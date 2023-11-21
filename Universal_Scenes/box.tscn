@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://b812mbppojnhg"]
+
+[ext_resource type="Script" path="res://Universal_Scenes/MoveableObject.gd" id="1_s8nkr"]
+[ext_resource type="Texture2D" uid="uid://c4sm3ge5nm1x6" path="res://Sprites/Objects/Box.png" id="2_1qvj5"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_q8ud4"]
+rough = true
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h4uon"]
+size = Vector2(35, 31)
+
+[node name="Box" type="RigidBody2D"]
+collision_layer = 8
+collision_mask = 223
+physics_material_override = SubResource("PhysicsMaterial_q8ud4")
+can_sleep = false
+lock_rotation = true
+linear_damp = 3.0
+script = ExtResource("1_s8nkr")
+
+[node name="Box" type="Sprite2D" parent="."]
+texture = ExtResource("2_1qvj5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_h4uon")

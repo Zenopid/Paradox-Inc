@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://wvh3ygv447m"
+path="res://.godot/imported/Metal Gear Rising_ Revengeance OST - Red Sun Extended.wav-5d99ff62746c27f39cdcc989504243bf.sample"
+
+[deps]
+
+source_file="res://audio/bgm/Metal Gear Rising_ Revengeance OST - Red Sun Extended.wav"
+dest_files=["res://.godot/imported/Metal Gear Rising_ Revengeance OST - Red Sun Extended.wav-5d99ff62746c27f39cdcc989504243bf.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://hswfds7k8o5c"]
+
+[ext_resource type="Script" path="res://HealthBar.gd" id="1_xk36n"]
+[ext_resource type="Texture2D" uid="uid://clsrduuf81yus" path="res://Sprites/UI_Sprites/HealthBar/health_bar_over.png" id="2_hcus5"]
+[ext_resource type="Texture2D" uid="uid://chawrgviqvh5r" path="res://Sprites/UI_Sprites/HealthBar/health_bar_progress.png" id="3_0vqcg"]
+[ext_resource type="Texture2D" uid="uid://dt76tcp4rb7qc" path="res://Sprites/UI_Sprites/HealthBar/health_bar_border.png" id="4_2xrw4"]
+
+[node name="HealthBar" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xk36n")
+
+[node name="HealthUnder" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_right = 310.0
+offset_bottom = 60.0
+value = 100.0
+texture_under = ExtResource("2_hcus5")
+texture_progress = ExtResource("3_0vqcg")
+tint_progress = Color(0.83, 0.0913, 0.103611, 1)
+
+[node name="HealthOver" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_right = 4.0
+offset_bottom = 27.0
+value = 100.0
+texture_over = ExtResource("4_2xrw4")
+texture_progress = ExtResource("3_0vqcg")
+tint_progress = Color(0.364706, 1, 0.0901961, 1)

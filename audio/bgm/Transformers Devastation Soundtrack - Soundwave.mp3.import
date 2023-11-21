@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b13bqqs0uqoc7"
+path="res://.godot/imported/Transformers Devastation Soundtrack - Soundwave.mp3-1a7760cbc58ca528d40fed28731f4cf8.mp3str"
+
+[deps]
+
+source_file="res://audio/bgm/Transformers Devastation Soundtrack - Soundwave.mp3"
+dest_files=["res://.godot/imported/Transformers Devastation Soundtrack - Soundwave.mp3-1a7760cbc58ca528d40fed28731f4cf8.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

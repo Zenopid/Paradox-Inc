@@ -1,0 +1,100 @@
+[gd_scene load_steps=4 format=3 uid="uid://c4fjnew0fybpk"]
+
+[ext_resource type="Script" path="res://Opening_Scenes/MainMenu.gd" id="1_3biwq"]
+[ext_resource type="FontFile" uid="uid://by1k102hd7hkp" path="res://fonts/Pixellari.ttf" id="1_l6hr5"]
+[ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="2_l0nly"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3biwq")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0509804, 0.0313726, 0.0588235, 1)
+
+[node name="Paradox" type="Label" parent="."]
+visible = false
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -223.0
+offset_top = -134.5
+offset_right = 223.0
+offset_bottom = -31.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0.741176, 1, 1)
+theme_override_fonts/font = ExtResource("1_l6hr5")
+theme_override_font_sizes/font_size = 100
+text = "Paradox"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Incorporated" type="Label" parent="."]
+visible = false
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.5
+offset_top = -55.5
+offset_right = 290.5
+offset_bottom = 47.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_l6hr5")
+theme_override_font_sizes/font_size = 50
+text = "I n c o r p o r a t e d"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -141.0
+offset_top = -281.0
+offset_right = 141.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Start" parent="VBoxContainer" instance=ExtResource("2_l0nly")]
+layout_mode = 2
+disabled = true
+text = "Start Shift"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 20
+
+[node name="Training" parent="VBoxContainer" instance=ExtResource("2_l0nly")]
+layout_mode = 2
+text = "Training"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 150
+
+[connection signal="pressed" from="VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="VBoxContainer/Training" to="." method="_on_training_pressed"]

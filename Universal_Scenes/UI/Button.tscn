@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://dm80pcxu7kvcx"]
+
+[ext_resource type="FontFile" uid="uid://by1k102hd7hkp" path="res://fonts/Pixellari.ttf" id="1_wgr2v"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fvyta"]
+bg_color = Color(0, 0.741176, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.878431, 0.996078, 1, 1)
+anti_aliasing = false
+
+[node name="Button" type="Button"]
+texture_filter = 1
+offset_right = 33.0
+offset_bottom = 18.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.878431, 0.996078, 1, 1)
+theme_override_colors/icon_normal_color = Color(0, 0.741176, 1, 1)
+theme_override_colors/icon_pressed_color = Color(0, 0.227333, 0.31, 1)
+theme_override_colors/icon_hover_color = Color(0, 0.741176, 1, 1)
+theme_override_colors/icon_hover_pressed_color = Color(0, 0.741176, 1, 1)
+theme_override_colors/icon_focus_color = Color(0, 0.396078, 0.541176, 1)
+theme_override_fonts/font = ExtResource("1_wgr2v")
+theme_override_styles/normal = SubResource("StyleBoxFlat_fvyta")
+text = "Text"
