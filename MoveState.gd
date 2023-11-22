@@ -16,6 +16,7 @@ func enter(_msg: = {}) -> void:
 	coyote_timer = state_machine.get_timer("Coyote")
 	coyote_timer.wait_time = coyote_duration
 	coyote_timer.one_shot = true
+	entity.set_collision_mask_value(4, true)
 
 func input(event):
 	if Input.is_action_just_pressed("dodge") and state_machine.get_timer("Dodge_Cooldown").is_stopped():
@@ -51,12 +52,7 @@ func physics_process(_delta:float) -> void:
 	var move = get_movement_input()
 	if move != 0:
 		entity.motion.x += acceleration * move
-		if !facing_left():
-			if entity.motion.x > move_speed:
-				entity.motion.x = move_speed  
-		else:
-			if entity.motion.x < -move_speed:
-				entity.motion.x = -move_speed
+		entity.motion.x = clamp(entity.motion.x, -move_speed, move_speed)
 	else:
 		entity.motion.x *= 0.85
 	move_and_slide_with_slopes()
@@ -74,8 +70,10 @@ func push_objects():
 		var collision = entity.get_slide_collision(i)
 		if collision.get_collider() is MoveableObject:
 			print(-collision.get_normal() * push)
-			collision.get_collider().lock_rotation = false
-			collision.get_collider().apply_central_impulse( -collision.get_normal() * push )
+			var normal:Vector2 = -collision.get_normal()
+			normal.y -= 0.1
+			collision.get_collider().start_pushing(push)
+			collision.get_collider().call_deferred("apply_central_impulse", ( normal * push ))
 
 func move_and_slide_with_slopes():
 	entity.set_velocity(entity.motion)

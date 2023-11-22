@@ -8,6 +8,10 @@ var max_speed: int = 250
 
 var can_accelerate: bool = true 
 
+func enter(_msg: ={}):
+	super.enter()
+	entity.set_collision_mask_value(4, true)
+
 func physics_process(_delta):
 	var move = get_movement_input()
 	if move != 0:
@@ -31,3 +35,4 @@ func push_objects():
 		var collision = entity.get_slide_collision(i)
 		if collision.get_collider() is MoveableObject:
 			collision.get_collider().apply_central_impulse(-collision.get_normal() * push )
+

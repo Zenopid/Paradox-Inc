@@ -1,4 +1,4 @@
-[gd_scene load_steps=89 format=3 uid="uid://68mxs8vrodes"]
+[gd_scene load_steps=91 format=3 uid="uid://68mxs8vrodes"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_p0ojg"]
 [ext_resource type="Texture2D" uid="uid://ccnj5krx1gyit" path="res://Adventurer-1.5/Individual Sprites/adventurer-crouch-00.png" id="2_nbwc8"]
@@ -57,6 +57,8 @@
 [ext_resource type="Script" path="res://Character/WallSlide.gd" id="41_qixio"]
 [ext_resource type="Script" path="res://Character/Dodge.gd" id="46_cwimo"]
 [ext_resource type="Script" path="res://Character/Dead.gd" id="48_10113"]
+[ext_resource type="Script" path="res://Levels/Backgrounds.gd" id="58_wunj3"]
+[ext_resource type="Texture2D" uid="uid://cmvmd1suu7ptj" path="res://Sidescroller Shooter - Central City/Background/Base Color.png" id="59_l462v"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vmqdd"]
 animations = [{
@@ -225,8 +227,8 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_0p5d7"]
-size = Vector2(20, 26.5)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b022k"]
+size = Vector2(21.5, 14.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f7o6w"]
 size = Vector2(15, 20.5)
@@ -614,9 +616,6 @@ tracks/3/keys = {
 "values": [SubResource("RectangleShape2D_wiw01"), SubResource("RectangleShape2D_av1jp"), SubResource("RectangleShape2D_nm7pp"), SubResource("RectangleShape2D_1wj74")]
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_b022k"]
-size = Vector2(21.5, 14.5)
-
 [sub_resource type="Animation" id="Animation_o4wer"]
 length = 0.001
 tracks/0/type = "value"
@@ -679,6 +678,9 @@ tracks/4/keys = {
 "update": 0,
 "values": [Vector2(0, 0)]
 }
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0p5d7"]
+size = Vector2(20, 26.5)
 
 [sub_resource type="Animation" id="Animation_pikag"]
 resource_name = "Run"
@@ -980,7 +982,7 @@ _data = {
 }
 
 [node name="Player" type="CharacterBody2D"]
-collision_mask = 255
+collision_mask = 22
 script = ExtResource("1_p0ojg")
 
 [node name="UI" type="CanvasLayer" parent="."]
@@ -1084,11 +1086,12 @@ vertical_alignment = 1
 modulate = Color(1, 0.231373, 0.231373, 1)
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_vmqdd")
-animation = &"Run"
+animation = &"Dodge"
+frame = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 4.25)
-shape = SubResource("RectangleShape2D_0p5d7")
+position = Vector2(0, 3.5)
+shape = SubResource("RectangleShape2D_b022k")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(1.2, 1.2)
@@ -1138,8 +1141,10 @@ animation_name = "Crouch"
 
 [node name="Slide" type="Node" parent="StateMachine"]
 script = ExtResource("35_tkmwk")
+slide_acceleration = 10
 slide_deceleration = 10
 slide_speed = 425
+slide_cooldown = 1.0
 coyote_duration = 0.1
 push = 55
 animation_name = "Slide"
@@ -1225,7 +1230,6 @@ text = "Speed: 20, 30"
 position = Vector2(2, 17.5)
 
 [node name="SpriteAnimator" type="AnimationPlayer" parent="."]
-reset_on_save = false
 playback_process_mode = 0
 libraries = {
 "": SubResource("AnimationLibrary_ci1of")
@@ -1239,6 +1243,18 @@ libraries = {
 [node name="Invlv_Timer" type="Timer" parent="."]
 wait_time = 0.4
 one_shot = true
+
+[node name="FutureBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="FutureBackground"]
+motion_scale = Vector2(0, 0)
+script = ExtResource("58_wunj3")
+
+[node name="Sprite2D" type="Sprite2D" parent="FutureBackground/ParallaxLayer"]
+texture_filter = 1
+scale = Vector2(2.4, 2.025)
+texture = ExtResource("59_l462v")
+centered = false
 
 [connection signal="pressed" from="UI/MenuButton" to="." method="_on_button_pressed"]
 [connection signal="timeout" from="Invlv_Timer" to="." method="_on_invlv_timer_timeout"]

@@ -13,6 +13,9 @@ size = Vector2(35, 31)
 collision_layer = 8
 collision_mask = 223
 physics_material_override = SubResource("PhysicsMaterial_q8ud4")
+continuous_cd = 2
+max_contacts_reported = 16
+contact_monitor = true
 can_sleep = false
 lock_rotation = true
 linear_damp = 3.0
@@ -23,3 +26,5 @@ texture = ExtResource("2_1qvj5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_h4uon")
+
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
