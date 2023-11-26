@@ -61,7 +61,7 @@ func physics_process(delta: float):
 			state_machine.transition_to("Jump")
 			return
 		elif Input.is_action_pressed("crouch"):
-			if state_machine.get_timer("Slide_Cooldown").is_stopped():
+			if state_machine.get_timer("Slide_Cooldown").is_stopped() and get_movement_input() != 0:
 				if entity.motion.x <= -fall_node.max_speed:
 					state_machine.transition_to("Slide")
 					return

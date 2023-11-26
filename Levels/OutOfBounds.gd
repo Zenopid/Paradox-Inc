@@ -7,8 +7,11 @@ func _on_body_entered(body):
 		body.damage(damage)
 		body.position = body.get_spawn()
 	else:
+		print("deleting " + str(body.get_name()))
 		body.queue_free()
 
 
 func set_debug_color(color: Color):
 	$CollisionShape2D.debug_color = color
+
+

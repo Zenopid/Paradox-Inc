@@ -27,6 +27,7 @@ func _ready():
 		if node is GenericLevel:
 			current_level = node
 	$UI/TimelineTracker.init(self)
+	$Backgrounds.init(self)
 	connect("health_updated", Callable(health_bar, "_on_health_updated"))
 
 func _physics_process(delta):
@@ -61,6 +62,9 @@ func damage(amount):
 		_set_health(health - amount)
 		effects_aniamtion.play("Damaged")
 		effects_aniamtion.queue("Invincible")
+
+func heal(amount):
+	_set_health(health + amount)
 
 func kill():
 	states.transition_to("Dead")

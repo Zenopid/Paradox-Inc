@@ -10,6 +10,7 @@ class_name MoveState extends BaseState
 var coyote_timer: Timer
 
 var push_counter: int = 0
+var ground_checker: RayCast2D
 
 func enter(_msg: = {}) -> void:
 	super.enter()
@@ -64,25 +65,31 @@ func physics_process(_delta:float) -> void:
 	if state_machine.get_current_state() == state_machine.find_state("Run"):
 		push_objects()
 
-
 func push_objects():
 	for i in entity.get_slide_collision_count():
 		var collision = entity.get_slide_collision(i)
 		if collision.get_collider() is MoveableObject:
-			print(-collision.get_normal() * push)
-			var normal:Vector2 = -collision.get_normal()
-			normal.y -= 0.1
-			collision.get_collider().start_pushing(push)
-			collision.get_collider().call_deferred("apply_central_impulse", ( normal * push ))
+			collision.get_collider().call_deferred("apply_central_impulse", -collision.get_normal() * push ) 
 
 func move_and_slide_with_slopes():
 	entity.set_velocity(entity.motion)
 	entity.set_up_direction(Vector2.UP)
-	entity.set_floor_stop_on_slope_enabled(false)
+	entity.set_floor_stop_on_slope_enabled(true)
 	entity.set_max_slides(4)
-	entity.set_floor_max_angle(PI/2)
+	entity.set_floor_max_angle(PI/4)
+	entity.apply_floor_snap()
 	entity.move_and_slide()
+	entity.floor_snap_length = 5
 	entity.motion = entity.velocity
+#	var slides = entity.get_slide_collision_count()
+#	if slides:
+#		if slides > 1:
+#			for i in slides:
+#				var touched = entity.get_slide_collision(i) 
+#				if entity.is_on_floor() and touched.get_normal().y < 1.0 and entity.motion.x != 0:
+#					print("getting normal and stuff")
+#					entity.motion.y = touched.get_normal().y
 
 func exit() -> void:
 	state_machine.get_timer("Coyote").stop()
+	entity.floor_snap_length = 1

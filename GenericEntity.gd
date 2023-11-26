@@ -25,3 +25,9 @@ func death_logic():
 
 func get_level():
 	return current_level
+	
+func damage(amount):
+	pass
+	
+func heal(amount):
+	pass

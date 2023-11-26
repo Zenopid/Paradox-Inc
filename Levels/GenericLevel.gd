@@ -12,7 +12,7 @@ var music_playlist = []
 
 var restarting_level = false
 
-var box_scene = preload("res://Universal_Scenes/box.tscn")
+var box_scene = preload("res://Universal_Scenes/Interactables/box.tscn")
 
 func _ready():
 	var folder_path = "res://audio/bgm/"
@@ -92,6 +92,11 @@ func _on_spawner_pressed():
 	
 	add_child(box_instance)
 
+func get_next_timeline_swap():
+	if current_timeline == "Future":
+		return "Past"
+	else:
+		return "Future"
 
 func _on_clear_box_pressed():
 	for nodes in get_children():

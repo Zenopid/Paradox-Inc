@@ -12,6 +12,7 @@ var processing_tracker: float = 0
 var is_tweening: bool = false
 
 func enter(_msg: = {}):
+	super.enter()
 	jump_node = state_machine.find_state("Jump")
 	if entity.has_method("get_death_screen"):
 		death_screen = entity.get_death_screen()
@@ -33,5 +34,6 @@ func physics_process(delta):
 		time_tracker += delta
 		if time_tracker >= time_until_exit:
 			entity.death_logic()
+	entity.motion.x *= 0.7
 	entity.motion.y += jump_node.get_gravity()
 	default_move_and_slide()

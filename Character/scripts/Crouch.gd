@@ -11,6 +11,7 @@ func enter(_msg: = {}):
 func physics_process(_delta):
 	var was_on_floor = entity.is_on_floor()
 	entity.motion.x *= 0.7
+	get_movement_input()
 	default_move_and_slide()
 	
 	if was_on_floor and !entity.is_on_floor() and coyote_timer.is_stopped():

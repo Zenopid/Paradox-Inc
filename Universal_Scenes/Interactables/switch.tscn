@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://c1qqqb8ugmyry"]
+
+[ext_resource type="Script" path="res://Switch.gd" id="1_nn3kv"]
+[ext_resource type="Texture2D" uid="uid://mkvjkdpocm" path="res://Sprites/Objects/PressurePlateOnFrame1.png" id="2_wfotb"]
+[ext_resource type="Texture2D" uid="uid://7bkym6aabrr2" path="res://Sprites/Objects/PressurePlateOff.png" id="3_7fipx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bve7i"]
+size = Vector2(27, 5.01023)
+
+[node name="Switch" type="Area2D"]
+collision_layer = 8
+collision_mask = 137
+script = ExtResource("1_nn3kv")
+
+[node name="OnSprite" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("2_wfotb")
+
+[node name="OffSprite" type="Sprite2D" parent="."]
+position = Vector2(0, -0.5)
+texture = ExtResource("3_7fipx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.039566, -0.495717)
+shape = SubResource("RectangleShape2D_bve7i")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

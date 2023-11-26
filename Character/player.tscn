@@ -1,4 +1,4 @@
-[gd_scene load_steps=91 format=3 uid="uid://68mxs8vrodes"]
+[gd_scene load_steps=92 format=3 uid="uid://68mxs8vrodes"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_p0ojg"]
 [ext_resource type="Texture2D" uid="uid://ccnj5krx1gyit" path="res://Adventurer-1.5/Individual Sprites/adventurer-crouch-00.png" id="2_nbwc8"]
@@ -59,6 +59,7 @@
 [ext_resource type="Script" path="res://Character/Dead.gd" id="48_10113"]
 [ext_resource type="Script" path="res://Levels/Backgrounds.gd" id="58_wunj3"]
 [ext_resource type="Texture2D" uid="uid://cmvmd1suu7ptj" path="res://Sidescroller Shooter - Central City/Background/Base Color.png" id="59_l462v"]
+[ext_resource type="Texture2D" uid="uid://dfl65b0g1jhq8" path="res://Stages/Tiles/Assets/Background_2.png" id="60_ihivh"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vmqdd"]
 animations = [{
@@ -983,6 +984,7 @@ _data = {
 
 [node name="Player" type="CharacterBody2D"]
 collision_mask = 22
+floor_constant_speed = true
 script = ExtResource("1_p0ojg")
 
 [node name="UI" type="CanvasLayer" parent="."]
@@ -1086,7 +1088,7 @@ vertical_alignment = 1
 modulate = Color(1, 0.231373, 0.231373, 1)
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_vmqdd")
-animation = &"Dodge"
+animation = &"Run"
 frame = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -1115,7 +1117,7 @@ script = ExtResource("4_2r8jj")
 acceleration = 31
 move_speed = 250
 coyote_duration = 0.1
-push = 75
+push = 100
 animation_name = "Run"
 
 [node name="Jump" type="Node" parent="StateMachine"]
@@ -1123,13 +1125,13 @@ script = ExtResource("32_nkne8")
 jump_height = 100.0
 jump_time_to_peak = 0.5
 jump_time_to_descent = 0.4
-push = 40
+push = 150
 animation_name = "Jump"
 
 [node name="Fall" type="Node" parent="StateMachine"]
 script = ExtResource("33_1aox5")
 maximum_fall_speed = 575
-push = 40
+push = 150
 animation_name = "Fall"
 
 [node name="Crouch" type="Node" parent="StateMachine"]
@@ -1146,7 +1148,7 @@ slide_deceleration = 10
 slide_speed = 425
 slide_cooldown = 1.0
 coyote_duration = 0.1
-push = 55
+push = 165
 animation_name = "Slide"
 
 [node name="WallSlide" type="Node" parent="StateMachine"]
@@ -1162,6 +1164,7 @@ animation_name = "Dodge"
 
 [node name="Dead" type="Node" parent="StateMachine"]
 script = ExtResource("48_10113")
+time_until_death_processing = 1.0
 animation_name = "Death"
 
 [node name="Timers" type="Node" parent="StateMachine"]
@@ -1197,11 +1200,10 @@ collision_mask = 4
 hit_from_inside = true
 
 [node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts"]
-visible = false
 position = Vector2(0, 13.5)
 scale = Vector2(3, 1)
 target_position = Vector2(0, 12)
-collision_mask = 2
+collision_mask = 10
 hit_from_inside = true
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
@@ -1244,16 +1246,26 @@ libraries = {
 wait_time = 0.4
 one_shot = true
 
-[node name="FutureBackground" type="ParallaxBackground" parent="."]
-
-[node name="ParallaxLayer" type="ParallaxLayer" parent="FutureBackground"]
-motion_scale = Vector2(0, 0)
+[node name="Backgrounds" type="ParallaxBackground" parent="."]
 script = ExtResource("58_wunj3")
 
-[node name="Sprite2D" type="Sprite2D" parent="FutureBackground/ParallaxLayer"]
+[node name="FutureBackground" type="ParallaxLayer" parent="Backgrounds"]
+motion_scale = Vector2(0, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Backgrounds/FutureBackground"]
 texture_filter = 1
 scale = Vector2(2.4, 2.025)
 texture = ExtResource("59_l462v")
+centered = false
+
+[node name="PastBackground" type="ParallaxLayer" parent="Backgrounds"]
+motion_scale = Vector2(0, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Backgrounds/PastBackground"]
+modulate = Color(0.85, 0.85, 0.85, 1)
+texture_filter = 1
+scale = Vector2(2.3246, 2.37132)
+texture = ExtResource("60_ihivh")
 centered = false
 
 [connection signal="pressed" from="UI/MenuButton" to="." method="_on_button_pressed"]

@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://c5s048qamwl8p"]
+
+[ext_resource type="Script" path="res://Universal_Scripts/Interactables/Checkpoint.gd" id="1_rs0s6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tqhly"]
+size = Vector2(10, 76)
+
+[sub_resource type="Environment" id="Environment_5a8us"]
+background_mode = 3
+glow_enabled = true
+glow_hdr_threshold = 0.0
+
+[node name="Checkpoint" type="Area2D"]
+monitorable = false
+script = ExtResource("1_rs0s6")
+disabled_color = Color(92.9, 0, 0, 1)
+enabled_color = Color(0, 89.94, 0, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0, -38)
+shape = SubResource("RectangleShape2D_tqhly")
+
+[node name="Line2D" type="Line2D" parent="."]
+self_modulate = Color(20, 20, 1, 1)
+points = PackedVector2Array(0, -75, 0, 0)
+width = 2.0
+default_color = Color(1.1, 0, 0.02, 1)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Line2D"]
+environment = SubResource("Environment_5a8us")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered" flags=18]
