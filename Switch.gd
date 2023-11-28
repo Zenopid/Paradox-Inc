@@ -25,7 +25,8 @@ func swap_view(new_timeline):
 		monitoring = true
 
 func _on_body_exited(body):
-	is_on = false
-	$OnSprite.hide()
-	$OffSprite.show()
-	emit_signal("status_changed", is_on)
+	if !has_overlapping_bodies():
+		is_on = false
+		$OnSprite.hide()
+		$OffSprite.show()
+		emit_signal("status_changed", is_on)

@@ -35,5 +35,5 @@ func physics_process(delta):
 		if time_tracker >= time_until_exit:
 			entity.death_logic()
 	entity.motion.x *= 0.7
-	entity.motion.y += jump_node.get_gravity()
+	entity.motion.y += jump_node.get_gravity() * delta
 	default_move_and_slide()

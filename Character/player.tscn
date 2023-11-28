@@ -984,7 +984,7 @@ _data = {
 
 [node name="Player" type="CharacterBody2D"]
 collision_mask = 22
-floor_constant_speed = true
+floor_max_angle = 1.10479
 script = ExtResource("1_p0ojg")
 
 [node name="UI" type="CanvasLayer" parent="."]
@@ -1131,6 +1131,7 @@ animation_name = "Jump"
 [node name="Fall" type="Node" parent="StateMachine"]
 script = ExtResource("33_1aox5")
 maximum_fall_speed = 575
+buffer_duration = 0.1
 push = 150
 animation_name = "Fall"
 
@@ -1201,9 +1202,23 @@ hit_from_inside = true
 
 [node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts"]
 position = Vector2(0, 13.5)
-scale = Vector2(3, 1)
-target_position = Vector2(0, 12)
-collision_mask = 10
+scale = Vector2(2, 1)
+target_position = Vector2(0, 10)
+collision_mask = 138
+hit_from_inside = true
+
+[node name="SlopeCheckerRight" type="RayCast2D" parent="StateMachine/Raycasts"]
+position = Vector2(1, 13.5)
+enabled = false
+target_position = Vector2(30, 0)
+collision_mask = 2
+hit_from_inside = true
+
+[node name="SlopeCheckerLeft" type="RayCast2D" parent="StateMachine/Raycasts"]
+position = Vector2(-1, 13.5)
+enabled = false
+target_position = Vector2(-30, 0)
+collision_mask = 2
 hit_from_inside = true
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

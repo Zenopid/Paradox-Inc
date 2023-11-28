@@ -15,6 +15,8 @@ signal killed()
 @onready var death_screen = $UI/DeathScreen
 @onready var health_bar = $UI/HealthBar
 
+var respawn_timeline: String = "Future"
+
 var spawn_point: Vector2
 
 func get_spawn():
@@ -41,8 +43,10 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("options"):
 		_on_button_pressed()
 
-func set_spawn(location: Vector2):
+func set_spawn(location: Vector2, res_timeline: String = "Future"):
 	spawn_point = location
+	respawn_timeline = res_timeline
+	
 
 func _on_button_pressed():
 	get_parent().enable_menu()
@@ -78,3 +82,6 @@ func get_death_screen():
 func death_logic():
 	_on_button_pressed()
 	
+func respawn():
+	position = spawn_point
+	get_level().set_timeline(respawn_timeline)

@@ -9,6 +9,7 @@ class_name Jump extends AirState
 @export_range(0, 1) var double_jump_strength: float = 0.75
 @export var double_jump_boost: int = 50
 
+
 @onready var jump_velocity: float = ((2.0 * jump_height) / jump_time_to_peak) * -1.0
 @onready var jump_gravity : float = ((-2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)) * -1.0
 @onready var fall_gravity : float = ((-2.0 * jump_height) / (jump_time_to_descent * jump_time_to_descent)) * -1.0
@@ -29,6 +30,7 @@ func enter(msg: = {}):
 		entity.motion.x += jump_speed.x 
 	else:
 		double_jump()
+	
 
 func physics_process(delta):
 	super.physics_process(delta)

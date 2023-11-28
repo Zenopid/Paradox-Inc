@@ -82,6 +82,28 @@ func _physics_process(delta):
 			future.visible = false
 			past.modulate.a = 1
 
+func set_timeline(new_timeline):
+	if current_timeline != new_timeline:
+		current_timeline = new_timeline
+		match current_timeline:
+			"Future":
+				for layers in future.get_layers_count():
+					future.set_layer_enabled(layers, false)
+				for layers in past.get_layers_count():
+					past.set_layer_enabled(layers, true)
+				current_timeline = "Past"
+			"Past":
+				for layers in future.get_layers_count():
+					future.set_layer_enabled(layers, true)
+				for layers in past.get_layers_count():
+					past.set_layer_enabled(layers, false)
+				current_timeline = "Future"
+		for nodes in get_tree().get_nodes_in_group("Small Objects"):
+			if nodes is MoveableObject:
+				if nodes.get_paradox_status() == false:
+					nodes.swap_status()
+		emit_signal("swapped_timeline",current_timeline)
+
 func get_start_point():
 	return $SpawnPoint.position
 

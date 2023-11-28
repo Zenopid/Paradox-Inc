@@ -7,6 +7,8 @@ extends Area2D
 
 var checkpoint_reached:bool
 
+@export var Timeline:String = "Future"
+
 func _ready():
 	$Line2D.default_color = disabled_color
 
@@ -20,6 +22,3 @@ func _on_body_entered(body):
 			var color_tween = get_tree().create_tween().set_ease(Tween.EASE_IN_OUT)
 			color_tween.tween_property($Line2D,"default_color", enabled_color, 0.6)
 			$Line2D.default_color = enabled_color
-			print("entered checkpoint")
-	if $Line2D.default_color != disabled_color and $Line2D.default_color != enabled_color:
-		print("somethings wrong with the colors")
