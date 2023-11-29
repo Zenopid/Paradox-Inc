@@ -1,4 +1,4 @@
-[gd_scene load_steps=99 format=3 uid="uid://68mxs8vrodes"]
+[gd_scene load_steps=93 format=3 uid="uid://68mxs8vrodes"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_p0ojg"]
 [ext_resource type="Texture2D" uid="uid://ccnj5krx1gyit" path="res://Adventurer-1.5/Individual Sprites/adventurer-crouch-00.png" id="2_nbwc8"]
@@ -26,18 +26,14 @@
 [ext_resource type="Texture2D" uid="uid://cqbufidmbitqr" path="res://Adventurer-1.5/Individual Sprites/adventurer-jump-01.png" id="7_o3qac"]
 [ext_resource type="Texture2D" uid="uid://btf3t1iehtkvx" path="res://Adventurer-1.5/Individual Sprites/adventurer-run-01.png" id="7_ompnv"]
 [ext_resource type="Texture2D" uid="uid://dasjdt2hrkoos" path="res://Adventurer-1.5/Individual Sprites/adventurer-jump-02.png" id="8_fak8u"]
-[ext_resource type="Texture2D" uid="uid://dn3odiih88lv" path="res://Adventurer-1.5/Individual Sprites/adventurer-cast-00.png" id="8_muvb6"]
 [ext_resource type="Texture2D" uid="uid://c72g6xul1pso1" path="res://Adventurer-1.5/Individual Sprites/adventurer-run-02.png" id="8_xt5i4"]
 [ext_resource type="Texture2D" uid="uid://c475ho75lwnrc" path="res://Adventurer-1.5/Individual Sprites/adventurer-jump-03.png" id="9_a0yk3"]
 [ext_resource type="Texture2D" uid="uid://dtnky4t7qbtgr" path="res://Adventurer-1.5/Individual Sprites/adventurer-run-03.png" id="9_eh3nt"]
-[ext_resource type="Texture2D" uid="uid://buoc1mfspf0cy" path="res://Adventurer-1.5/Individual Sprites/adventurer-cast-01.png" id="9_wx85i"]
-[ext_resource type="Texture2D" uid="uid://c5cgtn1bah5h3" path="res://Adventurer-1.5/Individual Sprites/adventurer-cast-02.png" id="10_3fwcm"]
 [ext_resource type="Texture2D" uid="uid://ciheafl17ohva" path="res://Adventurer-1.5/Individual Sprites/adventurer-run-04.png" id="10_lkj1o"]
 [ext_resource type="Texture2D" uid="uid://ci0c0m3ax113h" path="res://Adventurer-1.5/Individual Sprites/adventurer-smrslt-00.png" id="10_pfpav"]
 [ext_resource type="Texture2D" uid="uid://1hcph8a368lp" path="res://Adventurer-1.5/Individual Sprites/adventurer-smrslt-01.png" id="11_2ywvy"]
 [ext_resource type="Texture2D" uid="uid://d1vk5wpjcfbpq" path="res://Adventurer-1.5/Individual Sprites/adventurer-run-05.png" id="11_ays8h"]
 [ext_resource type="Texture2D" uid="uid://d03l7l8ny22w5" path="res://Adventurer-1.5/Individual Sprites/adventurer-die-00.png" id="11_e4cr4"]
-[ext_resource type="Texture2D" uid="uid://cs57lpvbms7tj" path="res://Adventurer-1.5/Individual Sprites/adventurer-cast-03.png" id="11_wmkse"]
 [ext_resource type="Texture2D" uid="uid://kqni0vgn4lhg" path="res://Adventurer-1.5/Individual Sprites/adventurer-die-01.png" id="12_0m4y6"]
 [ext_resource type="Texture2D" uid="uid://dd2m5r6hyi04c" path="res://Adventurer-1.5/Individual Sprites/adventurer-smrslt-02.png" id="12_xd46e"]
 [ext_resource type="Texture2D" uid="uid://8srolpeq0tlh" path="res://Adventurer-1.5/Individual Sprites/adventurer-die-02.png" id="13_fbkgm"]
@@ -65,27 +61,9 @@
 [ext_resource type="Script" path="res://Levels/Backgrounds.gd" id="58_wunj3"]
 [ext_resource type="Texture2D" uid="uid://cmvmd1suu7ptj" path="res://Sidescroller Shooter - Central City/Background/Base Color.png" id="59_l462v"]
 [ext_resource type="Texture2D" uid="uid://dfl65b0g1jhq8" path="res://Stages/Tiles/Assets/Background_2.png" id="60_ihivh"]
-[ext_resource type="PackedScene" uid="uid://dicbkcloxwqty" path="res://Player/Scenes/portal.tscn" id="62_csbhp"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vmqdd"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("8_muvb6")
-}, {
-"duration": 1.0,
-"texture": ExtResource("9_wx85i")
-}, {
-"duration": 1.0,
-"texture": ExtResource("10_3fwcm")
-}, {
-"duration": 1.0,
-"texture": ExtResource("11_wmkse")
-}],
-"loop": true,
-"name": &"Cast_Start",
-"speed": 5.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("2_nbwc8")
@@ -255,86 +233,7 @@ animations = [{
 size = Vector2(21.5, 14.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f7o6w"]
-size = Vector2(19.5, 24.5)
-
-[sub_resource type="Animation" id="Animation_03wmv"]
-resource_name = "Cast_Start"
-length = 0.400002
-step = 0.0166667
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("AnimatedSprite2D:animation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"Cast_Start"]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("AnimatedSprite2D:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("AnimatedSprite2D:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("CollisionShape2D:shape")
-tracks/3/interp = 0
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [SubResource("RectangleShape2D_f7o6w")]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("CollisionShape2D:position")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 5)]
-}
-tracks/5/type = "method"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("PrimaryMachine/Portal")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0.400001),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [],
-"method": &"anim_over"
-}]
-}
+size = Vector2(15, 20.5)
 
 [sub_resource type="Animation" id="Animation_onacb"]
 resource_name = "Crouch"
@@ -781,18 +680,6 @@ tracks/4/keys = {
 "update": 0,
 "values": [Vector2(0, 0)]
 }
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("AnimatedSprite2D:animation")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"Cast_Start"]
-}
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0p5d7"]
 size = Vector2(20, 26.5)
@@ -996,7 +883,6 @@ tracks/3/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ci1of"]
 _data = {
-"Cast_Start": SubResource("Animation_03wmv"),
 "Crouch": SubResource("Animation_onacb"),
 "Death": SubResource("Animation_5bfgl"),
 "Dodge": SubResource("Animation_5r70m"),
@@ -1203,7 +1089,7 @@ vertical_alignment = 1
 modulate = Color(1, 0.231373, 0.231373, 1)
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_vmqdd")
-animation = &"Cast_Start"
+animation = &"Crouch"
 frame = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -1285,20 +1171,7 @@ animation_name = "Death"
 
 [node name="Portal" type="Node" parent="PrimaryMachine"]
 script = ExtResource("57_2qvn5")
-animation_name = "Cast_Start"
-
-[node name="portal_a" parent="PrimaryMachine/Portal" node_paths=PackedStringArray("sister_portal") instance=ExtResource("62_csbhp")]
-modulate = Color(0.364706, 0.321569, 1, 1)
-position = Vector2(17, 0)
-collision_layer = 64
-collision_mask = 136
-sister_portal = NodePath("../portal_b")
-
-[node name="portal_b" parent="PrimaryMachine/Portal" node_paths=PackedStringArray("sister_portal") instance=ExtResource("62_csbhp")]
-modulate = Color(1, 0.141176, 0.141176, 1)
-collision_layer = 64
-collision_mask = 136
-sister_portal = NodePath("../portal_a")
+animation_name = null
 
 [node name="Timers" type="Node" parent="PrimaryMachine"]
 
@@ -1374,6 +1247,9 @@ offset_right = 52.0
 offset_bottom = -30.0
 theme_override_fonts/font = ExtResource("4_jysbm")
 text = "Speed: 20, 30"
+
+[node name="GroundMarker" type="Node2D" parent="."]
+position = Vector2(2, 17.5)
 
 [node name="SpriteAnimator" type="AnimationPlayer" parent="."]
 playback_process_mode = 0

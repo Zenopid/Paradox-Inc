@@ -20,6 +20,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0.0509804, 0.0313726, 0.0588235, 1)
 
 [node name="Paradox" type="Label" parent="."]
@@ -78,6 +79,7 @@ offset_right = 141.0
 offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
+mouse_filter = 2
 
 [node name="Start" parent="VBoxContainer" instance=ExtResource("2_l0nly")]
 layout_mode = 2

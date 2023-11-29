@@ -928,4 +928,3 @@ sources/0 = SubResource("TileSetAtlasSource_im5m4")
 [node name="Past" type="TileMap"]
 tile_set = SubResource("TileSet_i4ndw")
 format = 2
-layer_0/tile_data = PackedInt32Array(65535, 851968, 3, 1, 851968, 65539)

@@ -8,8 +8,12 @@ var jump_force: int = 200
 @onready var anim_player: AnimationPlayer = get_node("SpriteAnimator")
 @onready var sfx: AudioStreamPlayer = get_node("AudioStreamPlayer")
 @onready var sprite: AnimatedSprite2D = get_node("AnimatedSprite2D")
-@onready var states: EntityStateMachine = get_node("StateMachine")
+@onready var states: EntityStateMachine = get_node_or_null("StateMachine")
 var current_level: GenericLevel
+
+func _ready():
+	if states == null:
+		states = get_node_or_null("PrimaryMachine")
 
 func _physics_process(delta: float) -> void:
 	states.physics_update(delta)

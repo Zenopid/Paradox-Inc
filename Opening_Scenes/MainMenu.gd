@@ -21,16 +21,20 @@ func add_player(pos):
 func disable_menu():
 	for nodes in get_children():
 		nodes.visible = false 
-	self.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if nodes is Button:
+			nodes.disabled = true
+			nodes.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func enable_menu():
 	for nodes in get_children():
 		if nodes is Control:
 			if nodes is Label == false:
 				nodes.visible = true
+		if nodes is Button:
+			nodes.disabled = false
+			nodes.mouse_filter = Control.MOUSE_FILTER_PASS
 		else:
 			nodes.queue_free()
-	self.mouse_filter = Control.MOUSE_FILTER_STOP
 
 func _on_training_pressed():
 	var training_instance: GenericLevel = training_scene.instantiate()

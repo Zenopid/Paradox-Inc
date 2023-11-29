@@ -124,3 +124,6 @@ func _on_clear_box_pressed():
 	for nodes in get_children():
 		if nodes is MoveableObject:
 			nodes.queue_free()
+
+func get_current_timeline():
+	return current_timeline

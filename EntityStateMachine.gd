@@ -43,7 +43,7 @@ func update(delta):
 func input(event: InputEvent):
 	current_state.input(event)
 	
-func transition_to(target_state_name: String = "", msg: = {}, trans_anim: String = "", overide: bool = false):
+func transition_to(target_state_name: String = "", msg: = {}, trans_anim: String = "", overide: bool = false, call_enter: bool = true):
 	if target_state_name != current_state.name or overide:
 		current_state.exit()
 		if get_node(target_state_name) is State:
@@ -51,7 +51,8 @@ func transition_to(target_state_name: String = "", msg: = {}, trans_anim: String
 			if trans_anim:
 				machine_owner.anim_player.play(trans_anim)
 				await machine_owner.anim_player.animation_finished
-			current_state.enter(msg)
+			if call_enter:
+				current_state.enter(msg)
 			if machine_owner.state_tracker:
 				machine_owner.state_tracker.text ="State: " + str(current_state.name)
 		else:
@@ -69,7 +70,6 @@ func get_timer(timer) -> Timer:
 	if state_timer:
 		return state_timer
 	return
-
 func get_raycast(raycast) -> RayCast2D:
 	var state_raycast: RayCast2D = get_node("Raycasts/" + raycast)
 	if state_raycast:

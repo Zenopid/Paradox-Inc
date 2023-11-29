@@ -29,6 +29,12 @@ func enter(_msg: = {}) -> void:
 	ground_checker.enabled = true
 
 func input(event):
+	if Input.is_action_just_pressed("portal_a"):
+		state_machine.transition_to("Portal", {state = state_machine.get_current_state(),portal_type = "A"})
+		return
+	if Input.is_action_just_pressed("portal_b"):
+		state_machine.transition_to("Portal", {state = state_machine.get_current_state(), portal_type = "B"})
+		return
 	if Input.is_action_just_pressed("dodge") and state_machine.get_timer("Dodge_Cooldown").is_stopped():
 		state_machine.transition_to("Dodge")
 		return
@@ -61,12 +67,15 @@ func physics_process(delta:float) -> void:
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	slope_ray_left.position = Vector2(entity.position.x - 1, entity.position.y + 13.5)
 	slope_ray_right.position = Vector2(entity.position.x + 1, entity.position.y + 13.5)
+	var slope_checker:RayCast2D
 	if facing_left():
 		slope_ray_left.enabled = true
 		slope_ray_right.enabled = false
+		slope_checker = slope_ray_left
 	else:
 		slope_ray_left.enabled = false
 		slope_ray_right.enabled = true
+		slope_checker = slope_ray_right
 	var was_on_floor = entity.is_on_floor()
 	var move = get_movement_input()
 	if move != 0:
@@ -87,8 +96,6 @@ func physics_process(delta:float) -> void:
 			return
 	if state_machine.get_current_state() == state_machine.find_state("Run"):
 		push_objects()
-	var point = ground_checker.get_collision_point().normalized()
-#	print(point)
 
 func push_objects():
 	for i in entity.get_slide_collision_count():
@@ -112,35 +119,7 @@ func move_and_slide_with_slopes(delta):
 	for i in range(2):
 		entity.move_and_slide()
 		entity.apply_floor_snap()
-#	for i in range(4):
-#		calculate_slope(delta, current_slope_ray)
-#		entity.move_and_slide()
-#		entity.apply_floor_snap()
-#	entity.get_wall_normal().normalized().or
-##			if entity.motion.y < -acceleration:
-##				entity.motion.y = -acceleration
-#			var move = get_movement_input()
-#			entity.motion.x += ((1 - normal) * acceleration) * (-1 * move)
-#			if move < 0:
-#				if entity.motion.x < (1 - normal) * move_speed:
-#					entity.motion.x = (1 - normal) * move_speed
-#			elif move > 0:
-#				if entity.motion.x > (1 - normal) * move_speed:
-#					entity.motion.x = (1 - normal) * move_speed
-#			print("its good cuz its currently " + str(normal))
-#		else:
-#			print("too steep") 
-
-#	var slides = entity.get_slide_collision_count()
-#	if slides:
-#		if slides > 1:
-#			for i in slides:
-#				var touched = entity.get_slide_collision(i) 
-#				if entity.is_on_floor() and touched.get_normal().y < 1.0 and entity.motion.x != 0:
-#					print("getting normal and stuff")
-#					entity.motion.y = touched.get_normal().y
-
-
+	
 func calculate_slope(delta, ray: RayCast2D):
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	if ground_checker.is_colliding():

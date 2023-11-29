@@ -23,6 +23,7 @@ func get_spawn():
 	return spawn_point
 
 func _ready():
+	super._ready()
 	states.init(self, debug_info)
 	effects_aniamtion.play("Rest")
 	for node in get_parent().get_children():
