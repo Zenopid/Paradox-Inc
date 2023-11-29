@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://b812mbppojnhg"]
 
-[ext_resource type="Script" path="res://Universal_Scenes/MoveableObject.gd" id="1_1hej8"]
+[ext_resource type="Script" path="res://Universal_Scripts/Interactables/MoveableObject.gd" id="1_1hej8"]
 [ext_resource type="Texture2D" uid="uid://c4sm3ge5nm1x6" path="res://Sprites/Objects/Box.png" id="2_fqxhm"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_q8ud4"]

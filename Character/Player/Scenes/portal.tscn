@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://dicbkcloxwqty"]
+
+[ext_resource type="Script" path="res://Character/Player/scripts/PortalObject.gd" id="1_i52mj"]
+[ext_resource type="Texture2D" uid="uid://ddgducmdbdpmg" path="res://Sprites/Objects/Portal.png" id="2_b06pn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_urp0g"]
+size = Vector2(12, 40)
+
+[node name="Portal" type="Area2D"]
+script = ExtResource("1_i52mj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-3, 0)
+texture = ExtResource("2_b06pn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_urp0g")
+
+[node name="Cooldown" type="Timer" parent="."]
+wait_time = 0.7
+one_shot = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
