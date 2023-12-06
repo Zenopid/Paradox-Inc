@@ -15,10 +15,9 @@ func _ready():
 
 func _on_body_entered(body):
 	if body is Player:
+		var character: Player = body
 		if !checkpoint_reached:
 			checkpoint_reached = true
 			body.set_spawn(Vector2(position.x, position.y - 30))
 			body.heal(heal_amount)
-			var color_tween = get_tree().create_tween().set_ease(Tween.EASE_IN_OUT)
-			color_tween.tween_property($Line2D,"default_color", enabled_color, 0.6)
 			$Line2D.default_color = enabled_color

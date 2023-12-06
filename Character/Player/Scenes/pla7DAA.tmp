@@ -1,4 +1,4 @@
-[gd_scene load_steps=121 format=3 uid="uid://68mxs8vrodes"]
+[gd_scene load_steps=110 format=3 uid="uid://68mxs8vrodes"]
 
 [ext_resource type="Script" path="res://Character/Player/scripts/Player.gd" id="1_d84qb"]
 [ext_resource type="Texture2D" uid="uid://ccnj5krx1gyit" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-crouch-00.png" id="2_nbwc8"]
@@ -61,14 +61,8 @@
 [ext_resource type="Texture2D" uid="uid://cq1cxcyiqtgk" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-wall-slide-01.png" id="32_ytgl7"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Fall.gd" id="33_1aox5"]
 [ext_resource type="Texture2D" uid="uid://df2xfuranu3nf" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack1-04.png" id="33_v15v2"]
-[ext_resource type="Texture2D" uid="uid://c8p6ahlpythqq" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack2-00.png" id="34_djqwj"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Crouch.gd" id="34_j5ybi"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Slide.gd" id="35_tkmwk"]
-[ext_resource type="Texture2D" uid="uid://rv664btiqla6" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack2-01.png" id="35_v7njt"]
-[ext_resource type="Texture2D" uid="uid://dtb44sedf2aa5" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack2-02.png" id="36_3h174"]
-[ext_resource type="Texture2D" uid="uid://dt17u4auaujc5" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack2-03.png" id="37_b5b0t"]
-[ext_resource type="Texture2D" uid="uid://vqxjw7u1hpb" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack2-04.png" id="38_2g1up"]
-[ext_resource type="Texture2D" uid="uid://dxmdqwokppvfk" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack2-05.png" id="39_jrae6"]
 [ext_resource type="Script" path="res://Character/Player/UI/WallSlide.gd" id="41_qixio"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Dodge.gd" id="46_cwimo"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Dead.gd" id="48_10113"]
@@ -79,8 +73,6 @@
 [ext_resource type="Texture2D" uid="uid://cmvmd1suu7ptj" path="res://Sprites/Sidescroller Shooter - Central City/Background/Base Color.png" id="59_l462v"]
 [ext_resource type="Texture2D" uid="uid://dfl65b0g1jhq8" path="res://Sprites/Stages/Tiles/Assets/Background_2.png" id="60_ihivh"]
 [ext_resource type="PackedScene" uid="uid://dicbkcloxwqty" path="res://Character/Player/Scenes/portal.tscn" id="62_csbhp"]
-[ext_resource type="Script" path="res://Character/Player/Scenes/GroundedAttack1.gd" id="65_1vkg5"]
-[ext_resource type="Script" path="res://Character/Player/Scenes/GroundedAttack2.gd" id="66_yecm2"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vmqdd"]
 animations = [{
@@ -194,29 +186,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("34_djqwj")
-}, {
-"duration": 1.0,
-"texture": ExtResource("35_v7njt")
-}, {
-"duration": 1.0,
-"texture": ExtResource("36_3h174")
-}, {
-"duration": 1.0,
-"texture": ExtResource("37_b5b0t")
-}, {
-"duration": 1.0,
-"texture": ExtResource("38_2g1up")
-}, {
-"duration": 1.0,
-"texture": ExtResource("39_jrae6")
-}],
-"loop": true,
-"name": &"Grounded_Attack_2",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": ExtResource("2_r16qh")
 }, {
 "duration": 1.0,
@@ -312,8 +281,8 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b022k"]
 size = Vector2(21.5, 14.5)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_rv833"]
-size = Vector2(19.5, 25.1)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f7o6w"]
+size = Vector2(19.5, 21.0217)
 
 [sub_resource type="Animation" id="Animation_03wmv"]
 resource_name = "Cast_Start"
@@ -365,7 +334,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [SubResource("RectangleShape2D_rv833")]
+"values": [SubResource("RectangleShape2D_f7o6w")]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -382,7 +351,7 @@ tracks/4/keys = {
 tracks/5/type = "method"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("StateMachine/Portal")
+tracks/5/path = NodePath("PrimaryMachine/Portal")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -393,9 +362,6 @@ tracks/5/keys = {
 "method": &"anim_over"
 }]
 }
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_g66f1"]
-size = Vector2(17, 20.6)
 
 [sub_resource type="Animation" id="Animation_onacb"]
 resource_name = "Crouch"
@@ -412,7 +378,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [SubResource("RectangleShape2D_g66f1")]
+"values": [SubResource("RectangleShape2D_f7o6w")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -552,7 +518,7 @@ tracks/2/keys = {
 tracks/3/type = "method"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("StateMachine/Dodge")
+tracks/3/path = NodePath("PrimaryMachine/Dodge")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -658,7 +624,7 @@ tracks/3/keys = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_13h34"]
-size = Vector2(19.5, 23.648)
+size = Vector2(19.5, 20.794)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ck0gr"]
 size = Vector2(19.5, 19.1256)
@@ -717,62 +683,6 @@ tracks/3/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector2(0, 7.1205), Vector2(0, 7.95468), Vector2(0, 4.37829)]
-}
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_in0ah"]
-size = Vector2(19.5, 23.648)
-
-[sub_resource type="Animation" id="Animation_1ptdi"]
-resource_name = "Grounded_Attack_2"
-length = 0.400002
-step = 0.0166667
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("AnimatedSprite2D:animation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"Grounded_Attack_2"]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("AnimatedSprite2D:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.216667, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4, 5]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("CollisionShape2D:shape")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [SubResource("RectangleShape2D_in0ah")]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("CollisionShape2D:position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 5.69352)]
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1ymqm"]
@@ -1181,7 +1091,6 @@ _data = {
 "Dodge": SubResource("Animation_5r70m"),
 "Fall": SubResource("Animation_xlc47"),
 "Grounded_Attack_1": SubResource("Animation_1o8gg"),
-"Grounded_Attack_2": SubResource("Animation_1ptdi"),
 "Idle": SubResource("Animation_hgcaq"),
 "Jump": SubResource("Animation_wrlkf"),
 "RESET": SubResource("Animation_o4wer"),
@@ -1385,6 +1294,7 @@ modulate = Color(1, 0.231373, 0.231373, 1)
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_vmqdd")
 animation = &"Cast_Start"
+frame = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3.5)
@@ -1397,84 +1307,21 @@ drag_horizontal_enabled = true
 drag_vertical_enabled = true
 script = ExtResource("28_8ueg6")
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("machine_owner")]
+[node name="PrimaryMachine" type="Node" parent="." node_paths=PackedStringArray("machine_owner")]
 script = ExtResource("2_pa1y2")
 initial_state = "Idle"
 machine_owner = NodePath("..")
 
-[node name="Attack" type="Node" parent="StateMachine"]
+[node name="Attack" type="Node" parent="PrimaryMachine"]
 script = ExtResource("52_61mr7")
 hitbox = ExtResource("58_tx02o")
 
-[node name="GroundedAttack1" type="Node" parent="StateMachine/Attack"]
-script = ExtResource("65_1vkg5")
-buffer_window = 13
-buffer_attack = "GroundedAttack2"
-animation_name = "Grounded_Attack_1"
-
-[node name="GroundedAttack2" type="Node" parent="StateMachine/Attack"]
-script = ExtResource("66_yecm2")
-animation_name = "Grounded_Attack_2"
-
-[node name="Crouch" type="Node" parent="StateMachine"]
-script = ExtResource("34_j5ybi")
-acceleration = 0
-move_speed = 0
-coyote_duration = 0.1
-animation_name = "Crouch"
-
-[node name="Dead" type="Node" parent="StateMachine"]
-script = ExtResource("48_10113")
-time_until_death_processing = 1.0
-animation_name = "Death"
-
-[node name="Dodge" type="Node" parent="StateMachine"]
-script = ExtResource("46_cwimo")
-dodge_duration = null
-dodge_speed = 250
-dodge_cooldown = null
-animation_name = "Dodge"
-
-[node name="Fall" type="Node" parent="StateMachine"]
-script = ExtResource("33_1aox5")
-maximum_fall_speed = 575
-buffer_duration = 0.1
-push = 150
-animation_name = "Fall"
-
-[node name="Idle" type="Node" parent="StateMachine"]
+[node name="Idle" type="Node" parent="PrimaryMachine"]
 script = ExtResource("3_4sr6w")
 coyote_duration = 0.1
 animation_name = "Idle"
 
-[node name="Jump" type="Node" parent="StateMachine"]
-script = ExtResource("32_nkne8")
-jump_height = 100.0
-jump_time_to_peak = 0.5
-jump_time_to_descent = 0.4
-push = 150
-animation_name = "Jump"
-
-[node name="Portal" type="Node" parent="StateMachine"]
-script = ExtResource("57_2qvn5")
-animation_name = "Cast_Start"
-
-[node name="portal_a" parent="StateMachine/Portal" node_paths=PackedStringArray("sister_portal") instance=ExtResource("62_csbhp")]
-visible = false
-modulate = Color(0.364706, 0.321569, 1, 1)
-position = Vector2(17, 0)
-collision_layer = 64
-collision_mask = 136
-sister_portal = NodePath("../portal_b")
-
-[node name="portal_b" parent="StateMachine/Portal" node_paths=PackedStringArray("sister_portal") instance=ExtResource("62_csbhp")]
-visible = false
-modulate = Color(1, 0.141176, 0.141176, 1)
-collision_layer = 64
-collision_mask = 136
-sister_portal = NodePath("../portal_a")
-
-[node name="Run" type="Node" parent="StateMachine"]
+[node name="Run" type="Node" parent="PrimaryMachine"]
 script = ExtResource("4_2r8jj")
 acceleration = 31
 move_speed = 250
@@ -1482,7 +1329,29 @@ coyote_duration = 0.1
 push = 100
 animation_name = "Run"
 
-[node name="Slide" type="Node" parent="StateMachine"]
+[node name="Jump" type="Node" parent="PrimaryMachine"]
+script = ExtResource("32_nkne8")
+jump_height = 100.0
+jump_time_to_peak = 0.5
+jump_time_to_descent = 0.4
+push = 150
+animation_name = "Jump"
+
+[node name="Fall" type="Node" parent="PrimaryMachine"]
+script = ExtResource("33_1aox5")
+maximum_fall_speed = 575
+buffer_duration = 0.1
+push = 150
+animation_name = "Fall"
+
+[node name="Crouch" type="Node" parent="PrimaryMachine"]
+script = ExtResource("34_j5ybi")
+acceleration = 0
+move_speed = 0
+coyote_duration = 0.1
+animation_name = "Crouch"
+
+[node name="Slide" type="Node" parent="PrimaryMachine"]
 script = ExtResource("35_tkmwk")
 slide_acceleration = 10
 slide_deceleration = 10
@@ -1492,39 +1361,66 @@ coyote_duration = 0.1
 push = 500
 animation_name = "Slide"
 
-[node name="WallSlide" type="Node" parent="StateMachine"]
+[node name="WallSlide" type="Node" parent="PrimaryMachine"]
 script = ExtResource("41_qixio")
 eject_timer = 0.2
-slide_speed = null
-max_slide_speed = null
-crouch_slide_boost = null
 wallslide_cooldown = 0.1
 animation_name = "WallSlide"
 
-[node name="Timers" type="Node" parent="StateMachine"]
+[node name="Dodge" type="Node" parent="PrimaryMachine"]
+script = ExtResource("46_cwimo")
+dodge_speed = 250
+animation_name = "Dodge"
 
-[node name="Coyote" type="Timer" parent="StateMachine/Timers"]
+[node name="Dead" type="Node" parent="PrimaryMachine"]
+script = ExtResource("48_10113")
+time_until_death_processing = 1.0
+animation_name = "Death"
+
+[node name="Portal" type="Node" parent="PrimaryMachine"]
+script = ExtResource("57_2qvn5")
+animation_name = "Cast_Start"
+
+[node name="portal_a" parent="PrimaryMachine/Portal" node_paths=PackedStringArray("sister_portal") instance=ExtResource("62_csbhp")]
+visible = false
+modulate = Color(0.364706, 0.321569, 1, 1)
+position = Vector2(17, 0)
+collision_layer = 64
+collision_mask = 136
+sister_portal = NodePath("../portal_b")
+
+[node name="portal_b" parent="PrimaryMachine/Portal" node_paths=PackedStringArray("sister_portal") instance=ExtResource("62_csbhp")]
+visible = false
+modulate = Color(1, 0.141176, 0.141176, 1)
+collision_layer = 64
+collision_mask = 136
+sister_portal = NodePath("../portal_a")
+
+[node name="Timers" type="Node" parent="PrimaryMachine"]
+
+[node name="Coyote" type="Timer" parent="PrimaryMachine/Timers"]
 process_callback = 0
 one_shot = true
 
-[node name="Slide_Cooldown" type="Timer" parent="StateMachine/Timers"]
+[node name="Slide_Cooldown" type="Timer" parent="PrimaryMachine/Timers"]
 process_callback = 0
 one_shot = true
 
-[node name="Jump_Buffer" type="Timer" parent="StateMachine/Timers"]
+[node name="Jump_Buffer" type="Timer" parent="PrimaryMachine/Timers"]
 one_shot = true
 
-[node name="Walljump_Cooldown" type="Timer" parent="StateMachine/Timers"]
+[node name="Walljump_Cooldown" type="Timer" parent="PrimaryMachine/Timers"]
 
-[node name="Superjump" type="Timer" parent="StateMachine/Timers"]
+[node name="Superjump" type="Timer" parent="PrimaryMachine/Timers"]
 one_shot = true
 
-[node name="Dodge_Cooldown" type="Timer" parent="StateMachine/Timers"]
+[node name="Dodge_Cooldown" type="Timer" parent="PrimaryMachine/Timers"]
 one_shot = true
 
-[node name="Raycasts" type="Node" parent="StateMachine"]
+[node name="Raycasts" type="Node" parent="PrimaryMachine"]
 
-[node name="WallChecker" type="RayCast2D" parent="StateMachine/Raycasts"]
+[node name="WallChecker" type="RayCast2D" parent="PrimaryMachine/Raycasts"]
+visible = false
 position = Vector2(-12.55, -10.5)
 scale = Vector2(4, 1)
 enabled = false
@@ -1532,21 +1428,21 @@ target_position = Vector2(0, 25)
 collision_mask = 4
 hit_from_inside = true
 
-[node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts"]
+[node name="GroundChecker" type="RayCast2D" parent="PrimaryMachine/Raycasts"]
 position = Vector2(0, 13.5)
 scale = Vector2(2, 1)
 target_position = Vector2(0, 10)
 collision_mask = 138
 hit_from_inside = true
 
-[node name="SlopeCheckerRight" type="RayCast2D" parent="StateMachine/Raycasts"]
+[node name="SlopeCheckerRight" type="RayCast2D" parent="PrimaryMachine/Raycasts"]
 position = Vector2(1, 13.5)
 enabled = false
 target_position = Vector2(30, 0)
 collision_mask = 2
 hit_from_inside = true
 
-[node name="SlopeCheckerLeft" type="RayCast2D" parent="StateMachine/Raycasts"]
+[node name="SlopeCheckerLeft" type="RayCast2D" parent="PrimaryMachine/Raycasts"]
 position = Vector2(-1, 13.5)
 enabled = false
 target_position = Vector2(-30, 0)
@@ -1611,9 +1507,6 @@ texture_filter = 1
 scale = Vector2(2.3246, 2.37132)
 texture = ExtResource("60_ihivh")
 centered = false
-
-[node name="GroundChecker" type="Node2D" parent="."]
-position = Vector2(-8.561, 17.55)
 
 [connection signal="pressed" from="UI/MenuButton" to="." method="_on_button_pressed"]
 [connection signal="timeout" from="Invlv_Timer" to="." method="_on_invlv_timer_timeout"]

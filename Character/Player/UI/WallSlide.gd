@@ -37,14 +37,9 @@ func input(_event: InputEvent) -> void:
 func physics_process(delta):
 	wall_checker.position.y = entity.position.y - 10.5
 	if entity.is_on_floor():
-		if get_movement_input() != 0:
-			state_machine.transition_to("Run")
+		if enter_crouch_state():
 			return
-		elif Input.is_action_pressed("crouch"):
-			state_machine.transition_to("Crouch")
-			return
-		else:
-			state_machine.transition_to("Idle")
+		if enter_move_state():
 			return
 	if !wall_checker.is_colliding():
 		state_machine.transition_to("Fall")

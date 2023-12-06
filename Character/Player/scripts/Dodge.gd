@@ -33,46 +33,18 @@ func physics_process(delta: float):
 	if entity.motion.y > fall_node.maximum_fall_speed:
 		entity.motion.y = fall_node.maximum_fall_speed 
 	default_move_and_slide()
-	if dodge_over:
-		if Input.is_action_pressed("jump"):
-			state_machine.transition_to("Jump")
-			return
-		elif !entity.is_on_floor():
-			state_machine.transition_to("Fall")
-			return
-		elif Input.is_action_pressed("crouch"):
-			print(-fall_node.max_speed)
-			if state_machine.get_timer("Slide_Cooldown").is_stopped():
-				if entity.motion.x <= -fall_node.max_speed:
-					state_machine.transition_to("Slide")
-					return
-				elif entity.motion.x >= fall_node.max_speed:
-					state_machine.transition_to("Slide")
-					return
-			state_machine.transition_to("Crouch")
-			return
-		elif get_movement_input() != 0:
-			state_machine.transition_to("Run")
-			return
-		state_machine.transition_to("Idle")
+	if dodge_over or is_actionable:
+		leave_dodge()
+
+func leave_dodge():
+	if enter_jump_state():
 		return
-	elif is_actionable:
-		if Input.is_action_pressed("jump"):
-			state_machine.transition_to("Jump")
-			return
-		elif Input.is_action_pressed("crouch"):
-			if state_machine.get_timer("Slide_Cooldown").is_stopped() and get_movement_input() != 0:
-				if entity.motion.x <= -fall_node.max_speed:
-					state_machine.transition_to("Slide")
-					return
-				elif entity.motion.x >= fall_node.max_speed:
-					state_machine.transition_to("Slide")
-					return
-			state_machine.transition_to("Crouch")
-			return
-		elif get_movement_input() != 0:
-			state_machine.transition_to("Run")
-			return
+	elif enter_dodge_state():
+		return
+	elif enter_crouch_state():
+		return
+	enter_move_state()
+	return
 
 func become_actionable():
 	is_actionable = true

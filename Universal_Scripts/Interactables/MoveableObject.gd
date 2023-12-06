@@ -14,7 +14,10 @@ var new_position: Vector2 = Vector2.ZERO
 
 var current_level: GenericLevel
 
+@export var health: int = 20
 @export var current_timeline: String = "Future"
+
+var is_on_slope:bool = false
 
 func _ready():
 	if get_parent() is GenericLevel:
@@ -49,14 +52,11 @@ func enable():
 func _physics_process(delta):
 	var ground_checker: RayCast2D 
 	var num_of_ground_rays: int = 0
-	var is_on_slope: bool = false
 	for nodes in get_children():
 		if nodes.get_class() == "RayCast2D":
-			if nodes.is_colliding():
-				var collision = nodes.get_collider()
-				if collision is Entity == false:
-					ground_checker = nodes
-					num_of_ground_rays += 1
+			if nodes.get_collider() is Entity == false:
+				ground_checker = nodes
+				num_of_ground_rays += 1
 	if num_of_ground_rays > 1:
 		is_on_slope = true
 	else:
@@ -76,18 +76,22 @@ func _physics_process(delta):
 			being_pushed = false
 	else:
 		push_count = 0
-		height_pre_pushing = position.y
+		height_pre_pushing = roundi(position.y)
 		being_pushed = true
 	if ground_checker:
 		if ground_checker.is_colliding() and being_pushed:
 			if !is_on_slope:
 				gravity_scale = 0
 				position.y = height_pre_pushing - 0.001
-		else:
+		else: 
 			gravity_scale = 1
 	else: 
 		gravity_scale = 1
 		
+	print(is_on_slope)
+	
+
+
 func _integrate_forces(state):
 	if should_reset:
 		state.transform.origin = new_position

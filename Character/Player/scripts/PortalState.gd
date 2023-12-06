@@ -25,7 +25,6 @@ func enter(msg: = {}) -> void:
 
 func input(event):
 	original_state.input(event)
-	var input_name:String
 	if !Input.is_action_pressed(active_portal_name):
 		state_machine.transition_to(original_state_name,{},"",false, true)
 

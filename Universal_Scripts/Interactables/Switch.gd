@@ -2,7 +2,7 @@ class_name Switch extends Area2D
 
 var is_on: bool = false
 
-signal status_changed(new_status)
+signal status_changed(new_status: bool)
 
 @export var timeline:String = "Future"
 @export var level: GenericLevel

@@ -29,39 +29,28 @@ func enter(_msg: = {}) -> void:
 	ground_checker.enabled = true
 
 func input(event):
-	if Input.is_action_just_pressed("portal_a"):
-		state_machine.transition_to("Portal", {state = state_machine.get_current_state(),portal_type = "A"})
+	if enter_attack_state():
 		return
-	if Input.is_action_just_pressed("portal_b"):
-		state_machine.transition_to("Portal", {state = state_machine.get_current_state(), portal_type = "B"})
+	if enter_portal_state():
 		return
-	if Input.is_action_just_pressed("dodge") and state_machine.get_timer("Dodge_Cooldown").is_stopped():
-		state_machine.transition_to("Dodge")
+	if enter_dodge_state():
 		return
-	if Input.is_action_just_pressed("jump"):
-		if state_machine.get_timer("Superjump").is_stopped():
-			state_machine.transition_to("Jump")
+	if enter_jump_state():
+		return
+	if enter_crouch_state():
+		return
+	enter_move_state()
+	return
+
+func can_slide():
+	if state_machine.get_timer("Slide_Cooldown").is_stopped():
+		if facing_left():
+			if entity.motion.x <= -move_speed:
+				return true
 		else:
-			state_machine.transition_to("Jump", {can_superjump = true})
-		return
-	if Input.is_action_pressed("crouch"):
-		if state_machine.get_timer("Slide_Cooldown").is_stopped():
-			if facing_left():
-				if entity.motion.x <= -move_speed:
-					state_machine.transition_to("Slide")
-					return
-			else:
-				if entity.motion.x >= move_speed:
-					state_machine.transition_to("Slide")
-					return
-		state_machine.transition_to("Crouch")
-		return
-	if get_movement_input() != 0:
-		state_machine.transition_to("Run")
-		return
-	else:
-		state_machine.transition_to("Idle")
-		return
+			if entity.motion.x >= move_speed:
+				return true
+	return false
 
 func physics_process(delta:float) -> void:
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
@@ -107,15 +96,16 @@ func move_and_slide_with_slopes(delta):
 	var jump_script: Jump = state_machine.find_state("Jump")
 	var fall_script: Fall = state_machine.find_state("Fall")
 	if state_machine.current_state != state_machine.find_state("Idle"):
-		entity.motion.y += jump_script.get_gravity() * delta 
-		if entity.motion.y > fall_script.maximum_fall_speed:
-			entity.motion.y = fall_script.maximum_fall_speed
+		entity.motion.y += jump_script.get_gravity() * delta
+		entity.motion.y = clamp(entity.motion.y, 0, fall_script.maximum_fall_speed)
 	entity.set_velocity(entity.motion)
 	entity.set_floor_stop_on_slope_enabled(true)
 	entity.set_max_slides(1)
 	entity.set_floor_max_angle(PI/2)
-	entity.floor_snap_length = 5
+	entity.floor_snap_length = 2
 	entity.set_up_direction(ground_checker.get_collision_normal())
+	
+	
 	for i in range(2):
 		entity.move_and_slide()
 		entity.apply_floor_snap()

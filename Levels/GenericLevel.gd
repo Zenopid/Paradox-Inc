@@ -126,4 +126,4 @@ func _on_clear_box_pressed():
 			nodes.queue_free()
 
 func get_current_timeline():
-	return current_timeline
+	return current_timeline                                           

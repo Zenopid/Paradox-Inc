@@ -16,6 +16,8 @@ class_name Jump extends AirState
 
 @export_range(0,1) var superjump_bonus: float = 0.25
 
+@export var minimum_doublejump_speed: int = 100
+
 func enter(msg: = {}):
 	super.enter()
 	var jump_speed: Vector2 = Vector2(0, jump_velocity)
@@ -35,7 +37,7 @@ func enter(msg: = {}):
 func physics_process(delta):
 	super.physics_process(delta)
 	entity.motion.y += get_gravity() * delta
-	if Input.is_action_just_pressed("jump") and entity.motion.y > -100 and remaining_jumps > 0:
+	if Input.is_action_just_pressed("jump") and entity.motion.y > -minimum_doublejump_speed and remaining_jumps > 0:
 		double_jump()
 	if entity.motion.y > 0:
 		state_machine.transition_to("Fall")

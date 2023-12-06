@@ -32,6 +32,8 @@ func _ready():
 	$UI/TimelineTracker.init(self)
 	$Backgrounds.init(self)
 	connect("health_updated", Callable(health_bar, "_on_health_updated"))
+	if get_node_or_null("GroundChecker"):
+		get_node("GroundChecker").queue_free()
 
 func _physics_process(delta):
 	super._physics_process(delta)
@@ -39,15 +41,12 @@ func _physics_process(delta):
 		Engine.time_scale = slow_down
 	else:
 		Engine.time_scale = 1
-	if position.y > 100:
-		position = spawn_point
 	if Input.is_action_just_pressed("options"):
 		_on_button_pressed()
 
 func set_spawn(location: Vector2, res_timeline: String = "Future"):
 	spawn_point = location
 	respawn_timeline = res_timeline
-	
 
 func _on_button_pressed():
 	get_parent().enable_menu()
@@ -55,7 +54,7 @@ func _on_button_pressed():
 func _set_health(value):
 	var prev_health = health
 	health = clamp(value, 0, max_health)
-	if health !=prev_health:
+	if health != prev_health:
 		emit_signal("health_updated", health, 5)
 		if health <= 0:
 			kill()

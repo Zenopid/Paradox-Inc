@@ -1,14 +1,15 @@
 extends Label
 
 var start_time: int
-var total_time: int 
+var total_time: int
 
 func _ready() -> void:
 	start_time = Time.get_ticks_msec()
 
 func _process(_delta: float) -> void:
+	#warning-ignore: Integer
 	total_time = Time.get_ticks_msec() - start_time
-	var minutes_played = roundi(total_time / 1000/60)
+	var minutes_played = roundi(total_time / 1000 /60)
 	var seconds_played = roundi(total_time / 1000 % 60)
 	var msecs_played = roundi(total_time%1000/10)
 

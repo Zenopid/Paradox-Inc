@@ -15,7 +15,7 @@ var motion_tracker: Label = null
 
 var test_num:int = 0
 
-var state_names: = {}
+var state_names: = []
 var state_count: int = 0
 
 func init(entity: Entity, debug_node: Node2D):
@@ -23,11 +23,12 @@ func init(entity: Entity, debug_node: Node2D):
 		if nodes is BaseState: 
 			state_count += 1
 			nodes.init(entity, self)
-			state_names[str(state_count)] = nodes.name
+			state_names.append(nodes.name)
 	if initial_state:
 		current_state = get_node(initial_state)
 	else:
 		current_state = get_node("Idle")
+	var attack_node = get_node_or_null("Attack")
 	current_state.enter()
 	debug_info = debug_node
 	state_tracker = debug_node.get_node_or_null("StateTracker")
@@ -57,6 +58,10 @@ func transition_to(target_state_name: String = "", msg: = {}, trans_anim: String
 				machine_owner.state_tracker.text ="State: " + str(current_state.name)
 		else:
 			print("Couldn't find state " + target_state_name)
+			
+func get_state_names():
+	return state_names
+
 func find_state(state):
 	if get_node(state):
 		return get_node(state)

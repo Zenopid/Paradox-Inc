@@ -10,8 +10,8 @@ var portal_opened: bool = false
 
 @onready var collision_box:CollisionShape2D = $CollisionShape2D
 
-func init(char, level): 
-	player = char
+func init(charac, level): 
+	player = charac
 	current_level = level
 	
 func _on_body_entered(body):

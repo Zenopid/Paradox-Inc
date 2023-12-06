@@ -28,7 +28,6 @@ func death_logic():
 	pass
 
 func get_level():
-	print(current_level)
 	return current_level
 	
 func damage(amount):

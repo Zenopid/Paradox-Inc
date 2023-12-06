@@ -21,6 +21,7 @@ func enter(_msg: = {}) -> void:
 	jump_buffer.wait_time = buffer_duration
 	wall_checker.enabled = true
 	ground_checker.enabled = true
+	
 func input(_event: InputEvent):
 	if Input.is_action_just_pressed("jump"):
 		if jump_node.remaining_jumps > 0: 
@@ -40,25 +41,12 @@ func physics_process(delta):
 			state_machine.transition_to("Jump")
 			jump_buffer.stop()
 			return
-		if Input.is_action_pressed("crouch"):
-			if state_machine.get_timer("Slide_Cooldown").is_stopped() and get_movement_input() != 0:
-				if entity.motion.x <= -max_speed:
-					state_machine.transition_to("Slide")
-					return
-				elif entity.motion.x >= max_speed:
-					state_machine.transition_to("Slide")
-					return
-			state_machine.transition_to("Crouch")
+		if enter_crouch_state():
 			return
-		if get_movement_input() != 0:
-			state_machine.transition_to("Run")
-			return
-		else:
-			state_machine.transition_to("Idle")
-			return
+		enter_move_state()
+		return
 	set_raycast_positions()
-	if wall_checker.is_colliding() and !ground_checker.is_colliding() and get_movement_input() != 0:
-		state_machine.transition_to("WallSlide")
+	if can_wallslide():
 		return
 	default_move_and_slide()
 	

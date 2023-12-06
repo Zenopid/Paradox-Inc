@@ -3,14 +3,6 @@ extends Control
 var training_scene = preload("res://Levels/Training.tscn")
 var player = preload("res://Character/Player/Scenes/player.tscn")
 
-
-#func _on_start_pressed():
-#	var future_instance = future_scene.instantiate()
-#	disable_menu()
-#	var spawn_spot = Vector2(future_instance.position.x, future_instance.position.y - 30)
-#	add_child(future_instance)
-#	add_player(spawn_spot)
-
 func add_player(pos):
 	var player_instance: Player = player.instantiate()
 	player_instance.position = pos
@@ -29,11 +21,11 @@ func enable_menu():
 		if nodes is Control:
 			if nodes is Label == false:
 				nodes.visible = true
+		else:
+			nodes.queue_free()
 		if nodes is Button:
 			nodes.disabled = false
 			nodes.mouse_filter = Control.MOUSE_FILTER_PASS
-		else:
-			nodes.queue_free()
 
 func _on_training_pressed():
 	var training_instance: GenericLevel = training_scene.instantiate()
