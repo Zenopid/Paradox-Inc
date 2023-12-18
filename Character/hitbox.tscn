@@ -5,13 +5,16 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dk2i"]
 
 [node name="Hitbox" type="Area2D"]
+scale = Vector2(0.1, 0.1)
 collision_layer = 16
 collision_mask = 152
+collision_priority = 5.0
 script = ExtResource("1_rc7vj")
+metadata/_edit_group_ = true
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 top_level = true
 shape = SubResource("RectangleShape2D_7dk2i")
 debug_color = Color(0.701961, 0, 0.0117647, 0.419608)
 
-[connection signal="hitbox_collided" from="." to="." method="_on_hitbox_collided"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

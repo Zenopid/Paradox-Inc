@@ -14,12 +14,15 @@ var parent = get_parent()
 
 @export var duration:int = 10
 
-@onready var parent_state = get_parent().get_parent().get_current_state()
+@onready var parent_state: BaseState = get_parent()
+@onready var state_machine: EntityStateMachine = get_parent().get_parent()
+@onready var hitbox_owner: Entity = state_machine.get_parent()
 @onready var hitbox: CollisionShape2D = get_node("Shape")
+
 var framez = 0.0
 
 func set_parameters(d, w,h,amount, angle, type, af, pos, dur, push):
-	self.position = Vector2.ZERO
+	position = Vector2.ZERO
 	duration = dur
 	damage = d
 	angle_flipper = af
@@ -31,35 +34,37 @@ func set_parameters(d, w,h,amount, angle, type, af, pos, dur, push):
 	position = pos
 	object_push = push
 	update_extends()
-	connect("body_entered", Callable(self, "hitbox_collide"))
+	monitoring = true
 	set_physics_process(true)
 
 func update_extends():
 	hitbox.shape.size = Vector2(width, height)
+	$Shape.position = position
 
 func _ready():
-	set_physics_process(false)
+	monitoring = false 
 	hitbox.shape = RectangleShape2D.new()
-	
-func _physics_process(delta):
+	set_physics_process(false)
+
+func _physics_process(delta:float ) -> void:
 	if framez < duration:
 		framez += 1
 	elif framez == duration:
 		Engine.time_scale = 1
 		queue_free()
 		return
-	if get_parent().get_parent().get_current_state() != parent_state:
+	if state_machine.get_current_state() != parent_state:
 		Engine.time_scale = 1
 		queue_free()
 		return
 
-func hitbox_collide(body):
-	if body is MoveableObject:
-		body.apply_impulse(object_push)
-	else:
-		print("hit something else.")
+func _on_body_entered(body):
+	for i in get_overlapping_bodies():
+		print(i)
+	if body is RigidBody2D:
+		body.call_deferred("apply_central_impulse",object_push)
+	elif body is Entity:
+		if body != hitbox_owner:
+			body.damage(damage, knockback_amount, knockback_angle)
+#	print("You hit a " + str(body.name) + " with a push of " + str(object_push))
 	emit_signal("hitbox_collided", body)
-
-
-func _on_hitbox_collided(object):
-	print("hitbox collided with " + str(object))

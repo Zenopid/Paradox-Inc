@@ -15,13 +15,14 @@ var timer = 10
 
 @export var hitbox: PackedScene
 
+var number_of_active_hitboxes: int = 0
+
 
 var frame: int = 0
 
 var jump_script: Jump
 
-var active_attack:String 
-var attack_node: Attack
+var active_attack:BaseStrike 
 
 var has_init:bool = false
 
@@ -32,52 +33,37 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 			nodes.init(current_entity,s_machine)
 			nodes.set_attack_state(self)
 			nodes.connect("leave_state", Callable(self, "exit_state"))
+			nodes.hitbox = hitbox
+	jump_script = state_machine.find_state("Jump")
 
-#func set_parameters(d, w,h,amount, angle, type, af, pos, dur):
 func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle_flipper, points, push, hitlag = 1):
+	var facing: int = 1
+	if entity.sprite.flip_h:
+		facing = -1
 	var hitbox_instance: Hitbox = hitbox.instantiate()
-	self.add_child(hitbox_instance)
-	get_node(active_attack).connect("hitbox_collided", Callable(self, "on_attack_hit"))
 	if entity.sprite.flip_h:
 		points = Vector2(-points.x, points.y)
 		push = Vector2(-push.x, push.y)
 	var hitbox_location = Vector2(entity.position.x + points.x, entity.position.y + points.y)
+	add_child(hitbox_instance)
 	hitbox_instance.set_parameters(damage, width, height, kb_amount, angle, type, angle_flipper, hitbox_location, duration, push)
+	if active_attack:
+		hitbox_instance.connect("hitbox_collided", Callable(active_attack, "on_attack_hit"))
+	else:
+		print("there's no attack.")
 	return hitbox_instance
 
-#this is now a state machine within a state machine.
-#here's how it works:
-#idk how it works
-
-
 func enter(msg: = {}):
-#	state_machine.battle_stance_timer.start()
-	jump_script = state_machine.find_state("Jump")
+	entity.set_collision_mask_value(4,false)
 	animation_name = attack_name
 	super.enter()
 	frame = 0
 	if entity.is_on_floor():
-		attack_node = get_node("GroundedAttack1")
+		switch_attack("GroundedAttack1")
 	else:
 		state_machine.transition_to("Fall")
 		return
 	frame = 0
-	if attack_node:
-		attack_node.enter()
-		emit_signal("new_attack",attack_node)
-
-func input(event):
-	pass
-#	if Input.is_action_just_pressed("attack"):
-#		if can_cancel:
-#			state_machine.transition_to("Attack", {},"", true)
-#			return
-#		elif can_track_buffer:
-#			track_buffer = true
-#	if can_cancel:
-#		if buffer_tracker > 0 and buffered_attack != "":
-#			state_machine.transition_to("Attack", {},"", true)
-#			return
 
 func on_attack_hit(object):
 	pass
@@ -86,22 +72,26 @@ func _on_attack_over(anim_name):
 	pass
 
 func physics_process(delta: float) -> void:
-	attack_node.physics_process(delta)
+	active_attack.physics_process(delta)
 
 func set_buffer_attack(attack_name: String):
 	pass
 	
-func switch_attack(new_attack):
-	attack_node.exit()
-	attack_node = get_node(new_attack)
+func switch_attack(attack_name):
+	if active_attack:
+		active_attack.exit()
+	active_attack = get_node(attack_name)
 	frame = 0
-	if attack_node:
-		attack_node.enter()
-		emit_signal("new_attack",attack_node)
+	if active_attack:
+		active_attack.enter()
+		emit_signal("new_attack",active_attack.name)
 
 func exit_state():
 	if Input.is_action_pressed("jump"):
 		state_machine.transition_to("Jump")
+		return
+	elif Input.is_action_pressed("dodge") and state_machine.get_timer("Dodge_Cooldown").is_stopped():
+		state_machine.transition_to("Dodge")
 		return
 	elif enter_crouch_state():
 		return
@@ -109,4 +99,7 @@ func exit_state():
 	return
 
 func exit():
-	attack_node.exit()
+	if active_attack:
+		active_attack.exit()
+	entity.set_collision_mask_value(4, true)
+

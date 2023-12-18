@@ -16,6 +16,11 @@ var dodge_over: bool = false
 var jump_node: Jump
 var fall_node: Fall
 
+func init(current_entity: Entity, s_machine: EntityStateMachine):
+	super.init(current_entity,s_machine)
+	jump_node = state_machine.find_state("Jump")
+	fall_node = state_machine.find_state("Fall")
+
 func enter(_msg: = {}):
 	super.enter()
 	dodge_timer = state_machine.get_timer("Dodge_Cooldown")
@@ -37,11 +42,11 @@ func physics_process(delta: float):
 		leave_dodge()
 
 func leave_dodge():
-	if enter_jump_state():
+	if Input.is_action_pressed("jump"):
+		state_machine.transition_to("Jump")
 		return
-	elif enter_dodge_state():
-		return
-	elif enter_crouch_state():
+	if Input.is_action_pressed("crouch") and entity.is_on_floor():
+		state_machine.transition_to("Slide")
 		return
 	enter_move_state()
 	return
@@ -53,8 +58,7 @@ func end_dodge(_anim_name):
 	dodge_over = true
 
 func get_movement_input() -> int:
-	var move = Input.get_axis("left", "right")
-	return move
+	return Input.get_axis("left", "right")
 
 func exit():
 	entity.sprite.position = Vector2.ZERO

@@ -67,20 +67,14 @@ func physics_process(delta):
 		entity.motion.x = clamp(entity.motion.x, -slide_speed, slide_speed)
 		
 	hit_max_speed = true if abs(entity.motion.x) >= abs(slide_speed) else false
-	if coyote_timer.is_stopped():
-		if was_on_floor and entity.is_on_floor():
-			coyote_timer.start()
-		elif !entity.is_on_floor():
-			state_machine.transition_to("Fall")
-			return
+	if can_fall():
+		return
 	if entity.motion.x  == 0:
 		if Input.is_action_pressed("crouch"):
 			state_machine.transition_to("Crouch", {}, "Slide_to_Crouch")
 			return
-		else:
-			var move_state = "Run" if get_movement_input() != 0 else "Idle"
-			state_machine.transition_to(move_state)
-			return
+		enter_move_state()
+		return
 	if !is_on_slope():
 		default_move_and_slide()
 	else:
@@ -92,9 +86,8 @@ func physics_process(delta):
 
 func input(_event: InputEvent):
 	if !Input.is_action_pressed("crouch"):
-		var move_state = "Run" if get_movement_input() != 0 else "Idle"
-		state_machine.transition_to(move_state)
-		return
+		if enter_move_state():
+			return
 	if Input.is_action_just_pressed("jump"):
 		state_machine.transition_to("Jump", {bonus_speed = Vector2(0, (-1.0 * jump_node.jump_velocity))})
 		return

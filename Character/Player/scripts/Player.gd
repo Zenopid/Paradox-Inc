@@ -60,7 +60,7 @@ func _set_health(value):
 			kill()
 			emit_signal("killed")
 
-func damage(amount):
+func damage(amount, knockback: int = 0, knockback_angle: int = 0):
 	if invlv_timer.is_stopped():
 		invlv_timer.start()
 		_set_health(health - amount)

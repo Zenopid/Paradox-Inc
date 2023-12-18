@@ -9,7 +9,8 @@ signal status_changed(new_status: bool)
 
 func _ready():
 	level.connect("swapped_timeline", Callable(self, "swap_view"))
-
+	swap_view(level.current_timeline)
+	
 func _on_body_entered(body):
 	is_on = true
 	$OnSprite.show()
@@ -25,8 +26,9 @@ func swap_view(new_timeline):
 		monitoring = true
 
 func _on_body_exited(body):
-	if !has_overlapping_bodies():
-		is_on = false
-		$OnSprite.hide()
-		$OffSprite.show()
-		emit_signal("status_changed", is_on)
+	if monitoring:
+		if !has_overlapping_bodies():
+			is_on = false
+			$OnSprite.hide()
+			$OffSprite.show()
+			emit_signal("status_changed", is_on)

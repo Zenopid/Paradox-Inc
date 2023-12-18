@@ -30,7 +30,7 @@ func death_logic():
 func get_level():
 	return current_level
 	
-func damage(amount):
+func damage(amount, knockback: int = 0, knockback_angle: int = 0):
 	pass
 	
 func heal(amount):

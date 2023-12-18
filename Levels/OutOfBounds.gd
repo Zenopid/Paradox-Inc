@@ -1,6 +1,6 @@
 class_name OutOfBounds extends Area2D
 
-@export var damage:int = 25 
+@export var damage:int = 25
 
 func _on_body_entered(body):
 	if body is Player:

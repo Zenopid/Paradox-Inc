@@ -23,14 +23,15 @@ func get_inverse_movement_input(type):
 	var move = get_movement_input()
 	if move < 0:
 		if type == "String" or type == "string":
-			return "left"
+			return "right"
 		else:
 			return 1
 	elif move > 0:
 		if type == "String" or type == "string":
-			return "right"
+			return "left"
 		else:
 			return -1
+	return ""
 
 func facing_left() -> bool:
 	if entity.sprite.flip_h:
@@ -117,7 +118,8 @@ func can_wallslide():
 func can_fall():
 	var ground_checker = state_machine.get_raycast("GroundChecker")
 	var coyote_timer = state_machine.get_timer("Coyote")
-	if !ground_checker.is_colliding() and coyote_timer.is_stopped():
+	
+	if !ground_checker.is_colliding() and !entity.is_on_floor() and coyote_timer.is_stopped():
 		state_machine.transition_to("Fall")
 		return true
 	return false
