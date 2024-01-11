@@ -5,10 +5,10 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dk2i"]
 
 [node name="Hitbox" type="Area2D"]
-scale = Vector2(0.1, 0.1)
+scale = Vector2(1e-05, 1e-05)
 collision_layer = 16
-collision_mask = 152
-collision_priority = 5.0
+collision_mask = 191
+collision_priority = 50.0
 script = ExtResource("1_rc7vj")
 metadata/_edit_group_ = true
 

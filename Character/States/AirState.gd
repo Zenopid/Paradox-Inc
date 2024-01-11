@@ -1,4 +1,4 @@
-class_name AirState extends BaseState
+class_name AirState extends PlayerBaseState
 
 @export var push:int = 100
 
@@ -13,8 +13,7 @@ func enter(_msg: ={}):
 	entity.set_collision_mask_value(4, true)
 
 func physics_process(_delta):
-	var move = get_movement_input()
-	if move != 0:
+	if get_movement_input() != 0:
 		if facing_left():
 			if entity.motion.x > -max_speed:
 				entity.motion.x -= air_acceleration
@@ -25,7 +24,9 @@ func physics_process(_delta):
 				entity.motion.x += air_acceleration
 				if entity.motion.x > max_speed:
 					entity.motion.x = max_speed
-
+	if enter_attack_state():
+		return
+	
 func default_move_and_slide():
 	super.default_move_and_slide()
 	push_objects()

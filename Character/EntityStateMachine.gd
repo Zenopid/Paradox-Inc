@@ -13,12 +13,10 @@ var debug_info: Node2D = null
 var state_tracker: Label = null
 var motion_tracker: Label = null
 
-var test_num:int = 0
-
 var state_names: = []
 var state_count: int = 0
 
-func init(entity: Entity, debug_node: Node2D):
+func init(entity: Entity, debug_node: Node2D = null):
 	for nodes in get_children():
 		if nodes is BaseState: 
 			state_count += 1
@@ -31,8 +29,10 @@ func init(entity: Entity, debug_node: Node2D):
 	var attack_node = get_node_or_null("Attack")
 	current_state.enter()
 	debug_info = debug_node
-	state_tracker = debug_node.get_node_or_null("StateTracker")
-	motion_tracker = debug_node.get_node_or_null("MotionTracker")
+	if debug_node:
+		state_tracker = debug_node.get_node_or_null("StateTracker")
+		motion_tracker = debug_node.get_node_or_null("MotionTracker")
+		
 func physics_update(delta):
 	current_state.physics_process(delta)
 	if motion_tracker:
@@ -54,8 +54,9 @@ func transition_to(target_state_name: String = "", msg: = {}, trans_anim: String
 				await machine_owner.anim_player.animation_finished
 			if call_enter:
 				current_state.enter(msg)
-			if machine_owner.state_tracker:
-				machine_owner.state_tracker.text ="State: " + str(current_state.name)
+			if machine_owner:
+				if debug_info:
+					debug_info.get_node("StateTracker").text = "State: " + str(current_state.name)
 		else:
 			print("Couldn't find state " + target_state_name)
 			

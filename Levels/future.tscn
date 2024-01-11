@@ -443,7 +443,9 @@ texture = ExtResource("3_bteec")
 [sub_resource type="TileSet" id="TileSet_dfmre"]
 tile_size = Vector2i(3, 3)
 physics_layer_0/collision_layer = 2
+physics_layer_0/collision_mask = 129
 physics_layer_1/collision_layer = 4
+physics_layer_1/collision_mask = 129
 sources/0 = SubResource("TileSetAtlasSource_2b36e")
 sources/1 = SubResource("TileSetAtlasSource_7ypxl")
 sources/2 = SubResource("TileSetAtlasSource_qc3hi")

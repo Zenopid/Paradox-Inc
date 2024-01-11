@@ -9,17 +9,19 @@ func enter(_msg: = {}):
 	superjump_timer.wait_time = superjump_buffer
 
 func physics_process(_delta):
-	var was_on_floor = entity.is_on_floor()
+	var was_on_floor = grounded()
 	entity.motion.x *= 0.7
 	get_movement_input()
 	default_move_and_slide()
 	
-	if was_on_floor and !entity.is_on_floor() and coyote_timer.is_stopped():
+	if was_on_floor and !grounded() and coyote_timer.is_stopped():
 		coyote_timer.start()
 	if can_fall():
 		return
 
 func input(_event):
+	if enter_attack_state():
+		return
 	if Input.is_action_just_pressed("jump"):
 		state_machine.transition_to("Jump", {can_superjump = true})
 	if !Input.is_action_pressed("crouch"):

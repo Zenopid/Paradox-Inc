@@ -1,0 +1,307 @@
+[gd_scene load_steps=22 format=3 uid="uid://bsn3xf0byil13"]
+
+[ext_resource type="Script" path="res://Enemy/DarkStalker.gd" id="1_811do"]
+[ext_resource type="Texture2D" uid="uid://lofcnrqvh2h0" path="res://Sprites/NightBorne/NightBorne.png" id="3_meyua"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/Idle.gd" id="5_hynad"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/Chase.gd" id="6_eaorf"]
+[ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="7_156oq"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/Wander.gd" id="7_rh8x5"]
+[ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="8_bxbni"]
+[ext_resource type="Script" path="res://Character/EntityStateMachine.gd" id="68_xtxc1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trnwt"]
+size = Vector2(26.5949, 30.9026)
+
+[sub_resource type="Animation" id="Animation_5cyy4"]
+resource_name = "Basic Attack"
+length = 0.450002
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0333333, 0.0666667, 0.1, 0.133333, 0.2, 0.266667, 0.316667, 0.383333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [48, 49, 50, 51, 52, 53, 54, 55, 57]
+}
+
+[sub_resource type="Animation" id="Animation_2y40q"]
+resource_name = "Dead"
+length = 1.5
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.966667, 1.01667, 1.06667, 1.11667, 1.16667, 1.21667, 1.26667, 1.31667, 1.36667, 1.41667, 1.46667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 107, 108, 109, 110, 114]
+}
+
+[sub_resource type="Animation" id="Animation_5nieq"]
+resource_name = "Idle"
+length = 0.666668
+loop_mode = 1
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0833333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 8]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CollisionShape2D:shape")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("RectangleShape2D_trnwt")]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CollisionShape2D:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 8.96)]
+}
+
+[sub_resource type="Animation" id="Animation_6g0nn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CollisionShape2D:shape")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("RectangleShape2D_trnwt")]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CollisionShape2D:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 8.96)]
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t0x3l"]
+size = Vector2(26.5949, 30.9026)
+
+[sub_resource type="Animation" id="Animation_8qh2y"]
+resource_name = "Run"
+length = 0.600003
+loop_mode = 1
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.300001, 0.400001, 0.500001),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [23, 24, 25, 26, 27, 28]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CollisionShape2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 8.96)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CollisionShape2D:shape")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("RectangleShape2D_t0x3l")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_l363n"]
+_data = {
+"Basic Attack": SubResource("Animation_5cyy4"),
+"Dead": SubResource("Animation_2y40q"),
+"Idle": SubResource("Animation_5nieq"),
+"RESET": SubResource("Animation_6g0nn"),
+"Run": SubResource("Animation_8qh2y")
+}
+
+[sub_resource type="Animation" id="Animation_ovpgi"]
+resource_name = "Damaged"
+length = 0.333335
+loop_mode = 1
+step = 0.0166667
+
+[sub_resource type="Animation" id="Animation_tgkka"]
+resource_name = "Invincible"
+length = 0.166668
+loop_mode = 1
+step = 0.0166667
+
+[sub_resource type="Animation" id="Animation_tpcx1"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_tq0si"]
+resource_name = "Rest"
+length = 0.30001
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_brx4j"]
+_data = {
+"Damaged": SubResource("Animation_ovpgi"),
+"Invincible": SubResource("Animation_tgkka"),
+"RESET": SubResource("Animation_tpcx1"),
+"Rest": SubResource("Animation_tq0si")
+}
+
+[node name="Darkstalker" type="CharacterBody2D"]
+collision_mask = 30
+floor_max_angle = 1.10479
+script = ExtResource("1_811do")
+max_health = null
+
+[node name="UI" type="CanvasLayer" parent="."]
+scale = Vector2(0.1, 0.1)
+transform = Transform2D(0.1, 0, 0, 0.1, 0, 0)
+
+[node name="HealthBar" parent="UI" instance=ExtResource("7_156oq")]
+offset_left = -135.828
+offset_top = -157.306
+offset_right = -135.828
+offset_bottom = -157.306
+mouse_filter = 2
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("3_meyua")
+hframes = 23
+vframes = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 8.96)
+shape = SubResource("RectangleShape2D_trnwt")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("machine_owner")]
+script = ExtResource("68_xtxc1")
+initial_state = "Idle"
+machine_owner = NodePath("..")
+
+[node name="Attack" type="Node" parent="StateMachine"]
+
+[node name="GroundedAttack" type="Node" parent="StateMachine/Attack"]
+
+[node name="Dead" type="Node" parent="StateMachine"]
+
+[node name="Fall" type="Node" parent="StateMachine"]
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("5_hynad")
+animation_name = "Idle"
+
+[node name="Jump" type="Node" parent="StateMachine"]
+
+[node name="Chase" type="Node" parent="StateMachine"]
+script = ExtResource("6_eaorf")
+
+[node name="Wander" type="Node" parent="StateMachine"]
+script = ExtResource("7_rh8x5")
+animation_name = "Run"
+
+[node name="Timers" type="Node" parent="StateMachine"]
+
+[node name="Raycasts" type="Node" parent="StateMachine"]
+
+[node name="LOS" type="RayCast2D" parent="StateMachine/Raycasts"]
+position = Vector2(-12, 10)
+scale = Vector2(-1, 20)
+enabled = false
+target_position = Vector2(257, 0)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="SpriteAnimator" type="AnimationPlayer" parent="."]
+playback_process_mode = 0
+libraries = {
+"": SubResource("AnimationLibrary_l363n")
+}
+
+[node name="EffectAnimator" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_brx4j")
+}
+
+[node name="GroundChecker" type="Node2D" parent="."]
+position = Vector2(-4.9869, 24.425)
+
+[node name="Debug" type="Node2D" parent="."]
+
+[node name="StateTracker" type="Label" parent="Debug"]
+texture_filter = 1
+offset_left = -36.0
+offset_top = -37.0
+offset_right = 36.0
+offset_bottom = -14.0
+theme_override_fonts/font = ExtResource("8_bxbni")
+text = "State: Idle"
+
+[node name="MotionTracker" type="Label" parent="Debug"]
+texture_filter = 1
+offset_left = -44.0
+offset_top = -53.0
+offset_right = 52.0
+offset_bottom = -30.0
+theme_override_fonts/font = ExtResource("8_bxbni")
+text = "Speed: 10,10"

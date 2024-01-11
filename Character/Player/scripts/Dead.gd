@@ -1,4 +1,4 @@
-extends BaseState
+extends PlayerBaseState
 
 var death_screen: ColorRect
 

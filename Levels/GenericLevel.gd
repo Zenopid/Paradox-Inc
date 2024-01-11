@@ -30,7 +30,9 @@ func _ready():
 					music_playlist.append(load(folder_path + music_file))
 	future_tileset = future.tile_set
 	past_tileset = past.tile_set
-	set_timeline(current_timeline)
+	for i in 2:
+		set_timeline(get_next_timeline_swap())
+	
 
 func _physics_process(delta):
 	if Input.is_action_just_pressed("play_music"):
@@ -76,26 +78,23 @@ func _physics_process(delta):
 #			past.modulate.a = 1
 
 func set_timeline(new_timeline):
-	var old_timeline_tileset = get(current_timeline.to_lower() + "_tileset")
-	var new_timeline_tileset = get(new_timeline.to_lower() + "_tileset")
-	if new_timeline_tileset != past.tile_set and new_timeline_tileset != future.tile_set:
-		print("New timeline's tileset isn't past or future.")
-	if old_timeline_tileset != past.tile_set and old_timeline_tileset != future.tile_set:
-		print("Old timeline's tileset isn't past or future.")
+	var old_timeline_tileset:TileSet = get(current_timeline.to_lower() + "_tileset")
+	var new_timeline_tileset: TileSet = get(new_timeline.to_lower() + "_tileset")
 	if current_timeline != new_timeline:
-		print("Not current timeline, changing...")
 		if !new_timeline_tileset:
 			print_debug("No tileset for the timeline " + str(new_timeline))
 			return
 		for layers in old_timeline_tileset.get_physics_layers_count():
-			old_timeline_tileset.set_physics_layer_collision_layer(layers, 0)
+			old_timeline_tileset.set_physics_layer_collision_layer(layers, 0) 
 		for layers in new_timeline_tileset.get_physics_layers_count():
-			new_timeline_tileset.set_physics_layer_collision_layer(layers, 2)
-		get(current_timeline.to_lower()).visible = false
+			for i in 32:
+				new_timeline_tileset.set_physics_layer_collision_layer(layers, i)
+		var active_timeline = get(current_timeline.to_lower())
+		active_timeline.visible = false
 		current_timeline = new_timeline 
-		print(current_timeline)
-		get(current_timeline.to_lower()).modulate.a = 1
-		get(current_timeline.to_lower()).visible = true
+		active_timeline = get(current_timeline.to_lower())
+		active_timeline.modulate.a = 1
+		active_timeline.visible = true
 		for nodes in get_tree().get_nodes_in_group("Small Objects"):
 			if nodes is MoveableObject:
 				if nodes.get_paradox_status() == false:
@@ -117,10 +116,11 @@ func get_start_point():
 
 func _on_spawner_pressed():
 	var box_instance = box_scene.instantiate()
+	box_instance.init(current_timeline, self)
 	box_instance.position = $BoxSpawnPoint.position
-	
 	add_child(box_instance)
-
+	connect("swapped_timeline", Callable(box_instance,"swap_state"))
+	
 func get_next_timeline_swap():
 	if current_timeline == "Future":
 		return "Past"

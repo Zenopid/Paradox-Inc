@@ -1,4 +1,4 @@
-class_name MoveState extends BaseState
+class_name MoveState extends PlayerBaseState
 
 @export var acceleration = 25
 @export var move_speed = 125
@@ -57,14 +57,12 @@ func physics_process(delta:float) -> void:
 	slope_ray_left.position = Vector2(entity.position.x - 1, entity.position.y + 13.5)
 	slope_ray_right.position = Vector2(entity.position.x + 1, entity.position.y + 13.5)
 	var slope_checker:RayCast2D
-	if facing_left():
-		slope_ray_left.enabled = true
-		slope_ray_right.enabled = false
-		slope_checker = slope_ray_left
-	else:
-		slope_ray_left.enabled = false
-		slope_ray_right.enabled = true
-		slope_checker = slope_ray_right
+	var facing:String
+	facing = "left" if facing_left() else "right"
+	var opp_facing = "right" if facing == "left" else "left"
+	get("slope_ray_" + facing).enabled = true
+	get("slope_ray_" + opp_facing).enabled = false
+	slope_checker = get("slope_ray_" + facing)
 	var was_on_floor = entity.is_on_floor()
 	var move = get_movement_input()
 	if move != 0:
@@ -77,7 +75,7 @@ func physics_process(delta:float) -> void:
 		default_move_and_slide()
 	else:
 		move_and_slide_with_slopes(delta)
-	if !ground_checker.is_colliding() and coyote_timer.is_stopped():
+	if !entity.is_on_floor() and coyote_timer.is_stopped():
 		if was_on_floor:
 			coyote_timer.start()
 		if coyote_timer.is_stopped():

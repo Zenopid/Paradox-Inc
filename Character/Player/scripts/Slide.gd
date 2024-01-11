@@ -1,4 +1,4 @@
-extends BaseState
+extends PlayerBaseState
 
 @export var slide_acceleration:int = 5
 @export var slide_deceleration: int = 5
@@ -56,7 +56,7 @@ func physics_process(delta):
 	state_machine.get_raycast("SlopeCheckerRight").position = Vector2(entity.position.x + 1, entity.position.y + 13.5)
 	state_machine.get_raycast("SlopeCheckerLeft").position = Vector2(entity.position.x - 1, entity.position.y + 13.5)
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
-	var was_on_floor = entity.is_on_floor()
+	var was_on_floor = grounded()
 	if current_slide_duration <= 0:
 		if is_on_slope() and !ascending_slope():
 			pass
@@ -91,8 +91,7 @@ func input(_event: InputEvent):
 	if Input.is_action_just_pressed("jump"):
 		state_machine.transition_to("Jump", {bonus_speed = Vector2(0, (-1.0 * jump_node.jump_velocity))})
 		return
-	if Input.is_action_just_pressed("dodge"):
-		state_machine.transition_to("Dodge")
+	if enter_dodge_state():
 		return
 
 func slow_down(speed):
@@ -149,9 +148,6 @@ func calculate_slope():
 	print(str(opposite)+ " is the opposite.")
 	print(str(adjacent) + " is the adjacent.")
 	return rad_to_deg(atan(adjacent/opposite))
-
-func default_move_and_slide():
-	super.default_move_and_slide()
 
 func is_on_slope():
 	state_machine.get_raycast("SlopeCheckerLeft").force_raycast_update()

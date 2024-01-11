@@ -21,18 +21,24 @@ var is_on_slope:bool = false
 
 var entity_pushing: Entity
 
+var movement_speed: Vector2
+
+func init(timeline,level):
+	set_timeline(timeline)
+	current_level = level
+
 func _ready():
 	if get_parent() is GenericLevel:
 		current_level = get_parent()
 	elif get_parent() is Entity:
 		current_level = get_parent().get_level()
-	swap_state(current_level.get_current_timeline())
-	current_level.connect("swapped_timeline", Callable(self, "swap_state"))
 
 func swap_state(timeline):
 	if timeline != current_timeline:
+#		print("Object " + str(self) + " is disabling itself.")
 		disable()
 	else:
+#		print("Object " + str(self) + " is enabling itself.")
 		enable()
 
 func swap_timeline():
@@ -40,16 +46,18 @@ func swap_timeline():
 	disable()
 
 func disable():
+	$CollisionShape2D.disabled = true
 	set_physics_process(false)
 	visible = false
-	sleeping = true 
 	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_DISABLED)
+	sleeping = true 
 
 func enable():
+	$CollisionShape2D.disabled = false
 	set_physics_process(true)
 	visible = true
-	sleeping = false
 	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_CAST_SHAPE)
+	sleeping = false 
 
 func _physics_process(delta):
 #	var ground_checker: RayCast2D 
@@ -100,10 +108,13 @@ func _integrate_forces(state):
 	if should_reset:
 		state.transform.origin = new_position
 		should_reset = false
+		linear_velocity = movement_speed
 
 func set_new_location(pos):
+	movement_speed = linear_velocity
 	new_position = pos
 	should_reset = true
+	
 
 func _on_body_entered(body):
 	pass
@@ -119,5 +130,6 @@ func _on_body_exited(body):
 #		if i is Entity:
 #			return
 #	being_pushed = false
-
-	
+func set_timeline(new_timeline):
+	current_timeline = new_timeline
+	swap_state(current_timeline)

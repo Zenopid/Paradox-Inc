@@ -5,15 +5,15 @@ signal killed()
 
 @onready var state_tracker = $Debug/StateTracker
 @onready var debug_info = $Debug
-
-
-@export var slow_down: float = 0.1
-@export var max_health: int = 100
 @onready var health:int = max_health 
 @onready var invlv_timer = $Invlv_Timer
 @onready var effects_aniamtion: AnimationPlayer = $EffectAnimator
 @onready var death_screen = $UI/DeathScreen
 @onready var health_bar = $UI/HealthBar
+@onready var sprite: AnimatedSprite2D = get_node("AnimatedSprite2D")
+
+@export var slow_down: float = 0.1
+@export var max_health: int = 100
 
 var respawn_timeline: String = "Future"
 
@@ -23,6 +23,7 @@ func get_spawn():
 	return spawn_point
 
 func _ready():
+	sprite.position = Vector2.ZERO
 	super._ready()
 	states.init(self, debug_info)
 	effects_aniamtion.play("Rest")
@@ -59,8 +60,8 @@ func _set_health(value):
 		if health <= 0:
 			kill()
 			emit_signal("killed")
-
-func damage(amount, knockback: int = 0, knockback_angle: int = 0):
+#func damage(amount, knockback: int = 0, knockback_angle: int = 0):
+func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0):
 	if invlv_timer.is_stopped():
 		invlv_timer.start()
 		_set_health(health - amount)
@@ -85,3 +86,4 @@ func death_logic():
 func respawn():
 	position = spawn_point
 	get_level().set_timeline(respawn_timeline)
+	states.transition_to("Fall")

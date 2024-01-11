@@ -1,4 +1,4 @@
-class_name Attack extends BaseState
+class_name Attack extends PlayerBaseState
 
 signal new_attack(attack)
 
@@ -15,7 +15,6 @@ var timer = 10
 
 @export var hitbox: PackedScene
 
-var number_of_active_hitboxes: int = 0
 
 
 var frame: int = 0
@@ -26,6 +25,18 @@ var active_attack:BaseStrike
 
 var has_init:bool = false
 
+var ground_checker: RayCast2D 
+
+var temp_position: Vector2
+
+ 
+
+var active_hitboxes: = []
+var hitbox_positions: = []
+var num_of_active_hitboxes: int
+
+var test_num:int = 0
+
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	for nodes in get_children():
@@ -34,12 +45,11 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 			nodes.set_attack_state(self)
 			nodes.connect("leave_state", Callable(self, "exit_state"))
 			nodes.hitbox = hitbox
+	
 	jump_script = state_machine.find_state("Jump")
+	ground_checker = state_machine.get_raycast("GroundChecker")
 
 func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle_flipper, points, push, hitlag = 1):
-	var facing: int = 1
-	if entity.sprite.flip_h:
-		facing = -1
 	var hitbox_instance: Hitbox = hitbox.instantiate()
 	if entity.sprite.flip_h:
 		points = Vector2(-points.x, points.y)
@@ -51,19 +61,26 @@ func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle
 		hitbox_instance.connect("hitbox_collided", Callable(active_attack, "on_attack_hit"))
 	else:
 		print("there's no attack.")
+	num_of_active_hitboxes += 1
+	active_hitboxes.append(hitbox_instance)
+	hitbox_positions.append(points)
 	return hitbox_instance
 
 func enter(msg: = {}):
+	temp_position = ground_checker.target_position
+	ground_checker.target_position.y += 3
+	#just to make attacks more consistant. sometimes they wouldn't work on slopes
+	#cuz of hurtbox shifts
 	entity.set_collision_mask_value(4,false)
 	animation_name = attack_name
 	super.enter()
-	frame = 0
 	if entity.is_on_floor():
 		switch_attack("GroundedAttack1")
 	else:
-		state_machine.transition_to("Fall")
-		return
-	frame = 0
+		if Input.is_action_pressed("crouch"):
+			switch_attack("GroundPound")
+		else:
+			switch_attack("AirAttack1")
 
 func on_attack_hit(object):
 	pass
@@ -72,16 +89,15 @@ func _on_attack_over(anim_name):
 	pass
 
 func physics_process(delta: float) -> void:
-	active_attack.physics_process(delta)
-
-func set_buffer_attack(attack_name: String):
-	pass
+	if active_attack:
+		active_attack.physics_process(delta)
+	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	
 func switch_attack(attack_name):
 	if active_attack:
 		active_attack.exit()
-	active_attack = get_node(attack_name)
-	frame = 0
+	if has_node(attack_name):
+		active_attack = get_node(attack_name)
 	if active_attack:
 		active_attack.enter()
 		emit_signal("new_attack",active_attack.name)
@@ -97,9 +113,21 @@ func exit_state():
 		return
 	enter_move_state()
 	return
+	
+func clear_hitboxes():
+	for nodes in entity.get_children():
+		if nodes is Hitbox:
+			nodes.queue_free()
+
+func apply_lag(amount):
+	if active_attack:
+		active_attack.exit()
+	active_attack = get_node("LandingLag")
+	active_attack.enter({duration = amount})
 
 func exit():
 	if active_attack:
 		active_attack.exit()
 	entity.set_collision_mask_value(4, true)
+	ground_checker.target_position = temp_position
 

@@ -1,4 +1,4 @@
-extends BaseState
+extends PlayerBaseState
 
 @export var dodge_duration: int = 3
 @onready var dodge_tracker:int = dodge_duration 
@@ -37,6 +37,7 @@ func physics_process(delta: float):
 	entity.motion.y += jump_node.get_gravity() * delta
 	if entity.motion.y > fall_node.maximum_fall_speed:
 		entity.motion.y = fall_node.maximum_fall_speed 
+	entity.motion.y = clamp(entity.motion.y, 0, fall_node.maximum_fall_speed)
 	default_move_and_slide()
 	if dodge_over or is_actionable:
 		leave_dodge()
@@ -45,7 +46,7 @@ func leave_dodge():
 	if Input.is_action_pressed("jump"):
 		state_machine.transition_to("Jump")
 		return
-	if Input.is_action_pressed("crouch") and entity.is_on_floor():
+	if Input.is_action_pressed("crouch") and grounded():
 		state_machine.transition_to("Slide")
 		return
 	enter_move_state()
