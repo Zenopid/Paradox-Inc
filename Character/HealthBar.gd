@@ -25,10 +25,8 @@ func _on_health_updated(health, amount):
 		_flash_damage()
 	
 func _assign_color(health):
-	var pulse_tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+#	var pulse_tween: Tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	if health < health_over.max_value * danger_zone:
-		if will_pulse:
-			pulse_tween.tween_property(health_over, "tint_progress", danger_color, 1.2)
 		health_over.tint_progress = danger_color
 	elif health < health_over.max_value * caution_zone:
 		health_over.tint_progress = caution_color

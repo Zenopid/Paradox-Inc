@@ -1,17 +1,11 @@
-class_name Attack extends PlayerBaseState
+class_name PlayerAttack extends PlayerBaseState
 
-signal new_attack(attack)
-
-var attack_damage:int = 0
-var attack_name: String
-
-var combo_count:int = 1
+signal new_attack(attack_name)
 
 @export var friction:float = 0.2
 
 
 var timer = 10
-#the attack index is a dict with every attack and their corresponding attack value.
 
 @export var hitbox: PackedScene
 
@@ -19,9 +13,9 @@ var timer = 10
 
 var frame: int = 0
 
-var jump_script: Jump
+var jump_script
 
-var active_attack:BaseStrike 
+var active_attack: BaseStrike
 
 var has_init:bool = false
 
@@ -41,10 +35,9 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	for nodes in get_children():
 		if nodes is BaseStrike:
-			nodes.init(current_entity,s_machine)
+			nodes.init(entity)
 			nodes.set_attack_state(self)
 			nodes.connect("leave_state", Callable(self, "exit_state"))
-			nodes.hitbox = hitbox
 	
 	jump_script = state_machine.find_state("Jump")
 	ground_checker = state_machine.get_raycast("GroundChecker")
@@ -62,8 +55,6 @@ func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle
 	else:
 		print("there's no attack.")
 	num_of_active_hitboxes += 1
-	active_hitboxes.append(hitbox_instance)
-	hitbox_positions.append(points)
 	return hitbox_instance
 
 func enter(msg: = {}):
@@ -72,7 +63,6 @@ func enter(msg: = {}):
 	#just to make attacks more consistant. sometimes they wouldn't work on slopes
 	#cuz of hurtbox shifts
 	entity.set_collision_mask_value(4,false)
-	animation_name = attack_name
 	super.enter()
 	if entity.is_on_floor():
 		switch_attack("GroundedAttack1")
@@ -89,8 +79,12 @@ func _on_attack_over(anim_name):
 	pass
 
 func physics_process(delta: float) -> void:
+	if enter_dodge_state() and active_attack.frame <= 4 and active_attack.dodge_cancellable:
+		active_attack.exit()
+		return
 	if active_attack:
 		active_attack.physics_process(delta)
+	default_move_and_slide()
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	
 func switch_attack(attack_name):

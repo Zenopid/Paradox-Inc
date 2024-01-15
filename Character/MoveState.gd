@@ -14,6 +14,9 @@ var ground_checker: RayCast2D
 
 @onready var slope_ray_right: RayCast2D
 @onready var slope_ray_left: RayCast2D
+
+var decel_value: float = 0.7
+
 var test_num: int = 0
 
 func enter(_msg: = {}) -> void:
@@ -69,7 +72,7 @@ func physics_process(delta:float) -> void:
 		entity.motion.x += acceleration * move
 		entity.motion.x = clamp(entity.motion.x, -move_speed, move_speed)
 	else:
-		entity.motion.x *= 0.85
+		entity.motion.x *= decel_value
 	var normal = (ground_checker.get_collision_normal().angle_to(entity.up_direction))
 	if normal < 0.02 and normal > -0.02:
 		default_move_and_slide()

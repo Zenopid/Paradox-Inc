@@ -37,6 +37,7 @@ func physics_update(delta):
 	current_state.physics_process(delta)
 	if motion_tracker:
 		motion_tracker.text ="Speed: " + str(round(machine_owner.motion.x)) + "," + str(round(machine_owner.motion.y))
+		
 
 func update(delta):
 	current_state.process(delta)

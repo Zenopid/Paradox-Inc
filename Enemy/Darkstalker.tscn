@@ -1,12 +1,21 @@
-[gd_scene load_steps=22 format=3 uid="uid://bsn3xf0byil13"]
+[gd_scene load_steps=32 format=3 uid="uid://bsn3xf0byil13"]
 
 [ext_resource type="Script" path="res://Enemy/DarkStalker.gd" id="1_811do"]
 [ext_resource type="Texture2D" uid="uid://lofcnrqvh2h0" path="res://Sprites/NightBorne/NightBorne.png" id="3_meyua"]
+[ext_resource type="Script" path="res://Enemy/Attack.gd" id="5_80dmf"]
 [ext_resource type="Script" path="res://Enemy/DarkStalker/Idle.gd" id="5_hynad"]
 [ext_resource type="Script" path="res://Enemy/DarkStalker/Chase.gd" id="6_eaorf"]
+[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="6_go6rx"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/GroundedAttack.gd" id="7_3y84p"]
 [ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="7_156oq"]
 [ext_resource type="Script" path="res://Enemy/DarkStalker/Wander.gd" id="7_rh8x5"]
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="8_bxbni"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/Dash.gd" id="8_i3aym"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/LOS.gd" id="8_stb7w"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/GroundChecker.gd" id="9_s5haw"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/Alert.gd" id="9_vam36"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/Teleport.gd" id="13_i43wx"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/Conditions.gd" id="14_qybf2"]
 [ext_resource type="Script" path="res://Character/EntityStateMachine.gd" id="68_xtxc1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_trnwt"]
@@ -66,7 +75,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("CollisionShape2D:shape")
+tracks/1/path = NodePath("Hurtbox:shape")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -78,7 +87,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("CollisionShape2D:position")
+tracks/2/path = NodePath("Hurtbox:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -105,7 +114,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("CollisionShape2D:shape")
+tracks/1/path = NodePath("Hurtbox:shape")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -117,7 +126,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("CollisionShape2D:position")
+tracks/2/path = NodePath("Hurtbox:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -150,7 +159,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("CollisionShape2D:position")
+tracks/1/path = NodePath("Hurtbox:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -162,7 +171,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("CollisionShape2D:shape")
+tracks/2/path = NodePath("Hurtbox:shape")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -172,13 +181,69 @@ tracks/2/keys = {
 "values": [SubResource("RectangleShape2D_t0x3l")]
 }
 
+[sub_resource type="Animation" id="Animation_en356"]
+resource_name = "Teleport"
+length = 0.450002
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [69, 70, 71, 72, 73]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Hurtbox:shape")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("RectangleShape2D_trnwt")]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hurtbox:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 8.96)]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BehaviourTree/Teleport")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.3),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"move_body"
+}]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_l363n"]
 _data = {
 "Basic Attack": SubResource("Animation_5cyy4"),
 "Dead": SubResource("Animation_2y40q"),
 "Idle": SubResource("Animation_5nieq"),
 "RESET": SubResource("Animation_6g0nn"),
-"Run": SubResource("Animation_8qh2y")
+"Run": SubResource("Animation_8qh2y"),
+"Teleport": SubResource("Animation_en356")
 }
 
 [sub_resource type="Animation" id="Animation_ovpgi"]
@@ -209,7 +274,8 @@ _data = {
 }
 
 [node name="Darkstalker" type="CharacterBody2D"]
-collision_mask = 30
+collision_layer = 128
+collision_mask = 31
 floor_max_angle = 1.10479
 script = ExtResource("1_811do")
 max_health = null
@@ -230,45 +296,91 @@ texture = ExtResource("3_meyua")
 hframes = 23
 vframes = 5
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Hurtbox" type="CollisionShape2D" parent="."]
 position = Vector2(0, 8.96)
 shape = SubResource("RectangleShape2D_trnwt")
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("machine_owner")]
+[node name="BehaviourTree" type="Node" parent="." node_paths=PackedStringArray("machine_owner")]
 script = ExtResource("68_xtxc1")
 initial_state = "Idle"
 machine_owner = NodePath("..")
 
-[node name="Attack" type="Node" parent="StateMachine"]
+[node name="Attack" type="Node" parent="BehaviourTree"]
+script = ExtResource("5_80dmf")
+hitbox = ExtResource("6_go6rx")
 
-[node name="GroundedAttack" type="Node" parent="StateMachine/Attack"]
+[node name="GroundedAttack" type="Node" parent="BehaviourTree/Attack"]
+script = ExtResource("7_3y84p")
+animation_name = "Basic Attack"
+buffer_window = -1
+buffer_attack = "Dash"
+lunge_distance = 0
 
-[node name="Dead" type="Node" parent="StateMachine"]
+[node name="Dash" type="Node" parent="BehaviourTree/Attack"]
+script = ExtResource("8_i3aym")
+dash_speed = 415
+animation_name = "Run"
 
-[node name="Fall" type="Node" parent="StateMachine"]
+[node name="Dead" type="Node" parent="BehaviourTree"]
 
-[node name="Idle" type="Node" parent="StateMachine"]
+[node name="Fall" type="Node" parent="BehaviourTree"]
+
+[node name="Idle" type="Node" parent="BehaviourTree"]
 script = ExtResource("5_hynad")
 animation_name = "Idle"
 
-[node name="Jump" type="Node" parent="StateMachine"]
+[node name="Jump" type="Node" parent="BehaviourTree"]
 
-[node name="Chase" type="Node" parent="StateMachine"]
+[node name="Chase" type="Node" parent="BehaviourTree"]
 script = ExtResource("6_eaorf")
-
-[node name="Wander" type="Node" parent="StateMachine"]
-script = ExtResource("7_rh8x5")
+chase_speed = 225
+acceleration = 12
+chase_view_distance = 1000
 animation_name = "Run"
 
-[node name="Timers" type="Node" parent="StateMachine"]
+[node name="Wander" type="Node" parent="BehaviourTree"]
+script = ExtResource("7_rh8x5")
+wander_speed = 150
+animation_name = "Run"
 
-[node name="Raycasts" type="Node" parent="StateMachine"]
+[node name="Alert" type="Node" parent="BehaviourTree"]
+script = ExtResource("9_vam36")
 
-[node name="LOS" type="RayCast2D" parent="StateMachine/Raycasts"]
+[node name="Teleport" type="Node" parent="BehaviourTree"]
+script = ExtResource("13_i43wx")
+animation_name = "Teleport"
+
+[node name="Conditions" type="Node" parent="BehaviourTree" node_paths=PackedStringArray("entity", "state_machine")]
+script = ExtResource("14_qybf2")
+entity = NodePath("../..")
+state_machine = NodePath("..")
+
+[node name="Timers" type="Node" parent="BehaviourTree"]
+
+[node name="Timer" type="Timer" parent="BehaviourTree/Timers"]
+wait_time = 0.1
+one_shot = true
+
+[node name="Raycasts" type="Node" parent="BehaviourTree"]
+
+[node name="LOS" type="RayCast2D" parent="BehaviourTree/Raycasts" node_paths=PackedStringArray("entity")]
 position = Vector2(-12, 10)
 scale = Vector2(-1, 20)
-enabled = false
-target_position = Vector2(257, 0)
+target_position = Vector2(250, 0)
+collision_mask = 207
+hit_from_inside = true
+script = ExtResource("8_stb7w")
+entity = NodePath("../../..")
+
+[node name="GroundChecker" type="RayCast2D" parent="BehaviourTree/Raycasts" node_paths=PackedStringArray("entity")]
+position = Vector2(14, 10)
+target_position = Vector2(0, 30)
+collision_mask = 2
+hit_from_inside = true
+script = ExtResource("9_s5haw")
+entity = NodePath("../../..")
+
+[node name="Node" type="Node" parent="BehaviourTree"]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
@@ -305,3 +417,5 @@ offset_right = 52.0
 offset_bottom = -30.0
 theme_override_fonts/font = ExtResource("8_bxbni")
 text = "Speed: 10,10"
+
+[node name="Pathfinder" type="NavigationAgent2D" parent="."]

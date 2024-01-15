@@ -8,7 +8,8 @@ signal killed()
 @onready var health_bar = $UI/HealthBar
 @onready var effects_animation = get_node_or_null("EffectAnimator")
 @onready var sprite: Sprite2D = get_node("Sprite")
-
+@onready var pathfinder: NavigationAgent2D = $Pathfinder
+@onready var conditions: DarkStalkerConditions = $BehaviourTree/Conditions
 var spawn_point: Vector2
 
 func get_spawn():

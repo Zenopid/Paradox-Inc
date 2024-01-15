@@ -111,7 +111,7 @@ func exit() -> void:
 	current_slide_duration = slide_duration
 	ground_checker.enabled = false
 	entity.sprite.rotation_degrees = 0
-	entity.get_node("CollisionShape2D").rotation_degrees = 0
+	entity.get_node("Hurtbox").rotation_degrees = 0
 
 func push_objects():
 	for i in entity.get_slide_collision_count():

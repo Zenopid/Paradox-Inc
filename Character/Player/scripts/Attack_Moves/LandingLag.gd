@@ -15,4 +15,4 @@ func physics_process(delta):
 	lag_duration -= 1
 	if lag_duration <= 0:
 		emit_signal("leave_state")
-	entity.motion.y += jump_script.get_gravity() * delta
+	entity.motion.y += attack_state.jump_script.get_gravity() * delta

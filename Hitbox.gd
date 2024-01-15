@@ -76,6 +76,7 @@ func _on_body_entered(body):
 #		print(hitbox_owner.position)
 		body.call_deferred("apply_central_impulse",object_push)
 		emit_signal("hitbox_collided", body)
+		body.damage(damage)
 	elif body is Entity:
 		if body != hitbox_owner:
 			body.damage(damage, knockback_amount, knockback_angle)

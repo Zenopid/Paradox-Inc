@@ -14,7 +14,7 @@ var new_position: Vector2 = Vector2.ZERO
 
 var current_level: GenericLevel
 
-@export var health: int = 20
+@export var health: int = 100
 @export var current_timeline: String = "Future"
 
 var is_on_slope:bool = false
@@ -133,3 +133,8 @@ func _on_body_exited(body):
 func set_timeline(new_timeline):
 	current_timeline = new_timeline
 	swap_state(current_timeline)
+
+func damage(amount):
+	health -= amount
+	if health <= 0:
+		queue_free()

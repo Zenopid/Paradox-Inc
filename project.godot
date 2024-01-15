@@ -25,6 +25,10 @@ gdscript/warnings/integer_division=0
 
 window/stretch/mode="viewport"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/behavior_tree/plugin.cfg", "res://addons/yet_another_behavior_tree/plugin.cfg")
+
 [input]
 
 left={

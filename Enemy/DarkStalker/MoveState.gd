@@ -3,49 +3,64 @@ class_name DarkstalkerMoveState extends BaseState
 @export var behaviour_change_timer:float = 4
 @onready var timer
 var los_raycast: RayCast2D 
+var ground_checker: RayCast2D
+var vision_length: int = 250
+
 
 func enter(msg: = {}):
 	timer = behaviour_change_timer
 	super.enter()
+	var dir
 	if facing_left():
-		los_raycast.position.y = entity.position.y + 10
-		los_raycast.position.x = entity.position.x -12
-		los_raycast.scale.x = -1
+		dir = -1
 	else:
-		los_raycast.position.x = entity.position.x + 12
-		los_raycast.position.y = entity.position.y + 10
-		los_raycast.scale.x = 1
-
+		dir = 1
+	
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity, s_machine)
 	los_raycast = state_machine.get_raycast("LOS")
-
+	ground_checker = state_machine.get_raycast("GroundChecker")
+	ground_checker.add_exception(current_entity)
+	los_raycast.add_exception(current_entity)
+	
 func physics_process(delta:float):
+	var dir = -1 if entity.sprite.flip_h else 1
 	timer -= delta
+	
 	if los_raycast.is_colliding():
-		var object_seen = los_raycast.get_collider()
-		if object_seen is Player:
-			pass
-#			state_machine.transition_to("Chase", {chase_target = los_raycast.get_collision_point()})
-		elif object_seen is Enemy:
-			pass
-			# Note: add additional stuff for when it sees other enemies that arent like him
-			# wait is that racist?
-	elif timer <= 0:
+		var object = los_raycast.get_collider()
+		if object is Player:
+			state_machine.transition_to("Chase")
+			return
+	
+	if timer <= 0:
 		timer = behaviour_change_timer
 		change_behaviour()
-
+	for i in
+	
 func change_behaviour():
-	var rng = randi_range(1,3)
-	match rng:
-		1:
-			state_machine.transition_to("Idle")
-			return "Idle"
-		2:
-			state_machine.transition_to("Wander", {direction = "Left"})
-			return "Wander Left"
-		3: 
-			state_machine.transition_to("Wander", {direction = "Right"})
-			return "Wander Right"
-
+	var canChange:bool = false
+	while !canChange:
+		var rng = randi_range(1,3)
+		match rng:
+			1:
+				canChange = true
+				state_machine.transition_to("Idle")
+				return "Idle"
+			2:
+				ground_checker.position.x = entity.position.x - 14
+				ground_checker.force_update_transform()
+				ground_checker.force_raycast_update()
+				if ground_checker.is_colliding():
+					canChange = true
+					state_machine.transition_to("Wander", {direction = "Left"})
+					return "Wander Left"
+			3: 
+				ground_checker.position.x = entity.position.x + 14
+				ground_checker.force_update_transform()
+				ground_checker.force_raycast_update()
+				if ground_checker.is_colliding():
+					canChange = true
+					state_machine.transition_to("Wander", {direction = "Right"})
+					return "Wander Right"
 	

@@ -39,10 +39,13 @@ func physics_process(delta):
 	super.physics_process(delta)
 	entity.motion.y = clamp(entity.motion.y, entity.motion.y + jump_node.get_gravity() * delta, maximum_fall_speed)
 	if grounded():
+		#u landed, so we apply friction
 		if !jump_buffer.is_stopped():
+			entity.motion.x *= 0.95
 			state_machine.transition_to("Jump")
 			jump_buffer.stop()
 			return
+		entity.motion.x *= 0.7
 		if enter_crouch_state():
 			return
 		enter_move_state()

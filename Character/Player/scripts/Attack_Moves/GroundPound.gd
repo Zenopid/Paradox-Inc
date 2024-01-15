@@ -14,9 +14,9 @@ var ground_pound_damage: int
 var has_hit_ground: bool = false
 
 func enter(_msg: = {}):
-	print("WE POUNDING OUT HERE")
 	has_hit_ground = false
-	entity.anim_player.connect("animation_finished", Callable(self, "change_status"))
+	if !entity.anim_player.is_connected("animation_finished", Callable(self, "change_status")):
+		entity.anim_player.connect("animation_finished", Callable(self, "change_status"))
 	entity.anim_player.play("GroundPoundStart")
 	entity.anim_player.queue("GroundPoundLoop")
 	attack_status = "Start"
@@ -50,4 +50,3 @@ func physics_process(delta):
 			change_status("Landing")
 			attack_state.create_hitbox(39.625, 14.01,ground_pound_damage,1, 180, 4, "Normal", 1, Vector2(-1.375, 10.505), Vector2(700, -500))
 	super.physics_process(delta)
-	default_move_and_slide()
