@@ -1653,7 +1653,6 @@ _data = {
 collision_mask = 22
 floor_max_angle = 1.10479
 script = ExtResource("1_d84qb")
-max_health = null
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -1817,7 +1816,7 @@ attack_type = "Air"
 
 [node name="GroundPound" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("89_tqgg8")
-fall_speed = 700
+fall_speed = 800
 attack_type = "Air"
 
 [node name="LandingLag" type="Node" parent="StateMachine/Attack"]
@@ -1859,7 +1858,7 @@ script = ExtResource("32_nkne8")
 jump_height = 120.0
 jump_time_to_peak = 0.5
 jump_time_to_descent = 0.4
-minimum_doublejump_speed = 25
+minimum_doublejump_speed = 150
 animation_name = "Jump"
 
 [node name="Portal" type="Node" parent="StateMachine"]

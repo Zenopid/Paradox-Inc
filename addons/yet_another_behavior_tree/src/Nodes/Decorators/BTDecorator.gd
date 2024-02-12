@@ -30,33 +30,33 @@ extends BTNode
 #------------------------------------------
 
 func _get_configuration_warnings() -> PackedStringArray:
-    var warnings:PackedStringArray = []
-    if not _has_only_one_child():
-        warnings.append("A decorator must have only one child")
-    if not _child_is_bt_node():
-        warnings.append("A decorator must have a child of type BTNode")
-    return warnings
+	var warnings:PackedStringArray = []
+	if not _has_only_one_child():
+		warnings.append("A decorator must have only one child")
+	if not _child_is_bt_node():
+		warnings.append("A decorator must have a child of type BTNode")
+	return warnings
 
 #------------------------------------------
 # Fonctions publiques
 #------------------------------------------
 
 func reset() -> void:
-    for child in _children:
-        child.reset()
+	for child in _children:
+		child.reset()
 
 #------------------------------------------
 # Fonctions privées
 #------------------------------------------
 
 func is_valid() -> bool:
-    return _has_only_one_child() and _child_is_bt_node()
+	return _has_only_one_child() and _child_is_bt_node()
 
 func _has_only_one_child() -> bool:
-    return get_child_count() >= 1
+	return get_child_count() >= 1
 
 func _child_is_bt_node() -> bool:
-    for child in get_children():
-        if not child is BTNode:
-            return false
-    return true
+	for child in get_children():
+		if not child is BTNode:
+			return false
+	return true

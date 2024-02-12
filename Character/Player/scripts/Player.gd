@@ -44,6 +44,7 @@ func _physics_process(delta):
 		Engine.time_scale = 1
 	if Input.is_action_just_pressed("options"):
 		_on_button_pressed()
+	
 
 func set_spawn(location: Vector2, res_timeline: String = "Future"):
 	spawn_point = location

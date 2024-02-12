@@ -1,0 +1,133 @@
+[gd_scene load_steps=21 format=3 uid="uid://bgvgjuwnxk7st"]
+
+[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_2v6jb"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="2_fr27o"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="3_svdxn"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Ground_in_Front.gd" id="4_0om0d"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="5_bh21i"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/time_limiter.gd" id="5_brfy3"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Walk_In_Direction.gd" id="6_d7367"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Idle.gd" id="7_jl5v3"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Can_See_Entity.gd" id="8_4b7ch"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Turn_Around.gd" id="8_aa4sy"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Melee.gd" id="8_eabr6"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/inverter.gd" id="9_7a0x1"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Is_Enemy_Close.gd" id="10_12cqp"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/In_Hitstun.gd" id="10_jc3u3"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/cooldown.gd" id="14_wc0do"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/failer.gd" id="15_ivymw"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_random.gd" id="15_up1cr"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Set_Chase_Location.gd" id="16_hw3nr"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Run_Towards_Target.gd" id="17_j2jcl"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/repeater.gd" id="17_lg8cx"]
+
+[node name="AI_Tree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("1_2v6jb")
+blackboard = NodePath("@Node@22508")
+actor = NodePath("")
+
+[node name="WorldInteractions" type="Node" parent="."]
+script = ExtResource("2_fr27o")
+
+[node name="Fight" type="Node" parent="WorldInteractions"]
+script = ExtResource("3_svdxn")
+
+[node name="Can_See_Entity?" type="Node" parent="WorldInteractions/Fight"]
+script = ExtResource("8_4b7ch")
+
+[node name="Fight_Options" type="Node" parent="WorldInteractions/Fight"]
+script = ExtResource("5_bh21i")
+
+[node name="Melee" type="Node" parent="WorldInteractions/Fight/Fight_Options"]
+script = ExtResource("2_fr27o")
+
+[node name="If_Enemy_Is_Close_Continue" type="Node" parent="WorldInteractions/Fight/Fight_Options/Melee"]
+script = ExtResource("9_7a0x1")
+
+[node name="Is_Enemy_Close?" type="Node" parent="WorldInteractions/Fight/Fight_Options/Melee/If_Enemy_Is_Close_Continue"]
+script = ExtResource("10_12cqp")
+
+[node name="Melee" type="Node" parent="WorldInteractions/Fight/Fight_Options/Melee"]
+script = ExtResource("8_eabr6")
+anim_name = "Basic Attack"
+
+[node name="Move" type="Node" parent="WorldInteractions/Fight/Fight_Options"]
+script = ExtResource("2_fr27o")
+
+[node name="Pass_Check_If_Ground_Present" type="Node" parent="WorldInteractions/Fight/Fight_Options/Move"]
+script = ExtResource("9_7a0x1")
+
+[node name="Ground_in_Front?" type="Node" parent="WorldInteractions/Fight/Fight_Options/Move/Pass_Check_If_Ground_Present"]
+script = ExtResource("4_0om0d")
+
+[node name="TimeLimiterDecorator" type="Node" parent="WorldInteractions/Fight/Fight_Options/Move"]
+script = ExtResource("5_brfy3")
+wait_time = 0.5
+
+[node name="CooldownDecorator" type="Node" parent="WorldInteractions/Fight/Fight_Options/Move/TimeLimiterDecorator"]
+script = ExtResource("14_wc0do")
+wait_time = 4.0
+
+[node name="Move_In_Direction" type="Node" parent="WorldInteractions/Fight/Fight_Options/Move/TimeLimiterDecorator/CooldownDecorator"]
+script = ExtResource("6_d7367")
+movement_speed = -200
+
+[node name="Chase" type="Node" parent="WorldInteractions"]
+script = ExtResource("3_svdxn")
+
+[node name="Can_See_Entity?" type="Node" parent="WorldInteractions/Chase"]
+script = ExtResource("8_4b7ch")
+
+[node name="Not_In_Hitstun?" type="Node" parent="WorldInteractions/Chase"]
+script = ExtResource("9_7a0x1")
+
+[node name="In_Hitstun?" type="Node" parent="WorldInteractions/Chase/Not_In_Hitstun?"]
+script = ExtResource("10_jc3u3")
+
+[node name="Is_Enemy_Far" type="Node" parent="WorldInteractions/Chase"]
+script = ExtResource("9_7a0x1")
+
+[node name="Is_Enemy_Close?" type="Node" parent="WorldInteractions/Chase/Is_Enemy_Far"]
+script = ExtResource("10_12cqp")
+
+[node name="Set_Chase_Location" type="Node" parent="WorldInteractions/Chase"]
+script = ExtResource("16_hw3nr")
+
+[node name="Ground_in_Front?" type="Node" parent="WorldInteractions/Chase"]
+script = ExtResource("4_0om0d")
+
+[node name="TimeLimiterDecorator" type="Node" parent="WorldInteractions/Chase"]
+script = ExtResource("5_brfy3")
+wait_time = 12.0
+
+[node name="Run_Towards_Target" type="Node" parent="WorldInteractions/Chase/TimeLimiterDecorator"]
+script = ExtResource("17_j2jcl")
+
+[node name="WorldMovement" type="Node" parent="WorldInteractions"]
+script = ExtResource("15_up1cr")
+
+[node name="Idle_Limiter" type="Node" parent="WorldInteractions/WorldMovement"]
+script = ExtResource("5_brfy3")
+wait_time = 2.0
+
+[node name="Idle" type="Node" parent="WorldInteractions/WorldMovement/Idle_Limiter"]
+script = ExtResource("7_jl5v3")
+
+[node name="RepeaterDecorator" type="Node" parent="WorldInteractions/WorldMovement"]
+script = ExtResource("17_lg8cx")
+repetitions = 20
+
+[node name="Wander" type="Node" parent="WorldInteractions/WorldMovement/RepeaterDecorator"]
+script = ExtResource("2_fr27o")
+
+[node name="Ground_in_Front?" type="Node" parent="WorldInteractions/WorldMovement/RepeaterDecorator/Wander"]
+script = ExtResource("4_0om0d")
+
+[node name="AlwaysFailDecorator" type="Node" parent="WorldInteractions/WorldMovement/RepeaterDecorator/Wander"]
+script = ExtResource("15_ivymw")
+
+[node name="Move_In_Direction" type="Node" parent="WorldInteractions/WorldMovement/RepeaterDecorator/Wander/AlwaysFailDecorator"]
+script = ExtResource("6_d7367")
+
+[node name="Turn_Around" type="Node" parent="WorldInteractions/WorldMovement/RepeaterDecorator/Wander"]
+script = ExtResource("8_aa4sy")

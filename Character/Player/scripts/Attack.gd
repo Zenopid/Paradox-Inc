@@ -79,7 +79,7 @@ func _on_attack_over(anim_name):
 	pass
 
 func physics_process(delta: float) -> void:
-	if enter_dodge_state() and active_attack.frame <= 4 and active_attack.dodge_cancellable:
+	if enter_dodge_state() and active_attack.dodge_cancellable:
 		active_attack.exit()
 		return
 	if active_attack:
@@ -98,12 +98,16 @@ func switch_attack(attack_name):
 
 func exit_state():
 	if Input.is_action_pressed("jump"):
-		state_machine.transition_to("Jump")
-		return
+		if jump_script.remaining_jumps > 0:
+			state_machine.transition_to("Jump")
+			return
 	elif Input.is_action_pressed("dodge") and state_machine.get_timer("Dodge_Cooldown").is_stopped():
 		state_machine.transition_to("Dodge")
 		return
 	elif enter_crouch_state():
+		return
+	elif !grounded():
+		state_machine.transition_to("Fall")
 		return
 	enter_move_state()
 	return

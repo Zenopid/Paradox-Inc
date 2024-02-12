@@ -35,10 +35,9 @@ func enter_jump_state():
 	return false
 
 func enter_dodge_state():
-	if grounded():
-		if Input.is_action_just_pressed("dodge") and state_machine.get_timer("Dodge_Cooldown").is_stopped():
-			state_machine.transition_to("Dodge")
-			return true
+	if Input.is_action_just_pressed("dodge") and state_machine.get_timer("Dodge_Cooldown").is_stopped():
+		state_machine.transition_to("Dodge")
+		return true
 	return false
 
 func enter_portal_state():

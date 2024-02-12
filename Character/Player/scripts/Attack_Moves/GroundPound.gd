@@ -20,7 +20,6 @@ func enter(_msg: = {}):
 	entity.anim_player.play("GroundPoundStart")
 	entity.anim_player.queue("GroundPoundLoop")
 	attack_status = "Start"
-	entity.motion.x = entity.motion.x * 0.4
 	starting_position = entity.position.y
 
 func change_status(new_status):
@@ -37,8 +36,7 @@ func physics_process(delta):
 	ground_pound_damage = clamp(ground_pound_damage, minimum_damage, additional_damage)
 	match attack_status:
 		"Start":
-			entity.motion.y = 0
-			entity.motion.x *= 0.1
+			entity.motion *= 0.15
 		"Falling":
 			entity.motion.y = fall_speed
 	if entity.is_on_floor():

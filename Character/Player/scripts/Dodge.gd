@@ -26,31 +26,40 @@ func enter(_msg: = {}):
 	dodge_timer = state_machine.get_timer("Dodge_Cooldown")
 	dodge_timer.wait_time = dodge_cooldown
 	entity.anim_player.connect("animation_finished", Callable(self, "end_dodge"))
-	jump_node = state_machine.find_state("Jump")
-	fall_node = state_machine.find_state("Fall")
-
-func physics_process(delta: float):
+	if abs(entity.motion.x) > dodge_speed: 
+		return
 	if facing_left():
 		entity.motion.x = -dodge_speed
 	else:
 		entity.motion.x = dodge_speed
+
+func physics_process(delta: float):
 	entity.motion.y += jump_node.get_gravity() * delta
 	if entity.motion.y > fall_node.maximum_fall_speed:
 		entity.motion.y = fall_node.maximum_fall_speed 
 	entity.motion.y = clamp(entity.motion.y, 0, fall_node.maximum_fall_speed)
 	default_move_and_slide()
-	if dodge_over or is_actionable:
+	if dodge_over:
 		leave_dodge()
+	if is_actionable:
+		if grounded():
+			enter_move_state()
+		state_machine.transition_to("Fall")
+		return
 
 func leave_dodge():
-	if Input.is_action_pressed("jump"):
-		state_machine.transition_to("Jump")
+	if grounded():
+		if Input.is_action_pressed("jump"):
+			state_machine.transition_to("Jump")
+			return
+		if Input.is_action_pressed("crouch") and grounded():
+			state_machine.transition_to("Slide")
+			return
+		enter_move_state()
 		return
-	if Input.is_action_pressed("crouch") and grounded():
-		state_machine.transition_to("Slide")
+	else:
+		state_machine.transition_to("Fall")
 		return
-	enter_move_state()
-	return
 
 func become_actionable():
 	is_actionable = true

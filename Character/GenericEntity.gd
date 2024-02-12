@@ -15,16 +15,20 @@ func _ready():
 		states = get_node_or_null("PrimaryMachine")
 
 func _physics_process(delta: float) -> void:
-	states.physics_update(delta)
+	if states:
+		states.physics_update(delta)
 
 func _process(delta):
-	states.update(delta)
+	if states:
+		states.update(delta)
 
 func _unhandled_input(event: InputEvent):
-	states.input(event)
+	if states:
+		states.input(event)
 
 func death_logic():
-	states.transition_to("Dead")
+	if states:
+		states.transition_to("Dead")
 
 func get_level():
 	return current_level

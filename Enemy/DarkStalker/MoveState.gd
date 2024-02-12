@@ -36,7 +36,7 @@ func physics_process(delta:float):
 	if timer <= 0:
 		timer = behaviour_change_timer
 		change_behaviour()
-	for i in
+	
 	
 func change_behaviour():
 	var canChange:bool = false

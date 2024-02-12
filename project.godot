@@ -15,6 +15,11 @@ run/main_scene="res://Opening_Scenes/MainMenu.tscn"
 config/features=PackedStringArray("4.1", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+BeehaveGlobalMetrics="*res://addons/beehave/metrics/beehave_global_metrics.gd"
+BeehaveGlobalDebugger="*res://addons/beehave/debug/global_debugger.gd"
+
 [debug]
 
 gdscript/warnings/unused_variable=0
@@ -27,7 +32,7 @@ window/stretch/mode="viewport"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/behavior_tree/plugin.cfg", "res://addons/yet_another_behavior_tree/plugin.cfg")
+enabled=PackedStringArray("res://addons/beehave/plugin.cfg")
 
 [input]
 

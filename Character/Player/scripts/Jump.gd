@@ -24,7 +24,6 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	ground_checker = state_machine.get_raycast("GroundChecker")
 
-
 func enter(msg: = {}):
 	super.enter()
 	var jump_speed: Vector2 = Vector2(0, jump_velocity)
@@ -42,6 +41,8 @@ func enter(msg: = {}):
 	
 
 func physics_process(delta):
+	if enter_dodge_state():
+		return
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	super.physics_process(delta)
 	entity.motion.y += get_gravity() * delta
@@ -57,7 +58,6 @@ func double_jump():
 	entity.motion.x += double_jump_boost * get_movement_input()
 	remaining_jumps -= 1
 	super.enter()
-
 
 func get_gravity() -> float:
 	return jump_gravity if entity.motion.y < 0.0 else fall_gravity

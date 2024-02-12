@@ -1,22 +1,14 @@
-[gd_scene load_steps=32 format=3 uid="uid://bsn3xf0byil13"]
+[gd_scene load_steps=25 format=3 uid="uid://bsn3xf0byil13"]
 
 [ext_resource type="Script" path="res://Enemy/DarkStalker.gd" id="1_811do"]
 [ext_resource type="Texture2D" uid="uid://lofcnrqvh2h0" path="res://Sprites/NightBorne/NightBorne.png" id="3_meyua"]
-[ext_resource type="Script" path="res://Enemy/Attack.gd" id="5_80dmf"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/Idle.gd" id="5_hynad"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/Chase.gd" id="6_eaorf"]
-[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="6_go6rx"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/GroundedAttack.gd" id="7_3y84p"]
 [ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="7_156oq"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/Wander.gd" id="7_rh8x5"]
+[ext_resource type="Script" path="res://Enemy/Attack.gd" id="8_bsslf"]
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="8_bxbni"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/Dash.gd" id="8_i3aym"]
 [ext_resource type="Script" path="res://Enemy/DarkStalker/LOS.gd" id="8_stb7w"]
 [ext_resource type="Script" path="res://Enemy/DarkStalker/GroundChecker.gd" id="9_s5haw"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/Alert.gd" id="9_vam36"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/Teleport.gd" id="13_i43wx"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/Conditions.gd" id="14_qybf2"]
-[ext_resource type="Script" path="res://Character/EntityStateMachine.gd" id="68_xtxc1"]
+[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="9_wp7pv"]
+[ext_resource type="PackedScene" uid="uid://bgvgjuwnxk7st" path="res://Enemy/DarkStalker/ai_tree.tscn" id="18_t7mad"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_trnwt"]
 size = Vector2(26.5949, 30.9026)
@@ -273,12 +265,14 @@ _data = {
 "Rest": SubResource("Animation_tq0si")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_duk8c"]
+radius = 100.0
+
 [node name="Darkstalker" type="CharacterBody2D"]
 collision_layer = 128
 collision_mask = 31
 floor_max_angle = 1.10479
 script = ExtResource("1_811do")
-max_health = null
 
 [node name="UI" type="CanvasLayer" parent="."]
 scale = Vector2(0.1, 0.1)
@@ -300,88 +294,6 @@ vframes = 5
 position = Vector2(0, 8.96)
 shape = SubResource("RectangleShape2D_trnwt")
 
-[node name="BehaviourTree" type="Node" parent="." node_paths=PackedStringArray("machine_owner")]
-script = ExtResource("68_xtxc1")
-initial_state = "Idle"
-machine_owner = NodePath("..")
-
-[node name="Attack" type="Node" parent="BehaviourTree"]
-script = ExtResource("5_80dmf")
-hitbox = ExtResource("6_go6rx")
-
-[node name="GroundedAttack" type="Node" parent="BehaviourTree/Attack"]
-script = ExtResource("7_3y84p")
-animation_name = "Basic Attack"
-buffer_window = -1
-buffer_attack = "Dash"
-lunge_distance = 0
-
-[node name="Dash" type="Node" parent="BehaviourTree/Attack"]
-script = ExtResource("8_i3aym")
-dash_speed = 415
-animation_name = "Run"
-
-[node name="Dead" type="Node" parent="BehaviourTree"]
-
-[node name="Fall" type="Node" parent="BehaviourTree"]
-
-[node name="Idle" type="Node" parent="BehaviourTree"]
-script = ExtResource("5_hynad")
-animation_name = "Idle"
-
-[node name="Jump" type="Node" parent="BehaviourTree"]
-
-[node name="Chase" type="Node" parent="BehaviourTree"]
-script = ExtResource("6_eaorf")
-chase_speed = 225
-acceleration = 12
-chase_view_distance = 1000
-animation_name = "Run"
-
-[node name="Wander" type="Node" parent="BehaviourTree"]
-script = ExtResource("7_rh8x5")
-wander_speed = 150
-animation_name = "Run"
-
-[node name="Alert" type="Node" parent="BehaviourTree"]
-script = ExtResource("9_vam36")
-
-[node name="Teleport" type="Node" parent="BehaviourTree"]
-script = ExtResource("13_i43wx")
-animation_name = "Teleport"
-
-[node name="Conditions" type="Node" parent="BehaviourTree" node_paths=PackedStringArray("entity", "state_machine")]
-script = ExtResource("14_qybf2")
-entity = NodePath("../..")
-state_machine = NodePath("..")
-
-[node name="Timers" type="Node" parent="BehaviourTree"]
-
-[node name="Timer" type="Timer" parent="BehaviourTree/Timers"]
-wait_time = 0.1
-one_shot = true
-
-[node name="Raycasts" type="Node" parent="BehaviourTree"]
-
-[node name="LOS" type="RayCast2D" parent="BehaviourTree/Raycasts" node_paths=PackedStringArray("entity")]
-position = Vector2(-12, 10)
-scale = Vector2(-1, 20)
-target_position = Vector2(250, 0)
-collision_mask = 207
-hit_from_inside = true
-script = ExtResource("8_stb7w")
-entity = NodePath("../../..")
-
-[node name="GroundChecker" type="RayCast2D" parent="BehaviourTree/Raycasts" node_paths=PackedStringArray("entity")]
-position = Vector2(14, 10)
-target_position = Vector2(0, 30)
-collision_mask = 2
-hit_from_inside = true
-script = ExtResource("9_s5haw")
-entity = NodePath("../../..")
-
-[node name="Node" type="Node" parent="BehaviourTree"]
-
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
 [node name="SpriteAnimator" type="AnimationPlayer" parent="."]
@@ -400,22 +312,47 @@ position = Vector2(-4.9869, 24.425)
 
 [node name="Debug" type="Node2D" parent="."]
 
-[node name="StateTracker" type="Label" parent="Debug"]
-texture_filter = 1
-offset_left = -36.0
-offset_top = -37.0
-offset_right = 36.0
-offset_bottom = -14.0
-theme_override_fonts/font = ExtResource("8_bxbni")
-text = "State: Idle"
-
 [node name="MotionTracker" type="Label" parent="Debug"]
 texture_filter = 1
 offset_left = -44.0
-offset_top = -53.0
+offset_top = -32.0
 offset_right = 52.0
-offset_bottom = -30.0
+offset_bottom = -9.0
 theme_override_fonts/font = ExtResource("8_bxbni")
 text = "Speed: 10,10"
 
 [node name="Pathfinder" type="NavigationAgent2D" parent="."]
+
+[node name="AI_Tree" parent="." node_paths=PackedStringArray("blackboard") instance=ExtResource("18_t7mad")]
+blackboard = NodePath("@Node@72125")
+
+[node name="Raycasts" type="Node" parent="."]
+
+[node name="LOS" type="RayCast2D" parent="Raycasts" node_paths=PackedStringArray("entity")]
+position = Vector2(-12, 10)
+scale = Vector2(-1, 20)
+target_position = Vector2(250, 0)
+collision_mask = 207
+hit_from_inside = true
+script = ExtResource("8_stb7w")
+entity = NodePath("../..")
+
+[node name="GroundChecker" type="RayCast2D" parent="Raycasts" node_paths=PackedStringArray("entity")]
+position = Vector2(14, 10)
+target_position = Vector2(0, 30)
+collision_mask = 2
+hit_from_inside = true
+script = ExtResource("9_s5haw")
+entity = NodePath("../..")
+
+[node name="Attack" type="Node" parent="." node_paths=PackedStringArray("current_entity")]
+script = ExtResource("8_bsslf")
+hitbox = ExtResource("9_wp7pv")
+current_entity = NodePath("..")
+
+[node name="DetectionSphere" type="Area2D" parent="."]
+collision_mask = 137
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionSphere"]
+position = Vector2(0, 9)
+shape = SubResource("CircleShape2D_duk8c")

@@ -15,8 +15,8 @@ var parent = get_parent()
 @export var duration:int = 10
 
 @onready var parent_state: BaseState = get_parent()
-@onready var state_machine: EntityStateMachine = get_parent().get_parent()
-@onready var hitbox_owner: Entity = state_machine.get_parent()
+@onready var state_machine = get_parent().get_parent()
+@onready var hitbox_owner: Entity 
 @onready var hitbox: CollisionShape2D = get_node("Shape")
 
 var framez = 0.0
@@ -42,6 +42,11 @@ func update_extends():
 	$Shape.position = position
 
 func _ready():
+	if state_machine is EntityStateMachine:
+		hitbox_owner = state_machine.get_parent()
+	else:
+		hitbox_owner = get_parent().get_parent()
+		state_machine = null
 	monitoring = false 
 	hitbox.shape = RectangleShape2D.new()
 	set_physics_process(false)
@@ -61,10 +66,11 @@ func _physics_process(delta:float ) -> void:
 		Engine.time_scale = 1
 		queue_free()
 		return
-	if state_machine.get_current_state() != parent_state:
-		Engine.time_scale = 1
-		queue_free()
-		return
+	if state_machine:
+		if state_machine.get_current_state() != parent_state:
+			Engine.time_scale = 1
+			queue_free()
+			return
 
 func _on_body_entered(body):
 	print(body)

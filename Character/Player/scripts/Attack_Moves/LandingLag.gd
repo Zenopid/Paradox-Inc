@@ -1,12 +1,15 @@
 extends BaseStrike
 
 var lag_duration: int
+@export var default_landing_lag: int = 4
 
 func enter(msg: = {}):
 	entity.anim_player.play("Crouch")
 	attack_state.clear_hitboxes()
 	if msg.has("duration"):
 		lag_duration = msg["duration"]
+	else:
+		lag_duration = default_landing_lag
 
 func input(event):
 	pass

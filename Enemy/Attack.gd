@@ -2,15 +2,10 @@ class_name DarkStalkerAttack extends BaseState
 
 signal new_attack(attack_name)
 
-@export var friction:float = 0.2
-
-@export var enemy_aggression: float = 0.45
-@export var enemy_passivity: float = 0.25
-@export var enemy_defensiveness: float = 0.3
-
 var timer = 10
 
 @export var hitbox: PackedScene
+@export var current_entity: Entity
 
 var frame: int = 0
 
@@ -42,10 +37,10 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	
 func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle_flipper, points, push, hitlag = 1):
 	var hitbox_instance: Hitbox = hitbox.instantiate()
-	if entity.sprite.flip_h:
+	if current_entity.sprite.flip_h:
 		points = Vector2(-points.x, points.y)
 		push = Vector2(-push.x, push.y)
-	var hitbox_location = Vector2(entity.position.x + points.x, entity.position.y + points.y)
+	var hitbox_location = Vector2(current_entity.position.x + points.x, current_entity.position.y + points.y)
 	add_child(hitbox_instance)
 	hitbox_instance.set_parameters(damage, width, height, kb_amount, angle, type, angle_flipper, hitbox_location, duration, push)
 	if active_attack:
