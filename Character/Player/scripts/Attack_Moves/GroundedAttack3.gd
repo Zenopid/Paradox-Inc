@@ -1,7 +1,6 @@
 extends BaseStrike
 
 func physics_process(delta):
-
 	super.physics_process(delta)
 	if frame == 5:
 		if entity.sprite.flip_h:

@@ -19,6 +19,9 @@ var perform_attack_logic:bool = true
 
 @export var lunge_distance:int = 250
 @export var dodge_cancellable:bool = true
+@export var hitstop: int = 3
+
+@export var camera_shake_strength: float = 0
 
 @export_enum("Ground", "Air") var attack_type: String = "Ground"
 
@@ -78,6 +81,8 @@ func on_attack_hit(object):
 	if object is Entity and object != entity:
 		#if the object is of the enity class, but it's not the entity that spawned the hitbox
 		can_cancel = true 
+		if entity is Player:
+			entity.camera.apply_screen_shake(camera_shake_strength)
 
 func start_buffer_attack():
 	if Input.is_action_pressed("left"):

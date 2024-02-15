@@ -28,8 +28,9 @@ func enter(msg: = {}):
 	super.enter()
 	var jump_speed: Vector2 = Vector2(0, jump_velocity)
 	if msg.has("bonus_speed"):
-		jump_speed.x += msg["bonus_speed"].x
-		jump_speed.y += msg["bonus_speed"].y
+		jump_speed += msg["bonus_speed"]
+#		jump_speed.x += msg["bonus_speed"].x
+#		jump_speed.y += msg["bonus_speed"].y
 	if msg.has("can_superjump"):
 		if msg["can_superjump"] == true:
 			jump_speed.y *= superjump_bonus
@@ -57,7 +58,6 @@ func double_jump():
 	entity.motion.y = jump_velocity * double_jump_strength
 	entity.motion.x += double_jump_boost * get_movement_input()
 	remaining_jumps -= 1
-	super.enter()
 
 func get_gravity() -> float:
 	return jump_gravity if entity.motion.y < 0.0 else fall_gravity

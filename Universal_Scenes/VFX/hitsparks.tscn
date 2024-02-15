@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://bvewt1lavbj41"]
+
+[sub_resource type="Gradient" id="Gradient_af2hu"]
+offsets = PackedFloat32Array(0.653333, 0.973333, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.0915751, 0.0915751, 0.0915751, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_20phs"]
+gradient = SubResource("Gradient_af2hu")
+
+[sub_resource type="Curve" id="Curve_rg0mx"]
+max_value = 10.0
+_data = [Vector2(0.102719, 2.42105), 0.0, 0.0, 0, 0, Vector2(1, 0.0315789), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_acj5p"]
+curve = SubResource("Curve_rg0mx")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gqc7q"]
+emission_shape = 1
+emission_sphere_radius = 0.7
+particle_flag_disable_z = true
+gravity = Vector3(200, 0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+scale_min = 1.2
+scale_max = 1.2
+scale_curve = SubResource("CurveTexture_acj5p")
+color = Color(0.894118, 0.937255, 0.960784, 1)
+color_ramp = SubResource("GradientTexture1D_20phs")
+
+[node name="Hitsparks" type="GPUParticles2D"]
+emitting = false
+amount = 20
+process_material = SubResource("ParticleProcessMaterial_gqc7q")
+lifetime = 0.5
+one_shot = true
+speed_scale = 2.0
+explosiveness = 0.75
+fixed_fps = 0

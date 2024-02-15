@@ -42,11 +42,12 @@ func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle
 		push = Vector2(-push.x, push.y)
 	var hitbox_location = Vector2(current_entity.position.x + points.x, current_entity.position.y + points.y)
 	add_child(hitbox_instance)
-	hitbox_instance.set_parameters(damage, width, height, kb_amount, angle, type, angle_flipper, hitbox_location, duration, push)
+	hitbox_instance.set_parameters(damage, width, height, kb_amount, angle, type, angle_flipper, hitbox_location, duration, push, hitlag)
 	if active_attack:
 		hitbox_instance.connect("hitbox_collided", Callable(active_attack, "on_attack_hit"))
 	else:
-		print("there's no attack.")
+		pass
+#		print("there's no attack.")
 	num_of_active_hitboxes += 1
 	return hitbox_instance
 
@@ -81,11 +82,8 @@ func switch_attack(attack_name):
 		active_attack.enter()
 		emit_signal("new_attack",active_attack.name)
 
-func exit_state():
-	state_machine.transition_to("Chase")
-	
 func clear_hitboxes():
-	for nodes in entity.get_children():
+	for nodes in get_children():
 		if nodes is Hitbox:
 			nodes.queue_free()
 

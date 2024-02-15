@@ -4,7 +4,6 @@
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="2_fr27o"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="3_svdxn"]
 [ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Ground_in_Front.gd" id="4_0om0d"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="5_bh21i"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/decorators/time_limiter.gd" id="5_brfy3"]
 [ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Walk_In_Direction.gd" id="6_d7367"]
 [ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Idle.gd" id="7_jl5v3"]
@@ -13,9 +12,10 @@
 [ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Melee.gd" id="8_eabr6"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/decorators/inverter.gd" id="9_7a0x1"]
 [ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Is_Enemy_Close.gd" id="10_12cqp"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/LockRaycasts.gd" id="10_chvab"]
 [ext_resource type="Script" path="res://Enemy/DarkStalker/AI/In_Hitstun.gd" id="10_jc3u3"]
+[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/FlipRays.gd" id="10_mtbyu"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/decorators/cooldown.gd" id="14_wc0do"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/failer.gd" id="15_ivymw"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_random.gd" id="15_up1cr"]
 [ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Set_Chase_Location.gd" id="16_hw3nr"]
 [ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Run_Towards_Target.gd" id="17_j2jcl"]
@@ -23,7 +23,8 @@
 
 [node name="AI_Tree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_2v6jb")
-blackboard = NodePath("@Node@22508")
+enabled = false
+blackboard = NodePath("@Node@22523")
 actor = NodePath("")
 
 [node name="WorldInteractions" type="Node" parent="."]
@@ -35,42 +36,56 @@ script = ExtResource("3_svdxn")
 [node name="Can_See_Entity?" type="Node" parent="WorldInteractions/Fight"]
 script = ExtResource("8_4b7ch")
 
-[node name="Fight_Options" type="Node" parent="WorldInteractions/Fight"]
-script = ExtResource("5_bh21i")
+[node name="FightOptions" type="Node" parent="WorldInteractions/Fight"]
+script = ExtResource("15_up1cr")
 
-[node name="Melee" type="Node" parent="WorldInteractions/Fight/Fight_Options"]
-script = ExtResource("2_fr27o")
+[node name="CloseQuartersMelee" type="Node" parent="WorldInteractions/Fight/FightOptions"]
+script = ExtResource("3_svdxn")
 
-[node name="If_Enemy_Is_Close_Continue" type="Node" parent="WorldInteractions/Fight/Fight_Options/Melee"]
-script = ExtResource("9_7a0x1")
-
-[node name="Is_Enemy_Close?" type="Node" parent="WorldInteractions/Fight/Fight_Options/Melee/If_Enemy_Is_Close_Continue"]
+[node name="Is_Enemy_Close?" type="Node" parent="WorldInteractions/Fight/FightOptions/CloseQuartersMelee"]
 script = ExtResource("10_12cqp")
 
-[node name="Melee" type="Node" parent="WorldInteractions/Fight/Fight_Options/Melee"]
+[node name="PreventMeleeSpam" type="Node" parent="WorldInteractions/Fight/FightOptions/CloseQuartersMelee"]
+script = ExtResource("14_wc0do")
+wait_time = 1.2
+
+[node name="Melee" type="Node" parent="WorldInteractions/Fight/FightOptions/CloseQuartersMelee/PreventMeleeSpam"]
 script = ExtResource("8_eabr6")
 anim_name = "Basic Attack"
 
-[node name="Move" type="Node" parent="WorldInteractions/Fight/Fight_Options"]
-script = ExtResource("2_fr27o")
+[node name="Dash" type="Node" parent="WorldInteractions/Fight/FightOptions"]
+script = ExtResource("3_svdxn")
 
-[node name="Pass_Check_If_Ground_Present" type="Node" parent="WorldInteractions/Fight/Fight_Options/Move"]
-script = ExtResource("9_7a0x1")
+[node name="LockRays" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash"]
+script = ExtResource("10_chvab")
+ray_status = "Lock"
 
-[node name="Ground_in_Front?" type="Node" parent="WorldInteractions/Fight/Fight_Options/Move/Pass_Check_If_Ground_Present"]
+[node name="FlipRay" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash"]
+script = ExtResource("10_mtbyu")
+affected_ray = "Ground Checker"
+
+[node name="Check_If_Ground_Then_Move" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash"]
+script = ExtResource("17_lg8cx")
+repetitions = 5
+
+[node name="SequenceSelector" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash/Check_If_Ground_Then_Move"]
+script = ExtResource("3_svdxn")
+
+[node name="Ground_in_Front?" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash/Check_If_Ground_Then_Move/SequenceSelector"]
 script = ExtResource("4_0om0d")
 
-[node name="TimeLimiterDecorator" type="Node" parent="WorldInteractions/Fight/Fight_Options/Move"]
-script = ExtResource("5_brfy3")
-wait_time = 0.5
-
-[node name="CooldownDecorator" type="Node" parent="WorldInteractions/Fight/Fight_Options/Move/TimeLimiterDecorator"]
-script = ExtResource("14_wc0do")
-wait_time = 4.0
-
-[node name="Move_In_Direction" type="Node" parent="WorldInteractions/Fight/Fight_Options/Move/TimeLimiterDecorator/CooldownDecorator"]
+[node name="Move_In_Direction" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash/Check_If_Ground_Then_Move/SequenceSelector"]
 script = ExtResource("6_d7367")
 movement_speed = -200
+accel_speed = -100
+
+[node name="UnflipRay" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash"]
+script = ExtResource("10_mtbyu")
+affected_ray = "Ground Checker"
+
+[node name="UnlockRays" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash"]
+script = ExtResource("10_chvab")
+ray_status = "Unlock"
 
 [node name="Chase" type="Node" parent="WorldInteractions"]
 script = ExtResource("3_svdxn")
@@ -118,16 +133,13 @@ script = ExtResource("17_lg8cx")
 repetitions = 20
 
 [node name="Wander" type="Node" parent="WorldInteractions/WorldMovement/RepeaterDecorator"]
-script = ExtResource("2_fr27o")
+script = ExtResource("3_svdxn")
 
 [node name="Ground_in_Front?" type="Node" parent="WorldInteractions/WorldMovement/RepeaterDecorator/Wander"]
 script = ExtResource("4_0om0d")
 
-[node name="AlwaysFailDecorator" type="Node" parent="WorldInteractions/WorldMovement/RepeaterDecorator/Wander"]
-script = ExtResource("15_ivymw")
-
-[node name="Move_In_Direction" type="Node" parent="WorldInteractions/WorldMovement/RepeaterDecorator/Wander/AlwaysFailDecorator"]
+[node name="Move_In_Direction" type="Node" parent="WorldInteractions/WorldMovement/RepeaterDecorator/Wander"]
 script = ExtResource("6_d7367")
 
-[node name="Turn_Around" type="Node" parent="WorldInteractions/WorldMovement/RepeaterDecorator/Wander"]
+[node name="Turn_Around" type="Node" parent="WorldInteractions/WorldMovement"]
 script = ExtResource("8_aa4sy")

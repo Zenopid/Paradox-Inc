@@ -130,7 +130,8 @@ func move_and_slide_with_slopes(delta):
 	entity.set_max_slides(1)
 	entity.set_floor_max_angle(PI/2)
 	entity.floor_snap_length = 2
-	entity.set_up_direction(ground_checker.get_collision_normal())
+	if ground_checker.get_collision_normal() != Vector2.ZERO:
+		entity.set_up_direction(ground_checker.get_collision_normal())
 	
 	for i in range(2):
 		entity.move_and_slide()

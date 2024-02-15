@@ -7,7 +7,7 @@ var jump_node: Jump
 var jump_buffer: Timer
 
 @export var buffer_duration: float = 0.6
-
+@export_range(0,1) var bunny_hop_boost: float = 0.05
 var wall_checker: RayCast2D 
 var ground_checker: RayCast2D
 
@@ -42,9 +42,12 @@ func physics_process(delta):
 	entity.motion.y = clamp(entity.motion.y, entity.motion.y + jump_node.get_gravity() * delta, maximum_fall_speed)
 	if grounded():
 		if !jump_buffer.is_stopped():
-			entity.motion.x *= 1.05
-			state_machine.transition_to("Jump")
+			entity.motion.x *= 1 + bunny_hop_boost
+			state_machine.transition_to("Jump", {bonus_speed = Vector2(0, - jump_node.jump_height/2)})
 			jump_buffer.stop()
+			return
+		if Input.is_action_pressed("crouch") and abs(entity.motion.x) >= max_speed and state_machine.get_timer("Slide_Cooldown").is_stopped() and get_movement_input() != 0:
+			state_machine.transition_to("Slide")
 			return
 		entity.motion.x *= 0.8
 		if enter_crouch_state():

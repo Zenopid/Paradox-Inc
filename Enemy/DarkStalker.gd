@@ -14,7 +14,9 @@ signal killed()
 @onready var attack_node: DarkStalkerAttack = get_node_or_null("Attack")
 @onready var speed_tracker =  $Debug/MotionTracker
 @onready var detection_sphere: Area2D = $DetectionSphere
+@onready var hitsparks: GPUParticles2D = $Hitsparks
 
+var currently_attacking:bool = false
 var in_hitstun: bool = false
 var stun_cnt: int = 0
 var spawn_point: Vector2
@@ -55,6 +57,7 @@ func _physics_process(delta):
 	if stun_cnt <= 0:
 		in_hitstun = false
 	speed_tracker.text = "Speed: (" + str(round(motion.x)) + "," + str(round(motion.y)) + ")"
+	
 
 func set_spawn(location: Vector2):
 	spawn_point = location
@@ -63,7 +66,7 @@ func _set_health(value):
 	var prev_health = health
 	health = clamp(value, 0, max_health)
 	if health != prev_health:
-		emit_signal("health_updated", health)
+		emit_signal("health_updated", health, 5)
 		if health <= 0:
 			kill()
 			emit_signal("killed")
@@ -73,7 +76,8 @@ func damage(amount, knockback: int = 0, knockback_angle: int = 0, hitstun: int =
 	stun_cnt = hitstun
 	_set_health(health - amount)
 	effects_animation.play("Damaged")
-	effects_animation.queue("Invincible")
+	hitsparks.emitting = true
+	
 
 func heal(amount):
 	_set_health(health + amount)
@@ -85,6 +89,9 @@ func kill():
 	queue_free()
 	
 func get_raycast(ray_name):
+	if ray_name == "Ground Checker":
+		ray_name = "GroundChecker"
+	#some code is calling it that, don't know why.
 	var raycast:RayCast2D = get_node("Raycasts").get_node(ray_name)
 	if raycast:
 		return raycast
@@ -107,7 +114,9 @@ func create_hitbox(width,height,damage, kb_amount, angle, duration, type, angle_
 
 func player_near():
 	for i in detection_sphere.get_overlapping_bodies():
-		print(i)
 		if i is Player:
 			return true
 	return false
+
+func clear_hitboxes():
+	get_node("Attack").clear_hitboxes()

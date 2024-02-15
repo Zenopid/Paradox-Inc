@@ -29,12 +29,6 @@ func _physics_process(delta):
 	if !view_locked:
 		position.x = entity.position.x + (12 * facing)
 		target_position = target_position * facing 
-#		if entity.sprite.flip_h: 
-#			position.x = entity.position.x - 12
-#			target_position.x = vision_distance
-#		else:
-#			position.x = entity.position.x + 12
-#			target_position.x = -vision_distance
 		position.y = entity.position.y + 10
 	if is_colliding():
 		var object = get_collider()

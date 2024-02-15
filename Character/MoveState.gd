@@ -15,7 +15,7 @@ var ground_checker: RayCast2D
 @onready var slope_ray_right: RayCast2D
 @onready var slope_ray_left: RayCast2D
 
-var DECEL_VALUE: float = 0.45
+var DECEL_VALUE: float = 0.6
 
 var test_num: int = 0
 

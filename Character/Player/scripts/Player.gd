@@ -11,6 +11,7 @@ signal killed()
 @onready var death_screen = $UI/DeathScreen
 @onready var health_bar = $UI/HealthBar
 @onready var sprite: AnimatedSprite2D = get_node("AnimatedSprite2D")
+@onready var camera: Camera2D = $Camera2D
 
 @export var slow_down: float = 0.1
 @export var max_health: int = 100
@@ -38,13 +39,8 @@ func _ready():
 
 func _physics_process(delta):
 	super._physics_process(delta)
-	if Input.is_action_pressed("slow_time"):
-		Engine.time_scale = slow_down
-	else:
-		Engine.time_scale = 1
 	if Input.is_action_just_pressed("options"):
 		_on_button_pressed()
-	
 
 func set_spawn(location: Vector2, res_timeline: String = "Future"):
 	spawn_point = location
@@ -87,4 +83,5 @@ func death_logic():
 func respawn():
 	position = spawn_point
 	get_level().set_timeline(respawn_timeline)
+	motion = Vector2.ZERO
 	states.transition_to("Fall")

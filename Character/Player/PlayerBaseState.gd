@@ -82,4 +82,3 @@ func grounded():
 	if ground_checker.is_colliding() or entity.is_on_floor():
 		return true
 	return false
-	

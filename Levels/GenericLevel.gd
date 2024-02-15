@@ -6,6 +6,7 @@ class_name GenericLevel extends Node
 @onready var past_tileset: TileSet
 @onready var music_player = $BGM
 
+
 @export var current_timeline: String = "Future"
 
 signal swapped_timeline(new_timeline)
@@ -30,11 +31,11 @@ func _ready():
 					music_playlist.append(load(folder_path + music_file))
 	future_tileset = future.tile_set
 	past_tileset = past.tile_set
-	for i in 2:
+	for i in 4:
 		set_timeline(get_next_timeline_swap())
+	#this should just set it back to the og timeline, but for some reason this just fixes stuff with wall slide not working
 	
-
-func _physics_process(delta):
+func _input(event):
 	if Input.is_action_just_pressed("play_music"):
 		if music_player.playing:
 			music_player.stop()
@@ -42,8 +43,26 @@ func _physics_process(delta):
 			var index = randi() % music_playlist.size()
 			music_player.stream = music_playlist[index]
 			music_player.play()
+		return
 	if Input.is_action_just_pressed("swap_timeline"):
 		set_timeline(get_next_timeline_swap())
+		return
+	var old_timeline = get(str(current_timeline.to_lower()))
+	var new_timeline = get(str(get_next_timeline_swap().to_lower()))
+	if Input.is_action_pressed("view_timeline"):
+		if new_timeline:
+			new_timeline.visible = true
+			new_timeline.modulate.a = 1
+		if old_timeline:
+			old_timeline.modulate.a = 0.15
+	else:
+		if new_timeline:
+			new_timeline.visible = false
+			new_timeline.modulate.a = 1
+		if old_timeline:
+			old_timeline.modulate.a = 1
+
+func _physics_process(delta):
 	var old_timeline = get(str(current_timeline.to_lower()))
 	var new_timeline = get(str(get_next_timeline_swap().to_lower()))
 	if Input.is_action_pressed("view_timeline"):

@@ -4,5 +4,6 @@ extends ConditionLeaf
 
 func tick(actor: Node, _blackboard: Blackboard) -> int:
 	if actor.player_near():
+#		print_debug("Player's nearby")
 		return SUCCESS
 	return FAILURE

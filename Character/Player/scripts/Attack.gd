@@ -49,12 +49,11 @@ func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle
 		push = Vector2(-push.x, push.y)
 	var hitbox_location = Vector2(entity.position.x + points.x, entity.position.y + points.y)
 	add_child(hitbox_instance)
-	hitbox_instance.set_parameters(damage, width, height, kb_amount, angle, type, angle_flipper, hitbox_location, duration, push)
+	hitbox_instance.set_parameters(damage, width, height, kb_amount, angle, type, angle_flipper, hitbox_location, duration, push, hitlag)
 	if active_attack:
 		hitbox_instance.connect("hitbox_collided", Callable(active_attack, "on_attack_hit"))
 	else:
 		print("there's no attack.")
-	num_of_active_hitboxes += 1
 	return hitbox_instance
 
 func enter(msg: = {}):
@@ -68,9 +67,8 @@ func enter(msg: = {}):
 		switch_attack("GroundedAttack1")
 	else:
 		if Input.is_action_pressed("crouch"):
-			switch_attack("GroundPound")
-		else:
-			switch_attack("AirAttack1")
+			return switch_attack("GroundPound")
+		switch_attack("AirAttack1")
 
 func on_attack_hit(object):
 	pass
@@ -87,7 +85,7 @@ func physics_process(delta: float) -> void:
 	default_move_and_slide()
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	
-func switch_attack(attack_name):
+func switch_attack(attack_name) -> bool:
 	if active_attack:
 		active_attack.exit()
 	if has_node(attack_name):
@@ -95,6 +93,8 @@ func switch_attack(attack_name):
 	if active_attack:
 		active_attack.enter()
 		emit_signal("new_attack",active_attack.name)
+		return true
+	return false
 
 func exit_state():
 	if Input.is_action_pressed("jump"):

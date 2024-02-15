@@ -7,7 +7,7 @@ extends BaseStrike
 var attack_status: String 
 
 var fall_distance: int
-var starting_position: int
+var starting_position: float
 
 var ground_pound_damage: int
 
@@ -31,8 +31,7 @@ func change_status(new_status):
 
 
 func physics_process(delta):
-	print(attack_status)
-	var additional_damage = min(maximum_damage, entity.position.y - starting_position)
+	var additional_damage = min(maximum_damage, abs(entity.position.y - starting_position))
 	ground_pound_damage = clamp(ground_pound_damage, minimum_damage, additional_damage)
 	match attack_status:
 		"Start":
@@ -41,6 +40,7 @@ func physics_process(delta):
 			entity.motion.y = fall_speed
 	if entity.is_on_floor():
 		if !has_hit_ground:
+			entity.camera.apply_screen_shake(camera_shake_strength)
 			entity.anim_player.disconnect("animation_finished", Callable(self, "change_status"))
 			entity.anim_player.play("GroundPoundLand")
 			entity.anim_player.connect("animation_finished", Callable(self, "_on_attack_over"))
