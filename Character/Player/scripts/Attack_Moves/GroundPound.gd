@@ -13,6 +13,8 @@ var ground_pound_damage: int
 
 var has_hit_ground: bool = false
 
+@export var height_scaler: float = 0.25
+
 func enter(_msg: = {}):
 	has_hit_ground = false
 	if !entity.anim_player.is_connected("animation_finished", Callable(self, "change_status")):
@@ -20,7 +22,7 @@ func enter(_msg: = {}):
 	entity.anim_player.play("GroundPoundStart")
 	entity.anim_player.queue("GroundPoundLoop")
 	attack_status = "Start"
-	starting_position = entity.position.y
+	starting_position = entity.global_position.y
 
 func change_status(new_status):
 	match attack_status:
@@ -31,8 +33,8 @@ func change_status(new_status):
 
 
 func physics_process(delta):
-	var additional_damage = min(maximum_damage, abs(entity.position.y - starting_position))
-	ground_pound_damage = clamp(ground_pound_damage, minimum_damage, additional_damage)
+	var additional_damage = roundi(min(maximum_damage, abs((entity.global_position.y - starting_position) * height_scaler )))
+	ground_pound_damage = min(maximum_damage, minimum_damage + additional_damage)
 	match attack_status:
 		"Start":
 			entity.motion *= 0.15
@@ -40,11 +42,12 @@ func physics_process(delta):
 			entity.motion.y = fall_speed
 	if entity.is_on_floor():
 		if !has_hit_ground:
-			entity.camera.apply_screen_shake(camera_shake_strength)
 			entity.anim_player.disconnect("animation_finished", Callable(self, "change_status"))
 			entity.anim_player.play("GroundPoundLand")
 			entity.anim_player.connect("animation_finished", Callable(self, "_on_attack_over"))
 			has_hit_ground = true
 			change_status("Landing")
 			attack_state.create_hitbox(39.625, 14.01,ground_pound_damage,1, 180, 4, "Normal", 1, Vector2(-1.375, 10.505), Vector2(700, -500))
+			entity.camera.set_shake(0.5)
+			print(str(ground_pound_damage) + " is the ground pound's damage.")
 	super.physics_process(delta)

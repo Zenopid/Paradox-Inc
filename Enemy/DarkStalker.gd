@@ -76,7 +76,10 @@ func damage(amount, knockback: int = 0, knockback_angle: int = 0, hitstun: int =
 	stun_cnt = hitstun
 	_set_health(health - amount)
 	effects_animation.play("Damaged")
-	hitsparks.emitting = true
+	if hitsparks.emitting == false:
+		hitsparks.emitting = true
+	else:
+		hitsparks.restart()
 	
 
 func heal(amount):

@@ -11,7 +11,7 @@ signal killed()
 @onready var death_screen = $UI/DeathScreen
 @onready var health_bar = $UI/HealthBar
 @onready var sprite: AnimatedSprite2D = get_node("AnimatedSprite2D")
-@onready var camera: Camera2D = $Camera2D
+@onready var camera: Camera2DPlus = $Camera
 
 @export var slow_down: float = 0.1
 @export var max_health: int = 100
@@ -19,6 +19,9 @@ signal killed()
 var respawn_timeline: String = "Future"
 
 var spawn_point: Vector2
+#
+#func set_camera(camera_name: Camera2DPlus):
+#	camera = camera_name
 
 func get_spawn():
 	return spawn_point
@@ -39,8 +42,12 @@ func _ready():
 
 func _physics_process(delta):
 	super._physics_process(delta)
+
+func _input(event):
 	if Input.is_action_just_pressed("options"):
 		_on_button_pressed()
+	if Input.is_action_pressed("slow_time"):
+		Engine.time_scale = slow_down
 
 func set_spawn(location: Vector2, res_timeline: String = "Future"):
 	spawn_point = location
@@ -57,13 +64,14 @@ func _set_health(value):
 		if health <= 0:
 			kill()
 			emit_signal("killed")
-#func damage(amount, knockback: int = 0, knockback_angle: int = 0):
+
 func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0):
 	if invlv_timer.is_stopped():
 		invlv_timer.start()
 		_set_health(health - amount)
 		effects_aniamtion.play("Damaged")
 		effects_aniamtion.queue("Invincible")
+		camera.flash()
 
 func heal(amount):
 	_set_health(health + amount)
@@ -85,3 +93,4 @@ func respawn():
 	get_level().set_timeline(respawn_timeline)
 	motion = Vector2.ZERO
 	states.transition_to("Fall")
+

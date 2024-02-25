@@ -58,7 +58,6 @@
 [ext_resource type="Texture2D" uid="uid://ivfxm5n0n0ws" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-stand-00.png" id="24_54rwl"]
 [ext_resource type="Texture2D" uid="uid://t0manrexua1k" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-stand-01.png" id="25_tuiwy"]
 [ext_resource type="Texture2D" uid="uid://drireukm1148j" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-stand-02.png" id="26_soet1"]
-[ext_resource type="Script" path="res://Character/Player/scripts/PlayerCamera.gd" id="28_8ueg6"]
 [ext_resource type="Texture2D" uid="uid://ccbif7dfcjui3" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack1-00.png" id="29_j8cjw"]
 [ext_resource type="Texture2D" uid="uid://qe255yxdmps5" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack1-01.png" id="30_ykcdw"]
 [ext_resource type="Texture2D" uid="uid://cl5ja5ry34gou" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-wall-slide-00.png" id="31_qgiff"]
@@ -95,7 +94,6 @@
 [ext_resource type="Script" path="res://Character/Player/scripts/PortalState.gd" id="57_2qvn5"]
 [ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="58_tx02o"]
 [ext_resource type="Script" path="res://Levels/Backgrounds.gd" id="58_wunj3"]
-[ext_resource type="Texture2D" uid="uid://cmvmd1suu7ptj" path="res://Sprites/Sidescroller Shooter - Central City/Background/Base Color.png" id="59_l462v"]
 [ext_resource type="Texture2D" uid="uid://dfl65b0g1jhq8" path="res://Sprites/Stages/Tiles/Assets/Background_2.png" id="60_ihivh"]
 [ext_resource type="PackedScene" uid="uid://dicbkcloxwqty" path="res://Character/Player/Scenes/portal.tscn" id="62_csbhp"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundedAttack1.gd" id="71_wsv55"]
@@ -105,6 +103,8 @@
 [ext_resource type="Script" path="res://Character/Player/Scenes/AirAttack2.gd" id="82_s6fht"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/LandingLag.gd" id="83_pq2wu"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundPound.gd" id="89_tqgg8"]
+[ext_resource type="Texture2D" uid="uid://cmvmd1suu7ptj" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Base Color.png" id="104_w3v4d"]
+[ext_resource type="PackedScene" uid="uid://d18ny0w4wlb1h" path="res://Universal_Scenes/camera.tscn" id="105_tcjc0"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vmqdd"]
 animations = [{
@@ -1809,14 +1809,6 @@ animation = &"Idle"
 position = Vector2(0, 3.5)
 shape = SubResource("RectangleShape2D_b022k")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(1.2, 1.2)
-process_callback = 0
-drag_horizontal_enabled = true
-drag_vertical_enabled = true
-script = ExtResource("28_8ueg6")
-shake_fade = 2.0
-
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("machine_owner")]
 script = ExtResource("2_pa1y2")
 initial_state = "Idle"
@@ -1845,7 +1837,7 @@ script = ExtResource("73_5exvu")
 animation_name = "Grounded_Attack_3"
 lunge_distance = 350
 hitstop = 9
-camera_shake_strength = 5.0
+camera_shake_strength = 0.5
 
 [node name="AirAttack1" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("74_kxsit")
@@ -1870,8 +1862,11 @@ attack_type = "Air"
 [node name="GroundPound" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("89_tqgg8")
 fall_speed = 800
+minimum_damage = 15
+maximum_damage = 45
+height_scaler = 0.1
 hitstop = 7
-camera_shake_strength = 2000.0
+camera_shake_strength = 5.0
 attack_type = "Air"
 
 [node name="LandingLag" type="Node" parent="StateMachine/Attack"]
@@ -2053,15 +2048,6 @@ one_shot = true
 [node name="Backgrounds" type="ParallaxBackground" parent="."]
 script = ExtResource("58_wunj3")
 
-[node name="FutureBackground" type="ParallaxLayer" parent="Backgrounds"]
-motion_scale = Vector2(0, 0)
-
-[node name="Sprite2D" type="Sprite2D" parent="Backgrounds/FutureBackground"]
-texture_filter = 1
-scale = Vector2(2.4, 2.025)
-texture = ExtResource("59_l462v")
-centered = false
-
 [node name="PastBackground" type="ParallaxLayer" parent="Backgrounds"]
 motion_scale = Vector2(0, 0)
 
@@ -2072,8 +2058,22 @@ scale = Vector2(2.3246, 2.37132)
 texture = ExtResource("60_ihivh")
 centered = false
 
+[node name="FutureBackground" type="ParallaxLayer" parent="Backgrounds"]
+motion_scale = Vector2(0, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Backgrounds/FutureBackground"]
+texture_filter = 1
+scale = Vector2(2.4, 2.025)
+texture = ExtResource("104_w3v4d")
+centered = false
+
 [node name="GroundChecker" type="Node2D" parent="."]
 position = Vector2(-8.561, 17.55)
+
+[node name="Camera" parent="." instance=ExtResource("105_tcjc0")]
+ignore_rotation = false
+enabled = true
+process_callback = 0
 
 [connection signal="pressed" from="UI/MenuButton" to="." method="_on_button_pressed"]
 [connection signal="timeout" from="Invlv_Timer" to="." method="_on_invlv_timer_timeout"]

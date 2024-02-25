@@ -3,6 +3,9 @@ class_name Hitbox extends Area2D
 signal hitbox_collided(object)
 
 var parent = get_parent()
+
+var CLASH_RANGE: int = 5
+
 @export var damage: int = 100
 @export var knockback_angle: int = 1
 @export var knockback_amount: int = 1
@@ -68,22 +71,33 @@ func _physics_process(delta:float ) -> void:
 			return
 
 func _on_body_entered(body):
-#	print(body)
-#	for i in get_overlapping_bodies():
-#		print(i)
 	if body is RigidBody2D:
-#		print(hitbox.position) 
-#		print("---------------------------------------------------------------")
-#		print(hitbox_owner.position)
 		body.call_deferred("apply_central_impulse",object_push)
 		emit_signal("hitbox_collided", body)
 		body.damage(damage)
 	elif body is Entity:
 		if body != hitbox_owner:
-			body.damage(damage, knockback_amount, knockback_angle)
-			emit_signal("hitbox_collided", body)
-			GenericManager.apply_hitstop(hit_stop)
+			damage_entity(body)
 	elif body is Hitbox:
-		if body.hitbox_owner != hitbox_owner:
-			print("CLASH")
-#	print("You hit a " + str(body.name) + " with a push of " + str(object_push))
+		#Check to see if one person is actually hitting the other.
+		for i in get_overlapping_bodies():
+			if i == body.get_parent():
+				if i is Entity:
+					#If hitbox A is hitting hitbox B and hurtbox B, 
+					#but hitbox B is only hitting hitbox A,
+					#Person B takes the damage. Hopefully.
+					damage_entity(body)
+					return
+		#Then we check to see if they're the same type.
+		if attack_type == body.attack_type:
+			#If they're the same type, they can clash, and we move on.
+			if abs(body.damage  - damage) <=  CLASH_RANGE:
+				#If they're around the same damage, then we clash, and both hitboxes dissapear.
+				body.queue_free()
+				self.queue_free()
+				print_debug("CLASH")
+
+func damage_entity(body):
+	body.damage(damage, knockback_amount, knockback_angle)
+	emit_signal("hitbox_collided", body)
+	GlobalScript.apply_hitstop(hit_stop)

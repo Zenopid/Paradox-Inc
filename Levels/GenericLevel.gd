@@ -16,8 +16,15 @@ var music_playlist = []
 var restarting_level = false
 
 var box_scene = preload("res://Universal_Scenes/Interactables/box.tscn")
-
+var darkstalker_scene = preload("res://Enemy/Darkstalker.tscn")
 func _ready():
+	load_music()
+	future_tileset = future.tile_set
+	past_tileset = past.tile_set
+	set_timeline(current_timeline)
+	#this should just set it back to the og timeline, but for some reason this just fixes stuff with wall slide not working
+
+func load_music():
 	var folder_path = "res://audio/bgm/"
 	var dir = DirAccess.open(folder_path)
 	if dir:
@@ -29,12 +36,7 @@ func _ready():
 			elif not music_file.begins_with("."):
 				if music_file.ends_with(".wav") || music_file.ends_with(".mp3"):
 					music_playlist.append(load(folder_path + music_file))
-	future_tileset = future.tile_set
-	past_tileset = past.tile_set
-	for i in 4:
-		set_timeline(get_next_timeline_swap())
-	#this should just set it back to the og timeline, but for some reason this just fixes stuff with wall slide not working
-	
+
 func _input(event):
 	if Input.is_action_just_pressed("play_music"):
 		if music_player.playing:
@@ -65,18 +67,18 @@ func _input(event):
 func _physics_process(delta):
 	var old_timeline = get(str(current_timeline.to_lower()))
 	var new_timeline = get(str(get_next_timeline_swap().to_lower()))
-	if Input.is_action_pressed("view_timeline"):
-		if new_timeline:
-			new_timeline.visible = true
-			new_timeline.modulate.a = 1
-		if old_timeline:
-			old_timeline.modulate.a = 0.15
-	else:
-		if new_timeline:
-			new_timeline.visible = false
-			new_timeline.modulate.a = 1
-		if old_timeline:
-			old_timeline.modulate.a = 1
+#	if Input.is_action_pressed("view_timeline"):
+#		if new_timeline:
+#			new_timeline.visible = true
+#			new_timeline.modulate.a = 1
+#		if old_timeline:
+#			old_timeline.modulate.a = 0.15
+#	else:
+#		if new_timeline:
+#			new_timeline.visible = false
+#			new_timeline.modulate.a = 1
+#		if old_timeline:
+#			old_timeline.modulate.a = 1
 #		future.visible = true
 #		past.visible = true
 #		match current_timeline:
@@ -127,11 +129,11 @@ func set_timeline(new_timeline):
 					alt_timeline.set_physics_layer_collision_layer(layers,0)
 		var starting_timeline = get(current_timeline.to_lower())
 		for layers in starting_timeline.tile_set.get_physics_layers_count():
-			starting_timeline.tile_set.set_physics_layer_collision_layer(layers, 2)
-
+			for i in 32:
+				starting_timeline.tile_set.set_physics_layer_collision_layer(layers, i)
+				
 func get_start_point():
 	return $SpawnPoint.position
-
 
 func _on_spawner_pressed():
 	var box_instance = box_scene.instantiate()
@@ -153,3 +155,14 @@ func _on_clear_box_pressed():
 
 func get_current_timeline():
 	return current_timeline
+
+func _on_spawn_enemy_pressed():
+	var enemy_instance: Enemy = darkstalker_scene.instantiate()
+	enemy_instance.current_timeline = get_current_timeline()
+	enemy_instance.position = $EnemySpawnerPoint.position
+	add_child(enemy_instance)
+
+func _on_clear_enemy_pressed():
+	for nodes in get_children():
+		if nodes is Enemy:
+			nodes.queue_free()

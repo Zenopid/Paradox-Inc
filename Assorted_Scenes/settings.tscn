@@ -1,0 +1,362 @@
+[gd_scene load_steps=8 format=3 uid="uid://do42anfb1sgba"]
+
+[ext_resource type="Script" path="res://Assorted_Scenes/Settings.gd" id="1_a66a5"]
+[ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="2_ceyak"]
+[ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="3_wcyc0"]
+[ext_resource type="PackedScene" uid="uid://cvmbeu5a133sy" path="res://Universal_Scenes/UI/custom_check_button.tscn" id="4_3nxqt"]
+[ext_resource type="AudioStream" uid="uid://32tolnox4aiu" path="res://audio/bgm/alt_battle_theme_2.wav" id="4_wiew8"]
+[ext_resource type="PackedScene" uid="uid://c2t80n81t81dn" path="res://Universal_Scenes/UI/dropdown_box.tscn" id="5_7eqmf"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_1n1pp"]
+color = Color(0, 0.741176, 1, 1)
+thickness = 2
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_a66a5")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.878431, 0.996078, 1, 1)
+
+[node name="ReturnButton" parent="." instance=ExtResource("2_ceyak")]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -92.0
+offset_top = -27.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Return"
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+layout_mode = 2
+offset_left = 51.0
+offset_top = 48.0
+offset_right = 1103.0
+offset_bottom = 596.0
+rotation = 0.00223235
+color = Color(0.110667, 0.08, 1, 1)
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 50.0
+offset_top = 50.0
+offset_right = -50.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Audio" type="VBoxContainer" parent="TabContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Audio"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="Master Volume" type="HBoxContainer" parent="TabContainer/Audio"]
+layout_mode = 2
+
+[node name="Master_Volume" type="Label" parent="TabContainer/Audio/Master Volume"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "Game Volume "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Master_Slider" type="HSlider" parent="TabContainer/Audio/Master Volume" groups=["Music Sliders"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+max_value = 1.0
+step = 0.05
+value = 0.5
+ticks_on_borders = true
+
+[node name="Game_Test" parent="TabContainer/Audio/Master Volume" groups=["Music Testers"] instance=ExtResource("2_ceyak")]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Test Game"
+
+[node name="Test_Music" type="AudioStreamPlayer" parent="TabContainer/Audio/Master Volume" groups=["Audio"]]
+stream = ExtResource("4_wiew8")
+
+[node name="Divider2" type="HSeparator" parent="TabContainer/Audio"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="SFX" type="HBoxContainer" parent="TabContainer/Audio"]
+layout_mode = 2
+
+[node name="SFX_Volume" type="Label" parent="TabContainer/Audio/SFX"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+SFX Volume "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SFX_Slider" type="HSlider" parent="TabContainer/Audio/SFX" groups=["Music Sliders"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+max_value = 1.0
+step = 0.05
+value = 1.0
+ticks_on_borders = true
+
+[node name="SFX_Test" parent="TabContainer/Audio/SFX" groups=["Music Testers"] instance=ExtResource("2_ceyak")]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Test SFX  "
+
+[node name="Test_Music" type="AudioStreamPlayer" parent="TabContainer/Audio/SFX" groups=["Audio"]]
+stream = ExtResource("4_wiew8")
+bus = &"Sfx"
+
+[node name="Divider" type="HSeparator" parent="TabContainer/Audio"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="Music" type="HBoxContainer" parent="TabContainer/Audio"]
+layout_mode = 2
+
+[node name="Test_Music" type="AudioStreamPlayer" parent="TabContainer/Audio/Music" groups=["Audio"]]
+stream = ExtResource("4_wiew8")
+bus = &"Music"
+
+[node name="Music_Volume" type="Label" parent="TabContainer/Audio/Music"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "Music Volume "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Music_Slider" type="HSlider" parent="TabContainer/Audio/Music" groups=["Music Sliders"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+max_value = 1.0
+step = 0.05
+value = 1.0
+ticks_on_borders = true
+
+[node name="Music_Test" parent="TabContainer/Audio/Music" groups=["Music Testers"] instance=ExtResource("2_ceyak")]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Test Music"
+
+[node name="Visual" type="VBoxContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Visual"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="CameraFlash" type="HBoxContainer" parent="TabContainer/Visual"]
+layout_mode = 2
+
+[node name="CameraFlashing" type="Label" parent="TabContainer/Visual/CameraFlash"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Camera Flash"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnableCameraFlashing" parent="TabContainer/Visual/CameraFlash" instance=ExtResource("4_3nxqt")]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Divider" type="HSeparator" parent="TabContainer/Visual"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="CameraShake" type="HBoxContainer" parent="TabContainer/Visual"]
+layout_mode = 2
+
+[node name="CameraShaking" type="Label" parent="TabContainer/Visual/CameraShake"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = " Camera Shake"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnableCameraShaking" parent="TabContainer/Visual/CameraShake" instance=ExtResource("4_3nxqt")]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Divider2" type="HSeparator" parent="TabContainer/Visual"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="EnableVSync" type="HBoxContainer" parent="TabContainer/Visual"]
+layout_mode = 2
+
+[node name="CameraShaking" type="Label" parent="TabContainer/Visual/EnableVSync"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+VSync"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnableVsync" parent="TabContainer/Visual/EnableVSync" instance=ExtResource("4_3nxqt")]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Divider4" type="HSeparator" parent="TabContainer/Visual"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="EnableFullscreen" type="HBoxContainer" parent="TabContainer/Visual"]
+layout_mode = 2
+
+[node name="Fullscreen" type="Label" parent="TabContainer/Visual/EnableFullscreen"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Fullscreen"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnableFullscreen" parent="TabContainer/Visual/EnableFullscreen" instance=ExtResource("4_3nxqt")]
+layout_mode = 2
+size_flags_horizontal = 2
+button_pressed = false
+
+[node name="Divider3" type="HSeparator" parent="TabContainer/Visual"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="ChangeResolution" type="HBoxContainer" parent="TabContainer/Visual"]
+layout_mode = 2
+
+[node name="Resolution" type="Label" parent="TabContainer/Visual/ChangeResolution"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Resolution"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResolutionOptions" parent="TabContainer/Visual/ChangeResolution" instance=ExtResource("5_7eqmf")]
+custom_minimum_size = Vector2(125, 0)
+layout_mode = 2
+
+[node name="Controls" type="VBoxContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Controls"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="Divider" type="HSeparator" parent="TabContainer/Controls"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="Divider2" type="HSeparator" parent="TabContainer/Controls"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="Divider4" type="HSeparator" parent="TabContainer/Controls"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="Divider3" type="HSeparator" parent="TabContainer/Controls"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="Apply" parent="." instance=ExtResource("2_ceyak")]
+layout_mode = 2
+offset_left = 550.0
+offset_top = 580.0
+offset_right = 602.0
+offset_bottom = 598.0
+size_flags_horizontal = 4
+size_flags_vertical = 10
+size_flags_stretch_ratio = 0.0
+text = " Apply "
+
+[connection signal="pressed" from="ReturnButton" to="." method="_on_return_button_pressed"]
+[connection signal="value_changed" from="TabContainer/Audio/Master Volume/Master_Slider" to="." method="_on_master_slider_value_changed"]
+[connection signal="pressed" from="TabContainer/Audio/Master Volume/Game_Test" to="." method="_on_game_test_pressed"]
+[connection signal="value_changed" from="TabContainer/Audio/SFX/SFX_Slider" to="." method="_on_sfx_slider_value_changed"]
+[connection signal="value_changed" from="TabContainer/Audio/Music/Music_Slider" to="." method="_on_sfx_slider_value_changed"]
+[connection signal="toggled" from="TabContainer/Visual/CameraFlash/EnableCameraFlashing" to="." method="_on_enable_camera_flashing_toggled"]
+[connection signal="toggled" from="TabContainer/Visual/CameraShake/EnableCameraShaking" to="." method="_on_enable_camera_shaking_toggled"]
+[connection signal="toggled" from="TabContainer/Visual/EnableVSync/EnableVsync" to="." method="_on_enable_vsync_toggled"]
+[connection signal="toggled" from="TabContainer/Visual/EnableFullscreen/EnableFullscreen" to="." method="_on_enable_fullscreen_toggled"]
+[connection signal="resolution_changed" from="TabContainer/Visual/ChangeResolution/ResolutionOptions" to="." method="_on_resolution_options_resolution_changed"]
+[connection signal="pressed" from="Apply" to="." method="_on_apply_pressed"]

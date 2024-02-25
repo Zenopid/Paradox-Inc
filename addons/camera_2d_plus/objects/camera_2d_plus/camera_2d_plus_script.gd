@@ -63,6 +63,7 @@ func _ready() -> void:
 	flash_rect.name = "FlashRect" # Updating the name of the new ColorRect.
 	flash_rect.size = get_viewport_rect().size # Updating the size of the new ColorRect to make it cover the entire screen.
 	flash_rect.color = Color.TRANSPARENT # Updating the color of the new ColorRect.
+	flash_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	flash_layer.call_deferred("add_child", flash_rect) # Adding the new ColorRect to the scene.
 	
 	top_rect = ColorRect.new() # Creating a new ColorRect.
@@ -70,6 +71,7 @@ func _ready() -> void:
 	top_rect.size = get_viewport_rect().size # Updating the size of the new ColorRect to make it cover the entire screen.
 	top_rect.color = Color.BLACK # Updating the color of the new ColorRect.
 	top_rect.global_position.y = -get_viewport_rect().size.y # Updating the position of the new ColorRect.
+	top_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cinematic_layer.call_deferred("add_child", top_rect) # Adding the new ColorRect to the scene.
 	
 	bottom_rect = ColorRect.new() # Creating a new ColorRect.
@@ -77,6 +79,7 @@ func _ready() -> void:
 	bottom_rect.size = get_viewport_rect().size # Updating the size of the new ColorRect to make it cover the entire screen.
 	bottom_rect.color = Color.BLACK # Updating the color of the new ColorRect.
 	bottom_rect.global_position.y = get_viewport_rect().size.y # Updating the position of the new ColorRect.
+	bottom_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cinematic_layer.call_deferred("add_child", bottom_rect) # Adding the new ColorRect to the scene.
 	
 	left_rect = ColorRect.new() # Creating a new ColorRect.
@@ -84,6 +87,7 @@ func _ready() -> void:
 	left_rect.size = get_viewport_rect().size # Updating the size of the new ColorRect to make it cover the entire screen.
 	left_rect.color = Color.BLACK # Updating the color of the new ColorRect.
 	left_rect.global_position.x = -get_viewport_rect().size.x # Updating the position of the new ColorRect.
+	left_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cinematic_layer.call_deferred("add_child", left_rect) # Adding the new ColorRect to the scene.
 	
 	right_rect = ColorRect.new() # Creating a new ColorRect.
@@ -91,6 +95,7 @@ func _ready() -> void:
 	right_rect.size = get_viewport_rect().size # Updating the size of the new ColorRect to make it cover the entire screen.
 	right_rect.color = Color.BLACK # Updating the color of the new ColorRect.
 	right_rect.global_position.x = get_viewport_rect().size.x # Updating the position of the new ColorRect.
+	right_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cinematic_layer.call_deferred("add_child", right_rect) # Adding the new ColorRect to the scene.
 
 

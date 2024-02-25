@@ -30,6 +30,7 @@ var ground_checker:RayCast2D
 
 var position_tracker:int 
 
+
 func enter(_msg: = {}):
 	super.enter()
 	ground_checker = state_machine.get_raycast("GroundChecker")
@@ -46,13 +47,17 @@ func enter(_msg: = {}):
 		slide_direction = 1
 	current_slide_duration = slide_duration
 
-func process(delta):
+func speed_timer_logic(delta):
 	if hit_max_speed:
 		current_slide_duration -= delta
 		if current_slide_duration < 0:
 			current_slide_duration = 0
 
 func physics_process(delta):
+	
+	speed_timer_logic(delta)
+	
+	
 	state_machine.get_raycast("SlopeCheckerRight").position = Vector2(entity.position.x + 1, entity.position.y + 13.5)
 	state_machine.get_raycast("SlopeCheckerLeft").position = Vector2(entity.position.x - 1, entity.position.y + 13.5)
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
@@ -85,10 +90,14 @@ func physics_process(delta):
 	push_objects()
 
 func input(_event: InputEvent):
+	if enter_attack_state():
+		return
 	if !Input.is_action_pressed("crouch"):
 		if enter_move_state():
 			return
 	if Input.is_action_just_pressed("jump"):
+		jump_node.remaining_jumps += 1
+		#for some reason, you can't jump without this.
 		state_machine.transition_to("Jump", {bonus_speed = Vector2(0, (-1.0 * jump_node.jump_velocity))})
 		return
 	if enter_dodge_state():
@@ -120,10 +129,9 @@ func push_objects():
 			collision.get_collider().apply_central_impulse(- collision.get_normal() * push)
 
 func move_and_slide_with_slopes(delta):
-	var jump_script: Jump = state_machine.find_state("Jump")
 	var fall_script: Fall = state_machine.find_state("Fall")
 	if state_machine.current_state != state_machine.find_state("Idle"):
-		entity.motion.y += jump_script.get_gravity() * delta
+		entity.motion.y += jump_node.get_gravity() * delta
 		entity.motion.y = clamp(entity.motion.y, 0, fall_script.maximum_fall_speed)
 	entity.set_velocity(entity.motion)
 	entity.set_floor_stop_on_slope_enabled(true)

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://d18ny0w4wlb1h"]
+
+[ext_resource type="Script" path="res://Character/Player/scripts/Camera.gd" id="1_6idsg"]
+
+[node name="Camera" type="Camera2D"]
+enabled = false
+zoom = Vector2(1.2, 1.2)
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+script = ExtResource("1_6idsg")

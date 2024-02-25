@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvmbeu5a133sy"]
+
+[ext_resource type="Texture2D" uid="uid://bj70hf47s0yyy" path="res://Sprites/UI_Sprites/on_button1.png" id="1_nr5v3"]
+[ext_resource type="Texture2D" uid="uid://clflp6ifpnkwb" path="res://Sprites/UI_Sprites/off_button1.png" id="2_1woxy"]
+
+[node name="CustomCheckButton" type="CheckButton"]
+offset_right = 64.0
+offset_bottom = 25.0
+theme_override_icons/checked = ExtResource("1_nr5v3")
+theme_override_icons/unchecked = ExtResource("2_1woxy")
+button_pressed = true
+alignment = 1
+icon_alignment = 1

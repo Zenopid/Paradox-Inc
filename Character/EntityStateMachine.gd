@@ -22,11 +22,9 @@ func init(entity: Entity, debug_node: Node2D = null):
 			state_count += 1
 			nodes.init(entity, self)
 			state_names.append(nodes.name)
-	if initial_state:
-		current_state = get_node(initial_state)
-	else:
+	current_state = get_node(initial_state)
+	if !current_state:
 		current_state = get_node("Idle")
-	var attack_node = get_node_or_null("Attack")
 	current_state.enter()
 	debug_info = debug_node
 	if debug_node:
@@ -35,9 +33,7 @@ func init(entity: Entity, debug_node: Node2D = null):
 		
 func physics_update(delta):
 	current_state.physics_process(delta)
-	if motion_tracker:
-		motion_tracker.text ="Speed: " + str(round(machine_owner.motion.x)) + "," + str(round(machine_owner.motion.y))
-		
+	motion_tracker.text ="Speed: " + str(round(machine_owner.motion.x)) + "," + str(round(machine_owner.motion.y))
 
 func update(delta):
 	current_state.process(delta)
@@ -55,12 +51,12 @@ func transition_to(target_state_name: String = "", msg: = {}, trans_anim: String
 				await machine_owner.anim_player.animation_finished
 			if call_enter:
 				current_state.enter(msg)
-			if machine_owner:
-				if debug_info:
-					debug_info.get_node("StateTracker").text = "State: " + str(current_state.name)
+			if debug_info:
+				debug_info.get_node("StateTracker").text = "State: " + str(current_state.name)
+			emit_signal("transitioned", current_state)
 		else:
 			print("Couldn't find state " + target_state_name)
-			
+
 func get_state_names():
 	return state_names
 

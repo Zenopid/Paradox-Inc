@@ -43,7 +43,7 @@ func physics_process(delta):
 	if grounded():
 		if !jump_buffer.is_stopped():
 			entity.motion.x *= 1 + bunny_hop_boost
-			state_machine.transition_to("Jump", {bonus_speed = Vector2(0, - jump_node.jump_height/2)})
+			state_machine.transition_to("Jump")
 			jump_buffer.stop()
 			return
 		if Input.is_action_pressed("crouch") and abs(entity.motion.x) >= max_speed and state_machine.get_timer("Slide_Cooldown").is_stopped() and get_movement_input() != 0:

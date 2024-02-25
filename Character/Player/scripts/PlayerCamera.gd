@@ -9,22 +9,11 @@ const SHIFT_DURATION = 1.0
 var facing = 0
 
 @onready var prev_camera_pos = get_camera_position()
-@export var shake_fade: float = 5.0
 
-var shake_strength: float = 0.0
-var old_offset: Vector2
-
-func _ready():
-	old_offset = offset
 
 func _process(_delta: float) -> void:
-	if shake_strength > 0:
-		shake_strength = lerpf(shake_strength, 0, shake_fade)
-		offset = random_offset()
-	elif shake_strength <= 0:
-		_check_facing()
-		prev_camera_pos = get_camera_position()
-		offset = old_offset
+	_check_facing()
+	prev_camera_pos = get_camera_position()
 
 func _check_facing():
 	var new_facing = sign(get_camera_position().x - prev_camera_pos.x)
@@ -36,14 +25,6 @@ func _check_facing():
 
 func _on_Player_grounded_updated(is_grounded) -> void:
 	drag_vertical_enabled = !is_grounded
-	
-func apply_screen_shake(amount):
-	shake_strength = amount
-	
-func random_offset() -> Vector2:
-	var rng = RandomNumberGenerator.new()
-	rng.randomize()
-	return Vector2(rng.randf_range(-shake_strength, shake_strength), rng.randf_range(-shake_strength, shake_strength))
 
 func get_camera_position():
 	return get_screen_center_position()

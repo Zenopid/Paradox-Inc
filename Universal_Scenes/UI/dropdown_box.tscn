@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://c2t80n81t81dn"]
+
+[ext_resource type="Script" path="res://Universal_Scripts/UI/dropdown_box.gd" id="1_nx71f"]
+[ext_resource type="Texture2D" uid="uid://b8m0nx8d2obso" path="res://Sprites/UI_Sprites/Arrow1.png" id="1_px85b"]
+[ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="2_jysly"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oj7mc"]
+bg_color = Color(0.00784314, 0.0627451, 0.0941176, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ymhpw"]
+bg_color = Color(0, 0.741176, 1, 1)
+
+[sub_resource type="Theme" id="Theme_1t3ks"]
+OptionButton/icons/arrow = ExtResource("1_px85b")
+OptionButton/styles/disabled = SubResource("StyleBoxFlat_oj7mc")
+OptionButton/styles/normal = SubResource("StyleBoxFlat_ymhpw")
+
+[node name="ResolutionOptions" type="OptionButton"]
+texture_filter = 1
+texture_repeat = 1
+offset_right = 100.0
+offset_bottom = 16.0
+size_flags_horizontal = 2
+theme = SubResource("Theme_1t3ks")
+theme_override_fonts/font = ExtResource("2_jysly")
+item_count = 3
+popup/item_0/text = "640x360"
+popup/item_0/id = 0
+popup/item_1/text = "1280x720"
+popup/item_1/id = 1
+popup/item_2/text = "1920x1080"
+popup/item_2/id = 2
+script = ExtResource("1_nx71f")
+
+[connection signal="item_selected" from="." to="." method="_on_OptionButton_item_selected"]

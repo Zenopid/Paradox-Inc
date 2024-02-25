@@ -4,7 +4,7 @@
 [ext_resource type="FontFile" uid="uid://by1k102hd7hkp" path="res://fonts/Pixellari.ttf" id="1_l6hr5"]
 [ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="2_l0nly"]
 
-[node name="MainMenu" type="Control"]
+[node name="Game" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,7 +21,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.0509804, 0.0313726, 0.0588235, 1)
+color = Color(0.00784314, 0.0627451, 0.0941176, 1)
 
 [node name="Paradox" type="Label" parent="."]
 visible = false
@@ -74,9 +74,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -141.0
-offset_top = -281.0
+offset_top = -328.0
 offset_right = 141.0
-offset_bottom = -10.0
+offset_bottom = -57.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
@@ -88,7 +88,7 @@ text = "Start Shift"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_constants/margin_top = 20
+theme_override_constants/margin_top = 50
 
 [node name="Training" parent="VBoxContainer" instance=ExtResource("2_l0nly")]
 layout_mode = 2
@@ -96,7 +96,12 @@ text = "Training"
 
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_constants/margin_top = 150
+theme_override_constants/margin_top = 50
+
+[node name="Settings" parent="VBoxContainer" instance=ExtResource("2_l0nly")]
+layout_mode = 2
+text = "Settings"
 
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/Training" to="." method="_on_training_pressed"]
+[connection signal="pressed" from="VBoxContainer/Settings" to="." method="_on_settings_pressed"]

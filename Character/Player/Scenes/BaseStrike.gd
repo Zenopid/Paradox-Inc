@@ -68,7 +68,7 @@ func physics_process(delta):
 		return
 	if Input.is_action_just_pressed("attack"):
 		if entity is Player:
-			if can_cancel:
+			if can_cancel and buffer_attack != "None":
 				start_buffer_attack()
 				return 
 		buffer_tracker = buffer_window
@@ -82,7 +82,7 @@ func on_attack_hit(object):
 		#if the object is of the enity class, but it's not the entity that spawned the hitbox
 		can_cancel = true 
 		if entity is Player:
-			entity.camera.apply_screen_shake(camera_shake_strength)
+			entity.camera.set_shake(camera_shake_strength)
 
 func start_buffer_attack():
 	if Input.is_action_pressed("left"):

@@ -1,5 +1,8 @@
 extends BaseStrike
 
+
+@export var damage: int = 25
+
 func physics_process(delta):
 	super.physics_process(delta)
 	if frame == 5:
@@ -8,4 +11,4 @@ func physics_process(delta):
 		else:
 			entity.motion.x += lunge_distance  * ( 1 + get_movement_input() )
 	if frame == 9:
-		attack_state.create_hitbox(16.785, 21.48, 25, 1, 180, 4, "Normal", 0, Vector2(17.475, 7.049), Vector2(650, 0), 1)
+		attack_state.create_hitbox(16.785, 21.48, damage, 1, 180, 4, "Normal", 0, Vector2(17.475, 7.049), Vector2(650, 0), 1)

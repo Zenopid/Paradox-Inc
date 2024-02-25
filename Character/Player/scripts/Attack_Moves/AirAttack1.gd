@@ -1,7 +1,7 @@
 extends BaseStrike
 
 @export var air_accel:int = 15
-
+@export var damage: int = 8
 
 
 func physics_process(delta):
@@ -17,7 +17,7 @@ func physics_process(delta):
 	super.physics_process(delta)
 	air_attack_logic()
 	if frame == 7:
-		attack_state.create_hitbox(48.75, 24.75, 8, 1, 180, 5, "Normal", 0, Vector2(0.375, -2.125), Vector2(500, 50), 1)
+		attack_state.create_hitbox(48.75, 24.75, damage, 1, 180, 5, "Normal", 0, Vector2(0.375, -2.125), Vector2(500, 50), 1)
 
 func current_active_hitbox():
 	if frame > 12: 

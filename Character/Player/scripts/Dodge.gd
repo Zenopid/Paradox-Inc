@@ -50,16 +50,15 @@ func physics_process(delta: float):
 func leave_dodge():
 	if grounded():
 		if Input.is_action_pressed("jump"):
-			state_machine.transition_to("Jump")
+			state_machine.transition_to("Jump", {can_superjump = state_machine.get_timer("Superjump").is_stopped()})
 			return
 		if Input.is_action_pressed("crouch") and grounded():
 			state_machine.transition_to("Slide")
 			return
 		enter_move_state()
 		return
-	else:
-		state_machine.transition_to("Fall")
-		return
+	state_machine.transition_to("Fall")
+	return
 
 func become_actionable():
 	is_actionable = true
