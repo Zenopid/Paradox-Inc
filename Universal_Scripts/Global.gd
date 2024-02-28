@@ -10,22 +10,27 @@ class VisualSettings:
 	var fullscreen: bool = false
 
 class AudioSettings:
-	var sfx_volume: int = 100
-	var bgm_volume: int = 100
-	var game_volume: int = 100
+	var sfx_volume: int = 1
+	var bgm_volume: int = 1
+	var game_volume: int = 1
+	var ui_sfx_enabled: bool = true
 
 class ControlSettings:
-	var temp: int = 0
-#	var jump_button = ProjectSettings.get_setting()
-#	var crouch_button = KEW_
+	var jump_button = InputMap.action_get_events("jump")
+	var crouch_button = InputMap.action_get_events("crouch")
+	var left_button = InputMap.action_get_events("left")
+	var right_button = InputMap.action_get_events("right")
+	var attack_button = InputMap.action_get_events("attack")
+	var dodge_button = InputMap.action_get_events("dodge")
+	var timeline_button = InputMap.action_get_events("swap_timeline")
 
 var hitstop_frames_remaining: int = 0
 var HITSTOP_TIMESCALE: float = 0.2
 var in_hitstop: bool = false
 
-var visual_settings: VisualSettings = VisualSettings.new()
-var audio_settings: AudioSettings = AudioSettings.new()
-var control_settings: ControlSettings = ControlSettings.new()
+@onready var visual_settings: VisualSettings = VisualSettings.new()
+@onready var audio_settings: AudioSettings = AudioSettings.new()
+@onready var control_settings: ControlSettings = ControlSettings.new()
 
 var setting_class_names: = [
 	"visual_settings",
@@ -34,16 +39,14 @@ var setting_class_names: = [
 ]
 
 func _ready():
-	pass
-	# Initialize visual and audio settings
-#	visual_settings.camera_flash = false
-#	visual_settings.camera_shake = true
-#
-#	audio_settings.sfx_volume = 100
-#	audio_settings.bgm_volume = 100
-#	audio_settings.disable_sfx = false
-	
-	
+	for i in control_settings.jump_button:
+		var button = i
+		if button is InputEventKey:
+			var keycode_string = OS.get_keycode_string(button.get_key_label())
+#			print(OS.get_keycode_string(button.key_label))
+#		else:
+#			print(button.as_text())
+#	print(OS.get_keycode_string(control_settings.jump_button[0]))
 
 func set_setting(setting_class:String, setting_name: String, new_setting):
 	if setting_name in get(setting_class):

@@ -19,6 +19,7 @@ size = Vector2(80, 26)
 size = Vector2(42333.3, 150.959)
 
 [node name="Training" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_4njmc")
 metadata/_edit_horizontal_guides_ = []
 

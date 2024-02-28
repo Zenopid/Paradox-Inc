@@ -17,6 +17,7 @@ func add_player(pos) -> Player:
 	
 
 func disable_menu():
+	get_tree().paused = false
 	for nodes in get_children():
 		nodes.visible = false 
 		if nodes is Button:
@@ -25,12 +26,12 @@ func disable_menu():
 
 
 func enable_menu():
+	get_tree().paused = true 
 	for nodes in get_children():
 		if nodes is Control:
 			if nodes is Label == false:
 				nodes.visible = true
-		else:
-			nodes.queue_free()
+			nodes.PROCESS_MODE_DISABLED
 		if nodes is Button:
 			nodes.disabled = false
 			nodes.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -59,6 +60,7 @@ func _on_training_pressed():
 
 
 func _on_settings_pressed():
+	disable_menu()
 	var settings = settings_scene.instantiate()
 	add_child(settings)
 #	disable_menu()

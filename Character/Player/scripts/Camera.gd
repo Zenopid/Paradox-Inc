@@ -12,11 +12,10 @@ var facing = 0
 
 func _ready():
 	super._ready()
-	var visual_setting = GlobalScript.VisualSettings.new()
-	var audio_setting = GlobalScript.AudioSettings.new()
+
 	
-	ENABLE_CAMERA_FLASHING = visual_setting.camera_flash 
-	if visual_setting.camera_shake:
+	ENABLE_CAMERA_FLASHING = GlobalScript.visual_settings.camera_flash 
+	if GlobalScript.visual_settings.camera_shake:
 		SHAKE_ANGLE_MULTIPLIER = 0
 	else:
 		SHAKE_POSITION_MULTIPLIER = 1

@@ -24,7 +24,7 @@
 [node name="AI_Tree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_2v6jb")
 enabled = false
-blackboard = NodePath("@Node@20116")
+blackboard = NodePath("@Node@20122")
 actor = NodePath("")
 
 [node name="WorldInteractions" type="Node" parent="."]

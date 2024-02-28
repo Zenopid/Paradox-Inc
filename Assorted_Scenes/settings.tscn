@@ -67,6 +67,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Audio" type="VBoxContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -76,10 +77,10 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="Master Volume" type="HBoxContainer" parent="TabContainer/Audio"]
+[node name="Master" type="HBoxContainer" parent="TabContainer/Audio"]
 layout_mode = 2
 
-[node name="Master_Volume" type="Label" parent="TabContainer/Audio/Master Volume"]
+[node name="Master_Volume" type="Label" parent="TabContainer/Audio/Master"]
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_fonts/font = ExtResource("3_wcyc0")
@@ -87,7 +88,7 @@ text = "Game Volume "
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Master_Slider" type="HSlider" parent="TabContainer/Audio/Master Volume" groups=["Music Sliders"]]
+[node name="Master_Slider" type="HSlider" parent="TabContainer/Audio/Master" groups=["Music Sliders"]]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 2
@@ -96,13 +97,13 @@ step = 0.05
 value = 0.5
 ticks_on_borders = true
 
-[node name="Game_Test" parent="TabContainer/Audio/Master Volume" groups=["Music Testers"] instance=ExtResource("2_ceyak")]
+[node name="Game_Test" parent="TabContainer/Audio/Master" groups=["Music Testers"] instance=ExtResource("2_ceyak")]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 2
 text = "Test Game"
 
-[node name="Test_Music" type="AudioStreamPlayer" parent="TabContainer/Audio/Master Volume" groups=["Audio"]]
+[node name="Test_Music" type="AudioStreamPlayer" parent="TabContainer/Audio/Master" groups=["Audio"]]
 stream = ExtResource("4_wiew8")
 
 [node name="Divider2" type="HSeparator" parent="TabContainer/Audio"]
@@ -180,8 +181,30 @@ layout_mode = 2
 size_flags_horizontal = 2
 text = "Test Music"
 
+[node name="Divider3" type="HSeparator" parent="TabContainer/Audio"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="EnableUISFX" type="HBoxContainer" parent="TabContainer/Audio"]
+layout_mode = 2
+
+[node name="UISFX" type="Label" parent="TabContainer/Audio/EnableUISFX"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Enable UI SFX"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnableUISFX" parent="TabContainer/Audio/EnableUISFX" instance=ExtResource("4_3nxqt")]
+layout_mode = 2
+size_flags_horizontal = 2
+
 [node name="Visual" type="VBoxContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -299,46 +322,180 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(125, 0)
 layout_mode = 2
 
-[node name="Controls" type="VBoxContainer" parent="TabContainer"]
+[node name="Control" type="VBoxContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Controls"]
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="Divider" type="HSeparator" parent="TabContainer/Controls"]
+[node name="JumpButton" type="HBoxContainer" parent="TabContainer/Control"]
+layout_mode = 2
+
+[node name="ChangeJump" type="Label" parent="TabContainer/Control/JumpButton"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Jump"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="jump" parent="TabContainer/Control/JumpButton" groups=["Rebind Buttons"] instance=ExtResource("2_ceyak")]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Divider" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
-[node name="Divider2" type="HSeparator" parent="TabContainer/Controls"]
+[node name="CrouchButton" type="HBoxContainer" parent="TabContainer/Control"]
+layout_mode = 2
+
+[node name="ChangeCrouch" type="Label" parent="TabContainer/Control/CrouchButton"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Crouch"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="crouch" parent="TabContainer/Control/CrouchButton" groups=["Rebind Buttons"] instance=ExtResource("2_ceyak")]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Divider2" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
-[node name="Divider4" type="HSeparator" parent="TabContainer/Controls"]
+[node name="LeftButton" type="HBoxContainer" parent="TabContainer/Control"]
+layout_mode = 2
+
+[node name="ChangeLeft" type="Label" parent="TabContainer/Control/LeftButton"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Left"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="left" parent="TabContainer/Control/LeftButton" groups=["Rebind Buttons"] instance=ExtResource("2_ceyak")]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Divider4" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
-[node name="Divider3" type="HSeparator" parent="TabContainer/Controls"]
+[node name="RightButton" type="HBoxContainer" parent="TabContainer/Control"]
+layout_mode = 2
+
+[node name="ChangeRight" type="Label" parent="TabContainer/Control/RightButton"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Right"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="right" parent="TabContainer/Control/RightButton" groups=["Rebind Buttons"] instance=ExtResource("2_ceyak")]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Divider3" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="AttackButton" type="HBoxContainer" parent="TabContainer/Control"]
+layout_mode = 2
+
+[node name="ChangeAttack" type="Label" parent="TabContainer/Control/AttackButton"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Attack"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="attack" parent="TabContainer/Control/AttackButton" groups=["Rebind Buttons"] instance=ExtResource("2_ceyak")]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Divider5" type="HSeparator" parent="TabContainer/Control"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="DodgeButton" type="HBoxContainer" parent="TabContainer/Control"]
+layout_mode = 2
+
+[node name="ChangeDodge" type="Label" parent="TabContainer/Control/DodgeButton"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Dodge"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="dodge" parent="TabContainer/Control/DodgeButton" groups=["Rebind Buttons"] instance=ExtResource("2_ceyak")]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Divider6" type="HSeparator" parent="TabContainer/Control"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="TimelineButton" type="HBoxContainer" parent="TabContainer/Control"]
+layout_mode = 2
+
+[node name="ChangeTimeline" type="Label" parent="TabContainer/Control/TimelineButton"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Swap Timeline"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="swap_timeline" parent="TabContainer/Control/TimelineButton" groups=["Rebind Buttons"] instance=ExtResource("2_ceyak")]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 
 [node name="Apply" parent="." instance=ExtResource("2_ceyak")]
+visible = false
 layout_mode = 2
 offset_left = 550.0
 offset_top = 580.0
@@ -349,11 +506,70 @@ size_flags_vertical = 10
 size_flags_stretch_ratio = 0.0
 text = " Apply "
 
+[node name="Control_Rebind_Screen" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Rebind_Text" type="Label" parent="Control_Rebind_Screen"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -68.5
+offset_top = -11.0
+offset_right = 68.5
+offset_bottom = 11.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+theme_override_font_sizes/font_size = 64
+text = "
+Press new keybind:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Overlapping" type="Label" parent="Control_Rebind_Screen"]
+visible = false
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -68.5
+offset_top = -11.0
+offset_right = 68.5
+offset_bottom = 11.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+theme_override_font_sizes/font_size = 64
+text = "Controls overlap."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Timer" parent="Control_Rebind_Screen"]
+wait_time = 2.0
+one_shot = true
+
 [connection signal="pressed" from="ReturnButton" to="." method="_on_return_button_pressed"]
-[connection signal="value_changed" from="TabContainer/Audio/Master Volume/Master_Slider" to="." method="_on_master_slider_value_changed"]
-[connection signal="pressed" from="TabContainer/Audio/Master Volume/Game_Test" to="." method="_on_game_test_pressed"]
-[connection signal="value_changed" from="TabContainer/Audio/SFX/SFX_Slider" to="." method="_on_sfx_slider_value_changed"]
-[connection signal="value_changed" from="TabContainer/Audio/Music/Music_Slider" to="." method="_on_sfx_slider_value_changed"]
+[connection signal="tab_changed" from="TabContainer" to="." method="_on_tab_container_tab_changed"]
+[connection signal="drag_ended" from="TabContainer/Audio/Master/Master_Slider" to="." method="_on_master_slider_drag_ended"]
+[connection signal="pressed" from="TabContainer/Audio/Master/Game_Test" to="." method="_on_game_test_pressed"]
+[connection signal="drag_ended" from="TabContainer/Audio/SFX/SFX_Slider" to="." method="_on_sfx_slider_drag_ended"]
+[connection signal="drag_ended" from="TabContainer/Audio/Music/Music_Slider" to="." method="_on_music_slider_drag_ended"]
+[connection signal="toggled" from="TabContainer/Audio/EnableUISFX/EnableUISFX" to="." method="_on_enable_uisfx_toggled"]
 [connection signal="toggled" from="TabContainer/Visual/CameraFlash/EnableCameraFlashing" to="." method="_on_enable_camera_flashing_toggled"]
 [connection signal="toggled" from="TabContainer/Visual/CameraShake/EnableCameraShaking" to="." method="_on_enable_camera_shaking_toggled"]
 [connection signal="toggled" from="TabContainer/Visual/EnableVSync/EnableVsync" to="." method="_on_enable_vsync_toggled"]

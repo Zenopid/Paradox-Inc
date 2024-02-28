@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/draw_sword.wav-635474606b1e01289134c896b607b3b1.sample"
+
+[deps]
+
+source_file="res://audio/sfx/sound/sword_sfx/draw_sword.wav"
+dest_files=[ "res://.import/draw_sword.wav-635474606b1e01289134c896b607b3b1.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

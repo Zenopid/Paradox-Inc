@@ -26,6 +26,9 @@ var spawn_point: Vector2
 func get_spawn():
 	return spawn_point
 
+func get_camera():
+	return camera
+
 func _ready():
 	sprite.position = Vector2.ZERO
 	super._ready()
@@ -44,23 +47,23 @@ func _physics_process(delta):
 	super._physics_process(delta)
 
 func _input(event):
-	if Input.is_action_just_pressed("options"):
-		_on_button_pressed()
 	if Input.is_action_pressed("slow_time"):
 		Engine.time_scale = slow_down
+	else: 
+		Engine.time_scale = 1
 
 func set_spawn(location: Vector2, res_timeline: String = "Future"):
 	spawn_point = location
 	respawn_timeline = res_timeline
 
-func _on_button_pressed():
+func _on_menu_button_pressed():
 	get_parent().enable_menu()
 
 func _set_health(value):
 	var prev_health = health
 	health = clamp(value, 0, max_health)
 	if health != prev_health:
-		emit_signal("health_updated", health, 5)
+		emit_signal("health_updated", health)
 		if health <= 0:
 			kill()
 			emit_signal("killed")
@@ -71,6 +74,7 @@ func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0
 		_set_health(health - amount)
 		effects_aniamtion.play("Damaged")
 		effects_aniamtion.queue("Invincible")
+		
 		camera.flash()
 
 func heal(amount):
@@ -86,7 +90,7 @@ func get_death_screen():
 	return death_screen
 	
 func death_logic():
-	_on_button_pressed()
+	_on_menu_button_pressed()
 	
 func respawn():
 	position = spawn_point

@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="2_l0nly"]
 
 [node name="Game" type="Control"]
+process_mode = 3
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,7 +22,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.00784314, 0.0627451, 0.0941176, 1)
+color = Color(0.00784314, 0.0627451, 0.0941176, 0.733333)
 
 [node name="Paradox" type="Label" parent="."]
 visible = false
@@ -74,9 +75,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -141.0
-offset_top = -328.0
+offset_top = -309.0
 offset_right = 141.0
-offset_bottom = -57.0
+offset_bottom = -38.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
