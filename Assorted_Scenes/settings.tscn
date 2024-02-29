@@ -67,7 +67,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Audio" type="VBoxContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -205,6 +204,7 @@ layout_mode = 2
 size_flags_horizontal = 2
 
 [node name="Visual" type="VBoxContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -494,6 +494,22 @@ custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 2
 
+[node name="EnableVibration" type="HBoxContainer" parent="TabContainer/Control"]
+layout_mode = 2
+
+[node name="ControllerVibrate" type="Label" parent="TabContainer/Control/EnableVibration"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+VSync"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnableVibrate" parent="TabContainer/Control/EnableVibration" instance=ExtResource("4_3nxqt")]
+layout_mode = 2
+size_flags_horizontal = 2
+
 [node name="Apply" parent="." instance=ExtResource("2_ceyak")]
 visible = false
 layout_mode = 2
@@ -575,4 +591,5 @@ one_shot = true
 [connection signal="toggled" from="TabContainer/Visual/EnableVSync/EnableVsync" to="." method="_on_enable_vsync_toggled"]
 [connection signal="toggled" from="TabContainer/Visual/EnableFullscreen/EnableFullscreen" to="." method="_on_enable_fullscreen_toggled"]
 [connection signal="resolution_changed" from="TabContainer/Visual/ChangeResolution/ResolutionOptions" to="." method="_on_resolution_options_resolution_changed"]
+[connection signal="toggled" from="TabContainer/Control/EnableVibration/EnableVibrate" to="." method="_on_enable_vibrate_toggled"]
 [connection signal="pressed" from="Apply" to="." method="_on_apply_pressed"]

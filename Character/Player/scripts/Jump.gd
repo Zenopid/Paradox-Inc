@@ -29,8 +29,6 @@ func enter(msg: = {}):
 	var jump_speed: Vector2 = Vector2(0, jump_velocity)
 	if msg.has("bonus_speed"):
 		jump_speed += msg["bonus_speed"]
-#		jump_speed.x += msg["bonus_speed"].x
-#		jump_speed.y += msg["bonus_speed"].y
 	if msg.has("can_superjump"):
 		if msg["can_superjump"] == true:
 			jump_speed.y *= superjump_bonus

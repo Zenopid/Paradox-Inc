@@ -143,7 +143,7 @@ autostart = true
 
 [node name="OutOfBounds" parent="." instance=ExtResource("4_by1xf")]
 position = Vector2(425, -3)
-damage = 10
+damage = 100
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="OutOfBounds"]
 position = Vector2(2503.2, 225.873)

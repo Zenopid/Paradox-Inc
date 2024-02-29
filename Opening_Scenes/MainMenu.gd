@@ -6,6 +6,10 @@ var camera_path = preload("res://Universal_Scenes/camera.tscn")
 var settings_scene = preload("res://Assorted_Scenes/settings.tscn")
 
 var player_instance: Player
+var current_level: GenericLevel
+
+func _ready():
+	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
 
 func add_player(pos) -> Player:
 	player_instance = player.instantiate()
@@ -13,6 +17,7 @@ func add_player(pos) -> Player:
 	player_instance.set_spawn(pos)
 #	player_instance.set_camera(camera)
 	add_child(player_instance)
+#	add_child(camera_instance)
 	return player_instance
 	
 
@@ -31,13 +36,13 @@ func enable_menu():
 		if nodes is Control:
 			if nodes is Label == false:
 				nodes.visible = true
-			nodes.PROCESS_MODE_DISABLED
 		if nodes is Button:
 			nodes.disabled = false
 			nodes.mouse_filter = Control.MOUSE_FILTER_PASS
 
 func _on_training_pressed():
 	var training_instance: GenericLevel = training_scene.instantiate()
+	current_level = training_instance
 	disable_menu()
 	var spawn_spot = training_instance.get_start_point()
 	add_child(training_instance)
@@ -66,3 +71,8 @@ func _on_settings_pressed():
 #	disable_menu()
 #	$VBoxContainer/Settings.text = "Not Ready"
 #	$VBoxContainer/Settings.disabled = true
+
+func _on_game_over():
+	player_instance.queue_free()
+	current_level.queue_free()
+	enable_menu()

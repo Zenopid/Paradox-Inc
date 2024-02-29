@@ -4,8 +4,8 @@ signal resolution_changed(new_resolution)
 var values
 
 
-func _update_selected_item(text: String) -> void:
-	values = text.split_floats("x")
+func _update_selected_item(item_text: String) -> void:
+	values = item_text.split_floats("x")
 	emit_signal("resolution_changed", Vector2i(int(values[0]), int(values[1])) )
 
 

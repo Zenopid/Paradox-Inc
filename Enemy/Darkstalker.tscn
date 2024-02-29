@@ -330,8 +330,9 @@ text = "Speed: 10,10"
 
 [node name="Pathfinder" type="NavigationAgent2D" parent="."]
 
-[node name="AI_Tree" parent="." node_paths=PackedStringArray("blackboard") instance=ExtResource("18_t7mad")]
-blackboard = NodePath("@Node@19595")
+[node name="AI_Tree" parent="." node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("18_t7mad")]
+blackboard = NodePath("@Node@19596")
+actor = NodePath("..")
 
 [node name="Raycasts" type="Node" parent="."]
 

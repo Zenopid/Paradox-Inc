@@ -236,8 +236,9 @@ func change_control(event_name, button:Button):
 	if Input.get_connected_joypads() == []:
 		for i in InputMap.get_actions():
 			for x in InputMap.action_get_events(i):
-				if x.is_action(i):
+				if last_input == x:
 					emit_signal("controls_overlap")
+					return
 				#overlapping inputs
 	InputMap.action_erase_events(event_name)
 	InputMap.action_add_event(event_name, last_input)
@@ -272,3 +273,7 @@ func _on_overlapping_controls():
 	rebind_screen.hide()
 	overlapping_text.hide()
 	rebind_text.show()
+
+
+func _on_enable_vibrate_toggled(button_pressed):
+	check_if_setting_changed("vibration", button_pressed)

@@ -67,36 +67,6 @@ func _input(event):
 func _physics_process(delta):
 	var old_timeline = get(str(current_timeline.to_lower()))
 	var new_timeline = get(str(get_next_timeline_swap().to_lower()))
-#	if Input.is_action_pressed("view_timeline"):
-#		if new_timeline:
-#			new_timeline.visible = true
-#			new_timeline.modulate.a = 1
-#		if old_timeline:
-#			old_timeline.modulate.a = 0.15
-#	else:
-#		if new_timeline:
-#			new_timeline.visible = false
-#			new_timeline.modulate.a = 1
-#		if old_timeline:
-#			old_timeline.modulate.a = 1
-#		future.visible = true
-#		past.visible = true
-#		match current_timeline:
-#			"Future":
-#				future.modulate.a = 0.1
-#				past.modulate.a = 1
-#			"Past":
-#				future.modulate.a = 1
-#				past.modulate.a = 0.1
-#	else:
-#		future.visible = true
-#		past.visible = true
-#		if current_timeline == "Future":
-#			past.visible = false
-#			future.modulate.a = 1
-#		else:
-#			future.visible = false
-#			past.modulate.a = 1
 
 func set_timeline(new_timeline):
 	var old_timeline_tileset:TileSet = get(current_timeline.to_lower() + "_tileset")

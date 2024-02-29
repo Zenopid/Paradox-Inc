@@ -26,8 +26,7 @@ class_name Camera2DPlus
 @export_range(-99, 99) var CINEMATIC_LAYER: int = 2 ## The layer of the CanvasLayer that the cinematic effects will be at.
 
 # Nodes:
-@onready var node_to_follow: Node = get_node(NODE_TO_FOLLOW_PATH)
-
+var node_to_follow
 # Variables:
 var flash_layer: CanvasLayer ## This variable is going to store the CanvasLayer that is going to store the flash related stuff.
 var cinematic_layer: CanvasLayer ## This variable is going to store the CanvasLayer that is going to store the cinematic effect related stuff.
@@ -47,6 +46,11 @@ var angle_tilt: float = 0.0 ## The camera's angle tilt offset.
 
 
 func _ready() -> void:
+	for i in get_tree().get_nodes_in_group("Player"):
+		NODE_TO_FOLLOW_PATH = i.get_path()
+		break
+	node_to_follow = get_node(NODE_TO_FOLLOW_PATH)
+	print(node_to_follow)
 	## Adding all the necessary CanvasLayers so the Camera2D+ can work properly.
 	flash_layer = CanvasLayer.new() # Creating a new CanvasLayer.
 	flash_layer.name = "FlashLayer" # Updating the name of the new CanvasLayer.

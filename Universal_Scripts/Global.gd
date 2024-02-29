@@ -1,6 +1,7 @@
 class_name GeneralManager extends Node
 
 signal setting_changed(setting_name, new_setting)
+signal game_over
 
 class VisualSettings:
 	var camera_flash: bool = true 
@@ -23,6 +24,7 @@ class ControlSettings:
 	var attack_button = InputMap.action_get_events("attack")
 	var dodge_button = InputMap.action_get_events("dodge")
 	var timeline_button = InputMap.action_get_events("swap_timeline")
+	var vibration:bool = true 
 
 var hitstop_frames_remaining: int = 0
 var HITSTOP_TIMESCALE: float = 0.2
@@ -63,7 +65,8 @@ func set_setting(setting_class:String, setting_name: String, new_setting):
 						else:
 							DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 					"resolution":
-						DisplayServer.window_set_size(new_setting)
+#						DisplayServer.window_set_size(new_setting)
+						get_window().size = new_setting
 					"fullscreen":
 						if new_setting:
 							DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
@@ -93,13 +96,13 @@ func get_setting(setting_class:String, setting_name:String):
 	print_debug("Couldn't get setting " + str(setting_name) + " in class " + str(setting_class) )
 
 func apply_hitstop(duration):
-	print_debug("Applying hitstop...")
+#	print_debug("Applying hitstop...")
 	hitstop_frames_remaining = duration
 	Engine.time_scale = HITSTOP_TIMESCALE
 	in_hitstop = true 
 	
 func remove_hitstop():
-	print_debug("Removing hitstop...")
+#	print_debug("Removing hitstop...")
 	in_hitstop = false
 	Engine.time_scale = 1
 	hitstop_frames_remaining = 0

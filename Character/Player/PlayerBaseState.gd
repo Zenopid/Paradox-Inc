@@ -12,6 +12,28 @@ func enter_move_state():
 		return true
 	return false
 
+func get_movement_input() -> float:
+	var move = Input.get_axis("left", "right")
+	if move < 0:
+		entity.sprite.flip_h = true
+	elif move > 0:
+		entity.sprite.flip_h = false
+	return move
+
+func get_inverse_movement_input(type):
+	var move = get_movement_input()
+	if move < 0:
+		if type == "String" or type == "string":
+			return "right"
+		else:
+			return 1
+	elif move > 0:
+		if type == "String" or type == "string":
+			return "left"
+		else:
+			return -1
+	return ""
+
 func enter_crouch_state():
 	if !casting_portal():
 		if Input.is_action_pressed("crouch"):

@@ -25,7 +25,7 @@ func input(_event):
 		return
 	if Input.is_action_just_pressed("jump"):
 		state_machine.transition_to("Jump", {can_superjump = true})
-		return
+		return 
 	if !Input.is_action_pressed("crouch"):
 		enter_move_state()
 		return

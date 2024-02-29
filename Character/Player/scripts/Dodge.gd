@@ -66,7 +66,7 @@ func become_actionable():
 func end_dodge(_anim_name):
 	dodge_over = true
 
-func get_movement_input() -> int:
+func get_movement_input() -> float:
 	return Input.get_axis("left", "right")
 
 func exit():

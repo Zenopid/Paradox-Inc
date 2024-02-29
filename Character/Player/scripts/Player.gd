@@ -12,7 +12,6 @@ signal killed()
 @onready var health_bar = $UI/HealthBar
 @onready var sprite: AnimatedSprite2D = get_node("AnimatedSprite2D")
 @onready var camera: Camera2DPlus = $Camera
-
 @export var slow_down: float = 0.1
 @export var max_health: int = 100
 
@@ -63,7 +62,7 @@ func _set_health(value):
 	var prev_health = health
 	health = clamp(value, 0, max_health)
 	if health != prev_health:
-		emit_signal("health_updated", health)
+		emit_signal("health_updated", health, 5)
 		if health <= 0:
 			kill()
 			emit_signal("killed")
@@ -75,12 +74,14 @@ func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0
 		effects_aniamtion.play("Damaged")
 		effects_aniamtion.queue("Invincible")
 		
-		camera.flash()
+#		camera.flash()
+#		this will give an epilepsy warning lol
 
 func heal(amount):
 	_set_health(health + amount)
 
 func kill():
+	print("dyin")
 	states.transition_to("Dead")
 
 func _on_invlv_timer_timeout():
@@ -89,12 +90,12 @@ func _on_invlv_timer_timeout():
 func get_death_screen():
 	return death_screen
 	
-func death_logic():
-	_on_menu_button_pressed()
-	
 func respawn():
 	position = spawn_point
 	get_level().set_timeline(respawn_timeline)
 	motion = Vector2.ZERO
-	states.transition_to("Fall")
+	if health > 0:
+		states.transition_to("Fall")
 
+func death_logic():
+	GlobalScript.emit_signal("game_over")

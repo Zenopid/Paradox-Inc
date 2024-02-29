@@ -16,7 +16,16 @@ var motion_tracker: Label = null
 var state_names: = []
 var state_count: int = 0
 
+var timer_nodes = {}
+var ray_nodes = {}
+
+var can_transition:bool = true 
+
 func init(entity: Entity, debug_node: Node2D = null):
+	for nodes in get_node("Timers").get_children():
+		timer_nodes[nodes.name] = nodes
+	for nodes in get_node("Raycasts").get_children():
+		ray_nodes[nodes.name] = nodes
 	for nodes in get_children():
 		if nodes is BaseState: 
 			state_count += 1
@@ -42,42 +51,52 @@ func input(event: InputEvent):
 	current_state.input(event)
 	
 func transition_to(target_state_name: String = "", msg: = {}, trans_anim: String = "", overide: bool = false, call_enter: bool = true):
-	if target_state_name != current_state.name or overide:
-		current_state.exit()
-		if get_node(target_state_name) is State:
-			current_state = get_node(target_state_name)
-			if trans_anim:
-				machine_owner.anim_player.play(trans_anim)
-				await machine_owner.anim_player.animation_finished
-			if call_enter:
-				current_state.enter(msg)
-			if debug_info:
-				debug_info.get_node("StateTracker").text = "State: " + str(current_state.name)
-			emit_signal("transitioned", current_state)
-		else:
-			print("Couldn't find state " + target_state_name)
+	if can_transition:
+		if target_state_name != current_state.name or overide:
+			current_state.exit()
+			if get_node(target_state_name) is State:
+				current_state = get_node(target_state_name)
+				if trans_anim:
+					machine_owner.anim_player.play(trans_anim)
+					await machine_owner.anim_player.animation_finished
+				if call_enter:
+					current_state.enter(msg)
+				if debug_info:
+					debug_info.get_node("StateTracker").text = "State: " + str(current_state.name)
+				emit_signal("transitioned", current_state)
+			else:
+				print("Couldn't find state " + target_state_name)
+	else:
+		print_debug("Couldn't transition to state " + target_state_name +  " as the state machine is locked.")
 
 func get_state_names():
 	return state_names
 
-func find_state(state):
-	if get_node(state):
-		return get_node(state)
+func find_state(state) -> BaseState:
+	var desired_state = get_node(state)
+	if desired_state:
+		return desired_state
+	return 
 
 func set_timer(timer, wait_time):
-	var state_timer: Timer = get_node("Timers/" + timer)
-	state_timer.wait_time = wait_time
+	var desired_timer = timer_nodes[timer]
+	if desired_timer:
+		desired_timer.wait_time = wait_time
 
 func get_timer(timer) -> Timer:
-	var state_timer: Timer = get_node("Timers/" + timer)
-	if state_timer:
-		return state_timer
+	var desired_timer = timer_nodes[timer]
+	if desired_timer:
+		return desired_timer
 	return
+
 func get_raycast(raycast) -> RayCast2D:
-	var state_raycast: RayCast2D = get_node("Raycasts/" + raycast)
-	if state_raycast:
-		return state_raycast
-	return 
+	var desired_raycast = ray_nodes[raycast]
+	if desired_raycast:
+		return desired_raycast
+	return
 
 func get_current_state():
 	return current_state
+	
+func lock_into_current_state():
+	can_transition = false 
