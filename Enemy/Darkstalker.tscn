@@ -286,7 +286,7 @@ _data = {
 [sub_resource type="CircleShape2D" id="CircleShape2D_duk8c"]
 radius = 100.0
 
-[node name="Darkstalker" type="CharacterBody2D"]
+[node name="Darkstalker" type="CharacterBody2D" groups=["Enemy", "Persist"]]
 collision_layer = 128
 collision_mask = 31
 floor_max_angle = 1.10479
@@ -331,7 +331,8 @@ text = "Speed: 10,10"
 [node name="Pathfinder" type="NavigationAgent2D" parent="."]
 
 [node name="AI_Tree" parent="." node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("18_t7mad")]
-blackboard = NodePath("@Node@19596")
+enabled = true
+blackboard = NodePath("@Node@114025")
 actor = NodePath("..")
 
 [node name="Raycasts" type="Node" parent="."]
@@ -360,7 +361,6 @@ hitbox = ExtResource("9_wp7pv")
 current_entity = NodePath("..")
 
 [node name="DetectionSphere" type="Area2D" parent="."]
-visible = false
 collision_mask = 137
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionSphere"]
@@ -377,6 +377,14 @@ offset_top = -157.306
 offset_right = -135.828
 offset_bottom = -157.306
 mouse_filter = 2
+healthy_color = null
+caution_color = null
+danger_color = null
+pulse_color = null
+flash_color = null
+caution_zone = null
+danger_zone = null
+will_pulse = null
 
 [node name="Hitsparks" parent="." instance=ExtResource("10_jaece")]
 scale = Vector2(-2, 2)

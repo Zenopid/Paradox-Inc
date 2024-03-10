@@ -2,6 +2,8 @@ class_name PlayerAttack extends PlayerBaseState
 
 signal new_attack(attack_name)
 
+@onready var landing_lag = $LandingLag
+
 @export var friction:float = 0.2
 
 
@@ -25,12 +27,13 @@ var temp_position: Vector2
 
  
 
-var active_hitboxes: = []
+var active_hitboxes: = {}
 var hitbox_positions: = []
 var num_of_active_hitboxes: int
 
 var test_num:int = 0
 
+var attack_options = {}
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	for nodes in get_children():
@@ -38,6 +41,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 			nodes.init(entity)
 			nodes.set_attack_state(self)
 			nodes.connect("leave_state", Callable(self, "exit_state"))
+			attack_options[nodes.name] = nodes
 	
 	jump_script = state_machine.find_state("Jump")
 	ground_checker = state_machine.get_raycast("GroundChecker")
@@ -54,6 +58,7 @@ func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle
 		hitbox_instance.connect("hitbox_collided", Callable(active_attack, "on_attack_hit"))
 	else:
 		print("there's no attack.")
+	hitbox_instance.add_to_group("Player Hitboxes")
 	return hitbox_instance
 
 func enter(msg: = {}):
@@ -89,7 +94,7 @@ func switch_attack(attack_name) -> bool:
 	if active_attack:
 		active_attack.exit()
 	if has_node(attack_name):
-		active_attack = get_node(attack_name)
+		active_attack = attack_options[attack_name]
 	if active_attack:
 		active_attack.enter()
 		emit_signal("new_attack",active_attack.name)
@@ -113,14 +118,15 @@ func exit_state():
 	return
 	
 func clear_hitboxes():
-	for nodes in entity.get_children():
-		if nodes is Hitbox:
+	for nodes in get_tree().get_nodes_in_group("Player Hitboxes"):
+		if nodes != self:
 			nodes.queue_free()
+	active_hitboxes.clear()
 
 func apply_lag(amount):
 	if active_attack:
 		active_attack.exit()
-	active_attack = get_node("LandingLag")
+	active_attack = landing_lag
 	active_attack.enter({duration = amount})
 
 func exit():

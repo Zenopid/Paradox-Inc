@@ -14,3 +14,12 @@ func set_debug_color(color: Color):
 	$CollisionShape2D.debug_color = color
 
 
+func save():
+	var save_dict = {
+		"damage": damage,
+		"position": {
+			"x": position.x,
+			"y": position.y
+		}
+	}
+	return save_dict

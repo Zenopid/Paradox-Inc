@@ -19,7 +19,7 @@ func enter(msg: = {}) -> void:
 	elif msg.has("portal_type"):
 		portal_type = msg["portal_type"]
 	active_portal_name = "portal_" + portal_type.to_lower()
-	active_portal = get_node(active_portal_name)
+	active_portal = get(active_portal_name.to_lower())
 	original_state_name = original_state.name
 	
 

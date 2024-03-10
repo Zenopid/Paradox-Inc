@@ -1,6 +1,7 @@
 class_name Fall extends AirState
 
 var jump_node: Jump
+var walljump_node
 
 @export var maximum_fall_speed: int = 400
 
@@ -18,7 +19,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	jump_node = state_machine.find_state("Jump")
 	jump_buffer = state_machine.get_timer("Jump_Buffer")
 	jump_buffer.wait_time = buffer_duration
-
+	walljump_node = state_machine.find_state("WallSlide")
 
 func enter(_msg: = {}) -> void:
 	super.enter()
@@ -41,17 +42,15 @@ func physics_process(delta):
 	super.physics_process(delta)
 	entity.motion.y = clamp(entity.motion.y, entity.motion.y + jump_node.get_gravity() * delta, maximum_fall_speed)
 	if grounded():
+		walljump_node.jump_decay = 1
 		if !jump_buffer.is_stopped():
 			entity.motion.x *= 1 + bunny_hop_boost
 			state_machine.transition_to("Jump")
 			jump_buffer.stop()
 			return
-		if Input.is_action_pressed("crouch") and abs(entity.motion.x) >= max_speed and state_machine.get_timer("Slide_Cooldown").is_stopped() and get_movement_input() != 0:
-			state_machine.transition_to("Slide")
-			return
-		entity.motion.x *= 0.8
 		if enter_crouch_state():
 			return
+		entity.motion.x *= 0.8
 		enter_move_state()
 		return
 	set_raycast_positions()

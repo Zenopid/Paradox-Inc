@@ -45,7 +45,7 @@ func set_parameters(d, w,h,amount, angle, type, af, pos, dur, push, hitstop = 1)
 
 func update_extends():
 	hitbox.shape.size = Vector2(width, height)
-	$Shape.position = position
+	hitbox.position = position
 
 func _ready():
 	if state_machine is EntityStateMachine:
@@ -59,7 +59,6 @@ func _ready():
 	current_level = hitbox_owner.get_level()
 
 func _physics_process(delta:float ) -> void:
-	position = hitbox_owner.position
 	if framez < duration:
 		framez += 1
 	elif framez == duration:

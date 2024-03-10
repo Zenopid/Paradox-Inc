@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://b6qtlu8r47u1t"]
 
-[ext_resource type="Texture2D" uid="uid://bxmqcr1u77plg" path="res://Sprites/Sidescroller Shooter - Central City/Assets/Tiles.png" id="1_wvvjy"]
-[ext_resource type="Texture2D" uid="uid://bbkd3lq1g38s1" path="res://Sprites/Sidescroller Shooter - Central City/Background/Background Props.png" id="2_46vjb"]
-[ext_resource type="Texture2D" uid="uid://bl7n6wgvoartc" path="res://Sprites/Sidescroller Shooter - Central City/Assets/Props-01.png" id="3_bteec"]
+[ext_resource type="Texture2D" uid="uid://bxmqcr1u77plg" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Assets/Tiles.png" id="1_wvvjy"]
+[ext_resource type="Texture2D" uid="uid://bbkd3lq1g38s1" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Background Props.png" id="2_46vjb"]
+[ext_resource type="Texture2D" uid="uid://bl7n6wgvoartc" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Assets/Props-01.png" id="3_bteec"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2b36e"]
 texture = ExtResource("1_wvvjy")
@@ -412,11 +412,18 @@ texture = ExtResource("3_bteec")
 7:3/0/physics_layer_0/angular_velocity = 0.0
 7:3/0/physics_layer_1/linear_velocity = Vector2(0, 0)
 7:3/0/physics_layer_1/angular_velocity = 0.0
+7:4/next_alternative_id = 2
 7:4/0 = 0
 7:4/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 7:4/0/physics_layer_0/angular_velocity = 0.0
 7:4/0/physics_layer_1/linear_velocity = Vector2(0, 0)
 7:4/0/physics_layer_1/angular_velocity = 0.0
+7:4/1 = 1
+7:4/1/flip_h = true
+7:4/1/physics_layer_0/linear_velocity = Vector2(0, 0)
+7:4/1/physics_layer_0/angular_velocity = 0.0
+7:4/1/physics_layer_1/linear_velocity = Vector2(0, 0)
+7:4/1/physics_layer_1/angular_velocity = 0.0
 7:5/0 = 0
 7:5/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 7:5/0/physics_layer_0/angular_velocity = 0.0

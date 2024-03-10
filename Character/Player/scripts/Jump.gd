@@ -18,6 +18,8 @@ class_name Jump extends AirState
 
 @export var minimum_doublejump_speed: int = 100
 
+var superjumping: bool = false
+
 var ground_checker:RayCast2D 
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
@@ -25,18 +27,26 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	ground_checker = state_machine.get_raycast("GroundChecker")
 
 func enter(msg: = {}):
+	superjumping = false
 	super.enter()
 	var jump_speed: Vector2 = Vector2(0, jump_velocity)
-	if msg.has("bonus_speed"):
-		jump_speed += msg["bonus_speed"]
-	if msg.has("can_superjump"):
-		if msg["can_superjump"] == true:
-			jump_speed.y *= superjump_bonus
+	var double_jump_multiplier: float = 1
+	for i in msg.keys():
+		match i:
+			"bonus_speed":
+				jump_speed += msg["bonus_speed"]
+			"can_superjump":
+				jump_speed.y *= superjump_bonus
+				superjumping = true
+			"overwrite_speed":
+				jump_speed = msg["overwrite_speed"]
+			"double_jump_multiplier":
+				double_jump_multiplier = msg["double_jump_multiplier"]
 	if grounded() or !state_machine.get_timer("Coyote").is_stopped():
 		entity.motion.y = jump_speed.y
 		entity.motion.x += jump_speed.x 
 	else:
-		double_jump()
+		double_jump(double_jump_multiplier)
 	
 
 func physics_process(delta):
@@ -52,8 +62,8 @@ func physics_process(delta):
 		return
 	default_move_and_slide()
 
-func double_jump():
-	entity.motion.y = jump_velocity * double_jump_strength
+func double_jump(additional_multiplier: float = 1):
+	entity.motion.y = (jump_velocity * double_jump_strength) * additional_multiplier
 	entity.motion.x += double_jump_boost * get_movement_input()
 	remaining_jumps -= 1
 

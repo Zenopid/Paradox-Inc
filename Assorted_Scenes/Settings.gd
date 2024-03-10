@@ -3,6 +3,7 @@ extends Control
 var updated_settings = {}
 signal control_changed()
 signal controls_overlap()
+signal exiting_settings()
 
 @onready var rebind_screen = $Control_Rebind_Screen
 @onready var apply_button = $Apply
@@ -202,8 +203,8 @@ func _on_test_music_pressed(button):
 		music_player.play()
 
 func _on_return_button_pressed():
-	get_parent().enable_menu()
-	queue_free()
+	emit_signal("exiting_settings")
+	hide()
 
 func set_music_volume(value, slider):
 	slider.get_parent().get_node("Test_Music").volume = value 

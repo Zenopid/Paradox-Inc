@@ -32,6 +32,9 @@ func death_logic():
 
 func get_level():
 	return current_level
+
+func set_level(new_level:GenericLevel):
+	current_level = new_level
 	
 func damage(amount, knockback: int = 0, knockback_angle: int = 0, hitstun:int = 0):
 	pass

@@ -25,8 +25,6 @@ func get_spawn():
 	return spawn_point
 
 func _ready():
-	#for now...
-	#its changing tho... things going crazy hold on
 	for nodes in get_node("Raycasts").get_children():
 		if nodes is RayCast2D:
 			nodes.add_exception(self)
@@ -120,3 +118,14 @@ func player_near():
 
 func clear_hitboxes():
 	get_node("Attack").clear_hitboxes()
+
+func save():
+	var save_dict = {
+		"position": {
+			"x": position.x,
+			"y": position.y
+		},
+		"health": health,
+		"current_timeline": current_timeline,
+		"motion": motion
+	}

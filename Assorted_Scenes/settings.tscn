@@ -52,7 +52,7 @@ offset_top = 48.0
 offset_right = 1103.0
 offset_bottom = 596.0
 rotation = 0.00223235
-color = Color(0.110667, 0.08, 1, 1)
+color = Color(0.0500001, 0, 0.6, 1)
 
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 1
@@ -67,6 +67,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Audio" type="VBoxContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -323,7 +324,6 @@ custom_minimum_size = Vector2(125, 0)
 layout_mode = 2
 
 [node name="Control" type="VBoxContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -494,6 +494,13 @@ custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 2
 
+[node name="Divider7" type="HSeparator" parent="TabContainer/Control"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
 [node name="EnableVibration" type="HBoxContainer" parent="TabContainer/Control"]
 layout_mode = 2
 
@@ -501,8 +508,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_fonts/font = ExtResource("3_wcyc0")
-text = "
-VSync"
+text = "Vibration"
 horizontal_alignment = 1
 vertical_alignment = 1
 

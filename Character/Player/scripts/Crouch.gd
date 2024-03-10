@@ -4,8 +4,8 @@ var superjump_timer: Timer
 @export var superjump_buffer: float = 0.15
 @export var decelerate_value: float = 0.4
 
-func enter(_msg: = {}):
-	super.enter()
+func init(current_entity: Entity, s_machine: EntityStateMachine):
+	super.init(current_entity,s_machine)
 	superjump_timer = state_machine.get_timer("Superjump")
 	superjump_timer.wait_time = superjump_buffer
 
@@ -33,4 +33,4 @@ func input(_event):
 		return
 
 func exit() -> void:
-	state_machine.get_timer("Superjump").start()
+	superjump_timer.start()

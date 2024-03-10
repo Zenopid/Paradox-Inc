@@ -32,3 +32,12 @@ func _on_body_exited(body):
 			$OnSprite.hide()
 			$OffSprite.show()
 			emit_signal("status_changed", is_on)
+
+func save():
+	var save_dict = {
+		"monitoring": monitoring,
+		"visible": visible,
+		"is_on": is_on,
+		"timeline": timeline
+	}
+	return save_dict

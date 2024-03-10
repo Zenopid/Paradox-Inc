@@ -5,6 +5,7 @@ class_name GenericLevel extends Node
 @onready var future_tileset: TileSet
 @onready var past_tileset: TileSet
 @onready var music_player = $BGM
+@onready var spawn_point = get_node("SpawnPoint")
 
 
 @export var current_timeline: String = "Future"
@@ -12,17 +13,22 @@ class_name GenericLevel extends Node
 signal swapped_timeline(new_timeline)
 
 var music_playlist = []
+var level_conditions = {}
 
 var restarting_level = false
 
 var box_scene = preload("res://Universal_Scenes/Interactables/box.tscn")
 var darkstalker_scene = preload("res://Enemy/Darkstalker.tscn")
+
 func _ready():
 	load_music()
 	future_tileset = future.tile_set
 	past_tileset = past.tile_set
-	set_timeline(current_timeline)
-	#this should just set it back to the og timeline, but for some reason this just fixes stuff with wall slide not working
+	var old_timeline = current_timeline
+	set_timeline(get_next_timeline_swap())
+	set_timeline(old_timeline)
+	#for some reason this is needed in order to wall slide. prob some issue 
+	#with collision or somethin
 
 func load_music():
 	var folder_path = "res://audio/bgm/"
@@ -64,10 +70,6 @@ func _input(event):
 		if old_timeline:
 			old_timeline.modulate.a = 1
 
-func _physics_process(delta):
-	var old_timeline = get(str(current_timeline.to_lower()))
-	var new_timeline = get(str(get_next_timeline_swap().to_lower()))
-
 func set_timeline(new_timeline):
 	var old_timeline_tileset:TileSet = get(current_timeline.to_lower() + "_tileset")
 	var new_timeline_tileset: TileSet = get(new_timeline.to_lower() + "_tileset")
@@ -103,36 +105,17 @@ func set_timeline(new_timeline):
 				starting_timeline.tile_set.set_physics_layer_collision_layer(layers, i)
 				
 func get_start_point():
-	return $SpawnPoint.position
+	return spawn_point.position
 
-func _on_spawner_pressed():
-	var box_instance = box_scene.instantiate()
-	box_instance.init(current_timeline, self)
-	box_instance.position = $BoxSpawnPoint.position
-	add_child(box_instance)
-	connect("swapped_timeline", Callable(box_instance,"swap_state"))
-	
 func get_next_timeline_swap():
 	if current_timeline == "Future":
 		return "Past"
 	else:
 		return "Future"
 
-func _on_clear_box_pressed():
-	for nodes in get_children():
-		if nodes is MoveableObject:
-			nodes.queue_free()
-
 func get_current_timeline():
 	return current_timeline
 
-func _on_spawn_enemy_pressed():
-	var enemy_instance: Enemy = darkstalker_scene.instantiate()
-	enemy_instance.current_timeline = get_current_timeline()
-	enemy_instance.position = $EnemySpawnerPoint.position
-	add_child(enemy_instance)
-
-func _on_clear_enemy_pressed():
-	for nodes in get_children():
-		if nodes is Enemy:
-			nodes.queue_free()
+func save():
+	pass
+	#virtual method for each level i guess. i hate resources lol

@@ -1,5 +1,6 @@
 extends PlayerBaseState
 
+
 @export var slide_acceleration:int = 5
 @export var slide_deceleration: int = 5
 @export var slide_speed:int = 325 
@@ -30,15 +31,25 @@ var ground_checker:RayCast2D
 
 var position_tracker:int 
 
+var slope_checker_left:RayCast2D
+var slope_checker_right: RayCast2D
+var fall_state: Fall
+
+func init(current_entity: Entity, s_machine: EntityStateMachine):
+	super.init(current_entity,s_machine)
+	slope_checker_left = state_machine.get_raycast("SlopeCheckerRight")
+	slope_checker_right = state_machine.get_raycast("SlopeCheckerLeft")
+	ground_checker = state_machine.get_raycast("GroundChecker")
+	coyote_timer = state_machine.get_timer("Coyote")
+	cooldown_timer = state_machine.get_timer("Slide_Cooldown")
+	fall_state = state_machine.find_state("Fall")
+	
+	cooldown_timer.wait_time = slide_cooldown
+	coyote_timer.wait_time = coyote_duration
 
 func enter(_msg: = {}):
 	super.enter()
-	ground_checker = state_machine.get_raycast("GroundChecker")
 	ground_checker.enabled = true
-	coyote_timer = state_machine.get_timer("Coyote")
-	coyote_timer.wait_time = coyote_duration
-	cooldown_timer = state_machine.get_timer("Slide_Cooldown")
-	cooldown_timer.wait_time = slide_cooldown
 	jump_node = state_machine.find_state("Jump")
 	current_slide_duration = slide_duration
 	if facing_left():
@@ -50,16 +61,14 @@ func enter(_msg: = {}):
 func speed_timer_logic(delta):
 	if hit_max_speed:
 		current_slide_duration -= delta
-		if current_slide_duration < 0:
-			current_slide_duration = 0
 
 func physics_process(delta):
 	
 	speed_timer_logic(delta)
 	
 	
-	state_machine.get_raycast("SlopeCheckerRight").position = Vector2(entity.position.x + 1, entity.position.y + 13.5)
-	state_machine.get_raycast("SlopeCheckerLeft").position = Vector2(entity.position.x - 1, entity.position.y + 13.5)
+	slope_checker_right.position = Vector2(entity.position.x + 1, entity.position.y + 13.5)
+	slope_checker_left.position = Vector2(entity.position.x - 1, entity.position.y + 13.5)
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	var was_on_floor = grounded()
 	if current_slide_duration <= 0:
@@ -129,10 +138,9 @@ func push_objects():
 			collision.get_collider().apply_central_impulse(- collision.get_normal() * push)
 
 func move_and_slide_with_slopes(delta):
-	var fall_script: Fall = state_machine.find_state("Fall")
-	if state_machine.current_state != state_machine.find_state("Idle"):
+	if state_machine.get_current_state().name != "Idle":
 		entity.motion.y += jump_node.get_gravity() * delta
-		entity.motion.y = clamp(entity.motion.y, 0, fall_script.maximum_fall_speed)
+		entity.motion.y = clamp(entity.motion.y, 0, fall_state.maximum_fall_speed)
 	entity.set_velocity(entity.motion)
 	entity.set_floor_stop_on_slope_enabled(true)
 	entity.set_max_slides(1)
@@ -148,10 +156,10 @@ func move_and_slide_with_slopes(delta):
 func calculate_slope():
 	var point_a = ground_checker.get_collision_point()
 	var point_b
-	if state_machine.get_raycast("SlopeCheckerRight").is_colliding():
-		point_b = state_machine.get_raycast("SlopeCheckerRight").get_collision_point()
+	if slope_checker_right.is_colliding():
+		point_b = slope_checker_right.get_collision_point()
 	else:
-		point_b = state_machine.get_raycast("SlopeCheckerLeft").get_collision_point()
+		point_b = slope_checker_left.get_collision_point()
 	var opposite = abs(point_a.y - entity.position.y)
 	var adjacent = max(point_b.x, entity.position.x) - min(point_b.x, entity.position.x)
 	print(str(opposite)+ " is the opposite.")
@@ -159,14 +167,14 @@ func calculate_slope():
 	return rad_to_deg(atan(adjacent/opposite))
 
 func is_on_slope():
-	state_machine.get_raycast("SlopeCheckerLeft").force_raycast_update()
-	state_machine.get_raycast("SlopeCheckerRight").force_raycast_update()
-	if state_machine.get_raycast("SlopeCheckerLeft").is_colliding() or state_machine.get_raycast("SlopeCheckerRight").is_colliding():
+	slope_checker_left.force_raycast_update()
+	slope_checker_right.force_raycast_update()
+	if slope_checker_left.is_colliding() or slope_checker_right.is_colliding():
 		return true
 	return false
 
 func ascending_slope():
-	var facing = "Left" if facing_left() else "Right"
-	if state_machine.get_raycast("SlopeChecker" + facing).is_colliding():
+	var facing = "Left" if slide_direction < 0 else "Right"
+	if get("slope_checker_" + facing).is_colliding():
 		return true
 	return false

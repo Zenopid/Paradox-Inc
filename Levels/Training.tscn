@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://bdka6oxl4bhmn"]
 
 [ext_resource type="PackedScene" uid="uid://b6qtlu8r47u1t" path="res://Levels/future.tscn" id="1_0jmtq"]
-[ext_resource type="Script" path="res://Levels/GenericLevel.gd" id="1_4njmc"]
+[ext_resource type="Script" path="res://Levels/Training.gd" id="1_di3ua"]
 [ext_resource type="FontFile" uid="uid://by1k102hd7hkp" path="res://fonts/Pixellari.ttf" id="3_q6hlr"]
 [ext_resource type="PackedScene" uid="uid://bnnu8y3oqv6pi" path="res://Universal_Scenes/OutOfBounds.tscn" id="4_by1xf"]
 [ext_resource type="Script" path="res://Levels/DamageSlider.gd" id="5_x8m4r"]
@@ -18,9 +18,9 @@ size = Vector2(80, 26)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8dvi6"]
 size = Vector2(42333.3, 150.959)
 
-[node name="Training" type="Node2D"]
+[node name="Training" type="Node2D" groups=["Persist"]]
 process_mode = 1
-script = ExtResource("1_4njmc")
+script = ExtResource("1_di3ua")
 metadata/_edit_horizontal_guides_ = []
 
 [node name="Future" parent="." instance=ExtResource("1_0jmtq")]
@@ -33,7 +33,9 @@ layer_0/tile_data = PackedInt32Array(-3080175, 524288, 0, -3080170, 196608, 0, -
 [node name="BGM" type="AudioStreamPlayer" parent="."]
 bus = &"Music"
 
-[node name="BoundaryText" type="Label" parent="."]
+[node name="Labels" type="Node" parent="."]
+
+[node name="BoundaryText" type="Label" parent="Labels"]
 offset_left = 379.0
 offset_top = -145.0
 offset_right = 466.0
@@ -41,15 +43,15 @@ offset_bottom = -122.0
 theme_override_fonts/font = ExtResource("3_q6hlr")
 text = "Damage Box"
 
-[node name="Message" type="Label" parent="."]
+[node name="Message" type="Label" parent="Labels"]
 offset_left = 60.0
 offset_top = -284.0
-offset_right = 147.0
+offset_right = 332.0
 offset_bottom = -261.0
 theme_override_fonts/font = ExtResource("3_q6hlr")
 text = "Training Level WIP, getting overhauled"
 
-[node name="BoxSpawnerLabel" type="Label" parent="."]
+[node name="BoxSpawnerLabel" type="Label" parent="Labels"]
 offset_left = 258.0
 offset_top = -123.0
 offset_right = 352.0
@@ -57,13 +59,43 @@ offset_bottom = -100.0
 theme_override_fonts/font = ExtResource("3_q6hlr")
 text = "Box Spawner"
 
-[node name="EnemySpawnerLabel" type="Label" parent="."]
+[node name="EnemySpawnerLabel" type="Label" parent="Labels"]
 offset_left = -301.182
 offset_top = -124.964
 offset_right = -188.182
 offset_bottom = -101.964
 theme_override_fonts/font = ExtResource("3_q6hlr")
 text = "Enemy Spawner"
+
+[node name="Buttons" type="Node" parent="."]
+
+[node name="SpawnBox" parent="Buttons" instance=ExtResource("7_dnhoe")]
+offset_left = 282.0
+offset_top = -177.0
+offset_right = 331.0
+offset_bottom = -159.0
+text = "Spawn"
+
+[node name="SpawnEnemy" parent="Buttons" instance=ExtResource("7_dnhoe")]
+offset_left = -269.835
+offset_top = -161.023
+offset_right = -220.835
+offset_bottom = -143.023
+text = "Spawn"
+
+[node name="ClearEnemy" parent="Buttons" instance=ExtResource("7_dnhoe")]
+offset_left = -269.781
+offset_top = -143.018
+offset_right = -220.781
+offset_bottom = -125.018
+text = "Clear"
+
+[node name="ClearBox" parent="Buttons" instance=ExtResource("7_dnhoe")]
+offset_left = 282.0
+offset_top = -159.0
+offset_right = 331.0
+offset_bottom = -141.0
+text = "Clear"
 
 [node name="DamageBox" parent="." instance=ExtResource("4_by1xf")]
 position = Vector2(423, -116)
@@ -90,34 +122,6 @@ position = Vector2(1243.39, -232.84)
 visible = false
 position = Vector2(194.446, -103.021)
 
-[node name="SpawnBox" parent="." instance=ExtResource("7_dnhoe")]
-offset_left = 282.0
-offset_top = -177.0
-offset_right = 331.0
-offset_bottom = -159.0
-text = "Spawn"
-
-[node name="SpawnEnemy" parent="." instance=ExtResource("7_dnhoe")]
-offset_left = -269.835
-offset_top = -161.023
-offset_right = -220.835
-offset_bottom = -143.023
-text = "Spawn"
-
-[node name="ClearEnemy" parent="." instance=ExtResource("7_dnhoe")]
-offset_left = -269.781
-offset_top = -143.018
-offset_right = -220.781
-offset_bottom = -125.018
-text = "Clear"
-
-[node name="ClearBox" parent="." instance=ExtResource("7_dnhoe")]
-offset_left = 282.0
-offset_top = -159.0
-offset_right = 331.0
-offset_bottom = -141.0
-text = "Clear"
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="PositionTracker" type="Label" parent="CanvasLayer"]
@@ -136,14 +140,9 @@ theme_override_font_sizes/font_size = 34
 text = "Position: (0, -20140)"
 script = ExtResource("8_l6tpw")
 
-[node name="Timer" type="Timer" parent="CanvasLayer"]
-wait_time = 3.0
-one_shot = true
-autostart = true
-
 [node name="OutOfBounds" parent="." instance=ExtResource("4_by1xf")]
 position = Vector2(425, -3)
-damage = 100
+damage = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="OutOfBounds"]
 position = Vector2(2503.2, 225.873)
@@ -151,7 +150,6 @@ shape = SubResource("RectangleShape2D_8dvi6")
 
 [node name="Checkpoint" parent="." instance=ExtResource("9_nssps")]
 position = Vector2(635, -54)
-heal_amount = 50
 
 [node name="CheckButton" type="CheckButton" parent="."]
 offset_left = 401.0
@@ -170,10 +168,9 @@ position = Vector2(-417.166, -73)
 [node name="EnemySpawnerPoint" type="Node2D" parent="."]
 position = Vector2(-213.538, -73)
 
+[connection signal="pressed" from="Buttons/SpawnBox" to="." method="_on_spawner_pressed"]
+[connection signal="pressed" from="Buttons/SpawnEnemy" to="." method="_on_spawn_enemy_pressed"]
+[connection signal="pressed" from="Buttons/ClearEnemy" to="." method="_on_clear_enemy_pressed"]
+[connection signal="pressed" from="Buttons/ClearBox" to="." method="_on_clear_box_pressed"]
 [connection signal="value_changed" from="DamageSlider" to="DamageSlider" method="_on_value_changed"]
-[connection signal="pressed" from="SpawnBox" to="." method="_on_spawner_pressed"]
-[connection signal="pressed" from="SpawnEnemy" to="." method="_on_spawn_enemy_pressed"]
-[connection signal="pressed" from="ClearEnemy" to="." method="_on_clear_enemy_pressed"]
-[connection signal="pressed" from="ClearBox" to="." method="_on_clear_box_pressed"]
-[connection signal="timeout" from="CanvasLayer/Timer" to="CanvasLayer/PositionTracker" method="_on_timer_timeout"]
 [connection signal="toggled" from="CheckButton" to="DamageSlider" method="_on_check_button_toggled"]

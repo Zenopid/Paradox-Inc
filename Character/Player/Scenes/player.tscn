@@ -1,4 +1,4 @@
-[gd_scene load_steps=153 format=3 uid="uid://68mxs8vrodes"]
+[gd_scene load_steps=154 format=3 uid="uid://68mxs8vrodes"]
 
 [ext_resource type="Script" path="res://Character/Player/scripts/Player.gd" id="1_d84qb"]
 [ext_resource type="Texture2D" uid="uid://ccnj5krx1gyit" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-crouch-00.png" id="2_nbwc8"]
@@ -26,6 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://cqbufidmbitqr" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-jump-01.png" id="7_o3qac"]
 [ext_resource type="Texture2D" uid="uid://btf3t1iehtkvx" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-run-01.png" id="7_ompnv"]
 [ext_resource type="Texture2D" uid="uid://0g8a2iogd5dy" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-air-attack1-00.png" id="8_6ibdb"]
+[ext_resource type="PackedScene" uid="uid://cb6obgb5qrf3s" path="res://Assorted_Scenes/quick_menu.tscn" id="8_ea3g2"]
 [ext_resource type="Texture2D" uid="uid://dasjdt2hrkoos" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-jump-02.png" id="8_fak8u"]
 [ext_resource type="Texture2D" uid="uid://dn3odiih88lv" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-cast-00.png" id="8_muvb6"]
 [ext_resource type="Texture2D" uid="uid://c72g6xul1pso1" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-run-02.png" id="8_xt5i4"]
@@ -83,7 +84,6 @@
 [ext_resource type="Texture2D" uid="uid://xvlmy1coh15t" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-air-attack3-loop-01.png" id="40_njxsx"]
 [ext_resource type="Texture2D" uid="uid://b4r07femjr3n5" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack3-01.png" id="41_8y5r0"]
 [ext_resource type="Texture2D" uid="uid://d2ialn7q50u6w" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-air-attack3-rdy-00.png" id="41_13u44"]
-[ext_resource type="Script" path="res://Character/Player/UI/WallSlide.gd" id="41_qixio"]
 [ext_resource type="Texture2D" uid="uid://cau7sgvghhf0b" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack3-02.png" id="42_6rlje"]
 [ext_resource type="Texture2D" uid="uid://dyetfep4favr4" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack3-03.png" id="43_gh1br"]
 [ext_resource type="Texture2D" uid="uid://ctjd06ri5ysbx" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack3-04.png" id="44_scvyd"]
@@ -100,9 +100,10 @@
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundedAttack2.gd" id="72_t4ijd"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundedAttack3.gd" id="73_5exvu"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/AirAttack1.gd" id="74_kxsit"]
-[ext_resource type="Script" path="res://Character/Player/Scenes/AirAttack2.gd" id="82_s6fht"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/LandingLag.gd" id="83_pq2wu"]
+[ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/AirAttack2.gd" id="88_lli4y"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundPound.gd" id="89_tqgg8"]
+[ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/WallSlide.gd" id="101_lae4r"]
 [ext_resource type="Texture2D" uid="uid://cmvmd1suu7ptj" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Base Color.png" id="104_w3v4d"]
 [ext_resource type="PackedScene" uid="uid://d18ny0w4wlb1h" path="res://Universal_Scenes/camera.tscn" id="105_tcjc0"]
 
@@ -1696,7 +1697,7 @@ _data = {
 "Rest": SubResource("Animation_tq0si")
 }
 
-[node name="Player" type="CharacterBody2D" groups=["Player"]]
+[node name="Player" type="CharacterBody2D" groups=["Persist", "Player"]]
 process_mode = 1
 collision_mask = 22
 floor_max_angle = 1.10479
@@ -1776,6 +1777,13 @@ offset_top = 15.0
 offset_right = 15.0
 offset_bottom = 15.0
 mouse_filter = 2
+healthy_color = null
+caution_color = null
+danger_color = null
+pulse_color = null
+flash_color = null
+caution_zone = null
+danger_zone = null
 will_pulse = true
 
 [node name="DeathScreen" type="ColorRect" parent="UI"]
@@ -1809,6 +1817,12 @@ text = "You Died"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="QuickMenu" parent="UI" node_paths=PackedStringArray("player") instance=ExtResource("8_ea3g2")]
+visible = false
+z_index = 1
+mouse_filter = 2
+player = NodePath("../..")
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 show_behind_parent = true
 texture_filter = 1
@@ -1825,7 +1839,7 @@ script = ExtResource("2_pa1y2")
 initial_state = "Idle"
 machine_owner = NodePath("..")
 
-[node name="Attack" type="Node" parent="StateMachine"]
+[node name="Attack" type="Node" parent="StateMachine" groups=["Player Hitboxes"]]
 script = ExtResource("52_61mr7")
 hitbox = ExtResource("58_tx02o")
 
@@ -1861,7 +1875,7 @@ dodge_cancellable = false
 attack_type = "Air"
 
 [node name="AirAttack2" type="Node" parent="StateMachine/Attack"]
-script = ExtResource("82_s6fht")
+script = ExtResource("88_lli4y")
 animation_name = "AirAttack2"
 friction = 1.0
 landing_lag = 9
@@ -1876,6 +1890,7 @@ fall_speed = 800
 minimum_damage = 15
 maximum_damage = 45
 height_scaler = 0.1
+camera_shake_amount = 3.0
 hitstop = 7
 camera_shake_strength = 5.0
 attack_type = "Air"
@@ -1898,9 +1913,7 @@ animation_name = "Death"
 
 [node name="Dodge" type="Node" parent="StateMachine"]
 script = ExtResource("46_cwimo")
-dodge_duration = null
 dodge_speed = 250
-dodge_cooldown = null
 animation_name = "Dodge"
 
 [node name="Fall" type="Node" parent="StateMachine"]
@@ -1961,9 +1974,11 @@ push = 500
 animation_name = "Slide"
 
 [node name="WallSlide" type="Node" parent="StateMachine"]
-script = ExtResource("41_qixio")
+script = ExtResource("101_lae4r")
 eject_timer = 0.2
 wallslide_cooldown = 0.1
+jump_decay_rate = 0.15
+jump_boost = 150
 animation_name = "WallSlide"
 
 [node name="Timers" type="Node" parent="StateMachine"]
@@ -1980,6 +1995,8 @@ one_shot = true
 one_shot = true
 
 [node name="Walljump_Cooldown" type="Timer" parent="StateMachine/Timers"]
+wait_time = 0.2
+one_shot = true
 
 [node name="Superjump" type="Timer" parent="StateMachine/Timers"]
 one_shot = true
@@ -2059,8 +2076,8 @@ wait_time = 0.4
 one_shot = true
 
 [node name="Backgrounds" type="ParallaxBackground" parent="."]
-visible = false
 script = ExtResource("58_wunj3")
+tween_duration = 0.25
 
 [node name="PastBackground" type="ParallaxLayer" parent="Backgrounds"]
 motion_scale = Vector2(0, 0)
@@ -2088,6 +2105,7 @@ position = Vector2(-8.561, 17.55)
 ignore_rotation = false
 enabled = true
 process_callback = 0
+SHAKE_DECAY = 0.15
 
 [connection signal="pressed" from="UI/MenuButton" to="." method="_on_menu_button_pressed"]
 [connection signal="timeout" from="Invlv_Timer" to="." method="_on_invlv_timer_timeout"]

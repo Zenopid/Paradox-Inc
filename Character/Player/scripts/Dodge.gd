@@ -20,11 +20,11 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	jump_node = state_machine.find_state("Jump")
 	fall_node = state_machine.find_state("Fall")
+	dodge_timer = state_machine.get_timer("Dodge_Cooldown")
+	dodge_timer.wait_time = dodge_cooldown
 
 func enter(_msg: = {}):
 	super.enter()
-	dodge_timer = state_machine.get_timer("Dodge_Cooldown")
-	dodge_timer.wait_time = dodge_cooldown
 	entity.anim_player.connect("animation_finished", Callable(self, "end_dodge"))
 	if abs(entity.motion.x) > dodge_speed: 
 		return
@@ -35,25 +35,27 @@ func enter(_msg: = {}):
 
 func physics_process(delta: float):
 	entity.motion.y += jump_node.get_gravity() * delta
-	if entity.motion.y > fall_node.maximum_fall_speed:
-		entity.motion.y = fall_node.maximum_fall_speed 
 	entity.motion.y = clamp(entity.motion.y, 0, fall_node.maximum_fall_speed)
 	default_move_and_slide()
 	if dodge_over:
 		leave_dodge()
 	if is_actionable:
 		if grounded():
-			enter_move_state()
-		state_machine.transition_to("Fall")
-		return
+			if enter_crouch_state():
+				return
+			if enter_jump_state():
+				return
+			if get_movement_input() != 0:
+				state_machine.transition_to("Run")
+				return
+			
 
 func leave_dodge():
 	if grounded():
 		if Input.is_action_pressed("jump"):
 			state_machine.transition_to("Jump", {can_superjump = state_machine.get_timer("Superjump").is_stopped()})
 			return
-		if Input.is_action_pressed("crouch") and grounded():
-			state_machine.transition_to("Slide")
+		if enter_crouch_state():
 			return
 		enter_move_state()
 		return

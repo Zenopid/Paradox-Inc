@@ -7,6 +7,8 @@ const N_FLASHES = 4
 @onready var health_under = $HealthUnder
 
 
+@export var entity: Entity 
+
 @export var healthy_color: Color = Color.GREEN
 @export var caution_color:Color = Color.YELLOW
 @export var danger_color:Color = Color.RED
@@ -15,6 +17,10 @@ const N_FLASHES = 4
 @export var caution_zone:float = 0.5
 @export var danger_zone:float = 0.2
 @export var will_pulse:bool = false
+
+#func _ready():
+#	var update_tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+#	update_tween.tween_property(health_under, "value", entity., 0.5)
 
 func _on_health_updated(health, amount):
 	health_over.value = health

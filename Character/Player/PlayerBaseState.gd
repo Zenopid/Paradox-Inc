@@ -80,17 +80,19 @@ func enter_attack_state():
 func can_wallslide():
 	var wall_checker = state_machine.get_raycast("WallChecker")
 	var ground_checker = state_machine.get_raycast("GroundChecker")
-	if wall_checker.is_colliding():
-		ground_checker.force_raycast_update()
-		if !ground_checker.is_colliding():
-			if wall_checker.position.x < entity.position.x:
-				if get_movement_input() < 0:
-					state_machine.transition_to("WallSlide")
-					return true
-			else:
-				if get_movement_input() > 0:
-					state_machine.transition_to("WallSlide")
-					return true
+	var wall_jump_timer = state_machine.get_timer("Walljump_Cooldown")
+	if wall_jump_timer.is_stopped():
+		if wall_checker.is_colliding():
+			ground_checker.force_raycast_update()
+			if !ground_checker.is_colliding():
+				if wall_checker.position.x < entity.position.x:
+					if get_movement_input() < 0:
+						state_machine.transition_to("WallSlide")
+						return true
+				else:
+					if get_movement_input() > 0:
+						state_machine.transition_to("WallSlide")
+						return true
 	return false
 
 func can_fall():

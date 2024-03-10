@@ -3,6 +3,8 @@ extends BaseStrike
 @export var fall_speed:int = 400
 @export var minimum_damage:int = 30
 @export var maximum_damage:int = 65
+@export var height_scaler: float = 0.25
+@export var camera_shake_amount: float = 0.6
 
 var attack_status: String 
 
@@ -13,7 +15,6 @@ var ground_pound_damage: int
 
 var has_hit_ground: bool = false
 
-@export var height_scaler: float = 0.25
 
 func enter(_msg: = {}):
 	has_hit_ground = false
@@ -48,6 +49,6 @@ func physics_process(delta):
 			has_hit_ground = true
 			change_status("Landing")
 			attack_state.create_hitbox(39.625, 14.01,ground_pound_damage,1, 180, 4, "Normal", 1, Vector2(-1.375, 10.505), Vector2(700, -500))
-			entity.camera.set_shake(0.5)
+			entity.camera.set_shake(camera_shake_amount)
 			print(str(ground_pound_damage) + " is the ground pound's damage.")
 	super.physics_process(delta)

@@ -12,12 +12,15 @@ signal killed()
 @onready var health_bar = $UI/HealthBar
 @onready var sprite: AnimatedSprite2D = get_node("AnimatedSprite2D")
 @onready var camera: Camera2DPlus = $Camera
+@onready var quick_menu:Control = $UI/QuickMenu
+
 @export var slow_down: float = 0.1
 @export var max_health: int = 100
 
+var items = []
 var respawn_timeline: String = "Future"
-
 var spawn_point: Vector2
+
 #
 #func set_camera(camera_name: Camera2DPlus):
 #	camera = camera_name
@@ -33,13 +36,10 @@ func _ready():
 	super._ready()
 	states.init(self, debug_info)
 	effects_aniamtion.play("Rest")
-	for node in get_parent().get_children():
-		if node is GenericLevel:
-			current_level = node
 	$UI/TimelineTracker.init(self)
 	$Backgrounds.init(self)
 	connect("health_updated", Callable(health_bar, "_on_health_updated"))
-	if get_node_or_null("GroundChecker"):
+	if has_node("GroundChecker"):
 		get_node("GroundChecker").queue_free()
 
 func _physics_process(delta):
@@ -50,6 +50,8 @@ func _input(event):
 		Engine.time_scale = slow_down
 	else: 
 		Engine.time_scale = 1
+	if Input.is_action_just_pressed("options"):
+		quick_menu.enable_menu(current_level.name)
 
 func set_spawn(location: Vector2, res_timeline: String = "Future"):
 	spawn_point = location
@@ -69,6 +71,7 @@ func _set_health(value):
 
 func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0):
 	if invlv_timer.is_stopped():
+		Input.start_joy_vibration(0, 0.5,0, 0.2)
 		invlv_timer.start()
 		_set_health(health - amount)
 		effects_aniamtion.play("Damaged")
@@ -81,7 +84,6 @@ func heal(amount):
 	_set_health(health + amount)
 
 func kill():
-	print("dyin")
 	states.transition_to("Dead")
 
 func _on_invlv_timer_timeout():
