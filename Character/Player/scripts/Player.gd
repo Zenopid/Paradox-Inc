@@ -69,10 +69,10 @@ func _physics_process(delta):
 func _input(event):
 	if Input.is_action_just_pressed("options"):
 		quick_menu.enable_menu(current_level.name)
-	if Input.is_action_pressed("slow_time"):
-		Engine.time_scale = slow_down
-	elif Input.is_action_just_released("slow_time"):
-		Engine.time_scale = 1
+#	if Input.is_action_pressed("slow_time"):
+#		Engine.time_scale = slow_down
+#	elif Input.is_action_just_released("slow_time"):
+#		Engine.time_scale = 1
 
 func set_spawn(location: Vector2, res_timeline: String = "Future"):
 	spawn_point = location

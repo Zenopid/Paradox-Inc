@@ -1,9 +1,10 @@
 class_name PlayerBaseState extends BaseState
 
 func casting_portal() -> bool:
-	if !Input.is_action_pressed("portal_a") and !Input.is_action_pressed("portal_b"):
-		return false
-	return true
+#	if !Input.is_action_pressed("portal_a") and !Input.is_action_pressed("portal_b"):
+#		return false
+#	return true
+	return false
 
 func enter_move_state():
 	if !casting_portal():
@@ -63,12 +64,12 @@ func enter_dodge_state():
 	return false
 
 func enter_portal_state():
-	if Input.is_action_just_pressed("portal_a"):
-		state_machine.transition_to("Portal", {state = state_machine.get_current_state(),portal_type = "A"})
-		return true
-	if Input.is_action_just_pressed("portal_b"):
-		state_machine.transition_to("Portal", {state = state_machine.get_current_state(), portal_type = "B"})
-		return true
+#	if Input.is_action_just_pressed("portal_a"):
+#		state_machine.transition_to("Portal", {state = state_machine.get_current_state(),portal_type = "A"})
+#		return true
+#	if Input.is_action_just_pressed("portal_b"):
+#		state_machine.transition_to("Portal", {state = state_machine.get_current_state(), portal_type = "B"})
+#		return true
 	return false
 
 func enter_attack_state():
