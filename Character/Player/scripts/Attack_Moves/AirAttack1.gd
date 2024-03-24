@@ -6,7 +6,6 @@ extends BaseStrike
 var air_hitbox:Hitbox
 
 func physics_process(delta):
-	
 	if Input.is_action_just_pressed("attack"):
 		if Input.is_action_pressed("crouch"):
 			buffer_attack = "GroundPound"

@@ -60,7 +60,7 @@ func air_attack_logic():
 		if current_active_hitbox():
 			attack_state.apply_lag(landing_lag)
 		else:
-			attack_state.apply_lag(int(landing_lag/2))
+			attack_state.apply_lag(int(round((landing_lag/2))))
 
 func physics_process(delta):
 	if attack_type == "Ground" and !grounded():

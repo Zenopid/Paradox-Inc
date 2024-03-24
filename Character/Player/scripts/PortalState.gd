@@ -35,7 +35,8 @@ func physics_process(delta):
 	original_state.physics_process(delta)
 
 func anim_over():
-	active_portal.position = get_viewport().get_camera_2d().get_global_mouse_position()
-	active_portal.change_portal_state()
+	if active_portal:
+		active_portal.position = get_viewport().get_camera_2d().get_global_mouse_position()
+		active_portal.change_portal_state()
 	state_machine.transition_to(original_state_name,{},"", false, true)
 	return

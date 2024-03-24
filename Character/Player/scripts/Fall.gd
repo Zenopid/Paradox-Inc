@@ -12,6 +12,8 @@ var jump_buffer: Timer
 var wall_checker: RayCast2D 
 var ground_checker: RayCast2D
 
+var buffer_on_cd: bool = false
+
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	wall_checker = state_machine.get_raycast("WallChecker")
@@ -21,6 +23,8 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	jump_buffer.wait_time = buffer_duration
 	walljump_node = state_machine.find_state("WallSlide")
 
+
+
 func enter(_msg: = {}) -> void:
 	super.enter()
 	wall_checker.enabled = true
@@ -28,11 +32,10 @@ func enter(_msg: = {}) -> void:
 	
 func input(_event: InputEvent):
 	if Input.is_action_just_pressed("jump"):
+		jump_buffer.start()
 		if jump_node.remaining_jumps > 0: 
 			state_machine.transition_to("Jump")
 			return
-		else:
-			jump_buffer.start()
 
 func physics_process(delta):
 	if can_wallslide():
@@ -43,7 +46,7 @@ func physics_process(delta):
 	entity.motion.y = clamp(entity.motion.y, entity.motion.y + jump_node.get_gravity() * delta, maximum_fall_speed)
 	if grounded():
 		walljump_node.jump_decay = 1
-		if !jump_buffer.is_stopped():
+		if !jump_buffer.is_stopped() and !buffer_on_cd:
 			entity.motion.x *= 1 + bunny_hop_boost
 			state_machine.transition_to("Jump")
 			jump_buffer.stop()

@@ -1704,6 +1704,7 @@ floor_max_angle = 1.10479
 script = ExtResource("1_d84qb")
 
 [node name="UI" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
 
 [node name="InjureScreen" type="ColorRect" parent="UI"]
 modulate = Color(1, 1, 1, 0)
@@ -1745,6 +1746,7 @@ vertical_alignment = 1
 script = ExtResource("4_urpi3")
 
 [node name="Stopwatch" type="Label" parent="UI"]
+unique_name_in_owner = true
 texture_filter = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -1772,6 +1774,7 @@ scale = Vector2(2, 2)
 text = "Main Menu"
 
 [node name="HealthBar" parent="UI" instance=ExtResource("6_62s4t")]
+unique_name_in_owner = true
 offset_left = 15.0
 offset_top = 15.0
 offset_right = 15.0
@@ -1818,8 +1821,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="QuickMenu" parent="UI" node_paths=PackedStringArray("player") instance=ExtResource("8_ea3g2")]
+unique_name_in_owner = true
 visible = false
-z_index = 1
+z_index = 1000
 mouse_filter = 2
 player = NodePath("../..")
 
@@ -1861,11 +1865,12 @@ hitstop = 4
 script = ExtResource("73_5exvu")
 animation_name = "Grounded_Attack_3"
 lunge_distance = 350
-hitstop = 9
+hitstop = 6
 camera_shake_strength = 0.5
 
 [node name="AirAttack1" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("74_kxsit")
+damage = 15
 animation_name = "AirAttack1"
 friction = 1.0
 landing_lag = 7
@@ -1876,6 +1881,7 @@ attack_type = "Air"
 
 [node name="AirAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("88_lli4y")
+damage = 10
 animation_name = "AirAttack2"
 friction = 1.0
 landing_lag = 9
@@ -1930,6 +1936,7 @@ animation_name = "Idle"
 
 [node name="Jump" type="Node" parent="StateMachine"]
 script = ExtResource("32_nkne8")
+double_jumps = 0
 jump_height = 120.0
 jump_time_to_peak = 0.5
 jump_time_to_descent = 0.4
@@ -2007,7 +2014,6 @@ one_shot = true
 [node name="Raycasts" type="Node" parent="StateMachine"]
 
 [node name="WallChecker" type="RayCast2D" parent="StateMachine/Raycasts"]
-visible = false
 position = Vector2(-12.55, -10.5)
 scale = Vector2(4, 1)
 target_position = Vector2(0, 25)

@@ -3,11 +3,12 @@ class_name GameManager extends Node
 signal setting_changed(setting_name, new_setting)
 signal game_over
 signal update_settings()
+signal level_over()
 
 class VisualSettings:
 	var camera_flash: bool = true 
 	var camera_shake: bool = true
-	var resolution: Vector2i = Vector2i(1152, 648)
+	var resolution: Vector2i = Vector2i(120, 70)
 	var v_sync_enabled: bool = true
 	var fullscreen: bool = false
 
@@ -25,6 +26,7 @@ class ControlSettings:
 	var attack_button = InputMap.action_get_events("attack")
 	var dodge_button = InputMap.action_get_events("dodge")
 	var timeline_button = InputMap.action_get_events("swap_timeline")
+	var options_button = InputMap.action_get_events("options")
 	var vibration:bool = true 
 
 var hitstop_frames_remaining: int = 0
@@ -57,9 +59,14 @@ var setting_class_names: = [
 ]
 
 #im guessing 127 lines by demo
+#edit: im guessing no demo LMAO (due friday (end of march break), writing this on thursday...
 var game_data: Dictionary
 
+var player_instance: Player
 
+func _ready():
+	visual_settings.resolution = get_window().size
+	
 
 func set_setting(setting_class:String, setting_name: String, new_setting):
 	if setting_name in get(setting_class):
@@ -102,8 +109,11 @@ func set_setting(setting_class:String, setting_name: String, new_setting):
 	print_debug("Couldn't set setting " + str(setting_name) + " in class " + str(setting_class) )
 
 func get_setting(setting_class:String, setting_name:String):
-	if setting_name in get(setting_class):
-		return get(setting_class).get(setting_name)
+	var setting = get(setting_class).get(setting_name)
+	if setting:
+		return setting
+#	if setting_name in get(setting_class):
+#		return get(setting_class).get(setting_name)
 	print_debug("Couldn't get setting " + str(setting_name) + " in class " + str(setting_class) )
 
 func apply_hitstop(duration):
@@ -135,7 +145,7 @@ func save_game(player_status:Player, current_save_file: int = 1):
 			continue
 		if !node.has_method("save"):
 			print_debug("node doesn't have save func, skipped " % node.name)
-			
+		
 		var node_data = node.call("save")
 		var json_string = JSON.stringify(node_data)
 #	var player_spawn = player_status.get_spawn()
@@ -191,6 +201,6 @@ func load_save_file(file_number):
 	var level_path = "res://Levels/"
 	var level:PackedScene = load (level_path + level_data["level_name"] + ".tscn")
 	var level_instance: GenericLevel = level.instantiate()
-	level_instance.level_conditions = requested_file["level_conditions"]
+	level_instance = requested_file["level_conditions"]
 	var main = get_tree().get_first_node_in_group("Main")
 	main.add_child(level_instance)

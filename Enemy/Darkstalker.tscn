@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://bsn3xf0byil13"]
+[gd_scene load_steps=27 format=3 uid="uid://bsn3xf0byil13"]
 
 [ext_resource type="Script" path="res://Enemy/DarkStalker.gd" id="1_811do"]
 [ext_resource type="Texture2D" uid="uid://lofcnrqvh2h0" path="res://Sprites/NightBorne/NightBorne.png" id="3_meyua"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://Enemy/DarkStalker/GroundChecker.gd" id="9_s5haw"]
 [ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="9_wp7pv"]
 [ext_resource type="PackedScene" uid="uid://bvewt1lavbj41" path="res://Universal_Scenes/VFX/hitsparks.tscn" id="10_jaece"]
+[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="11_x2s36"]
 [ext_resource type="PackedScene" uid="uid://bgvgjuwnxk7st" path="res://Enemy/DarkStalker/ai_tree.tscn" id="18_t7mad"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_trnwt"]
@@ -284,13 +285,18 @@ _data = {
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_duk8c"]
-radius = 100.0
+radius = 250.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tqq4v"]
+radius = 37.6
 
 [node name="Darkstalker" type="CharacterBody2D" groups=["Enemy", "Persist"]]
 collision_layer = 128
-collision_mask = 31
+collision_mask = 159
 floor_max_angle = 1.10479
 script = ExtResource("1_811do")
+detection_color = Color(0, 0.839216, 0.0156863, 0.235294)
+no_detection_color = Color(0.839216, 0, 0, 0.235294)
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("3_meyua")
@@ -327,25 +333,25 @@ offset_right = 52.0
 offset_bottom = -9.0
 theme_override_fonts/font = ExtResource("8_bxbni")
 text = "Speed: 10,10"
+metadata/_edit_use_anchors_ = true
 
 [node name="Pathfinder" type="NavigationAgent2D" parent="."]
 
 [node name="AI_Tree" parent="." node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("18_t7mad")]
 enabled = true
-blackboard = NodePath("@Node@114025")
+blackboard = NodePath("../Blackboard")
 actor = NodePath("..")
 
 [node name="Raycasts" type="Node" parent="."]
 
 [node name="LOS" type="RayCast2D" parent="Raycasts" node_paths=PackedStringArray("entity")]
-visible = false
-position = Vector2(-12, 10)
-scale = Vector2(-1, 20)
-target_position = Vector2(250, 0)
+position = Vector2(0, 12)
+target_position = Vector2(450, 0)
 collision_mask = 207
 hit_from_inside = true
 script = ExtResource("8_stb7w")
 entity = NodePath("../..")
+vision_distance = 450
 
 [node name="GroundChecker" type="RayCast2D" parent="Raycasts" node_paths=PackedStringArray("entity")]
 position = Vector2(14, 10)
@@ -361,7 +367,10 @@ hitbox = ExtResource("9_wp7pv")
 current_entity = NodePath("..")
 
 [node name="DetectionSphere" type="Area2D" parent="."]
-collision_mask = 137
+collision_layer = 128
+collision_mask = 169
+collision_priority = 5.0
+priority = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionSphere"]
 position = Vector2(0, 9)
@@ -388,3 +397,19 @@ will_pulse = null
 
 [node name="Hitsparks" parent="." instance=ExtResource("10_jaece")]
 scale = Vector2(-2, 2)
+
+[node name="Blackboard" type="Node" parent="."]
+script = ExtResource("11_x2s36")
+
+[node name="EnemySphere" type="Area2D" parent="."]
+collision_layer = 128
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySphere"]
+shape = SubResource("CircleShape2D_tqq4v")
+debug_color = Color(0, 0.701961, 0.32549, 0.419608)
+
+[connection signal="body_entered" from="DetectionSphere" to="." method="_on_detection_sphere_body_entered"]
+[connection signal="body_exited" from="DetectionSphere" to="." method="_on_detection_sphere_body_exited"]
+[connection signal="body_entered" from="EnemySphere" to="." method="_on_enemy_sphere_body_entered"]
+[connection signal="body_exited" from="EnemySphere" to="." method="_on_enemy_sphere_body_exited"]

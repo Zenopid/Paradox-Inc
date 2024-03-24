@@ -1,4 +1,5 @@
-class_name GenericLevel extends Node
+class_name GenericLevel extends Node2D
+
 
 @onready var future: TileMap = get_node("Future")
 @onready var past: TileMap = get_node("Past")
@@ -6,19 +7,28 @@ class_name GenericLevel extends Node
 @onready var past_tileset: TileSet
 @onready var music_player = $BGM
 @onready var spawn_point = get_node("SpawnPoint")
+@onready var end_screen = $"%LevelEnd"
 
 
-@export var current_timeline: String = "Future"
+@export_enum("Future", "Past") var current_timeline: String = "Future"
 
 signal swapped_timeline(new_timeline)
 
 var music_playlist = []
 var level_conditions = {}
-
 var restarting_level = false
-
 var box_scene = preload("res://Universal_Scenes/Interactables/box.tscn")
 var darkstalker_scene = preload("res://Enemy/Darkstalker.tscn")
+
+var lock_timeline:bool = false
+var lock_music:bool = false
+
+var old_timeline_tileset: TileSet
+var current_timeline_tileset: TileSet
+
+var current_player: Player
+
+var player_deaths: int = 0
 
 func _ready():
 	load_music()
@@ -29,6 +39,15 @@ func _ready():
 	set_timeline(old_timeline)
 	#for some reason this is needed in order to wall slide. prob some issue 
 	#with collision or somethin
+	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
+	
+func _on_game_over():
+	self.queue_free()
+
+func _on_player_respawning():
+	print(current_player.respawn_timeline)
+	set_timeline(current_player.respawn_timeline)
+	player_deaths += 1
 
 func load_music():
 	var folder_path = "res://audio/bgm/"
@@ -70,18 +89,18 @@ func _input(event):
 		if old_timeline:
 			old_timeline.modulate.a = 1
 
-func set_timeline(new_timeline):
-	var old_timeline_tileset:TileSet = get(current_timeline.to_lower() + "_tileset")
-	var new_timeline_tileset: TileSet = get(new_timeline.to_lower() + "_tileset")
+func set_timeline(new_timeline:String):
+	old_timeline_tileset = get(current_timeline.to_lower() + "_tileset")
+	current_timeline_tileset = get(new_timeline.to_lower() + "_tileset")
 	if current_timeline != new_timeline:
-		if !new_timeline_tileset:
+		if !current_timeline_tileset:
 			print_debug("No tileset for the timeline " + str(new_timeline))
 			return
 		for layers in old_timeline_tileset.get_physics_layers_count():
 			old_timeline_tileset.set_physics_layer_collision_layer(layers, 0) 
-		for layers in new_timeline_tileset.get_physics_layers_count():
-			for i in 32:
-				new_timeline_tileset.set_physics_layer_collision_layer(layers, i)
+		for layers in current_timeline_tileset.get_physics_layers_count():
+			for i in 24:
+				current_timeline_tileset.set_physics_layer_collision_layer(layers, i)
 		var active_timeline = get(current_timeline.to_lower())
 		active_timeline.visible = false
 		current_timeline = new_timeline 
@@ -101,7 +120,7 @@ func set_timeline(new_timeline):
 					alt_timeline.set_physics_layer_collision_layer(layers,0)
 		var starting_timeline = get(current_timeline.to_lower())
 		for layers in starting_timeline.tile_set.get_physics_layers_count():
-			for i in 32:
+			for i in 24:
 				starting_timeline.tile_set.set_physics_layer_collision_layer(layers, i)
 				
 func get_start_point():
@@ -119,3 +138,6 @@ func get_current_timeline():
 func save():
 	pass
 	#virtual method for each level i guess. i hate resources lol
+
+func set_player(new_player):
+	current_player = new_player

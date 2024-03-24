@@ -7,20 +7,21 @@ extends Area2D
 
 var checkpoint_reached:bool
 
-@export var Timeline:String = "Future"
+@export_enum("Future", "Past")var timeline:String = "Future"
 
+@onready var vfx: Line2D = $Laser
 func _ready():
-	$Line2D.default_color = disabled_color
-
+	vfx.default_color = disabled_color
+	
 
 func _on_body_entered(body):
 	if body is Player:
-		var character: Player = body
 		if !checkpoint_reached:
 			checkpoint_reached = true
-			body.set_spawn(Vector2(position.x, position.y - 30))
+			body.set_spawn(Vector2(position.x, position.y - 30), timeline)
+			body.respawn_timeline = timeline
 			body.heal(heal_amount)
-			$Line2D.default_color = enabled_color
+			vfx.default_color = enabled_color
 			GlobalScript.emit_signal("update_settings")
 
 func save():
@@ -28,7 +29,7 @@ func save():
 		"parent": get_parent().name,
 		"checkpoint_reached": checkpoint_reached,
 		"heal_amount": heal_amount,
-		"timeline": Timeline,
+		"timeline": timeline,
 		"position": {
 			"x": position.x,
 			"y": position.y

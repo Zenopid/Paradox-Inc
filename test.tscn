@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://n4q874fsupam"]
+
+[ext_resource type="Script" path="res://Universal_Scenes/Interactables/Waypoints.gd" id="2_ghi1p"]
+[ext_resource type="PackedScene" uid="uid://xjsw2viwx3yw" path="res://Universal_Scenes/Interactables/moving_platform.tscn" id="3_y6ms4"]
+
+[sub_resource type="Curve2D" id="Curve2D_yaeil"]
+bake_interval = 0.01
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 0, 0, 0, 0, 0, 0, 0)
+}
+point_count = 3
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1d6tp"]
+
+[node name="Test" type="Node"]
+
+[node name="MovingPlatform" type="Path2D" parent="."]
+curve = SubResource("Curve2D_yaeil")
+script = ExtResource("2_ghi1p")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="MovingPlatform"]
+position = Vector2(45.0415, 0)
+progress = 45.0416
+rotates = false
+
+[node name="MovingPlatform" parent="MovingPlatform/PathFollow2D" instance=ExtResource("3_y6ms4")]
+speed = 50
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MovingPlatform/PathFollow2D/MovingPlatform"]
+shape = SubResource("RectangleShape2D_1d6tp")
+
+[node name="Pause_Duration" type="Timer" parent="MovingPlatform"]
+one_shot = true
+
+[connection signal="timeout" from="MovingPlatform/Pause_Duration" to="MovingPlatform" method="_on_pause_duration_timeout"]

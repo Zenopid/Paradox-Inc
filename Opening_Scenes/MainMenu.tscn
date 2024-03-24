@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://c4fjnew0fybpk"]
+[gd_scene load_steps=6 format=3 uid="uid://c4fjnew0fybpk"]
 
 [ext_resource type="Script" path="res://Opening_Scenes/MainMenu.gd" id="1_3biwq"]
 [ext_resource type="FontFile" uid="uid://by1k102hd7hkp" path="res://fonts/Pixellari.ttf" id="1_l6hr5"]
 [ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="2_l0nly"]
 [ext_resource type="PackedScene" uid="uid://do42anfb1sgba" path="res://Assorted_Scenes/settings.tscn" id="4_krxrd"]
+[ext_resource type="PackedScene" uid="uid://clrxebh7buvqx" path="res://Levels/level_end.tscn" id="5_j4oom"]
 
 [node name="Game" type="Control"]
 process_mode = 3
@@ -106,6 +107,12 @@ text = "Settings"
 [node name="Settings" parent="." instance=ExtResource("4_krxrd")]
 visible = false
 layout_mode = 1
+
+[node name="LevelEnd" parent="." instance=ExtResource("5_j4oom")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+mouse_filter = 2
 
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/Training" to="." method="_on_training_pressed"]

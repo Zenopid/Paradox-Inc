@@ -5,20 +5,24 @@ var player = preload("res://Character/Player/Scenes/player.tscn")
 var camera_path = preload("res://Universal_Scenes/camera.tscn")
 var first_level = preload("res://Levels/Act 1/Emergence.tscn")
 @onready var settings_scene = $Settings
-
-var player_instance: Player
+@onready var end_screen = $"%LevelEnd"
 var current_level: GenericLevel
 
 func _ready():
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
+	GlobalScript.connect("level_over", Callable(self, "_on_level_over"))
 
+func _on_level_over():
+	end_screen.end_level(current_level)
+	enable_menu()
 
-func add_player(pos) -> Player:
-	player_instance = player.instantiate()
+func add_player(pos) -> Player: 
+	var player_instance = player.instantiate()
 	player_instance.position = pos
 	player_instance.set_spawn(pos)
 	player_instance.set_level( current_level )
-	add_child(player_instance)
+	player_instance.add_to_group("Players")
+	add_child(player_instance) 
 	return player_instance
 	
 
@@ -52,6 +56,7 @@ func _on_training_pressed():
 	var spawn_spot = training_instance.get_start_point()
 	add_player(spawn_spot)
 	GlobalScript.current_level = "Training"
+	
 
 func _on_settings_pressed():
 	disable_menu()
@@ -59,16 +64,20 @@ func _on_settings_pressed():
 	settings_scene.connect("exiting_settings", Callable(self, "enable_menu"))
 
 func _on_game_over():
-	player_instance.queue_free()
 	current_level.queue_free()
+	for players in get_tree().get_nodes_in_group("Players"):
+		players.queue_free()
 	enable_menu()
 
 
 func _on_start_pressed():
-	var emergence_level:GenericLevel = first_level.instantiate()
-	current_level = emergence_level
 	disable_menu()
+	var emergence_level:GenericLevel = first_level.instantiate()
 	add_child(emergence_level)
+	current_level = emergence_level
 	var spawn_spot = emergence_level.get_start_point()
-	add_player(spawn_spot)
+	var player_instance = add_player(spawn_spot)
 	GlobalScript.current_level = "Emergence"
+	emergence_level.set_player(player_instance)
+	emergence_level.start_level()
+	

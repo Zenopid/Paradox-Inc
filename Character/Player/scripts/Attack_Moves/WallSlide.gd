@@ -42,7 +42,6 @@ func enter(_msg: = {}):
 	if previous_wall_direction != wall_direction:
 		jump_decay = 1
 		#Hopefully means that you jumped on another wall, because you're facing the other direction
-	print(jump_decay)
 	super.enter()
 	
 func input(_event: InputEvent) -> void:

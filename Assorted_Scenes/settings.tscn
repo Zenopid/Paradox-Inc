@@ -45,14 +45,36 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "Return"
 
-[node name="ColorRect2" type="ColorRect" parent="."]
+[node name="Blue_Background" type="ColorRect" parent="."]
 layout_mode = 2
 offset_left = 51.0
 offset_top = 48.0
-offset_right = 1103.0
-offset_bottom = 596.0
+offset_right = 1231.0
+offset_bottom = 667.0
 rotation = 0.00223235
 color = Color(0.0500001, 0, 0.6, 1)
+
+[node name="Apply" parent="Blue_Background" instance=ExtResource("2_ceyak")]
+unique_name_in_owner = true
+visible = false
+top_level = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -26.0
+offset_top = -88.0
+offset_right = 26.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(2, 2)
+size_flags_horizontal = 4
+size_flags_vertical = 10
+size_flags_stretch_ratio = 0.0
+text = " Apply "
 
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 1
@@ -65,9 +87,9 @@ offset_right = -50.0
 offset_bottom = -50.0
 grow_horizontal = 2
 grow_vertical = 2
+tab_alignment = 1
 
 [node name="Audio" type="VBoxContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -92,9 +114,9 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 2
-max_value = 1.0
-step = 0.05
-value = 0.5
+min_value = -10.0
+max_value = 20.0
+value = 1.0
 ticks_on_borders = true
 
 [node name="Game_Test" parent="TabContainer/Audio/Master" groups=["Music Testers"] instance=ExtResource("2_ceyak")]
@@ -103,13 +125,12 @@ layout_mode = 2
 size_flags_horizontal = 2
 text = "Test Game"
 
-[node name="Test_Music" type="AudioStreamPlayer" parent="TabContainer/Audio/Master" groups=["Audio"]]
+[node name="Test_Sound" type="AudioStreamPlayer" parent="TabContainer/Audio/Master" groups=["Audio"]]
 stream = ExtResource("4_wiew8")
 
 [node name="Divider2" type="HSeparator" parent="TabContainer/Audio"]
-custom_minimum_size = Vector2(1052, 25)
+custom_minimum_size = Vector2(1100, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -129,8 +150,8 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 2
-max_value = 1.0
-step = 0.05
+min_value = -10.0
+max_value = 20.0
 value = 1.0
 ticks_on_borders = true
 
@@ -140,22 +161,22 @@ layout_mode = 2
 size_flags_horizontal = 2
 text = "Test SFX  "
 
-[node name="Test_Music" type="AudioStreamPlayer" parent="TabContainer/Audio/SFX" groups=["Audio"]]
+[node name="Test_Sound" type="AudioStreamPlayer" parent="TabContainer/Audio/SFX" groups=["Audio"]]
 stream = ExtResource("4_wiew8")
 bus = &"Sfx"
 
 [node name="Divider" type="HSeparator" parent="TabContainer/Audio"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
 [node name="Music" type="HBoxContainer" parent="TabContainer/Audio"]
 layout_mode = 2
 
-[node name="Test_Music" type="AudioStreamPlayer" parent="TabContainer/Audio/Music" groups=["Audio"]]
+[node name="Test_Sound" type="AudioStreamPlayer" parent="TabContainer/Audio/Music" groups=["Audio"]]
 stream = ExtResource("4_wiew8")
+volume_db = 24.0
 bus = &"Music"
 
 [node name="Music_Volume" type="Label" parent="TabContainer/Audio/Music"]
@@ -170,9 +191,8 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 2
-max_value = 1.0
-step = 0.05
-value = 1.0
+min_value = -10.0
+max_value = 20.0
 ticks_on_borders = true
 
 [node name="Music_Test" parent="TabContainer/Audio/Music" groups=["Music Testers"] instance=ExtResource("2_ceyak")]
@@ -184,7 +204,6 @@ text = "Test Music"
 [node name="Divider3" type="HSeparator" parent="TabContainer/Audio"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -234,7 +253,6 @@ size_flags_horizontal = 2
 [node name="Divider" type="HSeparator" parent="TabContainer/Visual"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -256,7 +274,6 @@ size_flags_horizontal = 2
 [node name="Divider2" type="HSeparator" parent="TabContainer/Visual"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -279,7 +296,6 @@ size_flags_horizontal = 2
 [node name="Divider4" type="HSeparator" parent="TabContainer/Visual"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -303,7 +319,6 @@ button_pressed = false
 [node name="Divider3" type="HSeparator" parent="TabContainer/Visual"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -324,6 +339,7 @@ custom_minimum_size = Vector2(125, 0)
 layout_mode = 2
 
 [node name="Control" type="VBoxContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -353,7 +369,6 @@ size_flags_horizontal = 2
 [node name="Divider" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -377,7 +392,6 @@ size_flags_horizontal = 2
 [node name="Divider2" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -401,7 +415,6 @@ size_flags_horizontal = 2
 [node name="Divider4" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -425,7 +438,6 @@ size_flags_horizontal = 2
 [node name="Divider3" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -449,7 +461,6 @@ size_flags_horizontal = 2
 [node name="Divider5" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -473,7 +484,6 @@ size_flags_horizontal = 2
 [node name="Divider6" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -497,7 +507,29 @@ size_flags_horizontal = 2
 [node name="Divider7" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="OptionsButton" type="HBoxContainer" parent="TabContainer/Control"]
+layout_mode = 2
+
+[node name="ChangeOptions" type="Label" parent="TabContainer/Control/OptionsButton"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Options"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="options" parent="TabContainer/Control/OptionsButton" groups=["Rebind Buttons"] instance=ExtResource("2_ceyak")]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Divider8" type="HSeparator" parent="TabContainer/Control"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
 size_flags_vertical = 0
 theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 
@@ -515,18 +547,6 @@ vertical_alignment = 1
 [node name="EnableVibrate" parent="TabContainer/Control/EnableVibration" instance=ExtResource("4_3nxqt")]
 layout_mode = 2
 size_flags_horizontal = 2
-
-[node name="Apply" parent="." instance=ExtResource("2_ceyak")]
-visible = false
-layout_mode = 2
-offset_left = 550.0
-offset_top = 580.0
-offset_right = 602.0
-offset_bottom = 598.0
-size_flags_horizontal = 4
-size_flags_vertical = 10
-size_flags_stretch_ratio = 0.0
-text = " Apply "
 
 [node name="Control_Rebind_Screen" type="Panel" parent="."]
 visible = false
@@ -586,6 +606,7 @@ wait_time = 2.0
 one_shot = true
 
 [connection signal="pressed" from="ReturnButton" to="." method="_on_return_button_pressed"]
+[connection signal="pressed" from="Blue_Background/Apply" to="." method="_on_apply_pressed"]
 [connection signal="tab_changed" from="TabContainer" to="." method="_on_tab_container_tab_changed"]
 [connection signal="drag_ended" from="TabContainer/Audio/Master/Master_Slider" to="." method="_on_master_slider_drag_ended"]
 [connection signal="pressed" from="TabContainer/Audio/Master/Game_Test" to="." method="_on_game_test_pressed"]
@@ -598,4 +619,3 @@ one_shot = true
 [connection signal="toggled" from="TabContainer/Visual/EnableFullscreen/EnableFullscreen" to="." method="_on_enable_fullscreen_toggled"]
 [connection signal="resolution_changed" from="TabContainer/Visual/ChangeResolution/ResolutionOptions" to="." method="_on_resolution_options_resolution_changed"]
 [connection signal="toggled" from="TabContainer/Control/EnableVibration/EnableVibrate" to="." method="_on_enable_vibrate_toggled"]
-[connection signal="pressed" from="Apply" to="." method="_on_apply_pressed"]

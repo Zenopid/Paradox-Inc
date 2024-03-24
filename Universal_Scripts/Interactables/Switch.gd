@@ -6,6 +6,8 @@ signal status_changed(new_status: bool)
 
 @export var timeline:String = "Future"
 @export var level: GenericLevel
+@onready var on_sprite: Sprite2D = $OnSprite
+@onready var off_sprite: Sprite2D = $OffSprite
 
 func _ready():
 	level.connect("swapped_timeline", Callable(self, "swap_view"))
@@ -13,8 +15,8 @@ func _ready():
 	
 func _on_body_entered(body):
 	is_on = true
-	$OnSprite.show()
-	$OffSprite.hide()
+	on_sprite.show()
+	off_sprite.hide()
 	emit_signal("status_changed", is_on)
 
 func swap_view(new_timeline):
@@ -26,12 +28,11 @@ func swap_view(new_timeline):
 		monitoring = true
 
 func _on_body_exited(body):
-	if monitoring:
-		if !has_overlapping_bodies():
-			is_on = false
-			$OnSprite.hide()
-			$OffSprite.show()
-			emit_signal("status_changed", is_on)
+	if !has_overlapping_bodies() && monitoring:
+		is_on = false
+		on_sprite.hide()
+		off_sprite.show()
+		emit_signal("status_changed", is_on)
 
 func save():
 	var save_dict = {

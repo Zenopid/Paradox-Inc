@@ -45,10 +45,9 @@ func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle
 	hitbox_instance.set_parameters(damage, width, height, kb_amount, angle, type, angle_flipper, hitbox_location, duration, push, hitlag)
 	if active_attack:
 		hitbox_instance.connect("hitbox_collided", Callable(active_attack, "on_attack_hit"))
-	else:
-		pass
+#	else:
 #		print("there's no attack.")
-	num_of_active_hitboxes += 1
+	hitbox_instance.add_to_group(current_entity.name + " Hitboxes")
 	return hitbox_instance
 
 func enter(msg: = {}):
@@ -69,7 +68,7 @@ func _on_attack_over(anim_name):
 func physics_process(delta: float) -> void:
 	if active_attack:
 		active_attack.physics_process(delta)
-	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
+	ground_checker.position = Vector2(current_entity.position.x, entity.position.y + 13.5)
 	default_move_and_slide()
 	
 	
@@ -83,9 +82,8 @@ func switch_attack(attack_name):
 		emit_signal("new_attack",active_attack.name)
 
 func clear_hitboxes():
-	for nodes in get_children():
-		if nodes is Hitbox:
-			nodes.queue_free()
+	for nodes in get_tree().get_nodes_in_group(current_entity.name + " Hitboxes"):
+		nodes.queue_free()
 
 func exit():
 	if active_attack:

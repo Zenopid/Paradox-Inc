@@ -2,17 +2,21 @@ class_name Player extends Entity
 
 signal health_updated(health)
 signal killed()
+signal respawning()
 
 @onready var state_tracker = $Debug/StateTracker
 @onready var debug_info = $Debug
 @onready var health:int = max_health 
 @onready var invlv_timer = $Invlv_Timer
 @onready var effects_aniamtion: AnimationPlayer = $EffectAnimator
-@onready var death_screen = $UI/DeathScreen
-@onready var health_bar = $UI/HealthBar
+@onready var death_screen = $"%UI/DeathScreen"
+@onready var health_bar = $"%HealthBar"
 @onready var sprite: AnimatedSprite2D = get_node("AnimatedSprite2D")
 @onready var camera: Camera2DPlus = $Camera
-@onready var quick_menu:Control = $UI/QuickMenu
+@onready var quick_menu:Control = $"%QuickMenu"
+@onready var stopwatch: Label = $"%Stopwatch"
+
+@onready var UI:CanvasLayer = $"%UI"
 
 @export var slow_down: float = 0.1
 @export var max_health: int = 100
@@ -41,17 +45,34 @@ func _ready():
 	connect("health_updated", Callable(health_bar, "_on_health_updated"))
 	if has_node("GroundChecker"):
 		get_node("GroundChecker").queue_free()
+	GlobalScript.connect("level_over", Callable(self, "_on_level_over"))
+	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
+	
+func _on_game_over():
+	self.queue_free()
+
+func _on_level_over():
+	print("level's over doing the script")
+	camera.enabled = false
+	
+	UI.hide()
+	
+	set_process_input(false)
+	set_physics_process(false)
+	set_process(false)
+	
+	
 
 func _physics_process(delta):
 	super._physics_process(delta)
 
 func _input(event):
-	if Input.is_action_pressed("slow_time"):
-		Engine.time_scale = slow_down
-	else: 
-		Engine.time_scale = 1
 	if Input.is_action_just_pressed("options"):
 		quick_menu.enable_menu(current_level.name)
+	if Input.is_action_pressed("slow_time"):
+		Engine.time_scale = slow_down
+	elif Input.is_action_just_released("slow_time"):
+		Engine.time_scale = 1
 
 func set_spawn(location: Vector2, res_timeline: String = "Future"):
 	spawn_point = location
@@ -94,10 +115,11 @@ func get_death_screen():
 	
 func respawn():
 	position = spawn_point
-	get_level().set_timeline(respawn_timeline)
 	motion = Vector2.ZERO
 	if health > 0:
 		states.transition_to("Fall")
+	emit_signal("respawning")
 
 func death_logic():
 	GlobalScript.emit_signal("game_over")
+	GlobalScript.player_instance = null

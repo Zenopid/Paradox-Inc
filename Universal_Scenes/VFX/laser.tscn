@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://cslga75vdopuu"]
+
+[sub_resource type="Environment" id="Environment_5a8us"]
+background_mode = 3
+glow_enabled = true
+glow_hdr_threshold = 0.0
+
+[node name="Laser" type="Line2D"]
+self_modulate = Color(20, 20, 1, 1)
+points = PackedVector2Array(0, -75, 0, 0)
+width = 2.0
+default_color = Color(1.1, 0, 0.02, 1)
+metadata/_edit_group_ = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_5a8us")

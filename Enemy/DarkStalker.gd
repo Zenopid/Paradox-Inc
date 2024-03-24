@@ -5,6 +5,11 @@ signal killed()
 
 @export var max_health: int = 100
 @export_enum ("Future", "Past") var current_timeline:String = "Future"
+@export var detection_color: Color
+@export var no_detection_color: Color
+@export var gravity: int = 25
+@export var max_fall_speed: int = 150
+
 @onready var health:int = max_health 
 @onready var health_bar = $UI/HealthBar
 @onready var effects_animation = get_node_or_null("EffectAnimator")
@@ -14,13 +19,17 @@ signal killed()
 @onready var attack_node: DarkStalkerAttack = get_node_or_null("Attack")
 @onready var speed_tracker =  $Debug/MotionTracker
 @onready var detection_sphere: Area2D = $DetectionSphere
+@onready var detection_shape: CollisionShape2D = $DetectionSphere/CollisionShape2D
+@onready var enemy_sphere: Area2D = $EnemySphere
+@onready var enemy_sphere_shape: CollisionShape2D = $EnemySphere/CollisionShape2D
 @onready var hitsparks: GPUParticles2D = $Hitsparks
 
 var currently_attacking:bool = false
 var in_hitstun: bool = false
 var stun_cnt: int = 0
 var spawn_point: Vector2
-
+var player_close:bool = false
+var enemy_close: bool = false
 func get_spawn():
 	return spawn_point
 
@@ -34,6 +43,7 @@ func _ready():
 	current_level.connect("swapped_timeline", Callable(self, "pause_logic"))
 	if get_node_or_null("GroundChecker"):
 		get_node("GroundChecker").queue_free()
+	detection_shape.debug_color = no_detection_color
 
 
 func pause_logic(timeline):
@@ -52,7 +62,8 @@ func _physics_process(delta):
 	if stun_cnt <= 0:
 		in_hitstun = false
 	speed_tracker.text = "Speed: (" + str(round(motion.x)) + "," + str(round(motion.y)) + ")"
-	
+	motion.y += gravity
+	motion.y = clamp(motion.y, 0, max_fall_speed)
 
 func set_spawn(location: Vector2):
 	spawn_point = location
@@ -81,20 +92,22 @@ func heal(amount):
 	_set_health(health + amount)
 
 func kill():
-	beehave_tree.enabled = false
+	beehave_tree.free()
 	anim_player.play("Dead")
 	await anim_player.animation_finished
 	queue_free()
 	
-func get_raycast(ray_name):
-	if ray_name == "Ground Checker":
-		ray_name = "GroundChecker"
-	#some code is calling it that, don't know why.
+func get_raycast(ray_name:String) -> RayCast2D:
+#	if ray_name == "Ground Checker":
+#		ray_name = "GroundChecker"
+	if ray_name.contains(" "):
+		ray_name.replace(" ", "")
+		#get rid of spaces because something is calling it with spaces
 	var raycast:RayCast2D = get_node("Raycasts").get_node(ray_name)
 	if raycast:
 		return raycast
 	print_debug("Cannot find the raycast called " + ray_name)
-	
+	return null
 func is_in_hitstun():
 	return in_hitstun
 	
@@ -111,10 +124,7 @@ func create_hitbox(width,height,attack_damage, kb_amount, angle, duration, type,
 	attack_node.create_hitbox(width, height,attack_damage, kb_amount, angle, duration, type, angle_flipper, points, push, hitlag)
 
 func player_near():
-	for i in detection_sphere.get_overlapping_bodies():
-		if i is Player:
-			return true
-	return false
+	return player_close
 
 func clear_hitboxes():
 	get_node("Attack").clear_hitboxes()
@@ -129,3 +139,29 @@ func save():
 		"current_timeline": current_timeline,
 		"motion": motion
 	}
+
+
+func _on_detection_sphere_body_entered(body):
+	if body is Player:
+		detection_shape.debug_color = detection_color
+		player_close = true
+
+func _on_detection_sphere_body_exited(body):
+	print(body)
+	if body is Player:
+		detection_shape.debug_color = no_detection_color
+		player_close = false
+
+func _on_enemy_sphere_body_entered(body):
+	print(body)
+	if body is Enemy:
+		enemy_sphere_shape.debug_color = detection_color
+		enemy_close = true
+
+func _on_enemy_sphere_body_exited(body):
+	if body is Enemy:
+		enemy_sphere_shape.debug_color = no_detection_color
+		enemy_close = false
+
+func enemy_near():
+	return enemy_close

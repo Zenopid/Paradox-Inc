@@ -101,16 +101,21 @@ func physics_process(delta):
 func input(_event: InputEvent):
 	if enter_attack_state():
 		return
-	if !Input.is_action_pressed("crouch"):
-		if enter_move_state():
-			return
 	if Input.is_action_just_pressed("jump"):
-		jump_node.remaining_jumps += 1
+		jump_node.remaining_jumps += 1 
 		#for some reason, you can't jump without this.
-		state_machine.transition_to("Jump", {bonus_speed = Vector2(0, (-1.0 * jump_node.jump_velocity))})
+		if Input.is_action_pressed("crouch"):
+			state_machine.transition_to("Jump", {bonus_speed = Vector2(0, (-1.0 * jump_node.jump_velocity))})
+		else:
+			state_machine.transition_to("Jump")
 		return
 	if enter_dodge_state():
 		return
+	if !Input.is_action_pressed("crouch"):
+		if get_movement_input() != 0:
+			state_machine.transition_to("Run")
+			return
+		state_machine.transition_to("Idle")
 
 func slow_down(speed):
 	if facing_left():

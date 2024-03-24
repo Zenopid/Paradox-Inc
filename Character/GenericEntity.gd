@@ -30,7 +30,7 @@ func death_logic():
 	if states:
 		states.transition_to("Dead")
 
-func get_level():
+func get_level() -> GenericLevel:
 	return current_level
 
 func set_level(new_level:GenericLevel):

@@ -2,8 +2,8 @@ extends ConditionLeaf
 
 
 func tick(actor: Node, _blackboard: Blackboard) -> int:
-	actor.get_raycast("GroundChecker").force_raycast_update()
-	if actor.get_raycast("GroundChecker").is_colliding(): 
-		return SUCCESS
-	return FAILURE
+	var ground_checker:RayCast2D= actor.get_raycast("GroundChecker")
+	if !ground_checker.is_colliding():
+		return FAILURE
+	return SUCCESS
 

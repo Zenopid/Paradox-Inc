@@ -20,7 +20,6 @@ func enter(_msg: = {}):
 	processing_tracker = 0
 	is_tweening = false
 	entity.motion.x = 0
-	print_debug("in dead state")
 
 func physics_process(delta):
 	processing_tracker += delta

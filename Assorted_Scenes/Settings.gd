@@ -6,7 +6,7 @@ signal controls_overlap()
 signal exiting_settings()
 
 @onready var rebind_screen = $Control_Rebind_Screen
-@onready var apply_button = $Apply
+@onready var apply_button = $"%Apply"
 @onready var settings_tab: TabContainer = $TabContainer
 
 
@@ -31,6 +31,7 @@ signal exiting_settings()
 @onready var attack_control:Button = $TabContainer/Control/AttackButton/attack
 @onready var dodge_control:Button = $TabContainer/Control/DodgeButton/dodge
 @onready var timeline_control:Button = $TabContainer/Control/TimelineButton/swap_timeline
+@onready var options_control: Button = $TabContainer/Control/OptionsButton/options
 
 var current_setting_tab: String 
 var visual_settings_autocomplete = GlobalScript.VisualSettings.new()
@@ -79,11 +80,14 @@ func init_visual_settings():
 	v_sync.button_pressed = GlobalScript.visual_settings.v_sync_enabled
 	fullscreen.button_pressed = GlobalScript.visual_settings.fullscreen
 	for i in resolution.get_item_count():
-		var text = resolution.get_item_text(i )
+		var text = resolution.get_item_text(i)
 		var item_text = text.split_floats("x")
 		var res = Vector2i(int(item_text[0]), int(item_text[1]))
 		if res == GlobalScript.visual_settings.resolution:
 			resolution._select_int(i - 1)
+			return
+		print_debug(res)
+	print_debug("Couldn't find the current resolution " + str(GlobalScript.visual_settings.resolution) + " in the available options.")
 
 func init_control_settings(): 
 	for nodes in get_tree().get_nodes_in_group("Rebind Buttons"):
@@ -92,73 +96,30 @@ func init_control_settings():
 	if Input.get_connected_joypads() != []:
 		#there's a controller connected, so assume controller settings
 		input_type = "Controller"
+		print("Detected controller " + Input.get_joy_name(0))
 	if input_type == "Keyboard":
-		for i in GlobalScript.control_settings.jump_button:
-			if i is InputEventKey:
-				jump_control.text = OS.get_keycode_string(i.unicode).to_upper()
-				break
-		for i in GlobalScript.control_settings.crouch_button:
-			if i is InputEventKey:
-				crouch_control.text = OS.get_keycode_string(i.unicode).to_upper()
-				break
-		for i in GlobalScript.control_settings.left_button:
-			if i is InputEventKey:
-				left_control.text = OS.get_keycode_string(i.unicode).to_upper()
-				break
-		for i in GlobalScript.control_settings.right_button:
-			if i is InputEventKey:
-				right_control.text = OS.get_keycode_string(i.unicode).to_upper()
-				break
-		for i in GlobalScript.control_settings.attack_button:
-			if i is InputEventKey:
-				attack_control.text = OS.get_keycode_string(i.unicode).to_upper()
-				break
-		for i in GlobalScript.control_settings.dodge_button:
-			if i is InputEventKey:
-				dodge_control.text = OS.get_keycode_string(i.unicode).to_upper()
-				break
-		for i in GlobalScript.control_settings.timeline_button:
-			if i is InputEventKey:
-				timeline_control.text = OS.get_keycode_string(i.unicode).to_upper()
-				break
+		
+		for i in GlobalScript.control_settings.get_property_list():
+			var current_button:String = i["name"]
+			if !current_button.contains("button"):
+				continue
+			for input in GlobalScript.control_settings.get(current_button):
+				if input is InputEventKey:
+					get(current_button.left(current_button.find("_")) + "_control").text = OS.get_keycode_string(input.unicode).capitalize()
+					continue 
+					#just assume first key
 	else:
-		pass
-#		for i in GlobalScript.control_settings.jump_button:
-#			if i is InputEventJoypadButton:
-#				jump_control.text = OS.get_keycode_string(i.unicode).to_upper()
-#				break;
-#		for i in GlobalScript.control_settings.crouch_button:
-#			if i is InputEventJoypadButton:
-#				crouch_control.text = OS.get_keycode_string(i.unicode).to_upper()
-#				break;
-#		for i in GlobalScript.control_settings.left_control:
-#			if i is InputEventJoypadButton:
-#				left_control.text = OS.get_keycode_string(i.unicode).to_upper()
-#				break;
-#		for i in GlobalScript.control_settings.right_control:
-#			if i is InputEventJoypadButton:
-#				right_control.text = OS.get_keycode_string(i.unicode).to_upper()
-#				break;
-#		for i in GlobalScript.control_settings.attack_button:
-#			if i is InputEventJoypadButton:
-#				attack_control.text = OS.get_keycode_string(i.unicode).to_upper()
-#				break;
-#		for i in GlobalScript.control_settings.dodge_button:
-#			if i is InputEventJoypadButton:
-#				dodge_control.text = OS.get_keycode_string(i.unicode).to_upper()
-#				break;
-#		for i in GlobalScript.control_settings.timeline_control:
-#			if i is InputEventJoypadButton:
-#				timeline_control.text = OS.get_keycode_string(i.unicode).to_upper()
-#				break;
-#	jump_control.text = GlobalScript.control_settings.jump_button
-#	crouch_control.text = GlobalScript.control_settings.crouch_button
-#	left_control.text = GlobalScript.control_settings.left_button
-#	right_control.text = GlobalScript.control_settings.right_button
-#	attack_control.text = GlobalScript.control_settings.attack_button
-#	dodge_control.text = GlobalScript.control_settings.dodge_button
-#	timeline_control.text = GlobalScript.control_settings.timeline_button
-	
+		for i in GlobalScript.control_settings.get_property_list():
+			var current_button:String = i["name"]
+			if !current_button.contains("button"):
+				continue
+			for input in GlobalScript.control_settings.get(current_button):
+				if input is InputEventJoypadButton:
+					get(current_button.left(current_button.find("_")) + "_control").text = input.as_text()
+	if options_control.text == "":
+		if input_type == "Keyboard":
+			options_control.text = "Escape"
+			#engine bug i think
 
 func _process(delta):
 	if !updated_settings.is_empty():
@@ -173,6 +134,7 @@ func check_if_setting_changed(setting_name, setting_condition):
 		updated_settings[setting_name] = setting_condition
 	else:
 		updated_settings.erase(setting_name)
+	
 
 func _on_enable_camera_flashing_toggled(button_pressed):
 	check_if_setting_changed("camera_flash", button_pressed)
@@ -207,7 +169,7 @@ func _on_return_button_pressed():
 	hide()
 
 func set_music_volume(value, slider):
-	slider.get_parent().get_node("Test_Music").volume = value 
+	slider.get_parent().get_node("Test_Sound").volume_db = value 
 
 func _on_enable_uisfx_toggled(button_pressed):
 	check_if_setting_changed("ui_sfx_enabled", button_pressed)

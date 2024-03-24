@@ -1,0 +1,239 @@
+[gd_scene load_steps=6 format=3 uid="uid://clrxebh7buvqx"]
+
+[ext_resource type="Script" path="res://Levels/LevelEnd.gd" id="1_2capq"]
+[ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="2_kn272"]
+
+[sub_resource type="Animation" id="Animation_ixdtq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("VBoxContainer:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PerformanceTitle:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("ScoreRating:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_fukff"]
+resource_name = "Win"
+length = 5.0
+step = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("VBoxContainer:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PerformanceTitle:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("ScoreRating:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5res1"]
+_data = {
+"RESET": SubResource("Animation_ixdtq"),
+"Win": SubResource("Animation_fukff")
+}
+
+[node name="LevelEnd" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2capq")
+zero_deaths_color = Color(1, 0.768627, 0, 1)
+gold_color = Color(0, 44.38, 0.02, 1)
+sliver_color = Color(0.701961, 0.698039, 0.666667, 1)
+bronze_color = Color(0.760784, 0.372549, 0.0745098, 1)
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.00784314, 0.0627451, 0.0941176, 1)
+
+[node name="SceneTitle" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 50.0
+offset_right = 400.0
+offset_bottom = 153.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_kn272")
+theme_override_font_sizes/font_size = 100
+text = "Level Complete"
+uppercase = true
+
+[node name="ScoreRating" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 563.0
+offset_right = 400.0
+offset_bottom = 666.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.364706, 1, 0.0901961, 1)
+theme_override_fonts/font = ExtResource("2_kn272")
+theme_override_font_sizes/font_size = 100
+text = "Needs Improvement"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="PerformanceTitle" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 488.0
+offset_right = 400.0
+offset_bottom = 591.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_kn272")
+theme_override_font_sizes/font_size = 75
+text = "Performance evaulation:"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -20.0
+offset_right = 350.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Time" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="TotalTime" type="Label" parent="VBoxContainer/Time"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 11
+theme_override_fonts/font = ExtResource("2_kn272")
+theme_override_font_sizes/font_size = 50
+text = "00:00:00:00"
+horizontal_alignment = 2
+uppercase = true
+
+[node name="TimeLabel" type="Label" parent="VBoxContainer/Time"]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_fonts/font = ExtResource("2_kn272")
+theme_override_font_sizes/font_size = 50
+text = "Time"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="Deaths" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="NumberOfDeaths" type="Label" parent="VBoxContainer/Deaths"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 15
+theme_override_colors/font_color = Color(0.83, 0.0913, 0.103611, 1)
+theme_override_fonts/font = ExtResource("2_kn272")
+theme_override_font_sizes/font_size = 50
+text = "0"
+horizontal_alignment = 2
+uppercase = true
+
+[node name="DeathLabel" type="Label" parent="VBoxContainer/Deaths"]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_fonts/font = ExtResource("2_kn272")
+theme_override_font_sizes/font_size = 50
+text = "Accidents"
+
+[node name="Anim_Player" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_5res1")
+}
+
+[node name="Sfx" type="AudioStreamPlayer" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 2.5
+one_shot = true

@@ -16,6 +16,8 @@ var dodge_over: bool = false
 var jump_node: Jump
 var fall_node: Fall
 
+@export var inital_fall_speed: int = 100
+
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	jump_node = state_machine.find_state("Jump")
@@ -26,6 +28,8 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 func enter(_msg: = {}):
 	super.enter()
 	entity.anim_player.connect("animation_finished", Callable(self, "end_dodge"))
+	if entity.motion.y > inital_fall_speed:
+		entity.motion.y = inital_fall_speed
 	if abs(entity.motion.x) > dodge_speed: 
 		return
 	if facing_left():
