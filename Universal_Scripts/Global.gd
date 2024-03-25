@@ -2,8 +2,11 @@ class_name GameManager extends Node
 
 signal setting_changed(setting_name, new_setting)
 signal game_over
-signal update_settings()
 signal level_over()
+signal update_settings()
+
+signal enabling_menu()
+signal disabling_menu()
 
 class VisualSettings:
 	var camera_flash: bool = true 

@@ -4,7 +4,7 @@ class_name OutOfBounds extends Area2D
 
 func _on_body_entered(body):
 	if body is Player:
-		body.damage(damage)
+		body.damage(damage, 0, 0, 0, true)
 		body.respawn()
 	else:
 		body.queue_free()

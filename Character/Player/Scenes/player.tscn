@@ -1697,7 +1697,7 @@ _data = {
 "Rest": SubResource("Animation_tq0si")
 }
 
-[node name="Player" type="CharacterBody2D" groups=["Persist", "Player"]]
+[node name="Player" type="CharacterBody2D" groups=["Persist", "Players"]]
 process_mode = 1
 collision_mask = 22
 floor_max_angle = 1.10479
@@ -1839,6 +1839,7 @@ position = Vector2(0, 3.5)
 shape = SubResource("RectangleShape2D_b022k")
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("machine_owner")]
+unique_name_in_owner = true
 script = ExtResource("2_pa1y2")
 initial_state = "Idle"
 machine_owner = NodePath("..")
@@ -1936,7 +1937,6 @@ animation_name = "Idle"
 
 [node name="Jump" type="Node" parent="StateMachine"]
 script = ExtResource("32_nkne8")
-double_jumps = 0
 jump_height = 120.0
 jump_time_to_peak = 0.5
 jump_time_to_descent = 0.4
@@ -2082,6 +2082,7 @@ wait_time = 0.4
 one_shot = true
 
 [node name="Backgrounds" type="ParallaxBackground" parent="."]
+unique_name_in_owner = true
 script = ExtResource("58_wunj3")
 tween_duration = 0.25
 

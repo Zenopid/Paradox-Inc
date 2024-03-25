@@ -27,15 +27,14 @@ const  MINIMUM_JUMP_DECAY :float = 0.35
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	cooldown_timer = state_machine.get_timer("Walljump_Cooldown")
-
-
-func enter(_msg: = {}):
 	jump_node = state_machine.get_node("Jump")
 	wall_checker = state_machine.get_raycast("WallChecker")
-	if entity.motion.x < 0:
+
+func enter(_msg: = {}):
+	if Input.is_action_pressed("left"):
 		wall_direction = "left"
 		wall_checker.position.x  = entity.position.x - offset_x
-	else:
+	elif Input.is_action_pressed("right"):
 		wall_direction = "right"
 		wall_checker.position.x = entity.position.x + offset_x
 	wall_checker.enabled = true

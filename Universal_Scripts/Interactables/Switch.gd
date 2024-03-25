@@ -14,10 +14,11 @@ func _ready():
 	swap_view(level.current_timeline)
 	
 func _on_body_entered(body):
-	is_on = true
-	on_sprite.show()
-	off_sprite.hide()
-	emit_signal("status_changed", is_on)
+	if body is Entity or body is MoveableObject:
+		is_on = true
+		on_sprite.show()
+		off_sprite.hide()
+		emit_signal("status_changed", is_on)
 
 func swap_view(new_timeline):
 	if timeline != new_timeline:
@@ -28,11 +29,15 @@ func swap_view(new_timeline):
 		monitoring = true
 
 func _on_body_exited(body):
-	if !has_overlapping_bodies() && monitoring:
-		is_on = false
-		on_sprite.hide()
-		off_sprite.show()
-		emit_signal("status_changed", is_on)
+	if monitoring:
+		if !has_overlapping_bodies():
+			if body is Entity or body is MoveableObject:
+				is_on = false
+				on_sprite.hide()
+				off_sprite.show()
+				emit_signal("status_changed", is_on)
+		else:
+			print(get_overlapping_bodies())
 
 func save():
 	var save_dict = {

@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://clrxebh7buvqx"]
+[gd_scene load_steps=7 format=3 uid="uid://clrxebh7buvqx"]
 
 [ext_resource type="Script" path="res://Levels/LevelEnd.gd" id="1_2capq"]
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="2_kn272"]
+[ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="3_h2acp"]
 
 [sub_resource type="Animation" id="Animation_ixdtq"]
 length = 0.001
@@ -237,3 +238,23 @@ libraries = {
 unique_name_in_owner = true
 wait_time = 2.5
 one_shot = true
+
+[node name="ReturnButton" parent="." instance=ExtResource("3_h2acp")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -205.5
+offset_top = -65.0
+offset_right = 205.5
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 50
+text = "Back to Main Menu"
+
+[connection signal="pressed" from="ReturnButton" to="." method="_on_return_button_pressed"]

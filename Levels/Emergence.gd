@@ -3,6 +3,7 @@ extends GenericLevel
 @onready var elevator_animator: AnimationPlayer = $AnimationPlayer
 
 @export var laser_damage: int = 10
+
 func start_level():
 	current_player.connect("respawning", Callable(self, "_on_player_respawning"))
 	_on_swapped_timeline(current_timeline)
@@ -27,9 +28,6 @@ func _on_swapped_timeline(new_timeline):
 			area.monitoring = false
 		else:
 			area.monitoring = true
-		
-
 
 func _on_exit_body_entered(body):
 	GlobalScript.emit_signal("level_over")
-	self.visible = false

@@ -291,6 +291,7 @@ radius = 250.0
 radius = 37.6
 
 [node name="Darkstalker" type="CharacterBody2D" groups=["Enemy", "Persist"]]
+process_mode = 1
 collision_layer = 128
 collision_mask = 159
 floor_max_angle = 1.10479

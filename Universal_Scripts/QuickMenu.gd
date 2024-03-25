@@ -32,6 +32,7 @@ func _on_quit_pressed():
 		get_tree().quit()
 	else:
 		player.get_parent().enable_menu()
+		hide()
 
 func _on_main_menu_pressed():
 	quit_confirmation.show()

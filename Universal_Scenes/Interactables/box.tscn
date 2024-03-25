@@ -9,7 +9,7 @@ rough = true
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h4uon"]
 size = Vector2(35, 31)
 
-[node name="Box" type="RigidBody2D"]
+[node name="Box" type="RigidBody2D" groups=["Moveable Object"]]
 collision_layer = 8
 collision_mask = 223
 mass = 0.7

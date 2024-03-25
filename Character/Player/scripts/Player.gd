@@ -16,6 +16,7 @@ signal respawning()
 @onready var quick_menu:Control = $"%QuickMenu"
 @onready var stopwatch: Label = $"%Stopwatch"
 
+@onready var backdrops = $"%Backgrounds"
 @onready var UI:CanvasLayer = $"%UI"
 
 @export var slow_down: float = 0.1
@@ -47,12 +48,10 @@ func _ready():
 		get_node("GroundChecker").queue_free()
 	GlobalScript.connect("level_over", Callable(self, "_on_level_over"))
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
-	
-func _on_game_over():
-	self.queue_free()
-
-func _on_level_over():
-	print("level's over doing the script")
+	GlobalScript.connect("enabling_menu", Callable(self, "_on_game_over"))
+	GlobalScript.connect("disabling_menu", Callable(self, "enable"))
+func disable():
+	print_debug("disablin")
 	camera.enabled = false
 	
 	UI.hide()
@@ -60,8 +59,25 @@ func _on_level_over():
 	set_process_input(false)
 	set_physics_process(false)
 	set_process(false)
+	backdrops.hide()
+
+func enable():
+	camera.enabled = true
+	
+	UI.show()
+	
+	set_process_input(true)
+	set_physics_process(true)
+	set_process(true)
+	backdrops.show()
 	
 	
+
+func _on_game_over():
+	queue_free()
+
+func _on_level_over():
+	queue_free()
 
 func _physics_process(delta):
 	super._physics_process(delta)
@@ -69,6 +85,9 @@ func _physics_process(delta):
 func _input(event):
 	if Input.is_action_just_pressed("options"):
 		quick_menu.enable_menu(current_level.name)
+	if event is InputEventMouseButton:
+		if current_level.name == "Training":
+			spawn_point = get_viewport().get_camera_2d().get_global_mouse_position()
 #	if Input.is_action_pressed("slow_time"):
 #		Engine.time_scale = slow_down
 #	elif Input.is_action_just_released("slow_time"):
@@ -90,8 +109,8 @@ func _set_health(value):
 			kill()
 			emit_signal("killed")
 
-func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0):
-	if invlv_timer.is_stopped():
+func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0, ignores_invuln = false):
+	if invlv_timer.is_stopped() or ignores_invuln:
 		Input.start_joy_vibration(0, 0.5,0, 0.2)
 		invlv_timer.start()
 		_set_health(health - amount)

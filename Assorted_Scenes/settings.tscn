@@ -1,10 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://do42anfb1sgba"]
+[gd_scene load_steps=7 format=3 uid="uid://do42anfb1sgba"]
 
 [ext_resource type="Script" path="res://Assorted_Scenes/Settings.gd" id="1_a66a5"]
 [ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="2_ceyak"]
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="3_wcyc0"]
 [ext_resource type="PackedScene" uid="uid://cvmbeu5a133sy" path="res://Universal_Scenes/UI/custom_check_button.tscn" id="4_3nxqt"]
-[ext_resource type="AudioStream" uid="uid://32tolnox4aiu" path="res://audio/bgm/alt_battle_theme_2.wav" id="4_wiew8"]
 [ext_resource type="PackedScene" uid="uid://c2t80n81t81dn" path="res://Universal_Scenes/UI/dropdown_box.tscn" id="5_7eqmf"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_1n1pp"]
@@ -12,6 +11,7 @@ color = Color(0, 0.741176, 1, 1)
 thickness = 2
 
 [node name="Settings" type="Control"]
+process_mode = 3
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -126,7 +126,6 @@ size_flags_horizontal = 2
 text = "Test Game"
 
 [node name="Test_Sound" type="AudioStreamPlayer" parent="TabContainer/Audio/Master" groups=["Audio"]]
-stream = ExtResource("4_wiew8")
 
 [node name="Divider2" type="HSeparator" parent="TabContainer/Audio"]
 custom_minimum_size = Vector2(1100, 25)
@@ -162,7 +161,6 @@ size_flags_horizontal = 2
 text = "Test SFX  "
 
 [node name="Test_Sound" type="AudioStreamPlayer" parent="TabContainer/Audio/SFX" groups=["Audio"]]
-stream = ExtResource("4_wiew8")
 bus = &"Sfx"
 
 [node name="Divider" type="HSeparator" parent="TabContainer/Audio"]
@@ -175,7 +173,6 @@ theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
 layout_mode = 2
 
 [node name="Test_Sound" type="AudioStreamPlayer" parent="TabContainer/Audio/Music" groups=["Audio"]]
-stream = ExtResource("4_wiew8")
 volume_db = 24.0
 bus = &"Music"
 

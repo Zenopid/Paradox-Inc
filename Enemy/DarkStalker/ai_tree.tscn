@@ -24,7 +24,7 @@
 [node name="AI_Tree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_2v6jb")
 enabled = false
-blackboard = NodePath("@Node@19633")
+blackboard = NodePath("@Node@19627")
 actor = NodePath("")
 
 [node name="WorldInteractions" type="Node" parent="."]
@@ -63,6 +63,7 @@ script = ExtResource("3_svdxn")
 
 [node name="In_Melee_Range?" type="Node" parent="WorldInteractions/Fight/FightOptions/CloseQuartersMelee"]
 script = ExtResource("6_3us3o")
+attack_distance = 30
 
 [node name="Attack_Or_Evade" type="Node" parent="WorldInteractions/Fight/FightOptions/CloseQuartersMelee"]
 script = ExtResource("15_up1cr")

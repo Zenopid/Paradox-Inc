@@ -46,7 +46,7 @@ var angle_tilt: float = 0.0 ## The camera's angle tilt offset.
 
 
 func _ready() -> void:
-	for i in get_tree().get_nodes_in_group("Player"):
+	for i in get_tree().get_nodes_in_group("Players"):
 		NODE_TO_FOLLOW_PATH = i.get_path()
 		break
 	node_to_follow = get_node(NODE_TO_FOLLOW_PATH)

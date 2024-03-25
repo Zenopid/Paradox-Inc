@@ -7,7 +7,6 @@ class_name GenericLevel extends Node2D
 @onready var past_tileset: TileSet
 @onready var music_player = $BGM
 @onready var spawn_point = get_node("SpawnPoint")
-@onready var end_screen = $"%LevelEnd"
 
 
 @export_enum("Future", "Past") var current_timeline: String = "Future"
@@ -30,6 +29,8 @@ var current_player: Player
 
 var player_deaths: int = 0
 
+var timeline_layers = [2,3]
+var timeline_masks = [1, 8]
 func _ready():
 	load_music()
 	future_tileset = future.tile_set
@@ -40,12 +41,25 @@ func _ready():
 	#for some reason this is needed in order to wall slide. prob some issue 
 	#with collision or somethin
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
+	GlobalScript.connect("enabling_menu", Callable(self, "_on_game_over"))
+	GlobalScript.connect("disabling_menu", Callable(self, "enable"))
 	
+func enable():
+	show()
+	set_physics_process(true)
+	set_process(true)
+	set_process_input(true)
+
+func disable():
+	hide()
+	set_physics_process(false)
+	set_process(false)
+	set_process_input(false)
+
 func _on_game_over():
 	self.queue_free()
 
 func _on_player_respawning():
-	print(current_player.respawn_timeline)
 	set_timeline(current_player.respawn_timeline)
 	player_deaths += 1
 
@@ -88,40 +102,42 @@ func _input(event):
 			new_timeline.modulate.a = 1
 		if old_timeline:
 			old_timeline.modulate.a = 1
+			
+
 
 func set_timeline(new_timeline:String):
-	old_timeline_tileset = get(current_timeline.to_lower() + "_tileset")
-	current_timeline_tileset = get(new_timeline.to_lower() + "_tileset")
+	var old_timeline_tilemap: TileMap = get(current_timeline.to_lower())
+	var current_timeline_tilemap: TileMap = get(new_timeline.to_lower())
+	old_timeline_tileset = old_timeline_tilemap.tile_set
+	current_timeline_tileset = current_timeline_tilemap.tile_set
 	if current_timeline != new_timeline:
 		if !current_timeline_tileset:
 			print_debug("No tileset for the timeline " + str(new_timeline))
 			return
-		for layers in old_timeline_tileset.get_physics_layers_count():
-			old_timeline_tileset.set_physics_layer_collision_layer(layers, 0) 
-		for layers in current_timeline_tileset.get_physics_layers_count():
-			for i in 24:
-				current_timeline_tileset.set_physics_layer_collision_layer(layers, i)
-		var active_timeline = get(current_timeline.to_lower())
-		active_timeline.visible = false
-		current_timeline = new_timeline 
-		active_timeline = get(current_timeline.to_lower())
-		active_timeline.modulate.a = 1
-		active_timeline.visible = true
-		for nodes in get_tree().get_nodes_in_group("Small Objects"):
-			if nodes is MoveableObject:
-				if nodes.get_paradox_status() == false:
-					nodes.swap_status()
+		current_timeline = new_timeline
+		current_timeline_tileset.set_physics_layer_collision_layer(0, 2)
+		old_timeline_tileset.set_physics_layer_collision_layer(0, 0)
+		current_timeline_tileset.set_physics_layer_collision_layer(1, 4)
+		old_timeline_tileset.set_physics_layer_collision_layer(1, 0)
+		
+		
+		old_timeline_tilemap.visible = false
+		current_timeline_tilemap.modulate.a = 1
+		current_timeline_tilemap.visible = true
+#		current_timeline_tilemap.visible = true
+#		current_timeline_tilemap.modulate.a = 1
+#		old_timeline_tilemap.visible = false
+		for nodes in get_tree().get_nodes_in_group("Moveable Object"):
+			nodes.swap_status()
 		emit_signal("swapped_timeline",current_timeline)
 	else:
-		for nodes in get_children():
-			if nodes is TileMap:
-				var alt_timeline = nodes.tile_set
-				for layers in alt_timeline.get_physics_layers_count():
-					alt_timeline.set_physics_layer_collision_layer(layers,0)
-		var starting_timeline = get(current_timeline.to_lower())
-		for layers in starting_timeline.tile_set.get_physics_layers_count():
-			for i in 24:
-				starting_timeline.tile_set.set_physics_layer_collision_layer(layers, i)
+		for nodes in get_tree().get_nodes_in_group("Timelines"):
+			var alt_timeline = nodes.tile_set
+			alt_timeline.set_physics_layer_collision_layer(0,2) 
+			alt_timeline.set_physics_layer_collision_layer(1,0)
+		var starting_timeline = get(current_timeline.to_lower()).tile_set
+		starting_timeline.set_physics_layer_collision_layer(0, 2)
+		starting_timeline.set_physics_layer_collision_layer(1, 4)
 				
 func get_start_point():
 	return spawn_point.position
