@@ -10,8 +10,9 @@ var facing: int = 1
 var current_los_scale_x
 
 func before_run(actor: Node, blackboard: Blackboard) -> void:
-	ground_checker = actor.get_raycast("GroundChecker")
-	los_raycast = actor.get_raycast("LOS")
+	if !ground_checker:
+		ground_checker = actor.get_raycast("GroundChecker")
+		los_raycast = actor.get_raycast("LOS")
 	los_raycast.lock_view()
 	ground_checker.lock_position()
 	current_los_scale_x = los_raycast.scale.x

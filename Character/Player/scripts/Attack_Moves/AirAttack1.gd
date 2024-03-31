@@ -4,6 +4,11 @@ extends BaseStrike
 @export var damage: int = 8
 
 var air_hitbox:Hitbox
+var max_speed: int
+
+func init(current_entity, state):
+	super.init(current_entity, state)
+	max_speed = state.jump_script.max_speed
 
 func physics_process(delta):
 	if Input.is_action_just_pressed("attack"):
@@ -11,8 +16,13 @@ func physics_process(delta):
 			buffer_attack = "GroundPound"
 		else:
 			buffer_attack = "AirAttack2"
-	entity.motion.x += air_accel * get_movement_input()
-	entity.motion.x = clamp(entity.motion.x, -attack_state.jump_script.max_speed, attack_state.jump_script.max_speed)
+#	entity.motion.x += air_accel * get_movement_input()
+	
+#	entity.motion.x = clamp(entity.motion.x, -attack_state.jump_script.max_speed, attack_state.jump_script.max_speed)
+	if abs(entity.motion.x) < max_speed:
+		entity.motion.x += air_accel * get_movement_input()
+		if abs(entity.motion.x) > max_speed:
+			entity.motion.x = max_speed * sign(entity.motion.x)
 	entity.motion.y += attack_state.jump_script.get_gravity() * delta 
 	
 	super.physics_process(delta)

@@ -5,7 +5,6 @@ signal control_changed()
 signal controls_overlap()
 signal exiting_settings()
 
-@onready var rebind_screen = $Control_Rebind_Screen
 @onready var apply_button = $"%Apply"
 @onready var settings_tab: TabContainer = $TabContainer
 
@@ -21,10 +20,10 @@ signal exiting_settings()
 @onready var camera_shake = $TabContainer/Visual/CameraShake/EnableCameraShaking
 @onready var v_sync = $TabContainer/Visual/EnableVSync/EnableVsync
 @onready var fullscreen = $TabContainer/Visual/EnableFullscreen/EnableFullscreen
-@onready var resolution = $TabContainer/Visual/ChangeResolution/ResolutionOptions
+@onready var resolution: OptionButton = $TabContainer/Visual/ChangeResolution/ResolutionOptions
 
 #Controls
-@onready var jump_control:Button = $TabContainer/Control/JumpButton/jump
+@onready var jump_control:Button = $"%jump"
 @onready var crouch_control:Button = $TabContainer/Control/CrouchButton/crouch
 @onready var left_control:Button = $TabContainer/Control/LeftButton/left
 @onready var right_control:Button = $TabContainer/Control/RightButton/right
@@ -32,11 +31,16 @@ signal exiting_settings()
 @onready var dodge_control:Button = $TabContainer/Control/DodgeButton/dodge
 @onready var timeline_control:Button = $TabContainer/Control/TimelineButton/swap_timeline
 @onready var options_control: Button = $TabContainer/Control/OptionsButton/options
+@onready var boost_control: Button = $"%boost"
+@onready var rebind_screen = $Control_Rebind_Screen
+@onready var rebind_text:Label = rebind_screen.get_node("Rebind_Text")
+@onready var overlapping_text:Label = rebind_screen.get_node("Overlapping")
+@onready var timer:Timer = rebind_screen.get_node("Timer")
 
 var current_setting_tab: String 
-var visual_settings_autocomplete = GlobalScript.VisualSettings.new()
-var audio_settings_autocomplete = GlobalScript.AudioSettings.new()
-var control_settings_autocomplete = GlobalScript.ControlSettings.new()
+var new_visual_settings = GlobalScript.VisualSettings.new()
+var new_audio_settings = GlobalScript.AudioSettings.new()
+var new_control_settings = GlobalScript.ControlSettings.new()
 
 
 var invalid_inputs = [
@@ -50,7 +54,10 @@ var invalid_inputs = [
 
 var last_input: InputEvent
 
+var level:GenericLevel
+
 func _ready():
+	level = get_tree().get_first_node_in_group("CurrentLevel")
 	set_process(false)
 	current_setting_tab = settings_tab.get_current_tab_control().name.to_lower() + "_settings"
 	rebind_screen.hide()
@@ -84,9 +91,9 @@ func init_visual_settings():
 		var item_text = text.split_floats("x")
 		var res = Vector2i(int(item_text[0]), int(item_text[1]))
 		if res == GlobalScript.visual_settings.resolution:
-			resolution._select_int(i - 1)
+			resolution.select(i)
 			return
-		print_debug(res)
+#		print_debug(res)
 	print_debug("Couldn't find the current resolution " + str(GlobalScript.visual_settings.resolution) + " in the available options.")
 
 func init_control_settings(): 
@@ -130,11 +137,15 @@ func _process(delta):
 		apply_button.disabled = true 
 
 func check_if_setting_changed(setting_name, setting_condition):
+	#print(GlobalScript.get_setting(current_setting_tab, setting_name))
 	if setting_condition != GlobalScript.get_setting(current_setting_tab, setting_name):
-		updated_settings[setting_name] = setting_condition
+		updated_settings[setting_name] = {
+			"value": setting_condition,
+			"type": current_setting_tab
+			}
 	else:
 		updated_settings.erase(setting_name)
-	
+	#print(updated_settings)
 
 func _on_enable_camera_flashing_toggled(button_pressed):
 	check_if_setting_changed("camera_flash", button_pressed)
@@ -147,7 +158,9 @@ func _on_enable_vsync_toggled(button_pressed):
 
 func _on_apply_pressed():
 	for new_setting in updated_settings.keys():
-		GlobalScript.set_setting(current_setting_tab, new_setting, updated_settings[new_setting])
+		var setting = updated_settings[new_setting]
+		
+		GlobalScript.set_setting(setting["type"], new_setting, setting["value"])
 	updated_settings.clear()
 
 func _on_resolution_options_resolution_changed(new_resolution: Vector2i):
@@ -166,6 +179,7 @@ func _on_test_music_pressed(button):
 
 func _on_return_button_pressed():
 	emit_signal("exiting_settings")
+	level.show()
 	hide()
 
 func set_music_volume(value, slider):
@@ -177,8 +191,12 @@ func _on_enable_uisfx_toggled(button_pressed):
 func _input(event):
 	last_input = event 
 	if last_input.is_action_type() and last_input.is_pressed():
+#		if Input.is_action_just_pressed(KEY_ESCAPE):
+#			rebind_screen.hide()
+#			return
 		emit_signal("control_changed")
 		set_process_input(false)
+		
 
 func start_rebind(event_name, button:Button):
 	rebind_screen.show()
@@ -206,6 +224,7 @@ func change_control(event_name, button:Button):
 	InputMap.action_erase_events(event_name)
 	InputMap.action_add_event(event_name, last_input)
 	button.text = last_input.as_text()      
+	button.grab_focus()
 
 func _on_tab_container_tab_changed(tab):
 	current_setting_tab = settings_tab.get_current_tab_control().name.to_lower() + "_settings"
@@ -225,9 +244,6 @@ func _on_music_slider_drag_ended(value_changed):
 		updated_settings["bgm_volume"] = music_slider.value
 
 func _on_overlapping_controls():
-	var rebind_text:Label = rebind_screen.get_node("Rebind_Text")
-	var overlapping_text:Label = rebind_screen.get_node("Overlapping")
-	var timer:Timer = rebind_screen.get_node("Timer")
 	rebind_text.hide()
 	overlapping_text.show()
 	rebind_screen.show()
@@ -237,6 +253,22 @@ func _on_overlapping_controls():
 	overlapping_text.hide()
 	rebind_text.show()
 
-
 func _on_enable_vibrate_toggled(button_pressed):
 	check_if_setting_changed("vibration", button_pressed)
+
+
+func _on_tab_container_focus_entered():
+	settings_tab.set("focus_next", get_node(current_setting_tab) )
+
+
+func _on_enable_fps_tracker_toggled(button_pressed):
+	check_if_setting_changed("show_fps", button_pressed)
+
+
+
+func _on_visibility_changed():
+	if level:
+		if visible:
+			level.hide()
+		else:
+			level.show()

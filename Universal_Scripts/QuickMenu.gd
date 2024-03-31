@@ -4,6 +4,7 @@ extends Control
 @onready var settings_scene  = $Settings
 @onready var level_label:Label = $Level_Name
 @onready var quit_confirmation = $QuitConfirmation
+@onready var resume_button: Button = $"%Resume"
 
 var quitting_to_menu: bool = false 
 
@@ -13,6 +14,7 @@ func enable_menu(level_name):
 	self.show()
 	level_label.text = level_name
 	get_tree().paused = true 
+	resume_button.grab_focus()
 
 func _on_resume_pressed():
 	self.hide()

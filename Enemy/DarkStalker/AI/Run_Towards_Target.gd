@@ -15,21 +15,9 @@ var reached_destination:bool = false
 
 var entity: Entity
 
-func before_run(actor: Node, blackboard: Blackboard) -> void:
-	reached_destination = false
-	actor.anim_player.play(anim_name)
-	if blackboard.has_value("target_position"):
-		chase_location = blackboard.get_value("target_position")
-	ground_checker = actor.get_raycast("GroundChecker")
-	los = actor.get_raycast("LOS")
-	entity = actor
-	init_destination_area()
-
-func init_destination_area():
+func _ready():
 	destination_area = Area2D.new()
-	destination_area.is_visible_in_tree()
 	destination_area.visible = true
-	destination_area.global_position = chase_location
 	destination_area.set_collision_layer_value(1,false)
 	destination_area.set_collision_layer_value(8, true)
 	destination_area.set_collision_mask_value(1, false)
@@ -38,8 +26,23 @@ func init_destination_area():
 	circle.radius = acceptable_range
 	area_shape.shape = circle
 	destination_area.add_child(area_shape)
-	add_child(destination_area)
 	destination_area.connect("body_entered", Callable(self, "_on_destination_reached"))
+
+func before_run(actor: Node, blackboard: Blackboard) -> void:
+	reached_destination = false
+	actor.anim_player.play(anim_name)
+	if blackboard.has_value("target_position"):
+		chase_location = blackboard.get_value("target_position")
+	if !los:
+		los = actor.get_raycast("LOS")
+		entity = actor
+		ground_checker = actor.get_raycast("GroundChecker")
+	init_destination_area()
+
+func init_destination_area():
+	destination_area.global_position = chase_location
+	add_child(destination_area)
+	destination_area.add_to_group(entity.name + " Chase Locations")
 
 func _on_destination_reached(body):
 	if body == entity:
@@ -57,6 +60,9 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		return FAILURE
 	if !ground_checker.is_colliding():
 		actor.sprite.flip_h = !actor.sprite.flip_h
+		actor.motion.x *= -1
+		actor.default_move_and_slide()
+		#get em outta the way before he falls and dies
 		return FAILURE
 	
 	if reached_destination:
@@ -73,4 +79,4 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	return RUNNING
 
 func after_run(actor: Node, blackboard: Blackboard) -> void:
-	destination_area.queue_free()
+	remove_child(destination_area)

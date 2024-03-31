@@ -66,6 +66,7 @@ theme_override_constants/separation = 0
 alignment = 2
 
 [node name="Resume" parent="VBoxContainer" instance=ExtResource("3_hpu16")]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 1

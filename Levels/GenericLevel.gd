@@ -32,18 +32,25 @@ var player_deaths: int = 0
 var timeline_layers = [2,3]
 var timeline_masks = [1, 8]
 func _ready():
+	self.add_to_group("CurrentLevel")
 	load_music()
 	future_tileset = future.tile_set
 	past_tileset = past.tile_set
 	var old_timeline = current_timeline
 	set_timeline(get_next_timeline_swap())
 	set_timeline(old_timeline)
-	#for some reason this is needed in order to wall slide. prob some issue 
+	set_timeline(get_next_timeline_swap())
+	set_timeline(old_timeline)
+	#for some reason this is needed in order to disable the inverse timeline of current. prob some issue 
 	#with collision or somethin
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
 	GlobalScript.connect("enabling_menu", Callable(self, "_on_game_over"))
 	GlobalScript.connect("disabling_menu", Callable(self, "enable"))
-	
+
+func start_level():
+	current_player.connect("respawning", Callable(self, "_on_player_respawning"))
+	GlobalScript.emit_signal("starting_game")
+
 func enable():
 	show()
 	set_physics_process(true)
@@ -85,11 +92,12 @@ func _input(event):
 			music_player.stream = music_playlist[index]
 			music_player.play()
 		return
+	var next_timeline = get_next_timeline_swap()
 	if Input.is_action_just_pressed("swap_timeline"):
-		set_timeline(get_next_timeline_swap())
+		set_timeline(next_timeline)
 		return
 	var old_timeline = get(str(current_timeline.to_lower()))
-	var new_timeline = get(str(get_next_timeline_swap().to_lower()))
+	var new_timeline = get(next_timeline)
 	if Input.is_action_pressed("view_timeline"):
 		if new_timeline:
 			new_timeline.visible = true
@@ -120,7 +128,6 @@ func set_timeline(new_timeline:String):
 		current_timeline_tileset.set_physics_layer_collision_layer(1, 4)
 		old_timeline_tileset.set_physics_layer_collision_layer(1, 0)
 		
-		
 		old_timeline_tilemap.visible = false
 		current_timeline_tilemap.modulate.a = 1
 		current_timeline_tilemap.visible = true
@@ -128,17 +135,17 @@ func set_timeline(new_timeline:String):
 #		current_timeline_tilemap.modulate.a = 1
 #		old_timeline_tilemap.visible = false
 		for nodes in get_tree().get_nodes_in_group("Moveable Object"):
-			nodes.swap_status()
+			nodes.swap_state(new_timeline)
 		emit_signal("swapped_timeline",current_timeline)
 	else:
 		for nodes in get_tree().get_nodes_in_group("Timelines"):
 			var alt_timeline = nodes.tile_set
-			alt_timeline.set_physics_layer_collision_layer(0,2) 
+			alt_timeline.set_physics_layer_collision_layer(0,0) 
 			alt_timeline.set_physics_layer_collision_layer(1,0)
 		var starting_timeline = get(current_timeline.to_lower()).tile_set
 		starting_timeline.set_physics_layer_collision_layer(0, 2)
 		starting_timeline.set_physics_layer_collision_layer(1, 4)
-				
+		
 func get_start_point():
 	return spawn_point.position
 

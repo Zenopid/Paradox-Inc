@@ -1,9 +1,12 @@
 class_name GameManager extends Node
 
+@export var debug_enabled: bool = false 
+
 signal setting_changed(setting_name, new_setting)
 signal game_over
 signal level_over()
 signal update_settings()
+signal starting_game()
 
 signal enabling_menu()
 signal disabling_menu()
@@ -14,6 +17,7 @@ class VisualSettings:
 	var resolution: Vector2i = Vector2i(120, 70)
 	var v_sync_enabled: bool = true
 	var fullscreen: bool = false
+	var show_fps:bool = false
 
 class AudioSettings:
 	var sfx_volume: int = 1
@@ -30,6 +34,7 @@ class ControlSettings:
 	var dodge_button = InputMap.action_get_events("dodge")
 	var timeline_button = InputMap.action_get_events("swap_timeline")
 	var options_button = InputMap.action_get_events("options")
+	var boost_button = InputMap.action_get_events("grapple_boost")
 	var vibration:bool = true 
 
 var hitstop_frames_remaining: int = 0
@@ -39,21 +44,21 @@ var old_hitstop_timescale: float = 1
 
 var levels_beaten: int = 0
 
-var current_level = null :
+var current_level: GenericLevel = null :
 	set (value):
 		current_level = value
 	get: 
 		return current_level
 		
 var save_files = {}
+var game_time_start
+var game_time_end
+var total_game_time
 
 @onready var visual_settings: VisualSettings = VisualSettings.new()
 @onready var audio_settings: AudioSettings = AudioSettings.new()
 @onready var control_settings: ControlSettings = ControlSettings.new()
 
-var game_time_start
-var game_time_end
-var total_game_time
 
 var setting_class_names: = [
 	"visual_settings",
@@ -67,10 +72,66 @@ var game_data: Dictionary
 
 var player_instance: Player
 
-func _ready():
-	visual_settings.resolution = get_window().size
-	
+var completed_levels = {
+	"Emergence": false
+}
 
+var controller_type: String = "Keyboard"
+func _ready():
+	if !Input.get_connected_joypads() == []:
+		controller_type = "Controller"
+	visual_settings.resolution = get_window().size
+	change_ui_controls()
+	
+func change_ui_controls():
+	set_ui_input("ui_up")
+	set_ui_input("ui_down")
+	set_ui_input("ui_left")
+	set_ui_input("ui_right")
+	set_ui_input("ui_accept")
+	set_ui_input("ui_focus_prev")
+	set_ui_input("ui_focus_next")
+
+func set_ui_input(input_name: String):
+	if !InputMap.has_action(input_name):
+		print_debug("Couldn't find action name " + input_name)
+		return
+	var ui_input = input_name.right(-input_name.find("_") - 1)
+	var button_controls: String 
+	match ui_input:
+		"up":
+			button_controls = "jump"
+		"down":
+			button_controls = "crouch"
+		"accept":
+			button_controls = "attack"
+		"focus_prev":
+			button_controls = "view_timeline"
+		"focus_next":
+			button_controls = "next_timeline"
+		_:
+			button_controls = ui_input
+	button_controls += "_button"
+	if Input.get_connected_joypads() == []:
+		for i in InputMap.action_get_events(input_name):
+			if i is InputEventKey:
+				InputMap.action_erase_event(input_name, i)
+		var current_control = control_settings.get(button_controls)
+		if current_control != null:
+			for i in control_settings.get(button_controls):
+				if i is InputEventKey:
+					if !InputMap.action_has_event(input_name, i):
+						InputMap.action_add_event(input_name, i)
+			current_control = InputMap.action_get_events(button_controls.left(button_controls.find("_")))
+	else:
+		for i in InputMap.action_get_events(input_name):
+			if i is InputEventJoypadButton:
+				InputMap.action_erase_event(input_name, i)
+		if control_settings.get(button_controls + "_button") != null:
+			for i in control_settings.get(button_controls + "_button"):
+				if i is InputEventJoypadButton:
+					if !InputMap.action_has_event(input_name, i):
+						InputMap.action_add_event(input_name, i)
 func set_setting(setting_class:String, setting_name: String, new_setting):
 	if setting_name in get(setting_class):
 		get(setting_class).set(setting_name, new_setting)
@@ -135,7 +196,7 @@ func remove_hitstop():
 func _physics_process(delta):
 	if in_hitstop:
 		Engine.time_scale = HITSTOP_TIMESCALE
-		print(hitstop_frames_remaining)
+		#print(hitstop_frames_remaining)
 		hitstop_frames_remaining -= 1
 		if hitstop_frames_remaining <= 0:
 			remove_hitstop()

@@ -15,16 +15,25 @@ signal respawning()
 @onready var camera: Camera2DPlus = $Camera
 @onready var quick_menu:Control = $"%QuickMenu"
 @onready var stopwatch: Label = $"%Stopwatch"
-
+@onready var grapple: Hook = $"%GrapplingHook"
 @onready var backdrops = $"%Backgrounds"
 @onready var UI:CanvasLayer = $"%UI"
-
-@export var slow_down: float = 0.1
+@export_category("Grapple")
+@export var grapple_pull: int = 75
+@export var max_grapple_speed: Vector2
+#Even if you're insane at the video game i don't think you should be able to move at
+#mach 3 unfortunatly. 
+@export_category("Stats")
 @export var max_health: int = 100
 
 var items = []
 var respawn_timeline: String = "Future"
 var spawn_point: Vector2
+
+#Grapple
+var grapple_velocity: Vector2 = Vector2.ZERO
+var grappling_upwards:bool = false
+var player_braced: bool = false
 
 #
 #func set_camera(camera_name: Camera2DPlus):
@@ -41,17 +50,39 @@ func _ready():
 	super._ready()
 	states.init(self, debug_info)
 	effects_aniamtion.play("Rest")
-	$UI/TimelineTracker.init(self)
-	$Backgrounds.init(self)
-	connect("health_updated", Callable(health_bar, "_on_health_updated"))
-	if has_node("GroundChecker"):
-		get_node("GroundChecker").queue_free()
+	$"%TimelineTracker".init(self)
+	backdrops.init(self)
+	connect_signals()
+
+	if GlobalScript.debug_enabled:
+		debug_info.show()
+	else:
+		debug_info.hide()
+	
+func connect_signals():
 	GlobalScript.connect("level_over", Callable(self, "_on_level_over"))
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
 	GlobalScript.connect("enabling_menu", Callable(self, "_on_game_over"))
 	GlobalScript.connect("disabling_menu", Callable(self, "enable"))
+	connect("health_updated", Callable(health_bar, "_on_health_updated"))
+	
+
+func grapple_boost():
+	if grapple.attached:
+		var boost_dir:Vector2 = (position.direction_to(grapple.hook_body.global_position) * grapple.boost_speed.length()).round()
+		if !player_braced:
+			if abs(grapple.hook_location.y - global_position.y) <= 30:
+				boost_dir.y = 0
+				#remove vertical boost if the hook's body is basically level with the player's.
+			print(boost_dir)
+			motion += boost_dir
+			grappling_upwards = false
+		if grapple.grappled_object is MoveableObject:
+			#collision.get_collider().call_deferred("apply_central_impulse", -collision.get_normal() * push ) 
+			print(grapple.grappled_object.name + " is the name of the object.")
+			grapple.grappled_object.call_deferred("apply_central_impulse", -boost_dir )
+		grapple.release()
 func disable():
-	print_debug("disablin")
 	camera.enabled = false
 	
 	UI.hide()
@@ -80,18 +111,56 @@ func _on_level_over():
 	queue_free()
 
 func _physics_process(delta):
+	if Input.get_connected_joypads() == []:
+		grapple.set_pointer_direction(get_global_mouse_position() - global_position)
+	else:
+		grapple.set_pointer_direction(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
+	
 	super._physics_process(delta)
+	
+	var walk = (Input.get_action_strength("right") - Input.get_action_strength("left")) * states.find_state("Run").move_speed
+	if grapple.attached and !player_braced:
+		grapple_velocity = to_local(grapple.hook_location).normalized()
+		if grapple_velocity.y < 0:
+			grapple_velocity.y *= grapple.rise_multiplier
+			grappling_upwards = true 
+		else:
+			grapple_velocity.y *= grapple.fall_multiplier
+			grappling_upwards = false 
+		if sign(grapple_velocity.x) != sign(walk):
+			grapple_velocity.x *= grapple.sideways_multiplier
+	else: 
+		grapple_velocity = Vector2.ZERO
+	
+	if states.get_current_state().grounded():
+		grapple_velocity.y = 0
+		#no pulling up/down while running/sliding/idle/crouching, only airborne states
+		#also helps with pushing around objects n stuff
+	if grapple.grappled_object:
+		
+# (position.direction_to(grapple.hook_body.global_position) * grapple.boost_speed.length()).round()
+		var object_pull = grapple.hook_location.direction_to(global_position) * grapple.pull_speed
+		#print(object_pull)
+		grapple.grappled_object.call_deferred("apply_central_impulse", object_pull)
+	motion += grapple_velocity
+	motion = motion.clamp(-max_grapple_speed, max_grapple_speed)
 
 func _input(event):
+	if event is InputEventMouseMotion:
+		grapple.set_pointer_direction(get_global_mouse_position())
+	elif event is InputEventJoypadMotion:
+		grapple.set_pointer_direction(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
 	if Input.is_action_just_pressed("options"):
 		quick_menu.enable_menu(current_level.name)
-	if event is InputEventMouseButton:
-		if current_level.name == "Training":
-			spawn_point = get_viewport().get_camera_2d().get_global_mouse_position()
-#	if Input.is_action_pressed("slow_time"):
-#		Engine.time_scale = slow_down
-#	elif Input.is_action_just_released("slow_time"):
-#		Engine.time_scale = 1
+	if Input.is_action_just_pressed("grapple"):
+		if GlobalScript.controller_type == "Keyboard":
+			grapple.shoot(get_global_mouse_position() - global_position)
+		else:
+			grapple.shoot(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
+	if Input.is_action_just_released("grapple"):
+		grapple.release()
+	if Input.is_action_just_pressed("boost"):
+		grapple_boost()
 
 func set_spawn(location: Vector2, res_timeline: String = "Future"):
 	spawn_point = location
@@ -116,7 +185,7 @@ func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0
 		_set_health(health - amount)
 		effects_aniamtion.play("Damaged")
 		effects_aniamtion.queue("Invincible")
-		
+		grapple.release()
 #		camera.flash()
 #		this will give an epilepsy warning lol
 
@@ -134,6 +203,7 @@ func get_death_screen():
 	
 func respawn():
 	position = spawn_point
+	grapple.release()
 	motion = Vector2.ZERO
 	if health > 0:
 		states.transition_to("Fall")
@@ -142,3 +212,9 @@ func respawn():
 func death_logic():
 	GlobalScript.emit_signal("game_over")
 	GlobalScript.player_instance = null
+
+func brace():
+	player_braced = true
+
+func ease():
+	player_braced = false 

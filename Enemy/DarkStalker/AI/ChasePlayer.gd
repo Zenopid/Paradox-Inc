@@ -11,8 +11,9 @@ var direction: int
 
 func before_run(actor: Node, blackboard: Blackboard) -> void:
 	player_position = blackboard.get_value("target_position")
-	ground_checker = actor.get_raycast("GroundChecker")
-	los_raycast = actor.get_raycast("LOS")
+	if !ground_checker:
+		ground_checker = actor.get_raycast("GroundChecker")
+		los_raycast = actor.get_raycast("LOS")
 	direction = 1 if player_position.x < actor.position.x else -1
 	los_raycast.lock_view()
 	if !actor.sprite.flip_h:

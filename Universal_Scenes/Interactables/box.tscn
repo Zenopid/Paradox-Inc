@@ -26,7 +26,8 @@ max_frames_without_pushing = 10
 [node name="Box" type="Sprite2D" parent="."]
 texture = ExtResource("2_fqxhm")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Collision" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
 shape = SubResource("RectangleShape2D_h4uon")
 
 [node name="LeftSideChecker" type="RayCast2D" parent="."]
@@ -58,3 +59,8 @@ target_position = Vector2(0, -4)
 collision_mask = 131
 hit_from_inside = true
 collide_with_areas = true
+
+[node name="Destruction_Timer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.1
+one_shot = true

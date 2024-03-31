@@ -60,7 +60,8 @@ func _ready():
 
 func _physics_process(delta:float ) -> void:
 	if framez < duration:
-		framez += 1
+		if duration != -1:
+			framez += 1
 	elif framez == duration:
 		queue_free()
 		return

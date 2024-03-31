@@ -12,6 +12,7 @@ thickness = 2
 
 [node name="Settings" type="Control"]
 process_mode = 3
+z_index = 100
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,6 +32,7 @@ mouse_filter = 2
 color = Color(0.878431, 0.996078, 1, 1)
 
 [node name="ReturnButton" parent="." instance=ExtResource("2_ceyak")]
+z_index = 100
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -43,6 +45,7 @@ offset_right = -5.0
 offset_bottom = -5.0
 grow_horizontal = 0
 grow_vertical = 0
+focus_previous = NodePath("../TabContainer")
 text = "Return"
 
 [node name="Blue_Background" type="ColorRect" parent="."]
@@ -74,6 +77,8 @@ scale = Vector2(2, 2)
 size_flags_horizontal = 4
 size_flags_vertical = 10
 size_flags_stretch_ratio = 0.0
+focus_neighbor_top = NodePath("../../TabContainer")
+focus_previous = NodePath("../../TabContainer")
 text = " Apply "
 
 [node name="TabContainer" type="TabContainer" parent="."]
@@ -87,9 +92,13 @@ offset_right = -50.0
 offset_bottom = -50.0
 grow_horizontal = 2
 grow_vertical = 2
+focus_next = NodePath("Audio")
+focus_previous = NodePath("../ReturnButton")
 tab_alignment = 1
 
 [node name="Audio" type="VBoxContainer" parent="TabContainer"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -114,6 +123,12 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../../Control/EnableVibration/EnableVibrate")
+focus_neighbor_top = NodePath("../../..")
+focus_neighbor_right = NodePath("../Game_Test")
+focus_neighbor_bottom = NodePath("../../SFX/SFX_Slider")
+focus_next = NodePath("../../../../Blue_Background/Apply")
+focus_previous = NodePath("../../..")
 min_value = -10.0
 max_value = 20.0
 value = 1.0
@@ -123,6 +138,12 @@ ticks_on_borders = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../Master_Slider")
+focus_neighbor_top = NodePath("../../Music/Music_Test")
+focus_neighbor_right = NodePath("../../SFX/SFX_Slider")
+focus_neighbor_bottom = NodePath("../../SFX/SFX_Test")
+focus_next = NodePath("../../../../Blue_Background/Apply")
+focus_previous = NodePath("../../..")
 text = "Test Game"
 
 [node name="Test_Sound" type="AudioStreamPlayer" parent="TabContainer/Audio/Master" groups=["Audio"]]
@@ -149,6 +170,11 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../Master/Game_Test")
+focus_neighbor_top = NodePath("../../Master/Master_Slider")
+focus_neighbor_right = NodePath("../SFX_Test")
+focus_neighbor_bottom = NodePath("../../Music/Music_Slider")
+focus_next = NodePath("../../../../Blue_Background/Apply")
 min_value = -10.0
 max_value = 20.0
 value = 1.0
@@ -158,6 +184,12 @@ ticks_on_borders = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../SFX_Slider")
+focus_neighbor_top = NodePath("../../Master/Game_Test")
+focus_neighbor_right = NodePath("../../Music/Music_Slider")
+focus_neighbor_bottom = NodePath("../../Music/Music_Test")
+focus_next = NodePath("../../../../Blue_Background/Apply")
+focus_previous = NodePath("../../..")
 text = "Test SFX  "
 
 [node name="Test_Sound" type="AudioStreamPlayer" parent="TabContainer/Audio/SFX" groups=["Audio"]]
@@ -188,6 +220,12 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../SFX/SFX_Test")
+focus_neighbor_top = NodePath("../../SFX/SFX_Slider")
+focus_neighbor_right = NodePath("../Music_Test")
+focus_neighbor_bottom = NodePath("../../EnableUISFX/EnableUISFX")
+focus_next = NodePath("../../../../Blue_Background/Apply")
+focus_previous = NodePath("../../..")
 min_value = -10.0
 max_value = 20.0
 ticks_on_borders = true
@@ -196,6 +234,12 @@ ticks_on_borders = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../Music_Slider")
+focus_neighbor_top = NodePath("../../SFX/SFX_Test")
+focus_neighbor_right = NodePath("../../EnableUISFX/EnableUISFX")
+focus_neighbor_bottom = NodePath("../../EnableUISFX/EnableUISFX")
+focus_next = NodePath("../../../../Blue_Background/Apply")
+focus_previous = NodePath("../../..")
 text = "Test Music"
 
 [node name="Divider3" type="HSeparator" parent="TabContainer/Audio"]
@@ -219,8 +263,15 @@ vertical_alignment = 1
 [node name="EnableUISFX" parent="TabContainer/Audio/EnableUISFX" instance=ExtResource("4_3nxqt")]
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../Music/Music_Test")
+focus_neighbor_top = NodePath("../../Music/Music_Test")
+focus_neighbor_right = NodePath("../../Master/Master_Slider")
+focus_neighbor_bottom = NodePath("../../Master/Master_Slider")
+focus_next = NodePath("../../../../Blue_Background/Apply")
+focus_previous = NodePath("../../..")
 
 [node name="Visual" type="VBoxContainer" parent="TabContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
@@ -246,6 +297,12 @@ vertical_alignment = 1
 [node name="EnableCameraFlashing" parent="TabContainer/Visual/CameraFlash" instance=ExtResource("4_3nxqt")]
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../ChangeResolution/ResolutionOptions")
+focus_neighbor_top = NodePath("../../ChangeResolution/ResolutionOptions")
+focus_neighbor_right = NodePath("../../CameraShake/EnableCameraShaking")
+focus_neighbor_bottom = NodePath("../../CameraShake/EnableCameraShaking")
+focus_next = NodePath("../../../../Blue_Background/Apply")
+focus_previous = NodePath("../../..")
 
 [node name="Divider" type="HSeparator" parent="TabContainer/Visual"]
 custom_minimum_size = Vector2(1052, 25)
@@ -267,6 +324,11 @@ vertical_alignment = 1
 [node name="EnableCameraShaking" parent="TabContainer/Visual/CameraShake" instance=ExtResource("4_3nxqt")]
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../CameraFlash/EnableCameraFlashing")
+focus_neighbor_top = NodePath("../../CameraFlash/EnableCameraFlashing")
+focus_neighbor_right = NodePath("../../EnableVSync/EnableVsync")
+focus_neighbor_bottom = NodePath("../../EnableVSync/EnableVsync")
+focus_next = NodePath("../../../../Blue_Background/Apply")
 
 [node name="Divider2" type="HSeparator" parent="TabContainer/Visual"]
 custom_minimum_size = Vector2(1052, 25)
@@ -289,6 +351,12 @@ vertical_alignment = 1
 [node name="EnableVsync" parent="TabContainer/Visual/EnableVSync" instance=ExtResource("4_3nxqt")]
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../CameraShake/EnableCameraShaking")
+focus_neighbor_top = NodePath("../../CameraShake/EnableCameraShaking")
+focus_neighbor_right = NodePath("../../EnableFullscreen/EnableFullscreen")
+focus_neighbor_bottom = NodePath("../../EnableFullscreen/EnableFullscreen")
+focus_next = NodePath("../../../../Blue_Background/Apply")
+focus_previous = NodePath("../../..")
 
 [node name="Divider4" type="HSeparator" parent="TabContainer/Visual"]
 custom_minimum_size = Vector2(1052, 25)
@@ -311,9 +379,15 @@ vertical_alignment = 1
 [node name="EnableFullscreen" parent="TabContainer/Visual/EnableFullscreen" instance=ExtResource("4_3nxqt")]
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../EnableVSync/EnableVsync")
+focus_neighbor_top = NodePath("../../EnableVSync/EnableVsync")
+focus_neighbor_right = NodePath("../../ChangeResolution/ResolutionOptions")
+focus_neighbor_bottom = NodePath("../../ChangeResolution/ResolutionOptions")
+focus_next = NodePath("../../../../Blue_Background/Apply")
+focus_previous = NodePath("../../..")
 button_pressed = false
 
-[node name="Divider3" type="HSeparator" parent="TabContainer/Visual"]
+[node name="Divider5" type="HSeparator" parent="TabContainer/Visual"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
 size_flags_vertical = 0
@@ -334,13 +408,57 @@ vertical_alignment = 1
 [node name="ResolutionOptions" parent="TabContainer/Visual/ChangeResolution" instance=ExtResource("5_7eqmf")]
 custom_minimum_size = Vector2(125, 0)
 layout_mode = 2
+focus_neighbor_left = NodePath("../../EnableFullscreen/EnableFullscreen")
+focus_neighbor_top = NodePath("../../EnableFullscreen/EnableFullscreen")
+focus_neighbor_right = NodePath("../../CameraFlash/EnableCameraFlashing")
+focus_neighbor_bottom = NodePath("../../CameraFlash/EnableCameraFlashing")
+focus_next = NodePath("../../../../Blue_Background/Apply")
+focus_previous = NodePath("../../..")
+item_count = 5
+selected = 2
+popup/item_1/text = "800x600"
+popup/item_2/text = "1024x768"
+popup/item_3/text = "1280x720"
+popup/item_3/id = 3
+popup/item_4/text = "1920x1080"
+popup/item_4/id = 4
+
+[node name="Divider3" type="HSeparator" parent="TabContainer/Visual"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="ShowFPS" type="HBoxContainer" parent="TabContainer/Visual"]
+layout_mode = 2
+
+[node name="FPS" type="Label" parent="TabContainer/Visual/ShowFPS"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Show Frames Per Second"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnableFPSTracker" parent="TabContainer/Visual/ShowFPS" instance=ExtResource("4_3nxqt")]
+layout_mode = 2
+size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../EnableVSync/EnableVsync")
+focus_neighbor_top = NodePath("../../EnableVSync/EnableVsync")
+focus_neighbor_right = NodePath("../../ChangeResolution/ResolutionOptions")
+focus_neighbor_bottom = NodePath("../../ChangeResolution/ResolutionOptions")
+focus_next = NodePath("../../../../Blue_Background/Apply")
+focus_previous = NodePath("../../..")
+button_pressed = false
 
 [node name="Control" type="VBoxContainer" parent="TabContainer"]
-visible = false
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/Control"]
+visible = false
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -359,9 +477,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="jump" parent="TabContainer/Control/JumpButton" groups=["Rebind Buttons"] instance=ExtResource("2_ceyak")]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../EnableVibration/EnableVibrate")
+focus_neighbor_top = NodePath("../../EnableVibration/EnableVibrate")
+focus_neighbor_right = NodePath("../../CrouchButton/crouch")
+focus_neighbor_bottom = NodePath("../../CrouchButton/crouch")
 
 [node name="Divider" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
@@ -385,6 +508,10 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../JumpButton/jump")
+focus_neighbor_top = NodePath("../../JumpButton/jump")
+focus_neighbor_right = NodePath("../../LeftButton/left")
+focus_neighbor_bottom = NodePath("../../LeftButton/left")
 
 [node name="Divider2" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
@@ -408,6 +535,10 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../CrouchButton/crouch")
+focus_neighbor_top = NodePath("../../CrouchButton/crouch")
+focus_neighbor_right = NodePath("../../RightButton/right")
+focus_neighbor_bottom = NodePath("../../RightButton/right")
 
 [node name="Divider4" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
@@ -431,6 +562,10 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../LeftButton/left")
+focus_neighbor_top = NodePath("../../LeftButton/left")
+focus_neighbor_right = NodePath("../../AttackButton/attack")
+focus_neighbor_bottom = NodePath("../../AttackButton/attack")
 
 [node name="Divider3" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
@@ -454,6 +589,10 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../RightButton/right")
+focus_neighbor_top = NodePath("../../RightButton/right")
+focus_neighbor_right = NodePath("../../DodgeButton/dodge")
+focus_neighbor_bottom = NodePath("../../DodgeButton/dodge")
 
 [node name="Divider5" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
@@ -477,6 +616,10 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../AttackButton/attack")
+focus_neighbor_top = NodePath("../../AttackButton/attack")
+focus_neighbor_right = NodePath("../../TimelineButton/swap_timeline")
+focus_neighbor_bottom = NodePath("../../TimelineButton/swap_timeline")
 
 [node name="Divider6" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
@@ -500,6 +643,10 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../DodgeButton/dodge")
+focus_neighbor_top = NodePath("../../DodgeButton/dodge")
+focus_neighbor_right = NodePath("../../OptionsButton/options")
+focus_neighbor_bottom = NodePath("../../OptionsButton/options")
 
 [node name="Divider7" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
@@ -523,8 +670,40 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../TimelineButton/swap_timeline")
+focus_neighbor_top = NodePath("../../TimelineButton/swap_timeline")
+focus_neighbor_right = NodePath("../../EnableVibration/EnableVibrate")
+focus_neighbor_bottom = NodePath("../../EnableVibration/EnableVibrate")
 
 [node name="Divider8" type="HSeparator" parent="TabContainer/Control"]
+custom_minimum_size = Vector2(1052, 25)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_styles/separator = SubResource("StyleBoxLine_1n1pp")
+
+[node name="BoostButton" type="HBoxContainer" parent="TabContainer/Control"]
+layout_mode = 2
+
+[node name="ChangeBoost" type="Label" parent="TabContainer/Control/BoostButton"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("3_wcyc0")
+text = "
+Grapple Boost"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="boost" parent="TabContainer/Control/BoostButton" groups=["Rebind Buttons"] instance=ExtResource("2_ceyak")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../TimelineButton/swap_timeline")
+focus_neighbor_top = NodePath("../../TimelineButton/swap_timeline")
+focus_neighbor_right = NodePath("../../EnableVibration/EnableVibrate")
+focus_neighbor_bottom = NodePath("../../EnableVibration/EnableVibrate")
+
+[node name="Divider9" type="HSeparator" parent="TabContainer/Control"]
 custom_minimum_size = Vector2(1052, 25)
 layout_mode = 2
 size_flags_vertical = 0
@@ -544,6 +723,12 @@ vertical_alignment = 1
 [node name="EnableVibrate" parent="TabContainer/Control/EnableVibration" instance=ExtResource("4_3nxqt")]
 layout_mode = 2
 size_flags_horizontal = 2
+focus_neighbor_left = NodePath("../../OptionsButton/options")
+focus_neighbor_top = NodePath("../../OptionsButton/options")
+focus_neighbor_right = NodePath("../../JumpButton/jump")
+focus_neighbor_bottom = NodePath("../../JumpButton/jump")
+focus_next = NodePath("../../../../Blue_Background/Apply")
+focus_previous = NodePath("../../..")
 
 [node name="Control_Rebind_Screen" type="Panel" parent="."]
 visible = false
@@ -602,8 +787,10 @@ vertical_alignment = 1
 wait_time = 2.0
 one_shot = true
 
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="ReturnButton" to="." method="_on_return_button_pressed"]
 [connection signal="pressed" from="Blue_Background/Apply" to="." method="_on_apply_pressed"]
+[connection signal="focus_entered" from="TabContainer" to="." method="_on_tab_container_focus_entered"]
 [connection signal="tab_changed" from="TabContainer" to="." method="_on_tab_container_tab_changed"]
 [connection signal="drag_ended" from="TabContainer/Audio/Master/Master_Slider" to="." method="_on_master_slider_drag_ended"]
 [connection signal="pressed" from="TabContainer/Audio/Master/Game_Test" to="." method="_on_game_test_pressed"]
@@ -615,4 +802,5 @@ one_shot = true
 [connection signal="toggled" from="TabContainer/Visual/EnableVSync/EnableVsync" to="." method="_on_enable_vsync_toggled"]
 [connection signal="toggled" from="TabContainer/Visual/EnableFullscreen/EnableFullscreen" to="." method="_on_enable_fullscreen_toggled"]
 [connection signal="resolution_changed" from="TabContainer/Visual/ChangeResolution/ResolutionOptions" to="." method="_on_resolution_options_resolution_changed"]
+[connection signal="toggled" from="TabContainer/Visual/ShowFPS/EnableFPSTracker" to="." method="_on_enable_fps_tracker_toggled"]
 [connection signal="toggled" from="TabContainer/Control/EnableVibration/EnableVibrate" to="." method="_on_enable_vibrate_toggled"]

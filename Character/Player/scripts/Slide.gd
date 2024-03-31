@@ -77,8 +77,12 @@ func physics_process(delta):
 		else:
 			entity.motion.x = slow_down(entity.motion.x) 
 	else:
-		entity.motion.x += slide_acceleration * slide_direction
-		entity.motion.x = clamp(entity.motion.x, -slide_speed, slide_speed)
+		if abs(entity.motion.x) < slide_speed:
+			entity.motion.x += slide_acceleration * sign(entity.motion.x)
+			if abs(entity.motion.x) > slide_speed:
+				entity.motion.x = slide_speed * sign(entity.motion.x)
+#		entity.motion.x += slide_acceleration * slide_direction
+#		entity.motion.x = clamp(entity.motion.x, -slide_speed, slide_speed)
 		
 	hit_max_speed = true if abs(entity.motion.x) >= abs(slide_speed) else false
 	if can_fall():

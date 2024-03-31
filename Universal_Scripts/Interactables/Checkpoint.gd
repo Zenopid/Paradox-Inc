@@ -23,6 +23,8 @@ func _on_body_entered(body):
 			body.heal(heal_amount)
 			vfx.default_color = enabled_color
 			GlobalScript.emit_signal("update_settings")
+			set_deferred("monitoring",false)
+			set_deferred("monitorable", false)
 
 func save():
 	var save_dict = {

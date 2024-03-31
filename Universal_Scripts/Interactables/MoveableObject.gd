@@ -1,59 +1,60 @@
 class_name MoveableObject extends RigidBody2D
 
-var being_pushed: bool = false
-var push_speed: int
-
-var push_count:int = 0
 @export var max_frames_without_pushing:int = 5
-
-var height_pre_pushing: int = 0
-
-var should_reset:bool = false
-
-var new_position: Vector2 = Vector2.ZERO
-
-var current_level: GenericLevel
-
 @export var health: int = 100
 @export var current_timeline: String = "Future"
 
+@onready var collision:CollisionShape2D = $"%Collision"
+@onready var timer:Timer = $"%Destruction_Timer"
+
+var being_pushed: bool = false
+var push_speed: int
+var push_count:int = 0
+var height_pre_pushing: int = 0
+var should_reset:bool = false
+var new_position: Vector2 = Vector2.ZERO
+var current_level: GenericLevel
 var is_on_slope:bool = false
-
 var entity_pushing: Entity
-
 var movement_speed: Vector2
+
+var being_destroyed:bool = false
 
 func init(timeline,level):
 	set_timeline(timeline)
 	current_level = level
 
 func _ready():
-	if get_parent() is GenericLevel:
-		current_level = get_parent()
-	elif get_parent() is Entity:
-		current_level = get_parent().get_level()
+#	if get_parent() is GenericLevel:
+#		current_level = get_parent()
+#	elif get_parent() is Entity:
+#		current_level = get_parent().get_level()
+	current_level = get_tree().get_first_node_in_group("CurrentLevel")
 
 func swap_state(timeline):
 	if timeline != current_timeline:
-#		print("Object " + str(self) + " is disabling itself.")
-		disable()
+		if !is_in_group("Grappled Objects"):
+			disable()
 	else:
 #		print("Object " + str(self) + " is enabling itself.")
 		enable()
 
-func swap_timeline():
+func swap_timeline(disable_afterwards:bool):
 	current_timeline = current_level.get_next_timeline_swap()
-	disable()
+	if disable_afterwards:
+		disable()
 
 func disable():
-	$CollisionShape2D.disabled = true
+	if collision:
+		collision.set_deferred("disabled", true ) 
 	set_physics_process(false)
 	visible = false
 	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_DISABLED)
 	sleeping = true 
 
 func enable():
-	$CollisionShape2D.disabled = false
+	if collision:
+		collision.set_deferred("disabled", false ) 
 	set_physics_process(true)
 	visible = true
 	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_CAST_SHAPE)
@@ -93,7 +94,6 @@ func _physics_process(delta):
 #		if push_count > max_frames_without_pushing:
 #			lock_rotation = false
 #	print(being_pushed)
-	
 	pass
 
 func _integrate_forces(state):
@@ -137,4 +137,16 @@ func set_timeline(new_timeline):
 func damage(amount):
 	health -= amount
 	if health <= 0:
-		queue_free()
+		destroy()
+
+func destroy():
+	if !being_destroyed:
+		being_destroyed = true 
+		timer.start()
+		current_level.remove_child(self)
+		await timer.timeout
+		self.queue_free()
+		
+
+func queued_destruction() -> bool:
+	return being_destroyed

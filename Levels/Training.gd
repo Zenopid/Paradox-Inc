@@ -3,6 +3,14 @@ extends GenericLevel
 @onready var box_spawn_point:Node2D = $BoxSpawnPoint
 @onready var enemy_spawn_point:Node2D = $EnemySpawnerPoint
 @onready var animation_player = $AnimationPlayer
+@onready var speed_slider = $"%Speed_Slider"
+
+func _ready():
+	super._ready()
+	GlobalScript.connect("setting_changed", Callable(self, "_on_setting_changed"))
+func _on_setting_changed(new_setting, value):
+	pass
+	
 func _on_spawner_pressed():
 	var box_instance = box_scene.instantiate()
 	box_instance.init(current_timeline, self)
@@ -34,3 +42,8 @@ func _on_elevator_switch_status_changed(new_status:bool):
 		animation_player.play("Spin Platform")
 	else:
 		animation_player.pause()
+
+
+func _on_reset_pressed():
+	Engine.time_scale = 1
+	speed_slider.value = 1

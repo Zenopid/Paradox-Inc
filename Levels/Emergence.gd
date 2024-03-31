@@ -5,8 +5,9 @@ extends GenericLevel
 @export var laser_damage: int = 10
 
 func start_level():
-	current_player.connect("respawning", Callable(self, "_on_player_respawning"))
+	super.start_level()
 	_on_swapped_timeline(current_timeline)
+	elevator_animator.play("Rest")
 
 func _on_area_2d_body_entered(body):
 	if body is Player:
@@ -14,7 +15,6 @@ func _on_area_2d_body_entered(body):
 
 func _on_player_respawning():
 	super._on_player_respawning()
-	elevator_animator.play("Rest")
 
 func _on_laser_area_entered(body):
 	if body is Entity:
@@ -31,3 +31,10 @@ func _on_swapped_timeline(new_timeline):
 
 func _on_exit_body_entered(body):
 	GlobalScript.emit_signal("level_over")
+
+
+func _on_platform_rotate_switch_status_changed(new_status):
+	if new_status:
+		elevator_animator.play("RotateFloor")
+	else:
+		elevator_animator.pause()

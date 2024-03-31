@@ -21,10 +21,10 @@ func tick(actor: Node, _blackboard: Blackboard) -> int:
 		var ray: RayCast2D = i
 		ray.visible = true 
 		while ray.is_colliding():
-			print("going away now")
+			#print("going away now")
 #			ray.global_position = los.global_position
 			if ray.global_position != los.global_position:
-				print_debug("somethings going wrong")
+			#	print_debug("somethings going wrong")
 			var point = ray.get_collision_point()
 			var direction: int 
 			if actor.global_position.x < point.x :

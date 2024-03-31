@@ -30,14 +30,14 @@ func on_successful_attack(object):
 
 func tick(actor: Node, _blackboard: Blackboard) -> int:
 	frame += 1
-	print(frame)
+	#print(frame)
 	if actor.is_in_hitstun():
-		print("in hitstun")
+		#print("in hitstun")
 		actor.clear_hitboxes()
 		return FAILURE
 		
 	if frame == 27:
-		print("attack ended")
+		#print("attack ended")
 		actor.clear_hitboxes()
 		return SUCCESS
 		

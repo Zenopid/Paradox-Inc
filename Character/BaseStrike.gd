@@ -37,11 +37,8 @@ func get_movement_input() -> int:
 		entity.sprite.flip_h = false
 	return move
 
-func init(current_entity):
+func init(current_entity, state):
 	entity = current_entity
-
-
-func set_attack_state(state):
 	attack_state = state
 
 func enter(_msg: = {}):
@@ -107,8 +104,6 @@ func exit():
 	buffer_tracker = 0
 
 func grounded():
-	if entity.states.get_raycast("GroundChecker"):
-		var ground_checker = entity.states.get_raycast("GroundChecker")
-		if ground_checker.is_colliding() or entity.is_on_floor():
-			return true
-		return false
+	if entity.states.get_raycast("GroundChecker").is_colliding() or entity.is_on_floor():
+		return true
+	return false

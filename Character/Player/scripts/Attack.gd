@@ -15,7 +15,8 @@ var timer = 10
 
 var frame: int = 0
 
-var jump_script
+var jump_script: Jump
+var fall_script: Fall
 
 var active_attack: BaseStrike
 
@@ -36,15 +37,14 @@ var test_num:int = 0
 var attack_options = {}
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
+	jump_script = state_machine.find_state("Jump")
+	fall_script = state_machine.find_state("Fall")
+	ground_checker = state_machine.get_raycast("GroundChecker")
 	for nodes in get_children():
 		if nodes is BaseStrike:
-			nodes.init(entity)
-			nodes.set_attack_state(self)
+			nodes.init(entity, self)
 			nodes.connect("leave_state", Callable(self, "exit_state"))
 			attack_options[nodes.name] = nodes
-	
-	jump_script = state_machine.find_state("Jump")
-	ground_checker = state_machine.get_raycast("GroundChecker")
 
 func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle_flipper, points, push, hitlag = 1):
 	var hitbox_instance: Hitbox = hitbox.instantiate()

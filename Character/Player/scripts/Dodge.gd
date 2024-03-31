@@ -1,11 +1,12 @@
 extends PlayerBaseState
 
-@export var dodge_duration: int = 3
 @onready var dodge_tracker:int = dodge_duration 
-@export var dodge_speed: int = 50
-
 @onready var dodge_timer: Timer
 
+@export var dodge_boost: int = 25
+@export var dodge_duration: int = 3
+@export var dodge_speed: int = 50
+@export var inital_fall_speed: int = 100
 @export var dodge_cooldown: float = 0.9
 
 var facing: String 
@@ -15,14 +16,15 @@ var dodge_over: bool = false
 
 var jump_node: Jump
 var fall_node: Fall
-
-@export var inital_fall_speed: int = 100
+var jump_buffer:Timer
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	jump_node = state_machine.find_state("Jump")
 	fall_node = state_machine.find_state("Fall")
 	dodge_timer = state_machine.get_timer("Dodge_Cooldown")
+	
+	jump_buffer = state_machine.get_timer("Jump_Buffer")
 	dodge_timer.wait_time = dodge_cooldown
 
 func enter(_msg: = {}):
@@ -30,12 +32,18 @@ func enter(_msg: = {}):
 	entity.anim_player.connect("animation_finished", Callable(self, "end_dodge"))
 	if entity.motion.y > inital_fall_speed:
 		entity.motion.y = inital_fall_speed
+	entity.motion.x += dodge_boost * sign(entity.motion.x)
 	if abs(entity.motion.x) > dodge_speed: 
 		return
 	if facing_left():
 		entity.motion.x = -dodge_speed
 	else:
 		entity.motion.x = dodge_speed
+	
+
+func input(event):
+	if Input.is_action_just_pressed("jump"):
+		jump_buffer.start()
 
 func physics_process(delta: float):
 	entity.motion.y += jump_node.get_gravity() * delta
@@ -56,7 +64,7 @@ func physics_process(delta: float):
 
 func leave_dodge():
 	if grounded():
-		if Input.is_action_pressed("jump"):
+		if Input.is_action_pressed("jump") or !jump_buffer.is_stopped():
 			state_machine.transition_to("Jump", {can_superjump = state_machine.get_timer("Superjump").is_stopped()})
 			return
 		if enter_crouch_state():

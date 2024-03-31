@@ -292,6 +292,7 @@ radius = 37.6
 
 [node name="Darkstalker" type="CharacterBody2D" groups=["Enemy", "Persist"]]
 process_mode = 1
+process_physics_priority = 3
 collision_layer = 128
 collision_mask = 159
 floor_max_angle = 1.10479
@@ -345,7 +346,7 @@ actor = NodePath("..")
 
 [node name="Raycasts" type="Node" parent="."]
 
-[node name="LOS" type="RayCast2D" parent="Raycasts" node_paths=PackedStringArray("entity")]
+[node name="LOS" type="RayCast2D" parent="Raycasts" node_paths=PackedStringArray("entity") groups=["Raycasts"]]
 position = Vector2(0, 12)
 target_position = Vector2(450, 0)
 collision_mask = 207
@@ -354,7 +355,7 @@ script = ExtResource("8_stb7w")
 entity = NodePath("../..")
 vision_distance = 450
 
-[node name="GroundChecker" type="RayCast2D" parent="Raycasts" node_paths=PackedStringArray("entity")]
+[node name="GroundChecker" type="RayCast2D" parent="Raycasts" node_paths=PackedStringArray("entity") groups=["Raycasts"]]
 position = Vector2(14, 10)
 target_position = Vector2(0, 30)
 collision_mask = 2
@@ -367,7 +368,7 @@ script = ExtResource("8_bsslf")
 hitbox = ExtResource("9_wp7pv")
 current_entity = NodePath("..")
 
-[node name="DetectionSphere" type="Area2D" parent="."]
+[node name="DetectionSphere" type="Area2D" parent="." groups=["Detection"]]
 collision_layer = 128
 collision_mask = 169
 collision_priority = 5.0
@@ -402,7 +403,7 @@ scale = Vector2(-2, 2)
 [node name="Blackboard" type="Node" parent="."]
 script = ExtResource("11_x2s36")
 
-[node name="EnemySphere" type="Area2D" parent="."]
+[node name="EnemySphere" type="Area2D" parent="." groups=["Detection"]]
 collision_layer = 128
 collision_mask = 128
 

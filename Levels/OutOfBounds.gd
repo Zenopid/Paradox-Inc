@@ -6,9 +6,11 @@ func _on_body_entered(body):
 	if body is Player:
 		body.damage(damage, 0, 0, 0, true)
 		body.respawn()
-	else:
-		body.queue_free()
-
+	elif body is MoveableObject:
+		body.remove_from_group("Grappled Objects")
+		body.destroy()
+	elif body is Hook:
+		body.release()
 
 func set_debug_color(color: Color):
 	$CollisionShape2D.debug_color = color

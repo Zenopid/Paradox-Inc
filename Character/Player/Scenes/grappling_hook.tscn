@@ -1,0 +1,157 @@
+[gd_scene load_steps=11 format=3 uid="uid://bcefyj7s01eyu"]
+
+[ext_resource type="Script" path="res://Character/Player/scripts/GrapplingHook.gd" id="1_vmije"]
+[ext_resource type="Texture2D" uid="uid://bhri5467l08hv" path="res://Sprites/Objects/Hook_Chain.png" id="2_7enyg"]
+[ext_resource type="Texture2D" uid="uid://cfcjxk8lukojk" path="res://Sprites/Objects/Hook_Tip.png" id="3_o8pqn"]
+[ext_resource type="Texture2D" uid="uid://df7nh54dayhxo" path="res://Sprites/UI_Sprites/grapple_pointer.png" id="4_liijc"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2jdic"]
+radius = 2.92899
+height = 21.6
+
+[sub_resource type="Animation" id="Animation_mnqgn"]
+resource_name = "attach"
+length = 0.5
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Chain:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0.52549, 1, 0.25098, 1), Color(0.52549, 1, 0.25098, 1), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("GrapplePointer:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0.364706, 1, 0.0901961, 1), Color(0.364706, 1, 0.0901961, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_n7t2t"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Chain:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.776471, 1, 0.65098, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("GrapplePointer:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.364706, 1, 0.0901961, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_q2nri"]
+resource_name = "cooldown_start"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("GrapplePointer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.831373, 0.0901961, 0.101961, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_3jld0"]
+resource_name = "cooldown_end"
+length = 0.1
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("GrapplePointer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03, 0.1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0.831373, 0.0901961, 0.101961, 1), Color(0.831373, 0.0901961, 0.101961, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_k3lo8"]
+_data = {
+"RESET": SubResource("Animation_n7t2t"),
+"attach": SubResource("Animation_mnqgn"),
+"cooldown_end": SubResource("Animation_3jld0"),
+"cooldown_start": SubResource("Animation_q2nri")
+}
+
+[node name="GrapplingHook" type="Node2D"]
+process_physics_priority = 5
+script = ExtResource("1_vmije")
+
+[node name="Chain" type="Line2D" parent="." groups=["Hook"]]
+unique_name_in_owner = true
+modulate = Color(0.776471, 1, 0.65098, 1)
+texture_filter = 1
+texture_repeat = 2
+points = PackedVector2Array(0, 0, 0, 100)
+texture = ExtResource("2_7enyg")
+texture_mode = 1
+
+[node name="Hook" type="CharacterBody2D" parent="." groups=["Hook"]]
+unique_name_in_owner = true
+collision_layer = 256
+collision_mask = 174
+
+[node name="Hook_Sprite" type="Sprite2D" parent="Hook"]
+unique_name_in_owner = true
+texture = ExtResource("3_o8pqn")
+flip_h = true
+flip_v = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hook"]
+shape = SubResource("CapsuleShape2D_2jdic")
+
+[node name="Effects" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_k3lo8")
+}
+
+[node name="GrapplePointer" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+modulate = Color(0.364706, 1, 0.0901961, 1)
+position = Vector2(0, -36)
+texture = ExtResource("4_liijc")
+flip_h = true
+
+[node name="GravityTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+one_shot = true
+
+[node name="Cooldown" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.1
+one_shot = true
+
+[connection signal="timeout" from="Cooldown" to="." method="end_cooldown"]

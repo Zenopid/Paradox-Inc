@@ -8,10 +8,12 @@ var facing: int = 0
 var ground_checker: RayCast2D
 var los:RayCast2D
 
+
 func before_run(actor: Node, blackboard: Blackboard) -> void:
-	los = actor.get_raycast("LOS")
+	if !los:
+		los = actor.get_raycast("LOS")
+		ground_checker = actor.get_raycast("GroundChecker")
 	actor.anim_player.play(anim_name)
-	ground_checker = actor.get_raycast("GroundChecker")
 	if actor.sprite.flip_h:
 		facing = -1
 		return

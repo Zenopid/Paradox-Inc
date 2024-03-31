@@ -50,5 +50,5 @@ func physics_process(delta):
 			change_status("Landing")
 			attack_state.create_hitbox(39.625, 14.01,ground_pound_damage,1, 180, 7, "Normal", 1, Vector2(-1.375, 10.505), Vector2(700, -500))
 			entity.camera.set_shake(camera_shake_amount)
-			print(str(ground_pound_damage) + " is the ground pound's damage.")
+			#print(str(ground_pound_damage) + " is the ground pound's damage.")
 	super.physics_process(delta)

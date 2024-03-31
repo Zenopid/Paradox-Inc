@@ -24,17 +24,19 @@ var ground_checker:RayCast2D
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
-	ground_checker = state_machine.get_raycast("GroundChecker")
+	ground_checker = s_machine.get_raycast("GroundChecker")
 
 func enter(msg: = {}):
 	superjumping = false
 	super.enter()
 	var jump_speed: Vector2 = Vector2(0, jump_velocity)
 	var double_jump_multiplier: float = 1
+	var facing = -1 if facing_left() else 1
 	for i in msg.keys():
 		match i:
 			"bonus_speed":
-				jump_speed += msg["bonus_speed"]
+				jump_speed += Vector2(msg["bonus_speed"].x * facing, msg["bonus_speed"].y)
+				print("bonus speed is (" + str(msg["bonus_speed"].x) + "," + str(msg["bonus_speed"].y) + ")")
 			"can_superjump":
 				jump_speed.y *= superjump_bonus
 				superjumping = true
@@ -57,14 +59,19 @@ func physics_process(delta):
 	entity.motion.y += get_gravity() * delta
 	if Input.is_action_just_pressed("jump") and entity.motion.y > -minimum_doublejump_speed and remaining_jumps > 0:
 		double_jump()
-	if entity.motion.y > 0:
+	if entity.motion.y >= 0:
 		state_machine.transition_to("Fall")
 		return
 	default_move_and_slide()
 
 func double_jump(additional_multiplier: float = 1):
 	entity.motion.y = (jump_velocity * double_jump_strength) * additional_multiplier
-	entity.motion.x += double_jump_boost * get_movement_input()
+	var facing = -1 if get_movement_input() < 0 else 1
+	if abs(entity.motion.x) < max_speed:
+		entity.motion.x += double_jump_boost * sign(entity.motion.x)
+		if abs(entity.motion.x) > max_speed:
+			entity.motion.x = double_jump_boost * facing
+#	entity.motion.x += double_jump_boost * get_movement_input()
 	remaining_jumps -= 1
 
 func get_gravity() -> float:

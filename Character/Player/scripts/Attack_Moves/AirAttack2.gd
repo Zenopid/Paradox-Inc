@@ -5,15 +5,25 @@ extends BaseStrike
 
 var air_hitbox_1:Hitbox
 var air_hitbox_2:Hitbox
+var max_speed: int
+
+func init(current_entity, state):
+	super.init(current_entity, state)
+	max_speed = state.jump_script.max_speed
 
 func physics_process(delta):
 	var facing = -1 if entity.sprite.flip_h else 1
 	if Input.is_action_just_pressed("attack"):
 		if Input.is_action_pressed("crouch"):
 			buffer_attack = "GroundPound"
-	entity.motion.x += air_accel * get_movement_input()
-	entity.motion.x = clamp(entity.motion.x, -attack_state.jump_script.max_speed, attack_state.jump_script.max_speed)
+	if abs(entity.motion.x) < max_speed:
+		entity.motion.x += air_accel * get_movement_input()
+		if abs(entity.motion.x) > max_speed:
+			entity.motion.x = max_speed * sign(entity.motion.x)
+#	entity.motion.x = clamp(entity.motion.x, -attack_state.jump_script.max_speed, attack_state.jump_script.max_speed)
 	entity.motion.y += attack_state.jump_script.get_gravity() * delta
+	if entity.motion.y > attack_state.fall_script.maximum_fall_speed:
+		entity.motion.y = attack_state.fall_script.maximum_fall_speed
 	
 	super.physics_process(delta)
 	air_attack_logic()

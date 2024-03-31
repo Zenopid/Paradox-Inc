@@ -7,7 +7,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bve7i"]
 size = Vector2(27, 5.01023)
 
-[node name="Switch" type="Area2D"]
+[node name="Switch" type="Area2D" groups=["Persist"]]
 collision_layer = 8
 collision_mask = 137
 script = ExtResource("1_nn3kv")

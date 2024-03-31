@@ -8,6 +8,7 @@ extends PlayerBaseState
 @export var decay_multiplier: float = 1.7
 @export var jump_decay_rate: float = 0.1
 @export var jump_boost: int = 50
+@export var decel_rate: float = 0.7
 
 @onready var eject_tracker: float = eject_timer
 
@@ -46,7 +47,10 @@ func enter(_msg: = {}):
 func input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("jump"):
 		jump_node.remaining_jumps += 1
-		state_machine.transition_to("Jump", {"double_jump_multiplier" = jump_decay})
+		state_machine.transition_to("Jump", {
+			"double_jump_multiplier" = jump_decay, 
+			"bonus_speed" = Vector2(jump_boost, 0)}
+			)
 		jump_decay -= jump_decay_rate
 		if jump_decay < MINIMUM_JUMP_DECAY:
 			jump_decay = MINIMUM_JUMP_DECAY
@@ -72,6 +76,8 @@ func physics_process(delta):
 		
 	if Input.is_action_pressed("crouch"):
 		entity.motion.y = clamp(entity.motion.y, entity.motion.y + crouch_slide_boost, max_slide_speed)
+	elif entity.motion.y > slide_speed:
+		entity.motion.y *= decel_rate
 	else:
 		entity.motion.y = slide_speed
 	

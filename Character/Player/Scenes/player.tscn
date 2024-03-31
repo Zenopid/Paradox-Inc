@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://Character/Player/scripts/Player.gd" id="1_d84qb"]
 [ext_resource type="Texture2D" uid="uid://ccnj5krx1gyit" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-crouch-00.png" id="2_nbwc8"]
 [ext_resource type="Script" path="res://Character/EntityStateMachine.gd" id="2_pa1y2"]
+[ext_resource type="PackedScene" uid="uid://bcefyj7s01eyu" path="res://Character/Player/Scenes/grappling_hook.tscn" id="2_pt05f"]
 [ext_resource type="Texture2D" uid="uid://c0vk4qm408cpl" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-idle-00.png" id="2_r16qh"]
 [ext_resource type="Texture2D" uid="uid://cdbvlsidw0kqp" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-fall-00.png" id="2_x0un7"]
 [ext_resource type="FontFile" uid="uid://by1k102hd7hkp" path="res://fonts/Pixellari.ttf" id="2_xap18"]
@@ -18,7 +19,6 @@
 [ext_resource type="Script" path="res://Character/Player/UI/TimelineTracker.gd" id="4_urpi3"]
 [ext_resource type="Script" path="res://Character/Player/UI/Stopwatch.gd" id="4_wefng"]
 [ext_resource type="Texture2D" uid="uid://rj7qfwa4wl27" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-idle-03.png" id="5_eawid"]
-[ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="5_r2jtl"]
 [ext_resource type="Texture2D" uid="uid://dhqt1kidxttyd" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-crouch-03.png" id="5_uu1fm"]
 [ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="6_62s4t"]
 [ext_resource type="Texture2D" uid="uid://d2mthw70xc1fj" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-jump-00.png" id="6_f4ceq"]
@@ -1699,24 +1699,31 @@ _data = {
 
 [node name="Player" type="CharacterBody2D" groups=["Persist", "Players"]]
 process_mode = 1
+process_physics_priority = 25
 collision_mask = 22
 floor_max_angle = 1.10479
 script = ExtResource("1_d84qb")
+max_grapple_speed = Vector2(900, 900)
+
+[node name="GrapplingHook" parent="." node_paths=PackedStringArray("player") instance=ExtResource("2_pt05f")]
+unique_name_in_owner = true
+player = NodePath("..")
+launch_speed = 1050
+damage = 2
+time_until_grapple_falls = 0.55
+gravity = 2
+max_fall_speed = 125
+fall_multiplier = 4.5
+rise_multiplier = 10.5
+sideways_multiplier = 5.5
+boost_speed = Vector2(300, 300)
+pull_speed = Vector2(20, 350)
 
 [node name="UI" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
 
-[node name="InjureScreen" type="ColorRect" parent="UI"]
-modulate = Color(1, 1, 1, 0)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.83, 0.0913, 0.103611, 1)
-
 [node name="FPSTracker" type="Label" parent="UI"]
+visible = false
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -1731,6 +1738,7 @@ horizontal_alignment = 2
 script = ExtResource("3_x3tbr")
 
 [node name="TimelineTracker" type="Label" parent="UI"]
+unique_name_in_owner = true
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -1743,7 +1751,11 @@ theme_override_font_sizes/font_size = 33
 text = "Future"
 horizontal_alignment = 1
 vertical_alignment = 1
+uppercase = true
 script = ExtResource("4_urpi3")
+future_color = Color(0.00784314, 0.0627451, 0.0941176, 1)
+past_color = Color(1, 0.883333, 0, 1)
+extra_color = Color(0.623529, 0.0509804, 0.74902, 1)
 
 [node name="Stopwatch" type="Label" parent="UI"]
 unique_name_in_owner = true
@@ -1760,18 +1772,6 @@ theme_override_font_sizes/font_size = 33
 text = "00:00:00:00"
 horizontal_alignment = 2
 script = ExtResource("4_wefng")
-
-[node name="MenuButton" parent="UI" instance=ExtResource("5_r2jtl")]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -76.5
-offset_top = 39.0
-offset_right = -1.5
-offset_bottom = 57.0
-grow_horizontal = 2
-scale = Vector2(2, 2)
-text = "Main Menu"
 
 [node name="HealthBar" parent="UI" instance=ExtResource("6_62s4t")]
 unique_name_in_owner = true
@@ -1823,7 +1823,7 @@ vertical_alignment = 1
 [node name="QuickMenu" parent="UI" node_paths=PackedStringArray("player") instance=ExtResource("8_ea3g2")]
 unique_name_in_owner = true
 visible = false
-z_index = 1000
+z_index = 20
 mouse_filter = 2
 player = NodePath("../..")
 
@@ -1871,24 +1871,32 @@ camera_shake_strength = 0.5
 
 [node name="AirAttack1" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("74_kxsit")
+air_accel = null
 damage = 15
 animation_name = "AirAttack1"
 friction = 1.0
-landing_lag = 7
+landing_lag = 4
+buffer_window = null
 buffer_attack = "AirAttack2"
 lunge_distance = 0
 dodge_cancellable = false
+hitstop = null
+camera_shake_strength = null
 attack_type = "Air"
 
 [node name="AirAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("88_lli4y")
+air_accel = null
 damage = 10
 animation_name = "AirAttack2"
 friction = 1.0
-landing_lag = 9
+landing_lag = 6
+buffer_window = null
 buffer_attack = ""
 lunge_distance = 0
 dodge_cancellable = false
+hitstop = null
+camera_shake_strength = null
 attack_type = "Air"
 
 [node name="GroundPound" type="Node" parent="StateMachine/Attack"]
@@ -1953,6 +1961,8 @@ modulate = Color(0.364706, 0.321569, 1, 1)
 position = Vector2(17, 0)
 collision_layer = 64
 collision_mask = 136
+monitoring = false
+monitorable = false
 sister_portal = NodePath("../portal_b")
 
 [node name="portal_b" parent="StateMachine/Portal" node_paths=PackedStringArray("sister_portal") instance=ExtResource("62_csbhp")]
@@ -1960,6 +1970,8 @@ visible = false
 modulate = Color(1, 0.141176, 0.141176, 1)
 collision_layer = 64
 collision_mask = 136
+monitoring = false
+monitorable = false
 sister_portal = NodePath("../portal_a")
 
 [node name="Run" type="Node" parent="StateMachine"]
@@ -1975,7 +1987,6 @@ script = ExtResource("35_tkmwk")
 slide_acceleration = 10
 slide_deceleration = 10
 slide_speed = 425
-slide_cooldown = 1.0
 coyote_duration = 0.1
 push = 500
 animation_name = "Slide"
@@ -1983,9 +1994,10 @@ animation_name = "Slide"
 [node name="WallSlide" type="Node" parent="StateMachine"]
 script = ExtResource("101_lae4r")
 eject_timer = 0.2
-wallslide_cooldown = 0.1
+crouch_slide_boost = 10
+wallslide_cooldown = 0.0
 jump_decay_rate = 0.15
-jump_boost = 150
+jump_boost = 300
 animation_name = "WallSlide"
 
 [node name="Timers" type="Node" parent="StateMachine"]
@@ -1999,6 +2011,7 @@ process_callback = 0
 one_shot = true
 
 [node name="Jump_Buffer" type="Timer" parent="StateMachine/Timers"]
+wait_time = 0.2
 one_shot = true
 
 [node name="Walljump_Cooldown" type="Timer" parent="StateMachine/Timers"]
@@ -2087,6 +2100,7 @@ script = ExtResource("58_wunj3")
 tween_duration = 0.25
 
 [node name="PastBackground" type="ParallaxLayer" parent="Backgrounds"]
+z_index = 1
 motion_scale = Vector2(0, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="Backgrounds/PastBackground"]
@@ -2097,6 +2111,7 @@ texture = ExtResource("60_ihivh")
 centered = false
 
 [node name="FutureBackground" type="ParallaxLayer" parent="Backgrounds"]
+z_index = 1
 motion_scale = Vector2(0, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="Backgrounds/FutureBackground"]
@@ -2105,14 +2120,11 @@ scale = Vector2(2.4, 2.025)
 texture = ExtResource("104_w3v4d")
 centered = false
 
-[node name="GroundChecker" type="Node2D" parent="."]
-position = Vector2(-8.561, 17.55)
-
-[node name="Camera" parent="." instance=ExtResource("105_tcjc0")]
+[node name="Camera" parent="." node_paths=PackedStringArray("player") instance=ExtResource("105_tcjc0")]
 ignore_rotation = false
 enabled = true
 process_callback = 0
+player = NodePath("..")
 SHAKE_DECAY = 0.15
 
-[connection signal="pressed" from="UI/MenuButton" to="." method="_on_menu_button_pressed"]
 [connection signal="timeout" from="Invlv_Timer" to="." method="_on_invlv_timer_timeout"]

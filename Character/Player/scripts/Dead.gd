@@ -23,7 +23,7 @@ func enter(_msg: = {}):
 
 func physics_process(delta):
 	processing_tracker += delta
-	print(processing_tracker)
+	#print(processing_tracker)
 	if processing_tracker >= time_until_death_processing:
 		if !is_tweening:
 			var tween = get_tree().create_tween().set_ease(Tween.EASE_IN_OUT)
@@ -34,7 +34,7 @@ func physics_process(delta):
 			start_counter = true
 	if start_counter:
 		time_tracker += delta
-		print(time_tracker)
+		#print(time_tracker)
 		if time_tracker >= time_until_exit:
 			entity.death_logic()
 	entity.motion.y += jump_node.get_gravity() * delta

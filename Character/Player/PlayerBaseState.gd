@@ -7,11 +7,10 @@ func casting_portal() -> bool:
 	return false
 
 func enter_move_state():
-	if !casting_portal():
-		var move_state = "Run" if get_movement_input() != 0 else "Idle"
-		state_machine.transition_to(move_state)
-		return true
-	return false
+	var move_state = "Run" if get_movement_input() != 0 else "Idle"
+	state_machine.transition_to(move_state)
+	return true
+
 
 func get_movement_input() -> float:
 	var move = Input.get_axis("left", "right")
@@ -21,35 +20,34 @@ func get_movement_input() -> float:
 		entity.sprite.flip_h = false
 	return move
 
-func get_inverse_movement_input(type):
+func get_inverse_movement_input(type:String ):
 	var move = get_movement_input()
 	if move < 0:
-		if type == "String" or type == "string":
+		if type.to_lower() == "string":
 			return "right"
 		else:
 			return 1
 	elif move > 0:
-		if type == "String" or type == "string":
+		if type.to_lower() == "string":
 			return "left"
 		else:
 			return -1
 	return ""
 
 func enter_crouch_state():
-	if !casting_portal():
-		if Input.is_action_pressed("crouch"):
-			var movestate: MoveState = state_machine.find_state("Run")
-			if state_machine.get_timer("Slide_Cooldown").is_stopped():
-				if get_movement_input() != 0:
-					if abs(entity.motion.x) >= movestate.move_speed:
-						state_machine.transition_to("Slide")
-						return true
-			state_machine.transition_to("Crouch")
-			return true
+	if Input.is_action_pressed("crouch") and grounded():
+		var movestate: MoveState = state_machine.find_state("Run")
+		if state_machine.get_timer("Slide_Cooldown").is_stopped():
+			if get_movement_input() != 0:
+				if abs(entity.motion.x) >= movestate.move_speed:
+					state_machine.transition_to("Slide")
+					return true
+		state_machine.transition_to("Crouch")
+		return true
 	return false
 
 func enter_jump_state():
-	if Input.is_action_just_pressed("jump"):
+	if Input.is_action_just_pressed("jump") or !state_machine.get_timer("Jump_Buffer").is_stopped():
 		if state_machine.get_timer("Superjump").is_stopped():
 			state_machine.transition_to("Jump")
 		else:

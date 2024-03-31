@@ -30,6 +30,8 @@ var stun_cnt: int = 0
 var spawn_point: Vector2
 var player_close:bool = false
 var enemy_close: bool = false
+var raycasts = []
+var detection_areas = []
 func get_spawn():
 	return spawn_point
 
@@ -38,23 +40,41 @@ func _ready():
 		if nodes is RayCast2D:
 			nodes.add_exception(self)
 	super._ready()
-	current_level = get_parent()
+	current_level = get_tree().get_first_node_in_group("CurrentLevel")
 	connect("health_updated", Callable(health_bar, "_on_health_updated"))
 	current_level.connect("swapped_timeline", Callable(self, "pause_logic"))
 	if get_node_or_null("GroundChecker"):
 		get_node("GroundChecker").queue_free()
 	detection_shape.debug_color = no_detection_color
-
-
+	
+	raycasts = get_tree().get_nodes_in_group("Raycasts")
+	detection_areas = get_tree().get_nodes_in_group("Detection")
+	pause_logic(current_level.get_current_timeline())
+	
 func pause_logic(timeline):
 	if current_timeline != timeline:
 		visible = false
 		beehave_tree.enabled = false
 		set_physics_process(false)
+		
+		for nodes in raycasts:
+			nodes.enabled = false
+		for nodes in detection_areas:
+			nodes.set_deferred("monitoring", false)
+			nodes.set_deferred("monitorable",false)
+		for i in get_tree().get_nodes_in_group("Chase Locations"):
+			i.queue_free()
 	else:
 		visible = true
 		beehave_tree.enabled = true
 		set_physics_process(true)
+		
+		for nodes in raycasts:
+			nodes.enabled = true
+		for nodes in detection_areas:
+			nodes.set_deferred("monitoring", true)
+			nodes.set_deferred("monitorable",true)
+
 
 func _physics_process(delta):
 #	super._physics_process(delta)
@@ -147,7 +167,7 @@ func _on_detection_sphere_body_entered(body):
 		player_close = true
 
 func _on_detection_sphere_body_exited(body):
-	print(body)
+	#print(body)
 	if body is Player:
 		detection_shape.debug_color = no_detection_color
 		player_close = false
