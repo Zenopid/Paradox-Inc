@@ -1,4 +1,4 @@
-extends BaseStrike
+extends PlayerBaseStrike
 
 
 @export var damage: int = 25

@@ -23,7 +23,7 @@ var test_num: int = 0
 
 var jump_script: Jump 
 var fall_script: Fall 
-
+var run_state
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
@@ -36,8 +36,15 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	
 	jump_script = state_machine.find_state("Jump")
 	fall_script = state_machine.find_state("Fall")
+	run_state = state_machine.find_state("Run")
+	
+func enter(_msg: = {}):
+	super.enter()
+	slope_ray_left.enabled = true
+	slope_ray_right.enabled = true
 
 func input(event):
+	super.input(event)
 	if enter_attack_state():
 		return
 	if enter_portal_state():
@@ -56,12 +63,7 @@ func physics_process(delta:float) -> void:
 	slope_ray_left.position = Vector2(entity.position.x - 1, entity.position.y + 13.5)
 	slope_ray_right.position = Vector2(entity.position.x + 1, entity.position.y + 13.5)
 	var slope_checker:RayCast2D
-	var facing:String
-	facing = "left" if facing_left() else "right"
-	var opp_facing = "right" if facing == "left" else "left"
-	get("slope_ray_" + facing).enabled = true
-	get("slope_ray_" + opp_facing).enabled = false
-	slope_checker = get("slope_ray_" + facing)
+
 	var was_on_floor = entity.is_on_floor()
 	var move = get_movement_input()
 	if move != 0:
@@ -73,14 +75,17 @@ func physics_process(delta:float) -> void:
 	if normal < 0.02 and normal > -0.02:
 		default_move_and_slide()
 	else:
-		move_and_slide_with_slopes(delta)
+		if !ascending_slope():
+			move_and_slide_with_slopes(delta)
+		else:
+			default_move_and_slide()
 	if !entity.is_on_floor() and coyote_timer.is_stopped():
 		if was_on_floor:
 			coyote_timer.start()
 		if coyote_timer.is_stopped():
 			state_machine.transition_to("Fall")
 			return
-	if state_machine.get_current_state() == state_machine.find_state("Run"):
+	if state_machine.get_current_state() == run_state:
 		push_objects()
 
 func push_objects():
@@ -98,7 +103,8 @@ func move_and_slide_with_slopes(delta):
 	entity.set_max_slides(1)
 	entity.set_floor_max_angle(PI/2)
 	entity.floor_snap_length = 2
-	entity.set_up_direction(ground_checker.get_collision_normal())
+	if ground_checker.get_collision_normal() != Vector2.ZERO:
+		entity.set_up_direction(ground_checker.get_collision_normal())
 	
 	
 	for i in range(2):
@@ -121,10 +127,21 @@ func calculate_slope(delta, ray: RayCast2D):
 		else:
 			entity.set_up_direction(Vector2.UP)
 #		entity.motion -= entity.up_direction * delta
+
+func ascending_slope() -> bool:
+	if facing_left():
+		if slope_ray_right.is_colliding():
+			return false
+	else:
+		if slope_ray_left.is_colliding():
+			return false
+	return true 
+
 func exit() -> void:
 	coyote_timer.stop()
-	ground_checker.enabled = false
 	entity.floor_snap_length = 1
 	entity.safe_margin = 0.08
 	entity.rotation_degrees = 0
 	entity.up_direction = Vector2.UP
+	slope_ray_left.enabled = false
+	slope_ray_right.enabled = false

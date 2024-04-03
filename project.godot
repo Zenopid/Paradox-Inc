@@ -146,6 +146,7 @@ boost={
 2d_physics/layer_7="Portal"
 2d_physics/layer_8="Enemy"
 2d_physics/layer_9="Grappling Hook"
+2d_physics/layer_10="Out Of Bounds"
 
 [physics]
 

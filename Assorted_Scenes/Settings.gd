@@ -10,17 +10,18 @@ signal exiting_settings()
 
 
 #Audio
-@onready var game_slider = $TabContainer/Audio/Master/Master_Slider
-@onready var sfx_slider = $TabContainer/Audio/SFX/SFX_Slider
-@onready var music_slider = $TabContainer/Audio/Music/Music_Slider
-@onready var enable_ui_sfx = $TabContainer/Audio/EnableUISFX/EnableUISFX
+@onready var game_slider = $"%Game_Volume"
+@onready var sfx_slider = $"%SFX_Volume"
+@onready var music_slider = $"%Music_Volume"
+@onready var enable_ui_sfx = $"%ui_sfx_enabled"
 
 #Visual
-@onready var camera_flash = $TabContainer/Visual/CameraFlash/EnableCameraFlashing
-@onready var camera_shake = $TabContainer/Visual/CameraShake/EnableCameraShaking
-@onready var v_sync = $TabContainer/Visual/EnableVSync/EnableVsync
-@onready var fullscreen = $TabContainer/Visual/EnableFullscreen/EnableFullscreen
-@onready var resolution: OptionButton = $TabContainer/Visual/ChangeResolution/ResolutionOptions
+@onready var camera_flash:CheckButton = $"%camera_flash"
+@onready var camera_shake:CheckButton = $"%camera_shake"
+@onready var v_sync:CheckButton = $"%v_sync_enabled"
+@onready var fullscreen:CheckButton = $"%fullscreen"
+@onready var resolution: OptionButton = $"%ResolutionOptions"
+@onready var fps: OptionButton = $"%FPSOptions"
 
 #Controls
 @onready var jump_control:Button = $"%jump"
@@ -33,8 +34,8 @@ signal exiting_settings()
 @onready var options_control: Button = $TabContainer/Control/OptionsButton/options
 @onready var boost_control: Button = $"%boost"
 @onready var rebind_screen = $Control_Rebind_Screen
-@onready var rebind_text:Label = rebind_screen.get_node("Rebind_Text")
-@onready var overlapping_text:Label = rebind_screen.get_node("Overlapping")
+@onready var rebind_text:Label = $"%Rebind_Text"
+@onready var overlapping_text:Label = $"%Overlapping_Text_Notification"
 @onready var timer:Timer = rebind_screen.get_node("Timer")
 
 var current_setting_tab: String 
@@ -64,6 +65,9 @@ func _ready():
 	
 	connect("controls_overlap", Callable(self, "_on_overlapping_controls"))
 	
+	for i in get_tree().get_nodes_in_group("Toggle Buttons"):
+		i.connect("toggled", Callable(self, "_on_setting_toggled").bind(i))
+	
 	init_audio_settings()
 	init_visual_settings()
 	init_control_settings()
@@ -77,6 +81,7 @@ func init_audio_settings():
 	
 	for nodes in get_tree().get_nodes_in_group("Music Sliders"):
 		nodes.connect("value_changed", Callable(self, "set_music_volume").bind(nodes))
+		nodes.connect("drag_ended", Callable(self, "on_audio_slider_drag_ended").bind(nodes))
 		
 	for nodes in get_tree().get_nodes_in_group("Music Testers"):
 		nodes.connect("pressed", Callable(self, "_on_test_music_pressed").bind(nodes))
@@ -86,6 +91,7 @@ func init_visual_settings():
 	camera_shake.button_pressed = GlobalScript.visual_settings.camera_shake
 	v_sync.button_pressed = GlobalScript.visual_settings.v_sync_enabled
 	fullscreen.button_pressed = GlobalScript.visual_settings.fullscreen
+	
 	for i in resolution.get_item_count():
 		var text = resolution.get_item_text(i)
 		var item_text = text.split_floats("x")
@@ -96,6 +102,9 @@ func init_visual_settings():
 #		print_debug(res)
 	print_debug("Couldn't find the current resolution " + str(GlobalScript.visual_settings.resolution) + " in the available options.")
 
+func _on_setting_toggled(toggled:bool, button:Button):
+	check_if_setting_changed(button.name.to_lower(), toggled)
+
 func init_control_settings(): 
 	for nodes in get_tree().get_nodes_in_group("Rebind Buttons"):
 		nodes.connect("pressed", Callable(self, "start_rebind").bind(nodes.name,nodes))
@@ -105,7 +114,6 @@ func init_control_settings():
 		input_type = "Controller"
 		print("Detected controller " + Input.get_joy_name(0))
 	if input_type == "Keyboard":
-		
 		for i in GlobalScript.control_settings.get_property_list():
 			var current_button:String = i["name"]
 			if !current_button.contains("button"):
@@ -123,18 +131,11 @@ func init_control_settings():
 			for input in GlobalScript.control_settings.get(current_button):
 				if input is InputEventJoypadButton:
 					get(current_button.left(current_button.find("_")) + "_control").text = input.as_text()
+					continue
 	if options_control.text == "":
 		if input_type == "Keyboard":
 			options_control.text = "Escape"
 			#engine bug i think
-
-func _process(delta):
-	if !updated_settings.is_empty():
-		apply_button.show()
-		apply_button.disabled = false
-	else:
-		apply_button.hide()
-		apply_button.disabled = true 
 
 func check_if_setting_changed(setting_name, setting_condition):
 	#print(GlobalScript.get_setting(current_setting_tab, setting_name))
@@ -145,16 +146,7 @@ func check_if_setting_changed(setting_name, setting_condition):
 			}
 	else:
 		updated_settings.erase(setting_name)
-	#print(updated_settings)
-
-func _on_enable_camera_flashing_toggled(button_pressed):
-	check_if_setting_changed("camera_flash", button_pressed)
-
-func _on_enable_camera_shaking_toggled(button_pressed):
-	check_if_setting_changed("camera_shake", button_pressed)
-
-func _on_enable_vsync_toggled(button_pressed):
-	check_if_setting_changed("v_sync_enabled", button_pressed)
+	apply_button.visible = !updated_settings.is_empty()
 
 func _on_apply_pressed():
 	for new_setting in updated_settings.keys():
@@ -165,9 +157,6 @@ func _on_apply_pressed():
 
 func _on_resolution_options_resolution_changed(new_resolution: Vector2i):
 	check_if_setting_changed("resolution", new_resolution)
-
-func _on_enable_fullscreen_toggled(button_pressed):
-	check_if_setting_changed("fullscreen", button_pressed)
 
 func _on_test_music_pressed(button):
 	var music_player: AudioStreamPlayer = button.get_parent().get_node("Test_Music")
@@ -184,9 +173,6 @@ func _on_return_button_pressed():
 
 func set_music_volume(value, slider):
 	slider.get_parent().get_node("Test_Sound").volume_db = value 
-
-func _on_enable_uisfx_toggled(button_pressed):
-	check_if_setting_changed("ui_sfx_enabled", button_pressed)
 
 func _input(event):
 	last_input = event 
@@ -228,20 +214,23 @@ func change_control(event_name, button:Button):
 
 func _on_tab_container_tab_changed(tab):
 	current_setting_tab = settings_tab.get_current_tab_control().name.to_lower() + "_settings"
-
-
+	
 #Audio Sliders
-func _on_master_slider_drag_ended(value_changed):
-	if value_changed:
-		updated_settings["game_volume"] = game_slider.value
+#func _on_master_slider_drag_ended(value_changed):
+#	if value_changed:
+#		updated_settings["game_volume"] = game_slider.value
+#
+#func _on_sfx_slider_drag_ended(value_changed):
+#	if value_changed:
+#		updated_settings["sfx_volume"] = sfx_slider.value
+#
+#func _on_music_slider_drag_ended(value_changed):
+#	if value_changed:
+#		updated_settings["bgm_volume"] = music_slider.value
 
-func _on_sfx_slider_drag_ended(value_changed):
+func on_audio_slider_drag_ended(value_changed:bool, slider:HSlider):
 	if value_changed:
-		updated_settings["sfx_volume"] = sfx_slider.value
-
-func _on_music_slider_drag_ended(value_changed):
-	if value_changed:
-		updated_settings["bgm_volume"] = music_slider.value
+		updated_settings[slider.name.to_lower()] = slider.value
 
 func _on_overlapping_controls():
 	rebind_text.hide()
@@ -253,22 +242,12 @@ func _on_overlapping_controls():
 	overlapping_text.hide()
 	rebind_text.show()
 
-func _on_enable_vibrate_toggled(button_pressed):
-	check_if_setting_changed("vibration", button_pressed)
-
-
 func _on_tab_container_focus_entered():
 	settings_tab.set("focus_next", get_node(current_setting_tab) )
 
-
-func _on_enable_fps_tracker_toggled(button_pressed):
-	check_if_setting_changed("show_fps", button_pressed)
-
-
-
 func _on_visibility_changed():
 	if level:
-		if visible:
-			level.hide()
-		else:
-			level.show()
+		level.visible = !visible
+
+func _on_fps_options_item_selected(index):
+	check_if_setting_changed("fps", int(fps.get_item_text(index)))

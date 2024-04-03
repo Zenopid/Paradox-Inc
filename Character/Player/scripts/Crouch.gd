@@ -19,8 +19,9 @@ func enter(_msg:= {}):
 func physics_process(_delta):
 	var was_on_floor = grounded()
 	entity.motion.x *= decelerate_value
-	if entity.motion.y < fall_scipt.maximum_fall_speed:
-		entity.motion.y += jump_script.get_gravity()
+#	if entity.motion.y < fall_scipt.maximum_fall_speed:
+#		entity.motion.y += jump_script.get_gravity()
+	entity.motion.y = clamp(entity.motion.y, entity.motion.y + jump_script.get_gravity(), fall_scipt.maximum_fall_speed)
 	get_movement_input()
 	default_move_and_slide()
 	
@@ -30,6 +31,7 @@ func physics_process(_delta):
 		return
 
 func input(_event):
+	super.input(_event)
 	if enter_attack_state():
 		return
 	if Input.is_action_just_pressed("jump"):
@@ -43,4 +45,4 @@ func input(_event):
 
 func exit() -> void:
 	superjump_timer.start()
-	entity.ease()
+	entity.relax()

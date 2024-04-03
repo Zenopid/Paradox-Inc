@@ -43,20 +43,20 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	coyote_timer = state_machine.get_timer("Coyote")
 	cooldown_timer = state_machine.get_timer("Slide_Cooldown")
 	fall_state = state_machine.find_state("Fall")
-	
+	jump_node = state_machine.find_state("Jump")
 	cooldown_timer.wait_time = slide_cooldown
 	coyote_timer.wait_time = coyote_duration
 
 func enter(_msg: = {}):
 	super.enter()
-	ground_checker.enabled = true
-	jump_node = state_machine.find_state("Jump")
+#	ground_checker.enabled = true
 	current_slide_duration = slide_duration
 	if facing_left():
 		slide_direction = -1
 	else:
 		slide_direction = 1
-	current_slide_duration = slide_duration
+	hit_max_speed = false 
+#	current_slide_duration = slide_duration
 
 func speed_timer_logic(delta):
 	if hit_max_speed:
@@ -116,27 +116,26 @@ func input(_event: InputEvent):
 	if enter_dodge_state():
 		return
 	if !Input.is_action_pressed("crouch"):
-		if get_movement_input() != 0:
-			state_machine.transition_to("Run")
-			return
-		state_machine.transition_to("Idle")
+		enter_move_state()
 
-func slow_down(speed):
-	if facing_left():
-		speed += slide_deceleration
-		if speed > 0:
-			speed = 0
-	else:
-		speed -= slide_deceleration
-		if speed < 0:
-			speed = 0
+func slow_down(speed: float):
+	speed = int(round(speed))
+	speed = move_toward(speed, 0, slide_deceleration)
+#	if facing_left():
+#		speed += slide_deceleration
+#		if speed > 0:
+#			speed = 0
+#	else:
+#		speed -= slide_deceleration
+#		if speed < 0:
+#			speed = 0
 	return speed
 
 func exit() -> void:
 	cooldown_timer.start()
-	hit_max_speed = false
-	current_slide_duration = slide_duration
-	ground_checker.enabled = false
+#	hit_max_speed = false
+#	current_slide_duration = slide_duration
+#	ground_checker.enabled = false
 	entity.sprite.rotation_degrees = 0
 	entity.get_node("Hurtbox").rotation_degrees = 0
 

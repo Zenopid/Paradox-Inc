@@ -4,20 +4,24 @@ extends GenericLevel
 @onready var enemy_spawn_point:Node2D = $EnemySpawnerPoint
 @onready var animation_player = $AnimationPlayer
 @onready var speed_slider = $"%Speed_Slider"
+@onready var future_puzzle_tilemap = $"%FuturePuzzle"
+@onready var past_puzzle_tilemap = $"%PastPuzzle"
 
+@export var box_turn_speed: int = -6
 func _ready():
 	super._ready()
 	GlobalScript.connect("setting_changed", Callable(self, "_on_setting_changed"))
+	future_puzzle_tilemap.position = Vector2(388, -719)
+	past_puzzle_tilemap.position = Vector2(400, -690)
 func _on_setting_changed(new_setting, value):
 	pass
 	
 func _on_spawner_pressed():
 	var box_instance = box_scene.instantiate()
-	box_instance.init(current_timeline, self)
 	box_instance.position = box_spawn_point.position
 	add_child(box_instance)
 	box_instance.add_to_group("Boxes")
-	connect("swapped_timeline", Callable(box_instance,"swap_state"))
+
 
 func _on_clear_box_pressed():
 	for nodes in get_tree().get_nodes_in_group("Boxes"):
@@ -47,3 +51,25 @@ func _on_elevator_switch_status_changed(new_status:bool):
 func _on_reset_pressed():
 	Engine.time_scale = 1
 	speed_slider.value = 1
+
+
+func _on_rotate_box_left_status_changed(new_status):
+	if new_status:
+		animation_player.play("PuzzleFutureSwitch")
+	else:
+		animation_player.stop(true)
+		
+
+
+func _on_rotate_box_right_status_changed(new_status):
+	if new_status:
+		animation_player.play_backwards("PuzzleFutureSwitch")
+	else:
+		animation_player.pause()
+
+
+func _on_move_past_puzzle_pieces_status_changed(new_status):
+	if new_status:
+		animation_player.play("PuzzlePastSwitch")
+	else:
+		animation_player.pause()

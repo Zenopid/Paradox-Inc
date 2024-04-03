@@ -24,6 +24,7 @@ signal killed()
 @onready var enemy_sphere_shape: CollisionShape2D = $EnemySphere/CollisionShape2D
 @onready var hitsparks: GPUParticles2D = $Hitsparks
 
+
 var currently_attacking:bool = false
 var in_hitstun: bool = false
 var stun_cnt: int = 0
@@ -32,6 +33,7 @@ var player_close:bool = false
 var enemy_close: bool = false
 var raycasts = []
 var detection_areas = []
+var being_destroyed:bool = false 
 func get_spawn():
 	return spawn_point
 
@@ -52,28 +54,30 @@ func _ready():
 	pause_logic(current_level.get_current_timeline())
 	
 func pause_logic(timeline):
-	if current_timeline != timeline:
-		visible = false
-		beehave_tree.enabled = false
-		set_physics_process(false)
-		
-		for nodes in raycasts:
-			nodes.enabled = false
-		for nodes in detection_areas:
-			nodes.set_deferred("monitoring", false)
-			nodes.set_deferred("monitorable",false)
-		for i in get_tree().get_nodes_in_group("Chase Locations"):
-			i.queue_free()
-	else:
-		visible = true
-		beehave_tree.enabled = true
-		set_physics_process(true)
-		
-		for nodes in raycasts:
-			nodes.enabled = true
-		for nodes in detection_areas:
-			nodes.set_deferred("monitoring", true)
-			nodes.set_deferred("monitorable",true)
+	if !being_destroyed:
+		if current_timeline != timeline:
+			visible = false
+			beehave_tree.enabled = false
+			set_physics_process(false)
+			
+			for nodes in raycasts:
+				nodes.enabled = false
+			for nodes in detection_areas:
+				nodes.set_deferred("monitoring", false)
+				nodes.set_deferred("monitorable",false)
+			for i in get_tree().get_nodes_in_group("Chase Locations"):
+				i.queue_free()
+		else:
+			visible = true
+			beehave_tree.enabled = true
+			set_physics_process(true)
+			for nodes in raycasts:
+				nodes.enabled = true
+			for nodes in detection_areas:
+				nodes.set_deferred("monitoring", true)
+				nodes.set_deferred("monitorable",true)
+				
+	#print(being_destroyed)
 
 
 func _physics_process(delta):
@@ -84,7 +88,9 @@ func _physics_process(delta):
 	speed_tracker.text = "Speed: (" + str(round(motion.x)) + "," + str(round(motion.y)) + ")"
 	motion.y += gravity
 	motion.y = clamp(motion.y, 0, max_fall_speed)
-
+	if being_destroyed:
+		queue_free()
+		
 func set_spawn(location: Vector2):
 	spawn_point = location
 
@@ -112,10 +118,11 @@ func heal(amount):
 	_set_health(health + amount)
 
 func kill():
+	health_bar.hide()
+	current_level.disconnect("swapped_timeline", Callable(self, "pause_logic"))
 	beehave_tree.free()
 	anim_player.play("Dead")
-	await anim_player.animation_finished
-	queue_free()
+	being_destroyed = true
 	
 func get_raycast(ray_name:String) -> RayCast2D:
 #	if ray_name == "Ground Checker":
@@ -173,7 +180,7 @@ func _on_detection_sphere_body_exited(body):
 		player_close = false
 
 func _on_enemy_sphere_body_entered(body):
-	print(body)
+	#print(body)
 	if body is Enemy:
 		enemy_sphere_shape.debug_color = detection_color
 		enemy_close = true
@@ -185,3 +192,6 @@ func _on_enemy_sphere_body_exited(body):
 
 func enemy_near():
 	return enemy_close
+
+func destroy():
+	being_destroyed = true

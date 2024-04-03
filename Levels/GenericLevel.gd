@@ -13,6 +13,8 @@ class_name GenericLevel extends Node2D
 
 signal swapped_timeline(new_timeline)
 
+const UNFCOUSED_TIMELINE_MODULATE: float = 0.2
+
 var music_playlist = []
 var level_conditions = {}
 var restarting_level = false
@@ -29,23 +31,29 @@ var current_player: Player
 
 var player_deaths: int = 0
 
-var timeline_layers = [2,3]
-var timeline_masks = [1, 8]
+#var timeline_layers = [2,3]
+#var timeline_masks = [1, 8]
 func _ready():
 	self.add_to_group("CurrentLevel")
 	load_music()
 	future_tileset = future.tile_set
 	past_tileset = past.tile_set
-	var old_timeline = current_timeline
-	set_timeline(get_next_timeline_swap())
-	set_timeline(old_timeline)
-	set_timeline(get_next_timeline_swap())
-	set_timeline(old_timeline)
+	#var old_timeline = current_timeline
+#	set_timeline(get_next_timeline_swap())
+#	set_timeline(old_timeline)
+#	set_timeline(get_next_timeline_swap())
+#	set_timeline(old_timeline)
 	#for some reason this is needed in order to disable the inverse timeline of current. prob some issue 
 	#with collision or somethin
+	init_timeline()
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
 	GlobalScript.connect("enabling_menu", Callable(self, "_on_game_over"))
 	GlobalScript.connect("disabling_menu", Callable(self, "enable"))
+	if !is_connected("swapped_timeline", Callable(self, "_on_swapped_timeline")):
+		connect("swapped_timeline", Callable(self, "_on_swapped_timeline"))
+
+func _on_swapped_timeline(new_timeline):
+	pass
 
 func start_level():
 	current_player.connect("respawning", Callable(self, "_on_player_respawning"))
@@ -96,23 +104,17 @@ func _input(event):
 	if Input.is_action_just_pressed("swap_timeline"):
 		set_timeline(next_timeline)
 		return
-	var old_timeline = get(str(current_timeline.to_lower()))
-	var new_timeline = get(next_timeline)
-	if Input.is_action_pressed("view_timeline"):
-		if new_timeline:
-			new_timeline.visible = true
-			new_timeline.modulate.a = 1
-		if old_timeline:
-			old_timeline.modulate.a = 0.15
-	else:
-		if new_timeline:
-			new_timeline.visible = false
-			new_timeline.modulate.a = 1
-		if old_timeline:
-			old_timeline.modulate.a = 1
-			
-
-
+#	var old_timeline = get(str(current_timeline.to_lower()))
+#	var new_timeline = get(next_timeline.to_lower())
+#	if Input.is_action_pressed("view_timeline"):
+#		if next_timeline:
+#			new_timeline.visible = true 
+#			new_timeline.modulate.a = 0.15
+#	else:
+#		if new_timeline:
+#			new_timeline.visible = false
+#			new_timeline.modulate.a = 1
+#
 func set_timeline(new_timeline:String):
 	var old_timeline_tilemap: TileMap = get(current_timeline.to_lower())
 	var current_timeline_tilemap: TileMap = get(new_timeline.to_lower())
@@ -128,24 +130,30 @@ func set_timeline(new_timeline:String):
 		current_timeline_tileset.set_physics_layer_collision_layer(1, 4)
 		old_timeline_tileset.set_physics_layer_collision_layer(1, 0)
 		
-		old_timeline_tilemap.visible = false
+		old_timeline_tilemap.modulate.a = UNFCOUSED_TIMELINE_MODULATE
 		current_timeline_tilemap.modulate.a = 1
-		current_timeline_tilemap.visible = true
-#		current_timeline_tilemap.visible = true
-#		current_timeline_tilemap.modulate.a = 1
-#		old_timeline_tilemap.visible = false
 		for nodes in get_tree().get_nodes_in_group("Moveable Object"):
 			nodes.swap_state(new_timeline)
 		emit_signal("swapped_timeline",current_timeline)
-	else:
-		for nodes in get_tree().get_nodes_in_group("Timelines"):
-			var alt_timeline = nodes.tile_set
-			alt_timeline.set_physics_layer_collision_layer(0,0) 
-			alt_timeline.set_physics_layer_collision_layer(1,0)
-		var starting_timeline = get(current_timeline.to_lower()).tile_set
-		starting_timeline.set_physics_layer_collision_layer(0, 2)
-		starting_timeline.set_physics_layer_collision_layer(1, 4)
-		
+
+func init_timeline():
+	for nodes in get_tree().get_nodes_in_group("Timelines"):
+		var alt_timeline = nodes.tile_set
+		alt_timeline.set_physics_layer_collision_layer(0,0) 
+		alt_timeline.set_physics_layer_collision_layer(1,0)
+		nodes.modulate.a = UNFCOUSED_TIMELINE_MODULATE
+	
+	var starting_timeline = get(current_timeline.to_lower()).tile_set
+	starting_timeline.set_physics_layer_collision_layer(0, 2)
+	starting_timeline.set_physics_layer_collision_layer(1, 4)
+	for nodes in get_tree().get_nodes_in_group("Paradoxes"):
+		if !nodes.is_in_group("Timelines"):
+			var tile_set = nodes.tile_set
+			tile_set.set_physics_layer_collision_layer(0, 2)
+			tile_set.set_physics_layer_collision_layer(1, 4)
+			nodes.modulate.a = 1
+	get(current_timeline.to_lower()).modulate.a = 1
+
 func get_start_point():
 	return spawn_point.position
 

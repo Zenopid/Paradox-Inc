@@ -4,7 +4,9 @@
 
 [node name="OutOfBounds" type="Area2D"]
 position = Vector2(426, -101)
+collision_layer = 512
 collision_mask = 393
+collision_priority = 10.0
 script = ExtResource("1_a2yhh")
 damage = 1
 

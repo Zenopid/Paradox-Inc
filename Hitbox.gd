@@ -59,6 +59,7 @@ func _ready():
 	current_level = hitbox_owner.get_level()
 
 func _physics_process(delta:float ) -> void:
+	hitbox.global_position = global_position
 	if framez < duration:
 		if duration != -1:
 			framez += 1

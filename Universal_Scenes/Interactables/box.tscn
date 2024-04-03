@@ -1,10 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://b812mbppojnhg"]
+[gd_scene load_steps=4 format=3 uid="uid://b812mbppojnhg"]
 
 [ext_resource type="Script" path="res://Universal_Scripts/Interactables/MoveableObject.gd" id="1_1hej8"]
 [ext_resource type="Texture2D" uid="uid://c4sm3ge5nm1x6" path="res://Sprites/Objects/Box.png" id="2_fqxhm"]
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_q8ud4"]
-rough = true
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h4uon"]
 size = Vector2(35, 31)
@@ -12,16 +9,9 @@ size = Vector2(35, 31)
 [node name="Box" type="RigidBody2D" groups=["Moveable Object"]]
 collision_layer = 8
 collision_mask = 223
-mass = 0.7
-physics_material_override = SubResource("PhysicsMaterial_q8ud4")
-continuous_cd = 2
-max_contacts_reported = 16
+max_contacts_reported = 8
 contact_monitor = true
-can_sleep = false
-lock_rotation = true
-linear_damp = 3.0
 script = ExtResource("1_1hej8")
-max_frames_without_pushing = 10
 
 [node name="Box" type="Sprite2D" parent="."]
 texture = ExtResource("2_fqxhm")
@@ -34,21 +24,21 @@ shape = SubResource("RectangleShape2D_h4uon")
 position = Vector2(-17.5, 0)
 scale = Vector2(1, 5)
 target_position = Vector2(-4, 0)
-collision_mask = 131
+collision_mask = 385
 hit_from_inside = true
 
 [node name="RightSideChecker" type="RayCast2D" parent="."]
 position = Vector2(17.5, 0)
 scale = Vector2(1, 5)
 target_position = Vector2(4, 0)
-collision_mask = 131
+collision_mask = 385
 hit_from_inside = true
 
 [node name="SouthSideChecker" type="RayCast2D" parent="."]
 position = Vector2(0, 15.5)
 scale = Vector2(5, 1)
 target_position = Vector2(0, 4)
-collision_mask = 131
+collision_mask = 385
 hit_from_inside = true
 collide_with_areas = true
 
@@ -56,7 +46,7 @@ collide_with_areas = true
 position = Vector2(0, -15.5)
 scale = Vector2(5, 1)
 target_position = Vector2(0, -4)
-collision_mask = 131
+collision_mask = 385
 hit_from_inside = true
 collide_with_areas = true
 

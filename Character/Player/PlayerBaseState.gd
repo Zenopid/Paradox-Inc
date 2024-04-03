@@ -1,5 +1,11 @@
 class_name PlayerBaseState extends BaseState
 
+func input(event):
+	if Input.is_action_just_pressed("jump"):
+		state_machine.get_timer("Jump_Buffer").start()
+	if Input.is_action_just_released("crouch"):
+		state_machine.get_timer("Superjump").start()
+
 func casting_portal() -> bool:
 #	if !Input.is_action_pressed("portal_a") and !Input.is_action_pressed("portal_b"):
 #		return false
@@ -47,11 +53,14 @@ func enter_crouch_state():
 	return false
 
 func enter_jump_state():
-	if Input.is_action_just_pressed("jump") or !state_machine.get_timer("Jump_Buffer").is_stopped():
-		if state_machine.get_timer("Superjump").is_stopped():
-			state_machine.transition_to("Jump")
-		else:
+	var jump_buffer:Timer = state_machine.get_timer("Jump_Buffer")
+	if Input.is_action_just_pressed("jump") or !jump_buffer.is_stopped():
+		if !jump_buffer.is_stopped():
+			entity.motion.x *= 1 + state_machine.find_state("Fall").bunny_hop_boost
+		if Input.is_action_pressed("crouch") or !state_machine.get_timer("Superjump").is_stopped():
 			state_machine.transition_to("Jump", {can_superjump = true})
+		else: 
+			state_machine.transition_to("Jump")
 		return true
 	return false
 

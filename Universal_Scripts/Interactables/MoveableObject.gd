@@ -1,9 +1,10 @@
 class_name MoveableObject extends RigidBody2D
 
-@export var max_frames_without_pushing:int = 5
-@export var health: int = 100
-@export var current_timeline: String = "Future"
+const MAX_FRAMES_WITHOUT_PUSHING:int = 10
 
+@export var health: int = 100
+@export_enum ("Future", "Past") var current_timeline:String = "Future"
+@onready var current_level:GenericLevel 
 @onready var collision:CollisionShape2D = $"%Collision"
 @onready var timer:Timer = $"%Destruction_Timer"
 
@@ -13,16 +14,18 @@ var push_count:int = 0
 var height_pre_pushing: int = 0
 var should_reset:bool = false
 var new_position: Vector2 = Vector2.ZERO
-var current_level: GenericLevel
 var is_on_slope:bool = false
 var entity_pushing: Entity
 var movement_speed: Vector2
 
 var being_destroyed:bool = false
 
-func init(timeline,level):
-	set_timeline(timeline)
-	current_level = level
+enum state {
+	DISABLED,
+	ENABLED
+}
+
+var current_state = state.DISABLED
 
 func _ready():
 #	if get_parent() is GenericLevel:
@@ -30,14 +33,20 @@ func _ready():
 #	elif get_parent() is Entity:
 #		current_level = get_parent().get_level()
 	current_level = get_tree().get_first_node_in_group("CurrentLevel")
+	swap_state(current_level.current_timeline)
+	current_level.connect("swapped_timeline", Callable(self,"swap_state"))
+	print(str(current_level.name) + " is the current level")
+	print(current_level.current_timeline + " is the current timeline")
 
-func swap_state(timeline):
+func swap_state(timeline: String):
 	if timeline != current_timeline:
-		if !is_in_group("Grappled Objects"):
-			disable()
+		print("Object " + str(self) + " is disabling itself.")
+		disable()
 	else:
-#		print("Object " + str(self) + " is enabling itself.")
+		print("Object " + str(self) + " is enabling itself.")
 		enable()
+#	print(timeline + " is the new timeline.")
+#	print(current_state)
 
 func swap_timeline(disable_afterwards:bool):
 	current_timeline = current_level.get_next_timeline_swap()
@@ -51,7 +60,7 @@ func disable():
 	visible = false
 	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_DISABLED)
 	sleeping = true 
-
+	current_state = state.DISABLED
 func enable():
 	if collision:
 		collision.set_deferred("disabled", false ) 
@@ -59,6 +68,7 @@ func enable():
 	visible = true
 	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_CAST_SHAPE)
 	sleeping = false 
+	current_state = state.ENABLED
 
 func _physics_process(delta):
 #	var ground_checker: RayCast2D 

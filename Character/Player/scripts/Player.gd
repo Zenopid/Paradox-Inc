@@ -4,14 +4,14 @@ signal health_updated(health)
 signal killed()
 signal respawning()
 
-@onready var state_tracker = $Debug/StateTracker
-@onready var debug_info = $Debug
+@onready var state_tracker:Label = $Debug/StateTracker
+@onready var debug_info:Node2D = $Debug
 @onready var health:int = max_health 
 @onready var invlv_timer = $Invlv_Timer
 @onready var effects_aniamtion: AnimationPlayer = $EffectAnimator
 @onready var death_screen = $"%UI/DeathScreen"
-@onready var health_bar = $"%HealthBar"
-@onready var sprite: AnimatedSprite2D = get_node("AnimatedSprite2D")
+@onready var health_bar:HealthBar = $"%HealthBar"
+@onready var sprite: AnimatedSprite2D = $"%AnimatedSprite2D"
 @onready var camera: Camera2DPlus = $Camera
 @onready var quick_menu:Control = $"%QuickMenu"
 @onready var stopwatch: Label = $"%Stopwatch"
@@ -34,7 +34,7 @@ var spawn_point: Vector2
 var grapple_velocity: Vector2 = Vector2.ZERO
 var grappling_upwards:bool = false
 var player_braced: bool = false
-
+var grapple_enabled: bool = true 
 #
 #func set_camera(camera_name: Camera2DPlus):
 #	camera = camera_name
@@ -54,10 +54,7 @@ func _ready():
 	backdrops.init(self)
 	connect_signals()
 
-	if GlobalScript.debug_enabled:
-		debug_info.show()
-	else:
-		debug_info.hide()
+	debug_info.visible = GlobalScript.debug_enabled
 	
 func connect_signals():
 	GlobalScript.connect("level_over", Callable(self, "_on_level_over"))
@@ -78,7 +75,6 @@ func grapple_boost():
 			motion += boost_dir
 			grappling_upwards = false
 		if grapple.grappled_object is MoveableObject:
-			#collision.get_collider().call_deferred("apply_central_impulse", -collision.get_normal() * push ) 
 			print(grapple.grappled_object.name + " is the name of the object.")
 			grapple.grappled_object.call_deferred("apply_central_impulse", -boost_dir )
 		grapple.release()
@@ -101,8 +97,6 @@ func enable():
 	set_physics_process(true)
 	set_process(true)
 	backdrops.show()
-	
-	
 
 func _on_game_over():
 	queue_free()
@@ -137,37 +131,38 @@ func _physics_process(delta):
 		#no pulling up/down while running/sliding/idle/crouching, only airborne states
 		#also helps with pushing around objects n stuff
 	if grapple.grappled_object:
-		
-# (position.direction_to(grapple.hook_body.global_position) * grapple.boost_speed.length()).round()
 		var object_pull = grapple.hook_location.direction_to(global_position) * grapple.pull_speed
-		#print(object_pull)
+		if abs(grapple.hook_location.y - global_position.y) <= 30:
+			object_pull.y = -5
+			#if you're on the ground, apply a light lift upwards to prevent being stuck
 		grapple.grappled_object.call_deferred("apply_central_impulse", object_pull)
 	motion += grapple_velocity
 	motion = motion.clamp(-max_grapple_speed, max_grapple_speed)
 
+
 func _input(event):
-	if event is InputEventMouseMotion:
-		grapple.set_pointer_direction(get_global_mouse_position())
-	elif event is InputEventJoypadMotion:
-		grapple.set_pointer_direction(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
+	states.input(event)
+	if grapple_enabled:
+		if event is InputEventMouseMotion:
+			grapple.set_pointer_direction(get_global_mouse_position())
+		elif event is InputEventJoypadMotion:
+			grapple.set_pointer_direction(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
+		if Input.is_action_just_pressed("grapple"):
+			if GlobalScript.controller_type == "Keyboard":
+				grapple.shoot(get_global_mouse_position() - global_position)
+			else:
+				grapple.shoot(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
+		elif Input.is_action_just_released("grapple"):
+			if grapple.attached:
+				grapple.release()
+		if Input.is_action_just_pressed("boost"):
+			grapple_boost()
 	if Input.is_action_just_pressed("options"):
 		quick_menu.enable_menu(current_level.name)
-	if Input.is_action_just_pressed("grapple"):
-		if GlobalScript.controller_type == "Keyboard":
-			grapple.shoot(get_global_mouse_position() - global_position)
-		else:
-			grapple.shoot(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
-	if Input.is_action_just_released("grapple"):
-		grapple.release()
-	if Input.is_action_just_pressed("boost"):
-		grapple_boost()
 
 func set_spawn(location: Vector2, res_timeline: String = "Future"):
 	spawn_point = location
 	respawn_timeline = res_timeline
-
-func _on_menu_button_pressed():
-	get_parent().enable_menu()
 
 func _set_health(value):
 	var prev_health = health
@@ -216,5 +211,9 @@ func death_logic():
 func brace():
 	player_braced = true
 
-func ease():
+func relax():
 	player_braced = false 
+
+func change_grapple_status(status:bool):
+	grapple_enabled = status
+	grapple.pointer.visible = status

@@ -1707,17 +1707,18 @@ max_grapple_speed = Vector2(900, 900)
 
 [node name="GrapplingHook" parent="." node_paths=PackedStringArray("player") instance=ExtResource("2_pt05f")]
 unique_name_in_owner = true
+visible = false
 player = NodePath("..")
 launch_speed = 1050
 damage = 2
 time_until_grapple_falls = 0.55
 gravity = 2
 max_fall_speed = 125
-fall_multiplier = 4.5
+fall_multiplier = 5.0
 rise_multiplier = 10.5
 sideways_multiplier = 5.5
 boost_speed = Vector2(300, 300)
-pull_speed = Vector2(20, 350)
+pull_speed = Vector2(20, 50)
 
 [node name="UI" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
@@ -1828,6 +1829,7 @@ mouse_filter = 2
 player = NodePath("../..")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
 show_behind_parent = true
 texture_filter = 1
 position = Vector2(0, 9)
@@ -1844,59 +1846,51 @@ script = ExtResource("2_pa1y2")
 initial_state = "Idle"
 machine_owner = NodePath("..")
 
-[node name="Attack" type="Node" parent="StateMachine" groups=["Player Hitboxes"]]
+[node name="Attack" type="Node" parent="StateMachine"]
 script = ExtResource("52_61mr7")
 hitbox = ExtResource("58_tx02o")
 
 [node name="GroundedAttack1" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("71_wsv55")
-animation_name = "Grounded_Attack_1"
-friction = 0.4
+dodge_cancel_frames = null
+first_attack_damage = null
+second_attack_damage = null
+buffer_window = null
 buffer_attack = "GroundedAttack2"
+dodge_cancellable = null
 lunge_distance = 150
 hitstop = 4
+camera_shake_strength = null
+animation_name = "Grounded_Attack_1"
+friction = 0.4
+attack_type = null
 
 [node name="GroundedAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("72_t4ijd")
-animation_name = "Grounded_Attack_2"
 buffer_attack = "GroundedAttack3"
 hitstop = 4
+animation_name = "Grounded_Attack_2"
 
 [node name="GroundedAttack3" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("73_5exvu")
-animation_name = "Grounded_Attack_3"
 lunge_distance = 350
 hitstop = 6
 camera_shake_strength = 0.5
+animation_name = "Grounded_Attack_3"
 
 [node name="AirAttack1" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("74_kxsit")
-air_accel = null
 damage = 15
+buffer_attack = "AirAttack2"
 animation_name = "AirAttack1"
 friction = 1.0
-landing_lag = 4
-buffer_window = null
-buffer_attack = "AirAttack2"
-lunge_distance = 0
-dodge_cancellable = false
-hitstop = null
-camera_shake_strength = null
 attack_type = "Air"
 
 [node name="AirAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("88_lli4y")
-air_accel = null
 damage = 10
 animation_name = "AirAttack2"
 friction = 1.0
-landing_lag = 6
-buffer_window = null
-buffer_attack = ""
-lunge_distance = 0
-dodge_cancellable = false
-hitstop = null
-camera_shake_strength = null
 attack_type = "Air"
 
 [node name="GroundPound" type="Node" parent="StateMachine/Attack"]
@@ -1906,13 +1900,12 @@ minimum_damage = 15
 maximum_damage = 45
 height_scaler = 0.1
 camera_shake_amount = 3.0
-hitstop = 7
-camera_shake_strength = 5.0
+air_acceleration = 0
+landing_lag = 0
 attack_type = "Air"
 
 [node name="LandingLag" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("83_pq2wu")
-hitstop = 0
 
 [node name="Crouch" type="Node" parent="StateMachine"]
 script = ExtResource("34_j5ybi")
@@ -1929,6 +1922,7 @@ animation_name = "Death"
 [node name="Dodge" type="Node" parent="StateMachine"]
 script = ExtResource("46_cwimo")
 dodge_speed = 250
+dodge_cooldown = 0.8
 animation_name = "Dodge"
 
 [node name="Fall" type="Node" parent="StateMachine"]
@@ -1948,6 +1942,7 @@ script = ExtResource("32_nkne8")
 jump_height = 120.0
 jump_time_to_peak = 0.5
 jump_time_to_descent = 0.4
+jump_speed_decrease_on_released_button = 0.35
 minimum_doublejump_speed = 250
 animation_name = "Jump"
 
@@ -1997,7 +1992,6 @@ eject_timer = 0.2
 crouch_slide_boost = 10
 wallslide_cooldown = 0.0
 jump_decay_rate = 0.15
-jump_boost = 300
 animation_name = "WallSlide"
 
 [node name="Timers" type="Node" parent="StateMachine"]
@@ -2034,7 +2028,6 @@ collision_mask = 12
 hit_from_inside = true
 
 [node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts"]
-visible = false
 position = Vector2(0, 13.5)
 scale = Vector2(2, 1)
 target_position = Vector2(0, 10)
@@ -2042,16 +2035,14 @@ collision_mask = 138
 hit_from_inside = true
 
 [node name="SlopeCheckerRight" type="RayCast2D" parent="StateMachine/Raycasts"]
-visible = false
-position = Vector2(1, 13.5)
+position = Vector2(0, 19)
 enabled = false
 target_position = Vector2(30, 0)
 collision_mask = 2
 hit_from_inside = true
 
 [node name="SlopeCheckerLeft" type="RayCast2D" parent="StateMachine/Raycasts"]
-visible = false
-position = Vector2(-1, 13.5)
+position = Vector2(0, 19)
 enabled = false
 target_position = Vector2(-30, 0)
 collision_mask = 2

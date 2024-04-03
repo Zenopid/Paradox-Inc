@@ -5,6 +5,7 @@ class_name Jump extends AirState
 @export var jump_height : float = 400
 @export var jump_time_to_peak: float = 0.7
 @export var jump_time_to_descent: float = 0.8
+@export var jump_speed_decrease_on_released_button: float = 0.6
 
 @export_range(0, 1) var double_jump_strength: float = 0.75
 @export var double_jump_boost: int = 50
@@ -19,7 +20,7 @@ class_name Jump extends AirState
 @export var minimum_doublejump_speed: int = 100
 
 var superjumping: bool = false
-
+var released_jump_button: bool = false
 var ground_checker:RayCast2D 
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
@@ -27,6 +28,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	ground_checker = s_machine.get_raycast("GroundChecker")
 
 func enter(msg: = {}):
+	released_jump_button = false
 	superjumping = false
 	super.enter()
 	var jump_speed: Vector2 = Vector2(0, jump_velocity)
@@ -36,10 +38,11 @@ func enter(msg: = {}):
 		match i:
 			"bonus_speed":
 				jump_speed += Vector2(msg["bonus_speed"].x * facing, msg["bonus_speed"].y)
-				print("bonus speed is (" + str(msg["bonus_speed"].x) + "," + str(msg["bonus_speed"].y) + ")")
+				#print("bonus speed is (" + str(msg["bonus_speed"].x) + "," + str(msg["bonus_speed"].y) + ")")
 			"can_superjump":
 				jump_speed.y *= superjump_bonus
 				superjumping = true
+				#print_debug("Superjumping!")
 			"overwrite_speed":
 				jump_speed = msg["overwrite_speed"]
 			"double_jump_multiplier":
@@ -48,7 +51,11 @@ func enter(msg: = {}):
 		entity.motion.y = jump_speed.y
 		entity.motion.x += jump_speed.x 
 	else:
-		double_jump(double_jump_multiplier)
+		var boost: Vector2 = Vector2.ZERO
+		if msg.has("double_jump_bonus_speed"):
+			boost = msg["double_jump_bonus_speed"]
+			#print("adding boost of " + str(boost) )
+		double_jump(double_jump_multiplier, boost)
 	
 
 func physics_process(delta):
@@ -57,25 +64,39 @@ func physics_process(delta):
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	super.physics_process(delta)
 	entity.motion.y += get_gravity() * delta
-	if Input.is_action_just_pressed("jump") and entity.motion.y > -minimum_doublejump_speed and remaining_jumps > 0:
-		double_jump()
 	if entity.motion.y >= 0:
 		state_machine.transition_to("Fall")
 		return
 	default_move_and_slide()
 
-func double_jump(additional_multiplier: float = 1):
+func input(_event:InputEvent):
+	super.input(_event)
+	if Input.is_action_just_pressed("jump") and entity.motion.y > -minimum_doublejump_speed and remaining_jumps > 0:
+		double_jump()
+#	if Input.is_action_just_released("jump"):
+#		if !released_jump_button:
+#			entity.motion.y *= 1 - jump_speed_decrease_on_released_button
+#			released_jump_button = true 
+
+func double_jump(additional_multiplier: float = 1, boost: Vector2 = Vector2.ZERO):
 	entity.motion.y = (jump_velocity * double_jump_strength) * additional_multiplier
 	var facing = -1 if get_movement_input() < 0 else 1
 	if abs(entity.motion.x) < max_speed:
-		entity.motion.x += double_jump_boost * sign(entity.motion.x)
+		entity.motion.x += double_jump_boost * get_movement_input()
 		if abs(entity.motion.x) > max_speed:
-			entity.motion.x = double_jump_boost * facing
+			entity.motion.x = (double_jump_boost * facing) 
 #	entity.motion.x += double_jump_boost * get_movement_input()
+	entity.motion += boost
 	remaining_jumps -= 1
 
 func get_gravity() -> float:
 	return jump_gravity if entity.motion.y < 0.0 else fall_gravity
+
+func get_jump_gravity() -> float:
+	return jump_gravity
+
+func get_fall_gravity() -> float:
+	return fall_gravity
 
 func exit() -> void:
 	if grounded():

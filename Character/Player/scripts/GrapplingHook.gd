@@ -50,6 +50,7 @@ func _ready():
 	gravity_timer.wait_time = time_until_grapple_falls
 	links.hide()
 	hook_body.hide()
+	visible = true
 
 func shoot(dir: Vector2 = Vector2.ZERO) :
 	if cooldown_timer.is_stopped():
@@ -88,6 +89,8 @@ func set_pointer_direction(location:Vector2):
 	var angle
 	if GlobalScript.controller_type == "Keyboard":
 		angle = pointer.position.angle_to(to_local(get_global_mouse_position()).normalized())
+	else:
+		angle = pointer.get_angle_to(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
 	pointer.rotation = angle
 #	pointer.rotation = (pointer.global_position.angle_to_point(location) - deg_to_rad(90))
 

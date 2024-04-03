@@ -21,13 +21,11 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	jump_buffer.wait_time = buffer_duration
 	walljump_node = state_machine.find_state("WallSlide")
 
-
-
 func enter(_msg: = {}) -> void:
 	super.enter()
 	wall_checker.enabled = true
 	ground_checker.enabled = true
-	
+
 func input(_event: InputEvent):
 	if Input.is_action_just_pressed("jump"):
 		jump_buffer.start()

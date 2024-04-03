@@ -18,7 +18,7 @@ class VisualSettings:
 	var v_sync_enabled: bool = true
 	var fullscreen: bool = false
 	var show_fps:bool = false
-
+	var fps:int = Engine.physics_ticks_per_second
 class AudioSettings:
 	var sfx_volume: int = 1
 	var bgm_volume: int = 1
@@ -141,6 +141,10 @@ func set_setting(setting_class:String, setting_name: String, new_setting):
 			#actually applies changes to the game
 			"visual_settings":
 				match setting_name:
+					"fps":
+						Engine.max_fps = new_setting
+						Engine.physics_ticks_per_second = new_setting
+						Engine.max_physics_steps_per_frame = new_setting
 					"v_sync_enabled": 
 						if new_setting:
 							DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
@@ -170,15 +174,13 @@ func set_setting(setting_class:String, setting_name: String, new_setting):
 			_:
 				print_debug("Could not find class name " + setting_class)
 		return
-	print_debug("Couldn't set setting " + str(setting_name) + " in class " + str(setting_class) )
+	print_debug("Couldn't set setting '" + str(setting_name) + "' in class '" + str(setting_class) + "'" )
 
 func get_setting(setting_class:String, setting_name:String):
-	var setting = get(setting_class).get(setting_name)
-	if setting:
+	var setting = (get(setting_class)).get(setting_name)
+	if typeof(setting) != TYPE_NIL:
 		return setting
-#	if setting_name in get(setting_class):
-#		return get(setting_class).get(setting_name)
-	print_debug("Couldn't get setting " + str(setting_name) + " in class " + str(setting_class) )
+	print_debug("Couldn't get setting '" + str(setting_name) + "' in class '" + str(setting_class) + "'" )
 
 func apply_hitstop(duration):
 #	print_debug("Applying hitstop...")

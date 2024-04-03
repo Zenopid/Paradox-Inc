@@ -2,6 +2,7 @@ extends PlayerBaseState
 
 @onready var dodge_tracker:int = dodge_duration 
 @onready var dodge_timer: Timer
+@onready var superjump_timer:Timer
 
 @export var dodge_boost: int = 25
 @export var dodge_duration: int = 3
@@ -18,21 +19,25 @@ var jump_node: Jump
 var fall_node: Fall
 var jump_buffer:Timer
 
+var bunny_hop_boost: float 
+
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	jump_node = state_machine.find_state("Jump")
 	fall_node = state_machine.find_state("Fall")
 	dodge_timer = state_machine.get_timer("Dodge_Cooldown")
-	
+	superjump_timer = state_machine.get_timer("Superjump")
 	jump_buffer = state_machine.get_timer("Jump_Buffer")
 	dodge_timer.wait_time = dodge_cooldown
-
+	bunny_hop_boost = fall_node.bunny_hop_boost
+	
 func enter(_msg: = {}):
 	super.enter()
 	entity.anim_player.connect("animation_finished", Callable(self, "end_dodge"))
-	if entity.motion.y > inital_fall_speed:
-		entity.motion.y = inital_fall_speed
-	entity.motion.x += dodge_boost * sign(entity.motion.x)
+#	if entity.motion.y > inital_fall_speed:
+#		entity.motion.y = inital_fall_speed
+	entity.motion.y = clamp(entity.motion.y, inital_fall_speed, fall_node.maximum_fall_speed)
+	entity.motion.x += dodge_boost * get_movement_input()
 	if abs(entity.motion.x) > dodge_speed: 
 		return
 	if facing_left():
@@ -40,10 +45,6 @@ func enter(_msg: = {}):
 	else:
 		entity.motion.x = dodge_speed
 	
-
-func input(event):
-	if Input.is_action_just_pressed("jump"):
-		jump_buffer.start()
 
 func physics_process(delta: float):
 	entity.motion.y += jump_node.get_gravity() * delta
@@ -65,7 +66,9 @@ func physics_process(delta: float):
 func leave_dodge():
 	if grounded():
 		if Input.is_action_pressed("jump") or !jump_buffer.is_stopped():
-			state_machine.transition_to("Jump", {can_superjump = state_machine.get_timer("Superjump").is_stopped()})
+			if !jump_buffer.is_stopped():
+				entity.motion.x *= 1 + bunny_hop_boost
+			state_machine.transition_to("Jump", {can_superjump = superjump_timer.is_stopped()})
 			return
 		if enter_crouch_state():
 			return

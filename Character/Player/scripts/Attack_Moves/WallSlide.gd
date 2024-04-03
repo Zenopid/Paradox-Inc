@@ -7,7 +7,7 @@ extends PlayerBaseState
 @export var wallslide_cooldown: float = 0.6
 @export var decay_multiplier: float = 1.7
 @export var jump_decay_rate: float = 0.1
-@export var jump_boost: int = 50
+@export var jump_boost: Vector2 = Vector2 (50, -25)
 @export var decel_rate: float = 0.7
 
 @onready var eject_tracker: float = eject_timer
@@ -22,7 +22,6 @@ var jump_node: Jump
 var jump_decay: float = 1.0
 var previous_wall_direction: String
 var cooldown_timer: Timer
-
 const  MINIMUM_JUMP_DECAY :float = 0.35
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
@@ -47,9 +46,11 @@ func enter(_msg: = {}):
 func input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("jump"):
 		jump_node.remaining_jumps += 1
+		var speed_bonus:Vector2 = jump_boost
+		speed_bonus.x = jump_boost.x if wall_direction == "left" else -jump_boost.x
 		state_machine.transition_to("Jump", {
 			"double_jump_multiplier" = jump_decay, 
-			"bonus_speed" = Vector2(jump_boost, 0)}
+			"double_jump_bonus_speed" = speed_bonus}
 			)
 		jump_decay -= jump_decay_rate
 		if jump_decay < MINIMUM_JUMP_DECAY:
@@ -57,7 +58,8 @@ func input(_event: InputEvent) -> void:
 		return
 
 func physics_process(delta):
-	wall_checker.position.y = entity.position.y - offset_y
+	var facing = -1 if facing_left() else 1
+	wall_checker.position = Vector2(entity.position.x + (offset_x * facing), entity.position.y - offset_y)
 	if grounded():
 		if enter_dodge_state():
 			return

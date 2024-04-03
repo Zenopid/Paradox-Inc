@@ -3,13 +3,13 @@ class_name Switch extends Area2D
 var is_on: bool = false
 
 signal status_changed(new_status: bool)
-
-@export var timeline:String = "Future"
-@export var level: GenericLevel
+@export_enum ("Future", "Past") var timeline:String = "Future"
+@onready var level: GenericLevel
 @onready var on_sprite: Sprite2D = $OnSprite
 @onready var off_sprite: Sprite2D = $OffSprite
 
 func _ready():
+	level = get_tree().get_first_node_in_group("CurrentLevel")
 	level.connect("swapped_timeline", Callable(self, "swap_view"))
 	swap_view(level.current_timeline)
 	

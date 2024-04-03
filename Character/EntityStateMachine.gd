@@ -13,8 +13,7 @@ var debug_info: Node2D = null
 var state_tracker: Label = null
 var motion_tracker: Label = null
 
-var state_names: = []
-var state_count: int = 0
+var state_nodes: = {}
 
 var timer_nodes = {}
 var ray_nodes = {}
@@ -27,10 +26,11 @@ func init(entity: Entity, debug_node: Node2D = null):
 	for nodes in get_node("Raycasts").get_children():
 		ray_nodes[nodes.name] = nodes
 	for nodes in get_children():
+		if nodes is BaseState:
+			state_nodes[nodes.name] = nodes
+	for nodes in get_children():
 		if nodes is BaseState: 
-			state_count += 1
 			nodes.init(entity, self)
-			state_names.append(nodes.name)
 	current_state = get_node(initial_state)
 	if !current_state:
 		current_state = get_node("Idle")
@@ -39,7 +39,11 @@ func init(entity: Entity, debug_node: Node2D = null):
 	if debug_node:
 		state_tracker = debug_node.get_node_or_null("StateTracker")
 		motion_tracker = debug_node.get_node_or_null("MotionTracker")
-		
+
+	state_nodes.make_read_only()
+	timer_nodes.make_read_only()
+	ray_nodes.make_read_only()
+
 func physics_update(delta):
 	current_state.physics_process(delta)
 	motion_tracker.text ="Speed: " + str(round(machine_owner.motion.x)) + "," + str(round(machine_owner.motion.y))
@@ -68,28 +72,29 @@ func transition_to(target_state_name: String = "", msg: = {}, trans_anim: String
 				print("Couldn't find state " + target_state_name)
 	else:
 		print_debug("Couldn't transition to state " + target_state_name +  " as the state machine is locked.")
+#
+#func get_state_names():
+#	return state_names
 
-func get_state_names():
-	return state_names
-
-func find_state(state) -> BaseState:
-	var desired_state = get_node(state)
+func find_state(state:String) -> BaseState:
+	#print(state_nodes)
+	var desired_state = state_nodes[state]
 	if desired_state:
 		return desired_state
 	return 
 
-func set_timer(timer, wait_time):
+func set_timer(timer:String, wait_time: float):
 	var desired_timer = timer_nodes[timer]
 	if desired_timer:
 		desired_timer.wait_time = wait_time
 
-func get_timer(timer) -> Timer:
+func get_timer(timer:String) -> Timer:
 	var desired_timer = timer_nodes[timer]
 	if desired_timer:
 		return desired_timer
 	return
 
-func get_raycast(raycast) -> RayCast2D:
+func get_raycast(raycast:String) -> RayCast2D:
 	var desired_raycast = ray_nodes[raycast]
 	if desired_raycast:
 		return desired_raycast

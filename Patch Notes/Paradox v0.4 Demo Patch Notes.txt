@@ -1,0 +1,43 @@
+Paradox v0.4 Demo Patch Notes
+
+
+Bug Fixes:
+-fixed grapple and box interactions. The grapple should now properly attach to the box, as well as preventing errors when the box falls off a cliff.
+-fixed grapple not going exactly where the mouse was
+
+Levels
+Removed "View Timeline" button
+	-Other timelines are now consistanly visible, as if you were always holding the "view timeline" button.
+	-Increased visiblity of non focused timeline from 15% to 20% 
+Added Paradoxes (hey its the name of the game)
+	-Pieces of the map that exist in both timelines.
+
+
+Training
+Removed starting enemy. Spawn in one if you need to.
+Added training puzzle (use the walls in the future to get up to it)
+	Rotate box around to make box land on switch
+	Use the switches in the past to move paradoxes arounds  
+Removed past switch that rotates random object (was just testing switches)
+
+Emergence (First Level)
+Added more content to the level (grappling hook portion)
+Must pick up grappling hook to use it.
+Tweaked platform positions.
+Removed view timeline prompt 
+
+Player
+Jumping out of a wall slide now gives you bonus velocity compared to a normal double jump
+Can now buffer dodge at any time
+
+Grappling Hook
+Greatly increased grapple speed (600u -> 1050u)
+Greatly nerfed grapple damage(10 -> 2)(Will probably remove its ability to do damage, i have to add stuff to enemy ai in order to prvent them getting lamed out by this)
+Nerfed grapple horizontal pull speed (6.5 -> 5.5)
+Nerfed grapple vertical pull speed (12 -> 10.5)
+Added cooldown on grapple release (0 -> 0.1) 
+Added ability to pull objects,can yank objects with boost (was supposed to be in last patch)
+Grapple now falls down towards the ground after a short duration (0.55 seconds)
+Added new ui pointer to see where you're aiming 
+Grapple automatically releases when hitting a boundary
+Now aimable with controller (use right axis stick)

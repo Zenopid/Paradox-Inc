@@ -1,5 +1,7 @@
 extends Area2D
 
+signal reached_checkpoint()
+
 @export var disabled_color: Color
 @export var enabled_color: Color
 
@@ -25,6 +27,7 @@ func _on_body_entered(body):
 			GlobalScript.emit_signal("update_settings")
 			set_deferred("monitoring",false)
 			set_deferred("monitorable", false)
+			emit_signal("reached_checkpoint")
 
 func save():
 	var save_dict = {

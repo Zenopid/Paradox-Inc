@@ -2,7 +2,7 @@ extends Camera2DPlus
 
 @export var player:Entity
 const DEAD_ZONE = 160
-
+const DEAD_ZONE_MOUSE = 100
 const LOOK_AHEAD_FACTOR = 0.01
 const SHIFT_TRANS = Tween.TRANS_SINE
 const SHIFT_EASE = Tween.EASE_OUT
@@ -26,6 +26,7 @@ func _ready():
 func _process(delta: float) -> void:
 	super._process(delta)
 	if shake_strength <= 0:
+#		pass
 		_check_facing()
 #	change_zoom()
 	prev_camera_pos = get_camera_position()
@@ -47,6 +48,16 @@ func _check_facing():
 		var target_offset = get_viewport_rect().size.x * LOOK_AHEAD_FACTOR * facing
 		var tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 		tween.tween_property(self, "position:x", target_offset, SHIFT_DURATION)
+
+#func _input(event):
+#	if event is InputEventMouseMotion:
+#		var target:Vector2 = event.position - get_viewport().size * 0.5
+#		if target.length() < DEAD_ZONE_MOUSE:
+#			return
+##		var tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+#		target = target.normalized() * (target.length() - DEAD_ZONE_MOUSE) * 0.5
+#		position = target
+	
 
 func _on_Player_grounded_updated(is_grounded) -> void:
 	drag_vertical_enabled = !is_grounded
