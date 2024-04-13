@@ -50,7 +50,7 @@ func _ready() -> void:
 		NODE_TO_FOLLOW_PATH = i.get_path()
 		break
 	node_to_follow = get_node(NODE_TO_FOLLOW_PATH)
-	print(node_to_follow)
+#	print(node_to_follow)
 	## Adding all the necessary CanvasLayers so the Camera2D+ can work properly.
 	flash_layer = CanvasLayer.new() # Creating a new CanvasLayer.
 	flash_layer.name = "FlashLayer" # Updating the name of the new CanvasLayer.

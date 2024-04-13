@@ -4,3 +4,5 @@
 
 [node name="Singleton" type="Node"]
 script = ExtResource("1_oqxpk")
+
+[connection signal="save_game_state" from="." to="." method="save_game"]

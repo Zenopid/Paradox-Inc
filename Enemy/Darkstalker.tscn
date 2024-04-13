@@ -293,8 +293,8 @@ radius = 37.6
 [node name="Darkstalker" type="CharacterBody2D" groups=["Enemy", "Persist"]]
 process_mode = 1
 process_physics_priority = 3
-collision_layer = 128
-collision_mask = 159
+collision_layer = 0
+collision_mask = 0
 floor_max_angle = 1.10479
 script = ExtResource("1_811do")
 detection_color = Color(0, 0.839216, 0.0156863, 0.235294)
@@ -326,6 +326,7 @@ libraries = {
 position = Vector2(-4.9869, 24.425)
 
 [node name="Debug" type="Node2D" parent="."]
+unique_name_in_owner = true
 
 [node name="MotionTracker" type="Label" parent="Debug"]
 texture_filter = 1
@@ -347,23 +348,26 @@ actor = NodePath("..")
 [node name="Raycasts" type="Node" parent="."]
 
 [node name="LOS" type="RayCast2D" parent="Raycasts" node_paths=PackedStringArray("entity") groups=["Raycasts"]]
+unique_name_in_owner = true
 position = Vector2(0, 12)
 target_position = Vector2(450, 0)
-collision_mask = 207
+collision_mask = 805343232
 hit_from_inside = true
 script = ExtResource("8_stb7w")
 entity = NodePath("../..")
 vision_distance = 450
 
 [node name="GroundChecker" type="RayCast2D" parent="Raycasts" node_paths=PackedStringArray("entity") groups=["Raycasts"]]
+unique_name_in_owner = true
 position = Vector2(14, 10)
 target_position = Vector2(0, 30)
-collision_mask = 2
+collision_mask = 805306368
 hit_from_inside = true
 script = ExtResource("9_s5haw")
 entity = NodePath("../..")
 
 [node name="Attack" type="Node" parent="." node_paths=PackedStringArray("current_entity")]
+unique_name_in_owner = true
 script = ExtResource("8_bsslf")
 hitbox = ExtResource("9_wp7pv")
 current_entity = NodePath("..")
@@ -383,6 +387,7 @@ debug_color = Color(0, 0.6, 0.701961, 0.419608)
 scale = Vector2(0.1, 0.1)
 
 [node name="HealthBar" parent="UI" instance=ExtResource("7_156oq")]
+unique_name_in_owner = true
 offset_left = -135.828
 offset_top = -157.306
 offset_right = -135.828

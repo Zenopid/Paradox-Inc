@@ -4,7 +4,7 @@ signal hitbox_collided(object)
 
 var parent = get_parent()
 
-var CLASH_RANGE: int = 5
+const CLASH_RANGE: int = 5
 
 @export var damage: int = 100
 @export var knockback_angle: int = 1
@@ -18,8 +18,7 @@ var CLASH_RANGE: int = 5
 
 @export var duration:int = 10
 
-@onready var parent_state: BaseState = get_parent()
-@onready var state_machine = get_parent().get_parent()
+@onready var state_machine: EntityStateMachine
 @onready var hitbox_owner: Entity 
 var current_level: GenericLevel
 @onready var hitbox: CollisionShape2D = get_node("Shape")
@@ -48,11 +47,9 @@ func update_extends():
 	hitbox.position = position
 
 func _ready():
-	if state_machine is EntityStateMachine:
-		hitbox_owner = state_machine.get_parent()
-	else:
-		hitbox_owner = get_parent().get_parent()
-		state_machine = null
+	hitbox_owner = get_parent()
+	if hitbox_owner is Player:
+		state_machine = hitbox_owner.states
 	monitoring = false 
 	hitbox.shape = RectangleShape2D.new()
 	set_physics_process(false)
@@ -67,7 +64,7 @@ func _physics_process(delta:float ) -> void:
 		queue_free()
 		return
 	if state_machine:
-		if state_machine.get_current_state() != parent_state:
+		if state_machine.get_current_state().name != "Attack":
 			queue_free()
 			return
 
@@ -96,9 +93,26 @@ func _on_body_entered(body):
 				#If they're around the same damage, then we clash, and both hitboxes dissapear.
 				body.queue_free()
 				self.queue_free()
+				#To do: add particle effects 
 				print_debug("CLASH")
 
 func damage_entity(body):
 	body.damage(damage, knockback_amount, knockback_angle)
 	emit_signal("hitbox_collided", body)
 	GlobalScript.apply_hitstop(hit_stop)
+#	queue_free()
+func set_future_collision():
+	set_collision_layer_value(GlobalScript.collision_values.HITBOX_FUTURE, true)
+	
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
+
+func set_past_collision():
+	set_collision_layer_value(GlobalScript.collision_values.HITBOX_PAST, true)
+	
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)

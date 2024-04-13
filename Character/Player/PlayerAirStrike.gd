@@ -4,6 +4,7 @@ class_name PlayerAirStrike extends BaseStrike
 @export var buffer_window: int = 13
 @export var buffer_attack: String = "None"
 @export var dodge_cancellable:bool = true
+@export var dodge_window: int = 3
 @export_category("Camera")
 @export var camera_shake_strength: float = 0
 
@@ -19,7 +20,7 @@ var max_speed: int
 var attack_state: PlayerAttack
 var jump_script_gravity: float
 var buffer_tracker = buffer_window
-
+var can_dodge:bool 
 
 
 func init(current_entity:Entity):
@@ -38,15 +39,25 @@ func air_attack_logic():
 func physics_process(delta):
 	super.physics_process(delta)
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)
-	if abs(entity.motion.x) < max_speed:
-		entity.motion.x += air_acceleration * get_movement_input()
-		if abs(entity.motion.x) > max_speed:
-			entity.motion.x = max_speed * sign(entity.motion.x)
+#	if abs(entity.motion.x) < max_speed:
+#		entity.motion.x += air_acceleration * get_movement_input()
+#		if abs(entity.motion.x) > max_speed:
+#			entity.motion.x = max_speed * sign(entity.motion.x)
+	if get_movement_input() != 0:
+		if entity.sprite.flip_h:
+			if entity.motion.x > -max_speed:
+				entity.motion.x -= air_acceleration
+				if entity.motion.x < -max_speed:
+					entity.motion.x = -max_speed
+		else:
+			if entity.motion.x < max_speed:
+				entity.motion.x += air_acceleration
+				if entity.motion.x > max_speed:
+					entity.motion.x = max_speed
 	entity.motion.y += (attack_state.jump_script.get_gravity() * gravity) * delta 
-func enter(_msg: = {}):
-	super.enter()
-	buffer_tracker = 0
-
+	if frame >= dodge_window and dodge_window >= 0:
+		can_dodge = false
+	
 func get_movement_input() -> int:
 	var move = Input.get_axis("left", "right")
 	if move < 0:
@@ -62,6 +73,10 @@ func on_attack_hit(object):
 		can_cancel = true 
 		entity.camera.set_shake(camera_shake_strength)
 
+func enter(_msg: = {}):
+	super.enter()
+	buffer_tracker = 0
+	can_dodge = dodge_cancellable
 
 func input(event):
 	super.input(event)

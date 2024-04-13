@@ -23,7 +23,7 @@ func tick(actor: Node, _blackboard: Blackboard) -> int:
 		while ray.is_colliding():
 			#print("going away now")
 #			ray.global_position = los.global_position
-			if ray.global_position != los.global_position:
+			#if ray.global_position != los.global_position:
 			#	print_debug("somethings going wrong")
 			var point = ray.get_collision_point()
 			var direction: int 

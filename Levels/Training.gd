@@ -2,17 +2,18 @@ extends GenericLevel
 
 @onready var box_spawn_point:Node2D = $BoxSpawnPoint
 @onready var enemy_spawn_point:Node2D = $EnemySpawnerPoint
-@onready var animation_player = $AnimationPlayer
+#@onready var animation_player = $AnimationPlayer
 @onready var speed_slider = $"%Speed_Slider"
 @onready var future_puzzle_tilemap = $"%FuturePuzzle"
-@onready var past_puzzle_tilemap = $"%PastPuzzle"
+@onready var paradox_puzzle_tilemap = $"%ParadoxPuzzle"
 
-@export var box_turn_speed: int = -6
+@onready var future_player:AnimationPlayer = $"%FutureAnimPlayer"
+@onready var past_player:AnimationPlayer = $"%PastAnimPlayer"
+
 func _ready():
-	super._ready()
-	GlobalScript.connect("setting_changed", Callable(self, "_on_setting_changed"))
 	future_puzzle_tilemap.position = Vector2(388, -719)
-	past_puzzle_tilemap.position = Vector2(400, -690)
+	paradox_puzzle_tilemap.get_parent().position = Vector2(388, -719)
+	super._ready()
 func _on_setting_changed(new_setting, value):
 	pass
 	
@@ -21,7 +22,6 @@ func _on_spawner_pressed():
 	box_instance.position = box_spawn_point.position
 	add_child(box_instance)
 	box_instance.add_to_group("Boxes")
-
 
 func _on_clear_box_pressed():
 	for nodes in get_tree().get_nodes_in_group("Boxes"):
@@ -40,36 +40,24 @@ func _on_spawn_enemy_pressed():
 func _on_h_slider_value_changed(value: float):
 	Engine.time_scale = value
 
-
-func _on_elevator_switch_status_changed(new_status:bool):
-	if new_status:
-		animation_player.play("Spin Platform")
-	else:
-		animation_player.pause()
-
-
 func _on_reset_pressed():
 	Engine.time_scale = 1
 	speed_slider.value = 1
 
-
 func _on_rotate_box_left_status_changed(new_status):
 	if new_status:
-		animation_player.play("PuzzleFutureSwitch")
+		future_player.play("PuzzleFutureSwitch")
 	else:
-		animation_player.stop(true)
-		
-
+		future_player.pause()
 
 func _on_rotate_box_right_status_changed(new_status):
 	if new_status:
-		animation_player.play_backwards("PuzzleFutureSwitch")
+		future_player.play_backwards("PuzzleFutureSwitch")
 	else:
-		animation_player.pause()
-
+		future_player.pause()
 
 func _on_move_past_puzzle_pieces_status_changed(new_status):
 	if new_status:
-		animation_player.play("PuzzlePastSwitch")
+		past_player.play("PuzzlePastSwitch")
 	else:
-		animation_player.pause()
+		past_player.pause()

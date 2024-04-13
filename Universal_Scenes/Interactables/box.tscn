@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://b812mbppojnhg"]
+[gd_scene load_steps=8 format=3 uid="uid://b812mbppojnhg"]
 
 [ext_resource type="Script" path="res://Universal_Scripts/Interactables/MoveableObject.gd" id="1_1hej8"]
 [ext_resource type="Texture2D" uid="uid://c4sm3ge5nm1x6" path="res://Sprites/Objects/Box.png" id="2_fqxhm"]
@@ -6,9 +6,65 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h4uon"]
 size = Vector2(35, 31)
 
-[node name="Box" type="RigidBody2D" groups=["Moveable Object"]]
-collision_layer = 8
-collision_mask = 223
+[sub_resource type="Animation" id="Animation_4l2om"]
+resource_name = "Become Paradox"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Box:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0.235294, 0, 0.301961, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_rqamv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Box:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_yjceo"]
+resource_name = "Return"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Box:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.235294, 0, 0.301961, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hk24e"]
+_data = {
+"Become Paradox": SubResource("Animation_4l2om"),
+"RESET": SubResource("Animation_rqamv"),
+"Return": SubResource("Animation_yjceo")
+}
+
+[node name="Box" type="RigidBody2D" groups=["Moveable Object", "Persist"]]
+collision_layer = 0
+collision_mask = 0
 max_contacts_reported = 8
 contact_monitor = true
 script = ExtResource("1_1hej8")
@@ -20,37 +76,13 @@ texture = ExtResource("2_fqxhm")
 unique_name_in_owner = true
 shape = SubResource("RectangleShape2D_h4uon")
 
-[node name="LeftSideChecker" type="RayCast2D" parent="."]
-position = Vector2(-17.5, 0)
-scale = Vector2(1, 5)
-target_position = Vector2(-4, 0)
-collision_mask = 385
-hit_from_inside = true
-
-[node name="RightSideChecker" type="RayCast2D" parent="."]
-position = Vector2(17.5, 0)
-scale = Vector2(1, 5)
-target_position = Vector2(4, 0)
-collision_mask = 385
-hit_from_inside = true
-
-[node name="SouthSideChecker" type="RayCast2D" parent="."]
-position = Vector2(0, 15.5)
-scale = Vector2(5, 1)
-target_position = Vector2(0, 4)
-collision_mask = 385
-hit_from_inside = true
-collide_with_areas = true
-
-[node name="NorthSideChecker" type="RayCast2D" parent="."]
-position = Vector2(0, -15.5)
-scale = Vector2(5, 1)
-target_position = Vector2(0, -4)
-collision_mask = 385
-hit_from_inside = true
-collide_with_areas = true
-
 [node name="Destruction_Timer" type="Timer" parent="."]
 unique_name_in_owner = true
 wait_time = 0.1
 one_shot = true
+
+[node name="ColorChanger" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_hk24e")
+}

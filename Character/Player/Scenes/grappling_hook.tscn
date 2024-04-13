@@ -119,8 +119,9 @@ texture_mode = 1
 
 [node name="Hook" type="CharacterBody2D" parent="." groups=["Hook"]]
 unique_name_in_owner = true
-collision_layer = 256
-collision_mask = 686
+collision_layer = 16384
+collision_mask = 4372
+safe_margin = 0.25
 
 [node name="Hook_Sprite" type="Sprite2D" parent="Hook"]
 unique_name_in_owner = true

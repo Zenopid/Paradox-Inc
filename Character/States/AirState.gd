@@ -6,8 +6,6 @@ var remaining_jumps:int = 0
 var air_acceleration: int = 20
 var max_speed: int = 250
 
-var can_accelerate: bool = true 
-
 func enter(_msg: ={}):
 	super.enter()
 	entity.set_collision_mask_value(4, true)
@@ -24,6 +22,7 @@ func physics_process(_delta):
 				entity.motion.x += air_acceleration
 				if entity.motion.x > max_speed:
 					entity.motion.x = max_speed
+		
 	if enter_attack_state():
 		return
 	

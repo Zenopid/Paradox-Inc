@@ -182,7 +182,7 @@ func is_on_slope():
 	return false
 
 func ascending_slope():
-	var facing = "Left" if slide_direction < 0 else "Right"
+	var facing = "left" if slide_direction < 0 else "right"
 	if get("slope_checker_" + facing).is_colliding():
 		return true
 	return false

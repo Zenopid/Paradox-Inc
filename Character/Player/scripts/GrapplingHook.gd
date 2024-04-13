@@ -52,7 +52,40 @@ func _ready():
 	hook_body.hide()
 	visible = true
 
+func _on_swapped_timeline(new_timeline:String ):
+#	release()
+#	print("Grapple is changing to timeline " + new_timeline)
+	if new_timeline == "Future":
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, false)
+		
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, false)
+		
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, false)
+		
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
+		
+	else:
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, false)
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
+		
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, false)
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
+		
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, false)
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
+		
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
+		hook_body.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
+	var collision = hook_body.move_and_collide(get_speed(), true)
+	if !collision is KinematicCollision2D and !grappled_object and attached:
+		release()
+
 func shoot(dir: Vector2 = Vector2.ZERO) :
+	anim_player.play("RESET")
 	if cooldown_timer.is_stopped():
 		if dir == Vector2.ZERO:
 			dir = get_viewport().get_mouse_position()
@@ -97,14 +130,7 @@ func set_pointer_direction(location:Vector2):
 func _physics_process(delta):
 	hook_body.global_position = hook_location
 	if flying:
-		if gravity_timer.is_stopped():
-			gravity_amount += gravity
-			gravity_amount = clamp(gravity_amount, 0, max_fall_speed)
-		else:
-			gravity_amount = 0
-		var speed = ((direction * launch_speed ) + player.motion) * delta
-		speed.y += gravity_amount
-		var collision = hook_body.move_and_collide(speed)
+		var collision = hook_body.move_and_collide(get_speed())
 		if collision is KinematicCollision2D:
 			var object = collision.get_collider()
 			anim_player.play("attach")
@@ -123,15 +149,17 @@ func _physics_process(delta):
 func _on_object_grappled(object):
 	if object is MoveableObject:
 		grappled_object = object
-		grappled_object.remove_from_group("Moveable Object")
-		grappled_object.add_to_group("Grappled Objects")
+#		grappled_object.remove_from_group("Moveable Object")
+#		grappled_object.add_to_group("Grappled Objects")
+		grappled_object.become_paradox()
 	attachment_point = object.global_position - hook_body.global_position
 
 func _on_grapple_detatched():
 	if grappled_object:
-		grappled_object.remove_from_group("Grappled Objects")
-		grappled_object.add_to_group("Moveable Object")
-		grappled_object = null
+#		grappled_object.remove_from_group("Grappled Objects")
+#		grappled_object.add_to_group("Moveable Object")
+		grappled_object.become_normal()
+	grappled_object = null
 	attachment_point = Vector2.ZERO
 	links.hide()
 	hook_body.hide()
@@ -146,3 +174,13 @@ func start_cooldown():
 
 func end_cooldown():
 	anim_player.play("cooldown_end")
+
+func get_speed():
+	if gravity_timer.is_stopped():
+		gravity_amount += gravity
+		gravity_amount = clamp(gravity_amount, 0, max_fall_speed)
+	else:
+		gravity_amount = 0
+	var speed: Vector2 = ((direction * launch_speed ) + player.motion) * get_physics_process_delta_time()
+	speed.y += gravity_amount
+	return speed

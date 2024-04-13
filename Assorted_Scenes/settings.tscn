@@ -32,6 +32,7 @@ mouse_filter = 2
 color = Color(0.878431, 0.996078, 1, 1)
 
 [node name="ReturnButton" parent="." instance=ExtResource("2_ceyak")]
+unique_name_in_owner = true
 z_index = 100
 layout_mode = 1
 anchors_preset = 3
@@ -74,7 +75,6 @@ tab_alignment = 1
 
 [node name="Audio" type="VBoxContainer" parent="TabContainer"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -477,6 +477,7 @@ script = null
 
 [node name="Control" type="VBoxContainer" parent="TabContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -833,6 +834,7 @@ size_flags_stretch_ratio = 0.0
 focus_neighbor_top = NodePath("../TabContainer")
 focus_previous = NodePath("../TabContainer")
 text = " Apply "
+script = null
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="ReturnButton" to="." method="_on_return_button_pressed"]

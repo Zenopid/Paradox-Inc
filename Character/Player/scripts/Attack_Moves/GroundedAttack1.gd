@@ -1,6 +1,5 @@
 extends PlayerBaseStrike
 
-@export var dodge_cancel_frames: int = 4
 @export_category("First Attack")
 @export var first_attack_damage: int = 15
 @export_category("Second Attack")

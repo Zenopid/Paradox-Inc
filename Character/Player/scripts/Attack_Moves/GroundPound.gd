@@ -4,7 +4,6 @@ extends PlayerAirStrike
 @export var minimum_damage:int = 30
 @export var maximum_damage:int = 65
 @export var height_scaler: float = 0.25
-@export var camera_shake_amount: float = 0.6
 
 var attack_status: String 
 
@@ -49,6 +48,6 @@ func physics_process(delta):
 			has_hit_ground = true
 			change_status("Landing")
 			attack_state.create_hitbox(39.625, 14.01,ground_pound_damage,1, 180, 7, "Normal", 1, Vector2(-1.375, 10.505), Vector2(700, -500))
-			entity.camera.set_shake(camera_shake_amount)
+			entity.camera.set_shake(camera_shake_strength)
 			#print(str(ground_pound_damage) + " is the ground pound's damage.")
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)

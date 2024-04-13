@@ -4,6 +4,7 @@ var updated_settings = {}
 signal control_changed()
 signal controls_overlap()
 signal exiting_settings()
+signal invalid_control()
 
 @onready var apply_button = $"%Apply"
 @onready var settings_tab: TabContainer = $TabContainer
@@ -58,12 +59,13 @@ var last_input: InputEvent
 var level:GenericLevel
 
 func _ready():
+	set_process_input(false)
 	level = get_tree().get_first_node_in_group("CurrentLevel")
-	set_process(false)
 	current_setting_tab = settings_tab.get_current_tab_control().name.to_lower() + "_settings"
 	rebind_screen.hide()
 	
-	connect("controls_overlap", Callable(self, "_on_overlapping_controls"))
+	connect("controls_overlap", Callable(self, "_on_overlapping_controls").bind("Controls overlap."))
+	connect("invalid_control", Callable(self, "_on_overlapping_controls").bind("Invalid input."))
 	
 	for i in get_tree().get_nodes_in_group("Toggle Buttons"):
 		i.connect("toggled", Callable(self, "_on_setting_toggled").bind(i))
@@ -71,7 +73,6 @@ func _ready():
 	init_audio_settings()
 	init_visual_settings()
 	init_control_settings()
-	set_process(true)
 
 func init_audio_settings():
 	game_slider.value = db_to_linear(GlobalScript.audio_settings.game_volume)
@@ -123,13 +124,15 @@ func init_control_settings():
 					get(current_button.left(current_button.find("_")) + "_control").text = OS.get_keycode_string(input.unicode).capitalize()
 					continue 
 					#just assume first key
+				elif input is InputEventMouseButton:
+					get(current_button.left(current_button.find("_")) + "_control").text = input.as_text()
 	else:
 		for i in GlobalScript.control_settings.get_property_list():
 			var current_button:String = i["name"]
 			if !current_button.contains("button"):
 				continue
 			for input in GlobalScript.control_settings.get(current_button):
-				if input is InputEventJoypadButton:
+				if input is InputEventJoypadButton :
 					get(current_button.left(current_button.find("_")) + "_control").text = input.as_text()
 					continue
 	if options_control.text == "":
@@ -154,6 +157,7 @@ func _on_apply_pressed():
 		
 		GlobalScript.set_setting(setting["type"], new_setting, setting["value"])
 	updated_settings.clear()
+	apply_button.hide()
 
 func _on_resolution_options_resolution_changed(new_resolution: Vector2i):
 	check_if_setting_changed("resolution", new_resolution)
@@ -168,7 +172,8 @@ func _on_test_music_pressed(button):
 
 func _on_return_button_pressed():
 	emit_signal("exiting_settings")
-	level.show()
+	if level:
+		level.show()
 	hide()
 
 func set_music_volume(value, slider):
@@ -177,12 +182,22 @@ func set_music_volume(value, slider):
 func _input(event):
 	last_input = event 
 	if last_input.is_action_type() and last_input.is_pressed():
-#		if Input.is_action_just_pressed(KEY_ESCAPE):
-#			rebind_screen.hide()
-#			return
+		if GlobalScript.controller_type == "Keyboard":
+			if last_input is InputEventKey and last_input.is_pressed():
+				if Input.is_physical_key_pressed(KEY_ESCAPE):
+					rebind_screen.hide()
+					return
+				else:
+					for i in invalid_inputs:
+						if last_input["keycode"] == i:
+							emit_signal("invalid_control")
+							return
+		#		else:
+		#			for i in invalid_inputs:
+		#				print(last_input.as_text())
 		emit_signal("control_changed")
 		set_process_input(false)
-		
+
 
 func start_rebind(event_name, button:Button):
 	rebind_screen.show()
@@ -203,7 +218,7 @@ func change_control(event_name, button:Button):
 	if Input.get_connected_joypads() == []:
 		for i in InputMap.get_actions():
 			for x in InputMap.action_get_events(i):
-				if last_input == x:
+				if x.is_match(last_input, true):
 					emit_signal("controls_overlap")
 					return
 				#overlapping inputs
@@ -211,6 +226,7 @@ func change_control(event_name, button:Button):
 	InputMap.action_add_event(event_name, last_input)
 	button.text = last_input.as_text()      
 	button.grab_focus()
+	set_process_input(false)
 
 func _on_tab_container_tab_changed(tab):
 	current_setting_tab = settings_tab.get_current_tab_control().name.to_lower() + "_settings"
@@ -232,8 +248,9 @@ func on_audio_slider_drag_ended(value_changed:bool, slider:HSlider):
 	if value_changed:
 		updated_settings[slider.name.to_lower()] = slider.value
 
-func _on_overlapping_controls():
+func _on_overlapping_controls(display_text:String):
 	rebind_text.hide()
+	overlapping_text.text = display_text
 	overlapping_text.show()
 	rebind_screen.show()
 	rebind_screen.get_node("Timer").start()

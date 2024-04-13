@@ -76,7 +76,7 @@ func _on_attack_over(anim_name):
 	pass
 
 func physics_process(delta: float) -> void:
-	if enter_dodge_state() and active_attack.dodge_cancellable:
+	if enter_dodge_state() and active_attack.can_dodge:
 		active_attack.exit()
 		return
 	if active_attack:

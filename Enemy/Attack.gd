@@ -27,11 +27,6 @@ var los_raycast: RayCast2D
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
-	for nodes in get_children():
-		if nodes is BaseStrike:
-			nodes.init(entity)
-			nodes.set_attack_state(self)
-			nodes.connect("leave_state", Callable(self, "exit_state"))
 	los_raycast = state_machine.get_raycast("LOS")
 	ground_checker = state_machine.get_raycast("GroundChecker")
 	
@@ -41,7 +36,11 @@ func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle
 		points = Vector2(-points.x, points.y)
 		push = Vector2(-push.x, push.y)
 	var hitbox_location = Vector2(current_entity.position.x + points.x, current_entity.position.y + points.y)
-	add_child(hitbox_instance)
+	entity.add_child(hitbox_instance)
+	if entity.current_timeline == "Future":
+		hitbox.set_future_collision()
+	else:
+		entity.set_past_collision()
 	hitbox_instance.set_parameters(damage, width, height, kb_amount, angle, type, angle_flipper, hitbox_location, duration, push, hitlag)
 	if active_attack:
 		hitbox_instance.connect("hitbox_collided", Callable(active_attack, "on_attack_hit"))

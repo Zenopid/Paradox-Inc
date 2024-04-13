@@ -45,5 +45,4 @@ func _on_quit_menu_resume_pressed():
 
 func _input(event):
 	if Input.is_action_just_pressed("options"):
-		print("options pressed")
 		_on_resume_pressed()

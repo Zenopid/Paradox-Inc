@@ -1,6 +1,6 @@
 [gd_scene load_steps=19 format=3 uid="uid://bdka6oxl4bhmn"]
 
-[ext_resource type="PackedScene" uid="uid://b6qtlu8r47u1t" path="res://Levels/future.tscn" id="1_0jmtq"]
+[ext_resource type="PackedScene" uid="uid://cuaf8p6wx6aun" path="res://Levels/Future.tscn" id="1_0jmtq"]
 [ext_resource type="Script" path="res://Levels/Training.gd" id="1_di3ua"]
 [ext_resource type="FontFile" uid="uid://by1k102hd7hkp" path="res://fonts/Pixellari.ttf" id="3_q6hlr"]
 [ext_resource type="PackedScene" uid="uid://bnnu8y3oqv6pi" path="res://Universal_Scenes/OutOfBounds.tscn" id="4_by1xf"]
@@ -59,29 +59,12 @@ tracks/2/keys = {
 "values": [0.0, -6.28319]
 }
 
-[sub_resource type="Animation" id="Animation_vh74t"]
-resource_name = "PuzzlePastSwitch"
-length = 4.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Paradoxes/PastPuzzle:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1, 2, 3),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(100, 0), Vector2(100, 0), Vector2(0, 0)]
-}
-
 [sub_resource type="Animation" id="Animation_cvro0"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Paradoxes/PastPuzzle:position")
+tracks/0/path = NodePath("Paradoxes/ParadoxPuzzle:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -139,17 +122,32 @@ tracks/4/keys = {
 "values": [0.0]
 }
 
-[sub_resource type="Animation" id="Animation_mxupg"]
-resource_name = "Spin Platform"
-length = 5.0
-loop_mode = 1
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_npquc"]
 _data = {
 "PuzzleFutureSwitch": SubResource("Animation_6d3kj"),
-"PuzzlePastSwitch": SubResource("Animation_vh74t"),
-"RESET": SubResource("Animation_cvro0"),
-"Spin Platform": SubResource("Animation_mxupg")
+"RESET": SubResource("Animation_cvro0")
+}
+
+[sub_resource type="Animation" id="Animation_ieywb"]
+resource_name = "PuzzlePastSwitch_2"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Paradoxes/ParadoxPuzzle:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(100, 0), Vector2(100, 0), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mjncn"]
+_data = {
+"PuzzlePastSwitch": SubResource("Animation_ieywb")
 }
 
 [node name="Training" type="Node2D" groups=["Persist"]]
@@ -165,18 +163,27 @@ layer_0/tile_data = PackedInt32Array(-589818, 262144, 7, -589810, 262144, 7, -58
 [node name="FuturePuzzle" parent="Future" instance=ExtResource("1_0jmtq")]
 unique_name_in_owner = true
 position = Vector2(388, -719)
-layer_0/tile_data = PackedInt32Array(-1900577, 327680, 5, -1572897, 327680, 5, -1245217, 327680, 5, -917537, 327680, 5, -589857, 327680, 5, -262177, 327680, 5, 65503, 327680, 5, 393183, 327680, 5, 720863, 327680, 5, 1048543, 327680, 5, 1376223, 327680, 5, 1703903, 327680, 5, 2031583, 327680, 5, -1900572, 327680, 4, 2031588, 327680, 4, -1900567, 327680, 4, 2031593, 327680, 4, -1900562, 327680, 4, 2031598, 327680, 4, -1900557, 327680, 4, 2031603, 327680, 4, 786423, 0, 0, -1900552, 327680, 4, 2031608, 327680, 4, -1900547, 327680, 4, 2031613, 327680, 4, 720897, 0, 0, -1966078, 327680, 4, 1966082, 327680, 4, -1966073, 327680, 4, 1966087, 327680, 4, 720907, 0, 0, -1966068, 327680, 4, 1966092, 327680, 4, -917488, 327680, 6, -589808, 327680, 6, -262128, 327680, 6, 65552, 327680, 6, 393232, 327680, 6, -1966063, 327680, 4, 1966097, 327680, 4, -1966058, 327680, 4, 720918, 0, 0, 1966102, 327680, 4, 720920, 0, 0, -1966053, 327680, 4, 1966107, 327680, 4, -1966048, 327680, 6, -1638368, 327680, 6, -1310688, 327680, 6, -983008, 327680, 6, -655328, 327680, 6, -327648, 327680, 6, 32, 327680, 6, 327712, 327680, 6, 655392, 327680, 6, 983072, 327680, 6, 1310752, 327680, 6, 1638432, 327680, 6, 1966112, 327680, 6)
+layer_0/tile_data = PackedInt32Array(-1900577, 327680, 5, -1572897, 327680, 5, -1245217, 327680, 5, -917537, 327680, 5, -589857, 327680, 5, -262177, 327680, 5, 65503, 327680, 5, 393183, 327680, 5, 720863, 327680, 5, 1048543, 327680, 5, 1376223, 327680, 5, 1703903, 327680, 5, 2031583, 327680, 5, -1900572, 327680, 4, 2031588, 327680, 4, -1900567, 327680, 4, 2031593, 327680, 4, -1900562, 327680, 4, 2031598, 327680, 4, -1900557, 327680, 4, 2031603, 327680, 4, 786423, 0, 0, -1900552, 327680, 4, 2031608, 327680, 4, -1900547, 327680, 4, 2031613, 327680, 4, 720897, 0, 0, -1966078, 327680, 4, 1966082, 327680, 4, -1966073, 327680, 4, 1966087, 327680, 4, 720907, 0, 0, -1966068, 327680, 4, 1966092, 327680, 4, -1966063, 327680, 4, 1966097, 327680, 4, -1966058, 327680, 4, 720918, 0, 0, 1966102, 327680, 4, 720920, 0, 0, -1966053, 327680, 4, 1966107, 327680, 4, -1966048, 327680, 6, -1638368, 327680, 6, -1310688, 327680, 6, -983008, 327680, 6, -655328, 327680, 6, -327648, 327680, 6, 32, 327680, 6, 327712, 327680, 6, 655392, 327680, 6, 983072, 327680, 6, 1310752, 327680, 6, 1638432, 327680, 6, 1966112, 327680, 6, -589810, 327680, 6, -262130, 327680, 6, 65550, 327680, 6, 393230, 327680, 6)
 
 [node name="Past" parent="." groups=["Timelines"] instance=ExtResource("10_m2kjc")]
 layer_0/tile_data = PackedInt32Array(-3080175, 524288, 0, -3080170, 196608, 0, -3080165, 196608, 0, -3080161, 655360, 0, -11730898, 196608, 0, -11730893, 196608, 0, -11730888, 196608, 0, -11730883, 196608, 0, -11730878, 196608, 0, -11730873, 196608, 0, -11730868, 196608, 0, -11730863, 196608, 0, -11730858, 196608, 0, -11730853, 196608, 0, -11730848, 196608, 0, -11730843, 196608, 0, -11730838, 196608, 0, -11730833, 196608, 0, -11730828, 196608, 0, -11730823, 196608, 0, -11730818, 196608, 0, -11730813, 196608, 0, -11730808, 196608, 0, -11730803, 196608, 0, -11730798, 196608, 0, -11730793, 196608, 0, -11730788, 196608, 0, -11730783, 196608, 0, -11730778, 196608, 0, -11730773, 196608, 0, -11730768, 196608, 0, -11730763, 196608, 0, -11730758, 196608, 0, -11730753, 196608, 0, -11730748, 196608, 0, -11730743, 196608, 0, -11730738, 196608, 0, -11730733, 196608, 0, -11730728, 196608, 0, -11730723, 196608, 0, -11730718, 196608, 0, -11730713, 196608, 0, -11730708, 196608, 0, -11730703, 196608, 0, -11730698, 196608, 0, -11730693, 196608, 0, -11730688, 196608, 0, -11730683, 196608, 0, -11730678, 196608, 0, -11730673, 196608, 0, -11730668, 196608, 0, -11730663, 196608, 0, -11730657, 196608, 0, -11730652, 196608, 0, -11730647, 196608, 0, -11730642, 196608, 0, -11730637, 196608, 0, -11730632, 196608, 0, -11730627, 196608, 0, -11730622, 196608, 0, -11730617, 196608, 0, -11730612, 196608, 0, -11730607, 196608, 0, -11730602, 196608, 0, -11730597, 196608, 0, -11730592, 196608, 0, -11730587, 196608, 0, -11730582, 196608, 0)
 
 [node name="Paradoxes" type="Node2D" parent="."]
-modulate = Color(0.737255, 0.278431, 1, 1)
+unique_name_in_owner = true
+modulate = Color(0.235294, 0, 0.301961, 1)
 position = Vector2(388, -719)
 
-[node name="PastPuzzle" parent="Paradoxes" groups=["Paradoxes"] instance=ExtResource("10_m2kjc")]
+[node name="ParadoxPuzzle" parent="Paradoxes" groups=["Paradoxes"] instance=ExtResource("10_m2kjc")]
 unique_name_in_owner = true
-layer_0/tile_data = PackedInt32Array(-1900566, 851968, 3, -851993, 851968, 65539, 720874, 917504, 3)
+layer_0/tile_data = PackedInt32Array(720874, 917504, 3, -1179661, 917504, 4, -131085, 917504, 4)
+paradox = true
+
+[node name="TestParadox" parent="Paradoxes" groups=["Paradoxes"] instance=ExtResource("10_m2kjc")]
+unique_name_in_owner = true
+position = Vector2(-44.9758, 615.948)
+rotation = -6.28319
+layer_0/tile_data = PackedInt32Array(65522, 917504, 4)
+paradox = true
 
 [node name="BGM" type="AudioStreamPlayer" parent="."]
 bus = &"Music"
@@ -268,11 +275,11 @@ disabled_color = Color(1, 0, 0, 1)
 enabled_color = Color(0, 0.8, 1, 1)
 
 [node name="SpawnPoint" type="Node2D" parent="."]
-position = Vector2(-159.493, -246.866)
+position = Vector2(354.383, -432.074)
 
 [node name="BoxSpawnPoint" type="Node2D" parent="."]
 unique_name_in_owner = true
-position = Vector2(194, -103.021)
+position = Vector2(213.799, -114.335)
 
 [node name="TrainingUI" type="CanvasLayer" parent="."]
 
@@ -351,18 +358,9 @@ offset_top = -197.0
 offset_right = 445.0
 offset_bottom = -173.0
 
-[node name="Elevator Switch" parent="." instance=ExtResource("11_wnuvr")]
-position = Vector2(74.2242, -149.53)
-timeline = "Past"
-
 [node name="EnemySpawnerPoint" type="Node2D" parent="."]
 unique_name_in_owner = true
 position = Vector2(-213.538, -73)
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_npquc")
-}
 
 [node name="RotateBoxRight" parent="." instance=ExtResource("11_wnuvr")]
 unique_name_in_owner = true
@@ -375,9 +373,6 @@ position = Vector2(701, -545.631)
 position = Vector2(701, -545.631)
 timeline = "Past"
 
-[node name="Box" parent="." instance=ExtResource("12_l8y4q")]
-position = Vector2(742.138, -566.463)
-
 [node name="PuzzleBox" parent="." instance=ExtResource("12_l8y4q")]
 position = Vector2(323.846, -651.804)
 
@@ -388,6 +383,21 @@ position = Vector2(388, -719)
 position = Vector2(87.5, 13)
 rotation = 4.71239
 
+[node name="TestSwitch" parent="." instance=ExtResource("11_wnuvr")]
+position = Vector2(133.007, -37.0284)
+
+[node name="FutureAnimPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_npquc")
+}
+
+[node name="PastAnimPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_mjncn")
+}
+
 [connection signal="pressed" from="Buttons/SpawnBox" to="." method="_on_spawner_pressed"]
 [connection signal="pressed" from="Buttons/SpawnEnemy" to="." method="_on_spawn_enemy_pressed"]
 [connection signal="pressed" from="Buttons/ClearEnemy" to="." method="_on_clear_enemy_pressed"]
@@ -396,7 +406,5 @@ rotation = 4.71239
 [connection signal="value_changed" from="TrainingUI/Speed_Slider" to="." method="_on_h_slider_value_changed"]
 [connection signal="pressed" from="TrainingUI/Reset_Speed" to="." method="_on_reset_pressed"]
 [connection signal="toggled" from="CheckButton" to="DamageSlider" method="_on_check_button_toggled"]
-[connection signal="status_changed" from="Elevator Switch" to="." method="_on_elevator_switch_status_changed"]
 [connection signal="status_changed" from="RotateBoxRight" to="." method="_on_rotate_box_right_status_changed"]
 [connection signal="status_changed" from="RotateBoxLeft" to="." method="_on_rotate_box_left_status_changed"]
-[connection signal="status_changed" from="MovePastPuzzlePieces" to="." method="_on_move_past_puzzle_pieces_status_changed"]

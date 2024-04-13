@@ -4,25 +4,26 @@ signal health_updated(health)
 signal killed()
 
 @export var max_health: int = 100
-@export_enum ("Future", "Past") var current_timeline:String = "Future"
 @export var detection_color: Color
 @export var no_detection_color: Color
 @export var gravity: int = 25
 @export var max_fall_speed: int = 150
 
 @onready var health:int = max_health 
-@onready var health_bar = $UI/HealthBar
 @onready var effects_animation = get_node_or_null("EffectAnimator")
 @onready var sprite: Sprite2D = get_node("Sprite")
 @onready var pathfinder: NavigationAgent2D = $Pathfinder
 @onready var beehave_tree: BeehaveTree = get_node_or_null("AI_Tree")
-@onready var attack_node: DarkStalkerAttack = get_node_or_null("Attack")
+@onready var attack_node: DarkStalkerAttack = $"%Attack"
 @onready var speed_tracker =  $Debug/MotionTracker
 @onready var detection_sphere: Area2D = $DetectionSphere
 @onready var detection_shape: CollisionShape2D = $DetectionSphere/CollisionShape2D
 @onready var enemy_sphere: Area2D = $EnemySphere
 @onready var enemy_sphere_shape: CollisionShape2D = $EnemySphere/CollisionShape2D
 @onready var hitsparks: GPUParticles2D = $Hitsparks
+@onready var debug_ui: Node2D = $"%Debug"
+@onready var los_raycast = $"%LOS"
+@onready var ground_raycast = $"%GroundChecker"
 
 
 var currently_attacking:bool = false
@@ -43,42 +44,136 @@ func _ready():
 			nodes.add_exception(self)
 	super._ready()
 	current_level = get_tree().get_first_node_in_group("CurrentLevel")
-	connect("health_updated", Callable(health_bar, "_on_health_updated"))
-	current_level.connect("swapped_timeline", Callable(self, "pause_logic"))
+
 	if get_node_or_null("GroundChecker"):
 		get_node("GroundChecker").queue_free()
 	detection_shape.debug_color = no_detection_color
 	
+	debug_ui.visible = GlobalScript.debug_enabled
+	
 	raycasts = get_tree().get_nodes_in_group("Raycasts")
 	detection_areas = get_tree().get_nodes_in_group("Detection")
-	pause_logic(current_level.get_current_timeline())
+	_on_swapped_timeline(current_level.get_current_timeline())
 	
-func pause_logic(timeline):
+func _on_swapped_timeline(timeline: String):
 	if !being_destroyed:
 		if current_timeline != timeline:
-			visible = false
-			beehave_tree.enabled = false
-			set_physics_process(false)
-			
-			for nodes in raycasts:
-				nodes.enabled = false
-			for nodes in detection_areas:
-				nodes.set_deferred("monitoring", false)
-				nodes.set_deferred("monitorable",false)
-			for i in get_tree().get_nodes_in_group("Chase Locations"):
-				i.queue_free()
+			modulate.a = 0.25
+#			beehave_tree.enabled = false
+#			set_physics_process(false)
+#
+#			for nodes in raycasts:
+#				nodes.enabled = false
+#			for nodes in detection_areas:
+#				nodes.set_deferred("monitoring", false)
+#				nodes.set_deferred("monitorable",false)
+#			for i in get_tree().get_nodes_in_group("Chase Locations"):
+#				i.queue_free()
 		else:
-			visible = true
-			beehave_tree.enabled = true
-			set_physics_process(true)
-			for nodes in raycasts:
-				nodes.enabled = true
-			for nodes in detection_areas:
-				nodes.set_deferred("monitoring", true)
-				nodes.set_deferred("monitorable",true)
+			modulate.a = 1
+		print(timeline + "is the current timeline.")
+		if timeline == "Future":
+			set_future_collision()
+		else:
+			set_past_collision()
+#			beehave_tree.enabled = true
+#			set_physics_process(true)
+#			for nodes in raycasts:
+#				nodes.enabled = true
+#			for nodes in detection_areas:
+#				nodes.set_deferred("monitoring", true)
+#				nodes.set_deferred("monitorable",true)
 				
+#	for nodes in raycasts:
+#		nodes.set(get("collision_mask"), get("collision_mask"))
 	#print(being_destroyed)
 
+func set_future_collision():
+	
+	detection_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
+	detection_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, false)
+	
+	enemy_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
+	enemy_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, false)
+	
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
+	
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, false)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, false)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, false)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, false)
+	
+	ground_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
+	ground_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, false)
+	
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
+	set_collision_layer_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
+	set_collision_layer_value(GlobalScript.collision_values.ENTITY_PAST, false)
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
+	
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, false)
+	
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
+
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, false)
+	
+	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, false)
+	
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, false)
+
+func set_past_collision():
+	
+	detection_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
+	detection_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
+	
+	enemy_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
+	enemy_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
+	
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, false)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, false)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, false)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
+	
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
+	
+	
+	ground_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, false)
+	ground_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
+	
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
+	set_collision_layer_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
+	set_collision_layer_value(GlobalScript.collision_values.ENTITY_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
+	
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
+	
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
+
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, false)
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
+	
+	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, false)
+	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
+	
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, false)
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
 
 func _physics_process(delta):
 #	super._physics_process(delta)
@@ -112,14 +207,14 @@ func damage(amount, knockback: int = 0, knockback_angle: int = 0, hitstun: int =
 		hitsparks.emitting = true
 	else:
 		hitsparks.restart()
-	
 
 func heal(amount):
 	_set_health(health + amount)
 
 func kill():
 	health_bar.hide()
-	current_level.disconnect("swapped_timeline", Callable(self, "pause_logic"))
+	if current_level.is_connected("swapped_timeline", Callable(self, "_on_swapped_timeline")):
+		current_level.disconnect("swapped_timeline", Callable(self, "_on_swapped_timeline"))
 	beehave_tree.free()
 	anim_player.play("Dead")
 	being_destroyed = true
@@ -154,19 +249,21 @@ func player_near():
 	return player_close
 
 func clear_hitboxes():
-	get_node("Attack").clear_hitboxes()
+	attack_node.clear_hitboxes()
 
 func save():
 	var save_dict = {
-		"position": {
-			"x": position.x,
-			"y": position.y
-		},
-		"health": health,
-		"current_timeline": current_timeline,
-		"motion": motion
+	"position": global_position,
+	"health": health,
+	"current_timeline": current_timeline,
 	}
+	SaveSystem.set_var(self.name, save_dict)
 
+func load_from_file():
+	var save_data = SaveSystem.get_var(self.name)
+	if save_data:
+		for i in save_data.keys():
+			set(i, save_data[i])
 
 func _on_detection_sphere_body_entered(body):
 	if body is Player:
@@ -195,3 +292,4 @@ func enemy_near():
 
 func destroy():
 	being_destroyed = true
+	

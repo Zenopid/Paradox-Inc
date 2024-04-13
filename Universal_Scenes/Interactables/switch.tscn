@@ -8,8 +8,8 @@
 size = Vector2(27, 5.01023)
 
 [node name="Switch" type="Area2D" groups=["Persist"]]
-collision_layer = 8
-collision_mask = 137
+collision_layer = 0
+collision_mask = 0
 script = ExtResource("1_nn3kv")
 
 [node name="OnSprite" type="Sprite2D" parent="."]

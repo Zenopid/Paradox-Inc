@@ -26,7 +26,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.00784314, 0.0627451, 0.0941176, 0.733333)
+color = Color(0.00784314, 0.0627451, 0.0941176, 1)
 
 [node name="Paradox" type="Label" parent="."]
 visible = false
@@ -86,12 +86,14 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 50
+
 [node name="Start" parent="VBoxContainer" groups=["Menu"] instance=ExtResource("2_l0nly")]
 unique_name_in_owner = true
 layout_mode = 2
 focus_neighbor_top = NodePath("../Settings")
-focus_neighbor_bottom = NodePath("../Training")
-focus_next = NodePath("../Training")
 focus_previous = NodePath("../Settings")
 text = "Start Shift"
 
@@ -99,24 +101,14 @@ text = "Start Shift"
 layout_mode = 2
 theme_override_constants/margin_top = 50
 
-[node name="Training" parent="VBoxContainer" instance=ExtResource("2_l0nly")]
-layout_mode = 2
-focus_neighbor_top = NodePath("../Start")
-focus_neighbor_bottom = NodePath("../Settings")
-focus_next = NodePath("../Settings")
-focus_previous = NodePath("../Start")
-text = "Training"
-
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_top = 50
 
 [node name="Settings" parent="VBoxContainer" instance=ExtResource("2_l0nly")]
 layout_mode = 2
-focus_neighbor_top = NodePath("../Training")
 focus_neighbor_bottom = NodePath("../Start")
 focus_next = NodePath("../Start")
-focus_previous = NodePath("../Training")
 text = "Settings"
 
 [node name="Settings" parent="." instance=ExtResource("4_krxrd")]
@@ -166,7 +158,148 @@ vertical_alignment = 1
 unique_name_in_owner = true
 one_shot = true
 
+[node name="Delete_Save" parent="." groups=["Debug"] instance=ExtResource("2_l0nly")]
+visible = false
+layout_mode = 1
+offset_right = 102.0
+offset_bottom = 25.0
+text = "Clear Save Data"
+
+[node name="Retrieve_Save" parent="." groups=["Debug"] instance=ExtResource("2_l0nly")]
+visible = false
+layout_mode = 1
+offset_top = 25.0
+offset_right = 120.0
+offset_bottom = 50.0
+text = "Get Save Data"
+
+[node name="SaveInfo" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+z_index = 19
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.00784314, 0.0627451, 0.0941176, 1)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SaveInfo"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -610.0
+offset_top = -340.0
+offset_right = 610.0
+offset_bottom = 340.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SaveFileText" type="Label" parent="SaveInfo/ScrollContainer"]
+unique_name_in_owner = true
+z_index = 20
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_tlju2")
+text = "A buncha random text with random info about random stuff."
+
+[node name="Back" parent="SaveInfo" instance=ExtResource("2_l0nly")]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -73.0
+offset_top = -22.0
+offset_right = 73.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Back"
+
+[node name="LevelSelect" type="Control" parent="." groups=["Level Select"]]
+unique_name_in_owner = true
+visible = false
+z_index = 19
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="LevelSelect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.00784314, 0.0627451, 0.0941176, 1)
+
+[node name="Label" type="Label" parent="LevelSelect"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -234.0
+offset_top = 10.0
+offset_right = 234.0
+offset_bottom = 109.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("6_tlju2")
+theme_override_font_sizes/font_size = 96
+text = "SCHEDULE"
+
+[node name="Levels" type="GridContainer" parent="LevelSelect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = 177.0
+offset_right = -30.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 2
+metadata/_edit_group_ = true
+
+[node name="Training" parent="LevelSelect/Levels" groups=["Levels"] instance=ExtResource("2_l0nly")]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 1
+text = "Training"
+
+[node name="Emergence" parent="LevelSelect/Levels" groups=["Levels"] instance=ExtResource("2_l0nly")]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 1
+text = "Emergence"
+
+[node name="Return" parent="LevelSelect" instance=ExtResource("2_l0nly")]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -122.0
+offset_top = -32.0
+offset_right = -11.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Return"
+
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_on_start_pressed"]
-[connection signal="pressed" from="VBoxContainer/Training" to="." method="_on_training_pressed"]
 [connection signal="pressed" from="VBoxContainer/Settings" to="." method="_on_settings_pressed"]
 [connection signal="timeout" from="Debug_Screen/Debug_Timer" to="." method="_on_debug_timer_timeout"]
+[connection signal="pressed" from="Delete_Save" to="." method="_on_clear_data_pressed"]
+[connection signal="pressed" from="Retrieve_Save" to="." method="_on_retrieve_save_pressed"]
+[connection signal="pressed" from="SaveInfo/Back" to="." method="_on_save_info_back_button_pressed"]
+[connection signal="pressed" from="LevelSelect/Return" to="." method="_on_select_back_button_pressed"]

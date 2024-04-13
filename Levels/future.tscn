@@ -1,11 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://b6qtlu8r47u1t"]
+[gd_scene load_steps=9 format=3 uid="uid://cuaf8p6wx6aun"]
 
-[ext_resource type="Texture2D" uid="uid://bxmqcr1u77plg" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Assets/Tiles.png" id="1_wvvjy"]
-[ext_resource type="Texture2D" uid="uid://bbkd3lq1g38s1" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Background Props.png" id="2_46vjb"]
-[ext_resource type="Texture2D" uid="uid://bl7n6wgvoartc" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Assets/Props-01.png" id="3_bteec"]
+[ext_resource type="Texture2D" uid="uid://bxmqcr1u77plg" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Assets/Tiles.png" id="1_0pjxx"]
+[ext_resource type="Texture2D" uid="uid://bbkd3lq1g38s1" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Background Props.png" id="2_ohlfq"]
+[ext_resource type="Texture2D" uid="uid://bl7n6wgvoartc" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Assets/Props-01.png" id="3_b8d4w"]
+[ext_resource type="Script" path="res://Levels/timelines.gd" id="4_r37qo"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2b36e"]
-texture = ExtResource("1_wvvjy")
+texture = ExtResource("1_0pjxx")
 2:1/0 = 0
 2:1/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 2:1/0/physics_layer_0/angular_velocity = 0.0
@@ -121,7 +122,7 @@ texture = ExtResource("1_wvvjy")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7ypxl"]
 resource_name = "Background"
-texture = ExtResource("2_46vjb")
+texture = ExtResource("2_ohlfq")
 11:0/0 = 0
 11:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 11:0/0/physics_layer_0/angular_velocity = 0.0
@@ -247,7 +248,7 @@ texture = ExtResource("2_46vjb")
 11:11/0/physics_layer_1/angular_velocity = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qc3hi"]
-texture = ExtResource("3_bteec")
+texture = ExtResource("3_b8d4w")
 2:4/0 = 0
 2:4/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 2:4/0/physics_layer_0/angular_velocity = 0.0
@@ -449,17 +450,16 @@ texture = ExtResource("3_bteec")
 
 [sub_resource type="TileSet" id="TileSet_dfmre"]
 tile_size = Vector2i(3, 3)
-physics_layer_0/collision_layer = 2
-physics_layer_0/collision_mask = 129
-physics_layer_1/collision_layer = 4
-physics_layer_1/collision_mask = 129
+physics_layer_0/collision_layer = 256
+physics_layer_0/collision_mask = 0
+physics_layer_1/collision_layer = 1024
+physics_layer_1/collision_mask = 0
 navigation_layer_0/layers = 1
 sources/0 = SubResource("TileSetAtlasSource_2b36e")
 sources/1 = SubResource("TileSetAtlasSource_7ypxl")
 sources/2 = SubResource("TileSetAtlasSource_qc3hi")
 
 [node name="Future" type="TileMap"]
-z_index = -50
 texture_filter = 1
 tile_set = SubResource("TileSet_dfmre")
 collision_animatable = true
@@ -472,3 +472,4 @@ layer_1/y_sort_enabled = false
 layer_1/y_sort_origin = 0
 layer_1/z_index = 0
 layer_1/tile_data = PackedInt32Array()
+script = ExtResource("4_r37qo")

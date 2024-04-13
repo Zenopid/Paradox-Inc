@@ -8,11 +8,16 @@ var jump_force: int = 200
 @onready var anim_player: AnimationPlayer = get_node("SpriteAnimator")
 @onready var sfx: AudioStreamPlayer = get_node("AudioStreamPlayer")
 @onready var states: EntityStateMachine = get_node_or_null("StateMachine")
+@export_enum ("Future", "Past", "Inherit Level's Timeline") var current_timeline:String = "Future"
+@onready var health_bar:HealthBar = $"%HealthBar"
 var current_level: GenericLevel
 
 func _ready():
 	if states == null:
 		states = get_node_or_null("PrimaryMachine")
+	connect("health_updated", Callable(health_bar, "_on_health_updated"))
+	current_level = get_tree().get_first_node_in_group("CurrentLevel")
+	current_level.connect("swapped_timeline", Callable(self, "_on_swapped_timeline"))
 
 func _physics_process(delta: float) -> void:
 	if states:

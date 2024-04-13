@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://Character/Player/scripts/Player.gd" id="1_d84qb"]
 [ext_resource type="Texture2D" uid="uid://ccnj5krx1gyit" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-crouch-00.png" id="2_nbwc8"]
-[ext_resource type="Script" path="res://Character/EntityStateMachine.gd" id="2_pa1y2"]
 [ext_resource type="PackedScene" uid="uid://bcefyj7s01eyu" path="res://Character/Player/Scenes/grappling_hook.tscn" id="2_pt05f"]
 [ext_resource type="Texture2D" uid="uid://c0vk4qm408cpl" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-idle-00.png" id="2_r16qh"]
 [ext_resource type="Texture2D" uid="uid://cdbvlsidw0kqp" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-fall-00.png" id="2_x0un7"]
@@ -100,6 +99,7 @@
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundedAttack2.gd" id="72_t4ijd"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundedAttack3.gd" id="73_5exvu"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/AirAttack1.gd" id="74_kxsit"]
+[ext_resource type="Script" path="res://Character/Player/scripts/StateMachine.gd" id="81_fmllj"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/LandingLag.gd" id="83_pq2wu"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/AirAttack2.gd" id="88_lli4y"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundPound.gd" id="89_tqgg8"]
@@ -698,25 +698,13 @@ size = Vector2(15, 15.6563)
 resource_name = "Dodge"
 length = 0.666668
 step = 0.0166667
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:collision_mask")
+tracks/0/path = NodePath("StateMachine/Dodge")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.216667),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [46, 191]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("StateMachine/Dodge")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0.333333),
 "transitions": PackedFloat32Array(1),
 "values": [{
@@ -724,61 +712,61 @@ tracks/1/keys = {
 "method": &"become_actionable"
 }]
 }
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Hurtbox:shape")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Hurtbox:shape")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [SubResource("RectangleShape2D_r6i1h")]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hurtbox:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 8.9375)]
+}
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Hurtbox:position")
+tracks/3/path = NodePath("AnimatedSprite2D:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 8.9375)]
+"values": [Vector2(0, 9)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("AnimatedSprite2D:position")
+tracks/4/path = NodePath("AnimatedSprite2D:animation")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 9)]
+"update": 1,
+"values": [&"Dodge"]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("AnimatedSprite2D:animation")
+tracks/5/path = NodePath("AnimatedSprite2D:frame")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"Dodge"]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("AnimatedSprite2D:frame")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
 "times": PackedFloat32Array(0, 0.0833335, 0.166667, 0.25, 0.333334, 0.416667, 0.500001, 0.583334),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
@@ -1341,62 +1329,50 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath(".:collision_mask")
+tracks/2/path = NodePath("AnimatedSprite2D:animation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [22]
+"values": [&"Idle"]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("AnimatedSprite2D:animation")
+tracks/3/path = NodePath("AnimatedSprite2D:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"Idle"]
+"values": [0]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("AnimatedSprite2D:frame")
+tracks/4/path = NodePath("AnimatedSprite2D:modulate")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("AnimatedSprite2D:modulate")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
 "times": PackedFloat32Array(0.001),
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Color(1, 1, 1, 1)]
 }
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("AnimatedSprite2D:position")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("AnimatedSprite2D:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 9)]
+"values": [Vector2(0, 0)]
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0p5d7"]
@@ -1700,10 +1676,13 @@ _data = {
 [node name="Player" type="CharacterBody2D" groups=["Persist", "Players"]]
 process_mode = 1
 process_physics_priority = 25
-collision_mask = 22
+collision_layer = 0
+collision_mask = 0
 floor_max_angle = 1.10479
 script = ExtResource("1_d84qb")
 max_grapple_speed = Vector2(900, 900)
+air_grapple_boost_amount = 0.25
+current_timeline = "Inherit Level's Timeline"
 
 [node name="GrapplingHook" parent="." node_paths=PackedStringArray("player") instance=ExtResource("2_pt05f")]
 unique_name_in_owner = true
@@ -1774,20 +1753,14 @@ text = "00:00:00:00"
 horizontal_alignment = 2
 script = ExtResource("4_wefng")
 
-[node name="HealthBar" parent="UI" instance=ExtResource("6_62s4t")]
+[node name="HealthBar" parent="UI" node_paths=PackedStringArray("entity") instance=ExtResource("6_62s4t")]
 unique_name_in_owner = true
 offset_left = 15.0
 offset_top = 15.0
 offset_right = 15.0
 offset_bottom = 15.0
 mouse_filter = 2
-healthy_color = null
-caution_color = null
-danger_color = null
-pulse_color = null
-flash_color = null
-caution_zone = null
-danger_zone = null
+entity = NodePath("../..")
 will_pulse = true
 
 [node name="DeathScreen" type="ColorRect" parent="UI"]
@@ -1808,10 +1781,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -93.5
-offset_top = -28.5
-offset_right = 93.5
-offset_bottom = 28.5
+offset_left = -130.0
+offset_top = -35.0
+offset_right = 130.0
+offset_bottom = 35.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
@@ -1832,7 +1805,6 @@ player = NodePath("../..")
 unique_name_in_owner = true
 show_behind_parent = true
 texture_filter = 1
-position = Vector2(0, 9)
 sprite_frames = SubResource("SpriteFrames_vmqdd")
 animation = &"Idle"
 
@@ -1842,7 +1814,7 @@ shape = SubResource("RectangleShape2D_b022k")
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("machine_owner")]
 unique_name_in_owner = true
-script = ExtResource("2_pa1y2")
+script = ExtResource("81_fmllj")
 initial_state = "Idle"
 machine_owner = NodePath("..")
 
@@ -1852,18 +1824,11 @@ hitbox = ExtResource("58_tx02o")
 
 [node name="GroundedAttack1" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("71_wsv55")
-dodge_cancel_frames = null
-first_attack_damage = null
-second_attack_damage = null
-buffer_window = null
 buffer_attack = "GroundedAttack2"
-dodge_cancellable = null
 lunge_distance = 150
 hitstop = 4
-camera_shake_strength = null
 animation_name = "Grounded_Attack_1"
 friction = 0.4
-attack_type = null
 
 [node name="GroundedAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("72_t4ijd")
@@ -1873,6 +1838,7 @@ animation_name = "Grounded_Attack_2"
 
 [node name="GroundedAttack3" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("73_5exvu")
+dodge_window = 0
 lunge_distance = 350
 hitstop = 6
 camera_shake_strength = 0.5
@@ -1899,7 +1865,8 @@ fall_speed = 800
 minimum_damage = 15
 maximum_damage = 45
 height_scaler = 0.1
-camera_shake_amount = 3.0
+dodge_window = -1
+camera_shake_strength = 3.0
 air_acceleration = 0
 landing_lag = 0
 attack_type = "Air"
@@ -2021,31 +1988,35 @@ one_shot = true
 [node name="Raycasts" type="Node" parent="StateMachine"]
 
 [node name="WallChecker" type="RayCast2D" parent="StateMachine/Raycasts"]
+unique_name_in_owner = true
 position = Vector2(-12.55, -10.5)
 scale = Vector2(4, 1)
 target_position = Vector2(0, 25)
-collision_mask = 12
+collision_mask = 1024
 hit_from_inside = true
 
 [node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts"]
+unique_name_in_owner = true
 position = Vector2(0, 13.5)
 scale = Vector2(2, 1)
 target_position = Vector2(0, 10)
-collision_mask = 138
+collision_mask = 256
 hit_from_inside = true
 
 [node name="SlopeCheckerRight" type="RayCast2D" parent="StateMachine/Raycasts"]
+unique_name_in_owner = true
 position = Vector2(0, 19)
 enabled = false
 target_position = Vector2(30, 0)
-collision_mask = 2
+collision_mask = 1024
 hit_from_inside = true
 
 [node name="SlopeCheckerLeft" type="RayCast2D" parent="StateMachine/Raycasts"]
+unique_name_in_owner = true
 position = Vector2(0, 19)
 enabled = false
 target_position = Vector2(-30, 0)
-collision_mask = 2
+collision_mask = 256
 hit_from_inside = true
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

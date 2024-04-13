@@ -4,40 +4,74 @@ Paradox v0.4 Demo Patch Notes
 Bug Fixes:
 -fixed grapple and box interactions. The grapple should now properly attach to the box, as well as preventing errors when the box falls off a cliff.
 -fixed grapple not going exactly where the mouse was
+-fixed walljumping not giving you a speed bonus
+-fixed a bug where you couldn't apply settings beacause the 'Apply' button was missing.
+-fixed a bug where boxes wouldn't freeze/unfreeze properly when changing timelines
+-greatly reduced box performance cost
+
+Moveable Objects
+Boxes no longer lock rotation
+Boxes now change color when grappled to show they're now paradoxes
+
+
+General
+Eveything now continues what they're doing, even if you're not currently in the timeline. Some examples of changes:
+	-If you switch timelines after leaving something on top of a switch (i.e., a box) it will still be treated as on
+	-Enemies will still go towards the last location they saw you and chase you
+Collision may be very buggy
+
+Switches
+Switching timelines while on top of a switch now makes it turn off
+
+Settings
+Can now cancel after pressing a rebind button by pressing the Escape key
+Now prevents certain inputs from being bindable
 
 Levels
 Removed "View Timeline" button
 	-Other timelines are now consistanly visible, as if you were always holding the "view timeline" button.
-	-Increased visiblity of non focused timeline from 15% to 20% 
+	-Increased visiblity of non focused timeline from 15% to 20%
 Added Paradoxes (hey its the name of the game)
 	-Pieces of the map that exist in both timelines.
+	-Interactable at all times
+	-Have a purple tint in the past, red tint in the future.
+Reaching checkpoints now raise the boundary closer to you. No more having to redo parts.
 
 
 Training
-Removed starting enemy. Spawn in one if you need to.
+Removed starting enemy. Spawn in one if you need to. It was annoying me. 
 Added training puzzle (use the walls in the future to get up to it)
-	Rotate box around to make box land on switch
-	Use the switches in the past to move paradoxes arounds  
+	-Rotate box around to make box land on switch
+	-Use the switches in the past to move paradoxes arounds  
 Removed past switch that rotates random object (was just testing switches)
 
 Emergence (First Level)
-Added more content to the level (grappling hook portion)
-Must pick up grappling hook to use it.
+Added more content to the level 
+Must now pick up grappling hook to use it.
 Tweaked platform positions.
-Removed view timeline prompt 
+Removed view timeline prompt, since button no longer exists.
+Elevator now returns back to its starting position at a accelerated pace after reaching the top.
+
 
 Player
-Jumping out of a wall slide now gives you bonus velocity compared to a normal double jump
 Can now buffer dodge at any time
+Dodge boost is now dependant on your movement input instead of your previous velocity	
+	-Before, it would give you a flat boost towards the direction you were already moving. 
+Decreased dodge cooldown (0.9 -> 0.8)
 
 Grappling Hook
+
+Comments:
+	Seemed a little too fast to control properly, but took too long to use mid jump. Toning it down while adding some other functionalities to it.
+
 Greatly increased grapple speed (600u -> 1050u)
-Greatly nerfed grapple damage(10 -> 2)(Will probably remove its ability to do damage, i have to add stuff to enemy ai in order to prvent them getting lamed out by this)
+Greatly nerfed grapple damage (10 -> 2) (Will probably remove its ability to do damage, i have to add stuff to enemy ai in order to prvent them getting lamed out by this)
 Nerfed grapple horizontal pull speed (6.5 -> 5.5)
-Nerfed grapple vertical pull speed (12 -> 10.5)
+Nerfed grapple upwards pull speed (12 -> 10.5)
 Added cooldown on grapple release (0 -> 0.1) 
 Added ability to pull objects,can yank objects with boost (was supposed to be in last patch)
 Grapple now falls down towards the ground after a short duration (0.55 seconds)
-Added new ui pointer to see where you're aiming 
+	-Prevents just shooting it straight up to grapple the top of the level and cheese it 
+Added new ui pointer to see where you're aiming (glows green when grapple latches object, red on cooldown)
 Grapple automatically releases when hitting a boundary
 Now aimable with controller (use right axis stick)

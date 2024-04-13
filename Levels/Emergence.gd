@@ -7,15 +7,12 @@ extends GenericLevel
 @onready var grapple_item: Area2D = $"%Grapple"
 @export var laser_damage: int = 10
 
-
 func _ready():
 	var grapple_prompt_text = "the Left Mouse Button" if Input.get_connected_joypads() == [] else "Left Trigger Button"
 	$TutorialPrompts/Grapple.text = "Press " + grapple_prompt_text + " to use the grappling hook to 
 	pull yourself or other objects around." 
 	var grapple_boost_prompt_text = "the Right Mouse Button" if Input.get_connected_joypads() == [] else "Right Trigger Button"
-	$"%GrappleBoost".text = "Press " + grapple_boost_prompt_text + " to fling yourself
-towards your grapple
- target."
+	$"%GrappleBoost".text = "Press " + grapple_boost_prompt_text + " to fling yourself towards your grapple target."
 	spinning_platform_1_future.rotation_degrees = 90
 	level_animator.play("Rest")
 	for nodes in get_tree().get_nodes_in_group("Past Lasers"):
@@ -26,7 +23,7 @@ towards your grapple
 		for lasers in nodes.get_children():
 			lasers.get_node("Area2D").add_to_group("Future Lasers")
 	get_tree().get_first_node_in_group("Future Lasers").remove_from_group("Future Lasers")
-	_on_swapped_timeline(current_timeline)
+	#_on_swapped_timeline(current_timeline)
 	
 	super._ready()
 
@@ -60,13 +57,11 @@ func _on_swapped_timeline(new_timeline:String):
 func _on_exit_body_entered(body):
 	GlobalScript.emit_signal("level_over")
 
-
 func _on_platform_rotate_switch_status_changed(new_status):
 	if new_status:
 		level_animator.play("RotateFloor")
 	else:
 		level_animator.pause()
-
 
 func _on_checkpoint_reached_checkpoint():
 	level_animator.play("move_bounds_1")
@@ -87,7 +82,6 @@ func _on_laser_switch_past_1_status_changed(new_status):
 		laser.set_deferred("monitoring", !new_status)
 		laser.set_deferred("monitorable", !new_status)
 		lasers.set_deferred("visible", !new_status)
-
 
 func _on_grapple_body_entered(body):
 	if body is Player:

@@ -105,3 +105,4 @@ func get_current_state():
 	
 func lock_into_current_state():
 	can_transition = false 
+

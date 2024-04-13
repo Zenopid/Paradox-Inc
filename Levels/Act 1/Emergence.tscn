@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Levels/Emergence.gd" id="1_oxnw7"]
 [ext_resource type="Texture2D" uid="uid://ddgducmdbdpmg" path="res://Sprites/Objects/Portal.png" id="2_1rvo6"]
-[ext_resource type="PackedScene" uid="uid://b6qtlu8r47u1t" path="res://Levels/future.tscn" id="2_7jb62"]
+[ext_resource type="PackedScene" uid="uid://cuaf8p6wx6aun" path="res://Levels/Future.tscn" id="2_7jb62"]
 [ext_resource type="PackedScene" uid="uid://cslga75vdopuu" path="res://Universal_Scenes/VFX/laser.tscn" id="3_1afo2"]
 [ext_resource type="PackedScene" uid="uid://cmcurlpklixd" path="res://Levels/Past.tscn" id="3_e0i3l"]
 [ext_resource type="PackedScene" uid="uid://bnnu8y3oqv6pi" path="res://Universal_Scenes/OutOfBounds.tscn" id="4_bl0yy"]
@@ -12,6 +12,9 @@
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="10_dnhk6"]
 [ext_resource type="PackedScene" uid="uid://b812mbppojnhg" path="res://Universal_Scenes/Interactables/box.tscn" id="11_8pq51"]
 [ext_resource type="Texture2D" uid="uid://cfcjxk8lukojk" path="res://Sprites/Objects/Hook_Tip.png" id="12_62uhm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0gd44"]
+size = Vector2(100, 2)
 
 [sub_resource type="Animation" id="Animation_6a4qc"]
 resource_name = "MoveElevator"
@@ -218,9 +221,6 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vffqv"]
 size = Vector2(15.3461, 42.8857)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_0gd44"]
-size = Vector2(100, 2)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hgthm"]
 size = Vector2(160.94, 21.7106)
 
@@ -234,24 +234,6 @@ size = Vector2(20, 29.3262)
 process_mode = 1
 script = ExtResource("1_oxnw7")
 laser_damage = 20
-current_timeline = "Past"
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-root_node = NodePath("../Future")
-libraries = {
-"": SubResource("AnimationLibrary_r3seq")
-}
-
-[node name="Exit" type="Area2D" parent="."]
-position = Vector2(428.455, -9405.83)
-metadata/_edit_group_ = true
-
-[node name="Sprite" type="Sprite2D" parent="Exit"]
-texture = ExtResource("2_1rvo6")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Exit"]
-position = Vector2(3.0896, 0.351074)
-shape = SubResource("RectangleShape2D_vffqv")
 
 [node name="Future" parent="." groups=["Timelines"] instance=ExtResource("2_7jb62")]
 position = Vector2(-1, -1)
@@ -775,6 +757,26 @@ points = PackedVector2Array(0, -75, 100, -75)
 position = Vector2(50, -75.002)
 shape = SubResource("RectangleShape2D_0gd44")
 
+[node name="Paradoxes" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Future")
+libraries = {
+"": SubResource("AnimationLibrary_r3seq")
+}
+
+[node name="Exit" type="Area2D" parent="."]
+position = Vector2(2536.1, -5834.24)
+metadata/_edit_group_ = true
+
+[node name="Sprite" type="Sprite2D" parent="Exit"]
+texture = ExtResource("2_1rvo6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Exit"]
+position = Vector2(3.0896, 0.351074)
+shape = SubResource("RectangleShape2D_vffqv")
+
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
@@ -936,7 +938,6 @@ shape = SubResource("RectangleShape2D_5lseq")
 texture = ExtResource("12_62uhm")
 
 [connection signal="swapped_timeline" from="." to="." method="_on_swapped_timeline"]
-[connection signal="body_entered" from="Exit" to="." method="_on_exit_body_entered"]
 [connection signal="body_entered" from="Future/Future_Lasers/Laser20/Area2D" to="." method="_on_laser_area_entered"]
 [connection signal="body_entered" from="Future/Future_Lasers/Laser21/Area2D" to="." method="_on_laser_area_entered"]
 [connection signal="body_entered" from="Future/Future_Lasers/Laser22/Area2D" to="." method="_on_laser_area_entered"]
@@ -983,6 +984,7 @@ texture = ExtResource("12_62uhm")
 [connection signal="body_entered" from="Past/Past_Lasers/Laser21/Area2D" to="." method="_on_laser_area_entered"]
 [connection signal="body_entered" from="Past/Past_Lasers/Laser22/Area2D" to="." method="_on_laser_area_entered"]
 [connection signal="body_entered" from="Past/Past_Lasers/Laser23/Area2D" to="." method="_on_laser_area_entered"]
+[connection signal="body_entered" from="Exit" to="." method="_on_exit_body_entered"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="status_changed" from="Platform_Rotate_Switch" to="." method="_on_platform_rotate_switch_status_changed"]
 [connection signal="reached_checkpoint" from="Checkpoints/Checkpoint4" to="." method="_on_checkpoint_4_reached_checkpoint"]

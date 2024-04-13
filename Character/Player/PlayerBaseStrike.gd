@@ -4,6 +4,7 @@ class_name PlayerBaseStrike extends BaseStrike
 @export var buffer_window: int = 13
 @export var buffer_attack: String = "None"
 @export var dodge_cancellable:bool = true
+@export var dodge_window: int = 4
 @export_category("")
 @export var lunge_distance:int = 250
 @export var hitstop: int = 3
@@ -13,6 +14,7 @@ class_name PlayerBaseStrike extends BaseStrike
 @onready var buffer_tracker:int = buffer_window
 
 var attack_state: PlayerAttack
+var can_dodge:bool 
 func init(current_entity:Entity):
 	entity = current_entity
 	attack_state = current_entity.states.find_state("Attack")
@@ -20,6 +22,7 @@ func init(current_entity:Entity):
 func enter(_msg: = {}):
 	super.enter()
 	buffer_tracker = 0
+	can_dodge = dodge_cancellable
 
 func get_movement_input() -> int:
 	var move = Input.get_axis("left", "right")
@@ -42,6 +45,8 @@ func physics_process(delta: float):
 		entity.states.transition_to("Fall")
 		return
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)
+	if frame >= dodge_window:
+		can_dodge = false
 
 func input(event):
 	super.input(event)

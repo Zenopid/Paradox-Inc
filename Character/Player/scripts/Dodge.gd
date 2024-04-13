@@ -9,6 +9,7 @@ extends PlayerBaseState
 @export var dodge_speed: int = 50
 @export var inital_fall_speed: int = 100
 @export var dodge_cooldown: float = 0.9
+@export var dodge_invlv_frames: int = 13
 
 var facing: String 
 
@@ -20,6 +21,7 @@ var fall_node: Fall
 var jump_buffer:Timer
 
 var bunny_hop_boost: float 
+var frame_tracker: int = 0
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
@@ -32,6 +34,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	bunny_hop_boost = fall_node.bunny_hop_boost
 	
 func enter(_msg: = {}):
+	frame_tracker = 0
 	super.enter()
 	entity.anim_player.connect("animation_finished", Callable(self, "end_dodge"))
 #	if entity.motion.y > inital_fall_speed:
@@ -44,9 +47,16 @@ func enter(_msg: = {}):
 		entity.motion.x = -dodge_speed
 	else:
 		entity.motion.x = dodge_speed
-	
+	entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, false)
+	entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, false)
 
 func physics_process(delta: float):
+	frame_tracker += 1
+	if frame_tracker >= dodge_invlv_frames:
+		if entity.current_level.name == "Future":
+			entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, true)
+		else:
+			entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, true)
 	entity.motion.y += jump_node.get_gravity() * delta
 	entity.motion.y = clamp(entity.motion.y, 0, fall_node.maximum_fall_speed)
 	default_move_and_slide()

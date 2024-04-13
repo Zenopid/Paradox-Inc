@@ -2,11 +2,20 @@ class_name MoveableObject extends RigidBody2D
 
 const MAX_FRAMES_WITHOUT_PUSHING:int = 10
 
+signal update_link_object(object_dict)
+signal timeline_changed(new_timeline)
+signal object_status(current_status)
+signal position_changed(new_position)
+
 @export var health: int = 100
 @export_enum ("Future", "Past") var current_timeline:String = "Future"
+@export var is_paradox:bool = false
+@export var link_object: MoveableObject
+
 @onready var current_level:GenericLevel 
 @onready var collision:CollisionShape2D = $"%Collision"
 @onready var timer:Timer = $"%Destruction_Timer"
+@onready var anim_player = $"%ColorChanger"
 
 var being_pushed: bool = false
 var push_speed: int
@@ -22,10 +31,12 @@ var being_destroyed:bool = false
 
 enum state {
 	DISABLED,
-	ENABLED
+	ENABLED,
+	PARADOX
 }
 
 var current_state = state.DISABLED
+var position_before_disable: Vector2 = Vector2.ZERO
 
 func _ready():
 #	if get_parent() is GenericLevel:
@@ -33,44 +44,75 @@ func _ready():
 #	elif get_parent() is Entity:
 #		current_level = get_parent().get_level()
 	current_level = get_tree().get_first_node_in_group("CurrentLevel")
-	swap_state(current_level.current_timeline)
-	current_level.connect("swapped_timeline", Callable(self,"swap_state"))
-	print(str(current_level.name) + " is the current level")
-	print(current_level.current_timeline + " is the current timeline")
+	check_state(current_level.current_timeline)
+	current_level.connect("swapped_timeline", Callable(self,"check_state"))
+#	print(str(current_level.name) + " is the current level")
+#	print(current_level.current_timeline + " is the current timeline")
+	if is_paradox:
+		become_paradox()
+	else:
+		if current_timeline == "Future":
+			set_future_collision()
+		else:
+			set_past_collision()
+	if link_object:
+		for i in link_object.get_signal_list():
+			var target_method = "_on_link_object_" + i["name"]
+			if has_method(target_method):
+				link_object.connect(i["name"], Callable(self, target_method))
+			else:
+				link_object.connect(i["name"], Callable(self, "_on_link_object_status_changed"))
 
-func swap_state(timeline: String):
+func _on_link_object_status_changed(signal_info):
+	pass
+	#virtual method ot overwirte on case by case basis in case generic functions don't work
+
+func _on_link_object_object_status(new_status):
+	pass
+
+func _on_link_object_position_changed(new_position):
+	pass
+
+func _on_link_object_timeline_changed(new_timeline):
+	pass
+
+func check_state(timeline: String):
+	if is_paradox:
+		enable()
+		return
 	if timeline != current_timeline:
-		print("Object " + str(self) + " is disabling itself.")
+#		print("Object " + str(self) + " is disabling itself.")
 		disable()
 	else:
-		print("Object " + str(self) + " is enabling itself.")
+#		print("Object " + str(self) + " is enabling itself.")
 		enable()
+	emit_signal("object_status", current_state)
 #	print(timeline + " is the new timeline.")
 #	print(current_state)
-
-func swap_timeline(disable_afterwards:bool):
-	current_timeline = current_level.get_next_timeline_swap()
-	if disable_afterwards:
-		disable()
+#
+#func swap_timeline(disable_afterwards:bool):
+#	current_timeline = current_level.get_next_timeline_swap()
+#	if disable_afterwards:
+#		disable()
 
 func disable():
-	if collision:
-		collision.set_deferred("disabled", true ) 
-	set_physics_process(false)
-	visible = false
-	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_DISABLED)
-	sleeping = true 
+	#position_before_disable = global_position
+#	collision.set_deferred("disabled", true ) 
+	modulate.a  = 0.2
+	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_CAST_RAY) #need less collision checks hopefully, so we can demote it to just rays
 	current_state = state.DISABLED
+#	freeze = true 
 func enable():
-	if collision:
-		collision.set_deferred("disabled", false ) 
-	set_physics_process(true)
-	visible = true
+#	collision.set_deferred("disabled", false ) 
+	modulate.a = 1
 	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_CAST_SHAPE)
-	sleeping = false 
 	current_state = state.ENABLED
+#	set_deferred("freeze", false )
 
 func _physics_process(delta):
+#	if current_state == state.DISABLED:
+#		global_position = position_before_disable
+#		print("changing the global position of box " + name + " to location " + str(position_before_disable) )
 #	var ground_checker: RayCast2D 
 #	var num_of_ground_rays: int = 0
 #	for nodes in get_children():
@@ -106,19 +148,19 @@ func _physics_process(delta):
 #	print(being_pushed)
 	pass
 
-func _integrate_forces(state):
-	var should_lock: bool = false
-	for i in get_colliding_bodies():
-		if i is TileMap:
-			should_lock = true
-			
-	set_deferred("lock_rotation", should_lock)
-	if should_lock:
-		set_deferred("rotation", 0)
-	if should_reset:
-		state.transform.origin = new_position
-		should_reset = false
-		linear_velocity = movement_speed
+#func _integrate_forces(state):
+##	var should_lock: bool = false
+##	for i in get_colliding_bodies():
+##		if i is TileMap:
+##			should_lock = true
+##
+##	set_deferred("lock_rotation", should_lock)
+##	if should_lock:
+##		set_deferred("rotation", 0)
+#	if should_reset:
+#		state.transform.origin = new_position
+#		should_reset = false
+#		linear_velocity = movement_speed
 
 func set_new_location(pos):
 	movement_speed = linear_velocity
@@ -142,7 +184,50 @@ func _on_body_exited(body):
 #	being_pushed = false
 func set_timeline(new_timeline):
 	current_timeline = new_timeline
-	swap_state(current_timeline)
+	check_state(current_timeline)
+	if new_timeline == "Future":
+		set_future_collision(false)
+	else:
+		set_past_collision(false)
+	emit_signal("timeline_changed", new_timeline)
+func set_future_collision(past_collision_values:bool = false):
+	set_collision_layer_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
+	set_collision_layer_value(GlobalScript.collision_values.OBJECT_PAST, past_collision_values)
+	
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, past_collision_values)
+	
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, past_collision_values)
+	
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, past_collision_values)
+
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, past_collision_values)
+	
+	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, past_collision_values)
+
+func set_past_collision(future_collision_values: bool = false):
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, future_collision_values)
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
+	
+	set_collision_layer_value(GlobalScript.collision_values.OBJECT_FUTURE, future_collision_values)
+	set_collision_layer_value(GlobalScript.collision_values.OBJECT_PAST,true)
+
+
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, future_collision_values)
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
+	
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, future_collision_values)
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
+	
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, future_collision_values)
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
+	
+	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, future_collision_values)
+	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
 
 func damage(amount):
 	health -= amount
@@ -160,3 +245,57 @@ func destroy():
 
 func queued_destruction() -> bool:
 	return being_destroyed
+	
+func become_paradox():
+	anim_player.play("Become Paradox")
+	is_paradox = true
+	set_future_collision(true)
+	enable()
+	current_state = state.PARADOX
+	
+func become_normal():
+	anim_player.play("Return")
+	is_paradox = false
+	set_timeline(current_level.get_current_timeline())
+	current_state = state.ENABLED
+	
+func save():
+	var save_dict = {
+		"type": "Box",
+		"is_paradox": is_paradox,
+		"global_position": global_position,
+		"health": health,
+		"current_timeline": current_timeline,
+		"rotation": rotation
+	}
+	var new_file = SaveSystem.get_var("MoveableObjects")
+	if typeof(new_file) == TYPE_NIL:
+		new_file = {}
+	new_file[str(name)] = save_dict
+	SaveSystem.set_var("MoveableObjects", new_file)
+#	if SaveSystem.get_var("MoveableObjects"): #SaveSystem.get_var(file_location):
+#		print("Contents:")
+#		print("--------------------------------------------------------")
+#		print(SaveSystem.get_var("MoveableObjects"))
+#		print("--------------------------------------------------------")
+#	else:
+#		print("we saved it to a file that doesn't exist tho?")
+
+func load_from_file():
+	pass
+	#needs to be re-instanited at runtime
+#	print("loading box " + name)
+#	var save_file = SaveSystem.get_var("MoveableObjects")[str(name)]
+#	if save_file:
+#		for i in save_file.keys():
+#			set(i, save_file[i])
+#		check_state(current_timeline)
+#		if is_paradox:
+#			anim_player.play("Become Paradox")
+#			set_future_collision(true)
+#		else:
+#			anim_player.play("RESET")
+#			if current_timeline == "Future":
+#				set_future_collision()
+#			else:
+#				set_past_collision()

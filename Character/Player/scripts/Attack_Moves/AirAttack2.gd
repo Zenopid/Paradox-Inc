@@ -2,8 +2,6 @@ extends PlayerAirStrike
 
 @export var damage: int = 5
 
-var air_hitbox_1:Hitbox
-var air_hitbox_2:Hitbox
 
 func physics_process(delta):
 	var facing = -1 if entity.sprite.flip_h else 1
