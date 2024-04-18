@@ -65,7 +65,7 @@ _data = {
 [node name="Box" type="RigidBody2D" groups=["Moveable Object", "Persist"]]
 collision_layer = 0
 collision_mask = 0
-max_contacts_reported = 8
+max_contacts_reported = 16
 contact_monitor = true
 script = ExtResource("1_1hej8")
 

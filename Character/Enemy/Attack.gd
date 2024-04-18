@@ -37,15 +37,10 @@ func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle
 		push = Vector2(-push.x, push.y)
 	var hitbox_location = Vector2(current_entity.position.x + points.x, current_entity.position.y + points.y)
 	entity.add_child(hitbox_instance)
-	if entity.current_timeline == "Future":
-		hitbox.set_future_collision()
-	else:
-		entity.set_past_collision()
+	hitbox.call("set_" + entity.current_timeline.to_lower() +"_collision")
 	hitbox_instance.set_parameters(damage, width, height, kb_amount, angle, type, angle_flipper, hitbox_location, duration, push, hitlag)
 	if active_attack:
 		hitbox_instance.connect("hitbox_collided", Callable(active_attack, "on_attack_hit"))
-#	else:
-#		print("there's no attack.")
 	hitbox_instance.add_to_group(current_entity.name + " Hitboxes")
 	return hitbox_instance
 

@@ -1693,6 +1693,7 @@ damage = 2
 time_until_grapple_falls = 0.55
 gravity = 2
 max_fall_speed = 125
+cooldown = 0.1
 fall_multiplier = 5.0
 rise_multiplier = 10.5
 sideways_multiplier = 5.5

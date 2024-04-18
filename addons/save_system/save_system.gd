@@ -69,7 +69,6 @@ var base_resource_property_names := []
 signal loaded
 signal saved
 
-
 func _ready():
 	# Locating what properties a Resource has by default, so that they do not get
 	# added to a Dictionary when it is formed based on a Resource.

@@ -150,7 +150,9 @@ boost={
 [layer_names]
 
 2d_physics/layer_1="Player (Future)"
+2d_navigation/layer_1="Future"
 2d_physics/layer_2="Player (Past)"
+2d_navigation/layer_2="Past"
 2d_physics/layer_3="Objects (Future)"
 2d_physics/layer_4="Objects (Past)"
 2d_physics/layer_5="Entities (Future)"
@@ -163,7 +165,9 @@ boost={
 2d_physics/layer_12="Wall (Past)"
 2d_physics/layer_13="Boundary (Future)"
 2d_physics/layer_14="Boundary (Past)"
-2d_physics/layer_15="Grappling Hook"
+2d_physics/layer_15="Hook (Future)"
+2d_physics/layer_16="Hook (Past)"
+2d_physics/layer_17="Wander Area"
 
 [physics]
 

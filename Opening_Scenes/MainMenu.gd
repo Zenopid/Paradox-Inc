@@ -1,4 +1,4 @@
-extends Control
+class_name MainMenu extends Control
 
 var training_scene = preload("res://Levels/Training.tscn")
 var player = preload("res://Character/Player/Scenes/player.tscn")
@@ -15,35 +15,26 @@ var first_level = preload("res://Levels/Act 1/Emergence.tscn")
 @onready var save_screen:ColorRect = $"%SaveInfo"
 @onready var save_file_text:Label = $"%SaveFileText"
 @onready var level_select:Control = $"%LevelSelect"
+@onready var resume: Button = $"%Resume"
 var current_level: GenericLevel
-const LEVEL_PATHS = {
-	"Emergence" = "uid://2ixcpeisj8it",
-	"Training" = "uid://bdka6oxl4bhmn"
-}
+
 func _ready():
+	GlobalScript.main_menu = self
+	add_to_group("MainMenu")
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
 	GlobalScript.connect("level_over", Callable(self, "_on_level_over"))
 	start_button.grab_focus()
 	
 	for i in get_tree().get_nodes_in_group("Levels"):
 		i.connect("pressed", Callable(self, "start_level").bind(i.name))
-	
+	resume.disabled = !GlobalScript.has_save()
+
 func _on_level_over():
-	end_screen.end_level(current_level)
+	end_screen.end_level()
 	current_level.queue_free()
 	var player_instance = get_tree().get_first_node_in_group("Players")
 	player_instance.queue_free()
-
-func add_player(pos) -> Player: 
-	var player_instance = player.instantiate()
-	player_instance.position = pos
-	player_instance.set_spawn(pos)
-	player_instance.set_level( current_level )
-	player_instance.add_to_group("Players")
-	add_child(player_instance) 
-	return player_instance
 	
-
 func disable_menu():
 	GlobalScript.emit_signal("disabling_menu")
 	get_tree().paused = false
@@ -64,7 +55,8 @@ func enable_menu():
 		nodes.visible = true
 		nodes.mouse_filter = Control.MOUSE_FILTER_PASS
 	for nodes in get_tree().get_nodes_in_group("Debug"):
-		nodes.visible = false
+		nodes.visible = GlobalScript.debug_enabled
+	resume.disabled = !GlobalScript.has_save()
 	settings_scene.hide()
 	set_process_input(true)
 
@@ -94,44 +86,53 @@ func _input(event):
 				nodes.hide()
 		debug_screen.show()
 		debug_timer.start()
-		
 
-func start_level(level:String):
+#	GlobalScript.load_game()
+
+func start_level(level_name):
 	disable_menu()
-	var level_path: String = LEVEL_PATHS[level]
-	var new_level = load(level_path)
-	current_level = new_level.instantiate()
-	current_level.add_to_group("CurrentLevel")
-	add_child(current_level)
-	var spawn_point = current_level.get_start_point()
-	var player_instance = add_player(spawn_point)
-	GlobalScript.current_level = current_level
-	current_level.set_player(player_instance)
-	current_level.start_level()
-	GlobalScript.load_game()
+	GlobalScript.start_level(level_name)
 
 func _on_debug_timer_timeout():
 	debug_screen.hide()
 
-
 func _on_clear_data_pressed():
 	SaveSystem.delete_all()
-	debug_text.text = "Deleted all save data."
+	var save_file = get_save()
 	debug_screen.show()
+	debug_text.text = "Deleting Save..."
+	var new_file = FileAccess.open(SaveSystem.default_file_path, FileAccess.WRITE)
+	new_file.close()
+	new_file.flush()
+	debug_text.text = "Deleted Save File."
 	debug_timer.start()
 
 func _on_retrieve_save_pressed():
-	var folder_path = "user://save_data.sav"
-	var file = FileAccess.open(folder_path, FileAccess.READ_WRITE)
-	var content  = file.get_as_text()
-	var error = FileAccess.get_open_error()
-	if error == 0:
-		save_file_text.text = content
-		file.close()
+	var file = get_save()
+	if file:
+		var content  = file.get_as_text()
 		save_screen.show()
+		return
+	debug_text.text = "No save data found."
+	debug_screen.show()
+	debug_timer.start()
+
+func get_save():
+	var file = FileAccess.open(SaveSystem.default_file_path, FileAccess.READ_WRITE)
+	if file:
+		if FileAccess.get_open_error() == 0:
+			return file
+	return null
 
 func _on_save_info_back_button_pressed():
 	save_screen.hide()
 
 func _on_select_back_button_pressed():
 	level_select.hide()
+
+func _on_resume_pressed():
+	disable_menu()
+	GlobalScript.load_game()
+
+func _on_exit_button_pressed():
+	get_tree().quit()

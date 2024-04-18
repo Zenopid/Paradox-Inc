@@ -33,7 +33,7 @@ func _on_quit_pressed():
 	if !quitting_to_menu:
 		get_tree().quit()
 	else:
-		player.get_parent().enable_menu()
+		GlobalScript.main_menu.enable_menu()
 		hide()
 
 func _on_main_menu_pressed():

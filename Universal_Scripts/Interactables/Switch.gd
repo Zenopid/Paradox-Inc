@@ -2,13 +2,14 @@ class_name Switch extends Area2D
 
 var is_on: bool = false
 
-signal status_changed(new_status: bool)
+signal status_changed(activated: bool)
 @export_enum ("Future", "Past") var timeline:String = "Future"
 @onready var level: GenericLevel
 @onready var on_sprite: Sprite2D = $OnSprite
 @onready var off_sprite: Sprite2D = $OffSprite
 
 func _ready():
+	add_to_group("Switch")
 	level = get_tree().get_first_node_in_group("CurrentLevel")
 	level.connect("swapped_timeline", Callable(self, "swap_view"))
 	if timeline == "Future":
@@ -67,18 +68,29 @@ func _on_body_exited(body):
 		off_sprite.show()
 		emit_signal("status_changed", is_on)
 
-func save():
+func save() -> Dictionary:
+	var switch_data = SaveSystem.get_var("Switch")
+	if !switch_data:
+		switch_data = {}
 	var save_dict = {
 		"monitoring": monitoring,
 		"visible": visible,
 		"is_on": is_on,
-		"timeline": timeline
+		"timeline": timeline,
+		"name": name,
+		"rotation": rotation,
+		"global_position": global_position
 	}
-	SaveSystem.set_var(self.name, save_dict)
+	switch_data[name] = save_dict
+	SaveSystem.set_var("Switch", switch_data)
+	return save_dict
+#	SaveSystem.set_var(self.name, save_dict)
 
 func load_from_file():
-	var save_data = SaveSystem.get_var(self.name)
+	var save_data = SaveSystem.get_var("Switch")
 	if save_data:
-		for i in save_data.keys():
-			set(i, save_data[i])
+		save_data = SaveSystem.get_var("Switch:" + name)
+		if save_data:
+			for i in save_data.keys():
+				set(i, save_data[i])
 	emit_signal("status_changed", is_on)

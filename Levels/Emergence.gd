@@ -87,3 +87,11 @@ func _on_grapple_body_entered(body):
 	if body is Player:
 		body.change_grapple_status(true)
 		grapple_item.queue_free()
+
+func _on_door_switch_status_changed(activated):
+	if activated:
+		level_animator.play("MoveDoor")
+
+
+func _on_checkpoint_5_reached_checkpoint():
+	level_animator.play("move_bounds_5")

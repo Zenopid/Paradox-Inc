@@ -1,192 +1,192 @@
 [gd_scene load_steps=21 format=3 uid="uid://bgvgjuwnxk7st"]
 
-[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_2v6jb"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="2_fr27o"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="3_svdxn"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Is_Enemy_Near.gd" id="5_bbi2y"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/time_limiter.gd" id="5_brfy3"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/In_Melee_Range.gd" id="6_3us3o"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Walk_In_Direction.gd" id="6_d7367"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Turn_Around.gd" id="6_i3kc6"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Idle.gd" id="7_jl5v3"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Can_See_Entity.gd" id="8_4b7ch"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Melee.gd" id="8_eabr6"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/inverter.gd" id="9_7a0x1"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Is_Enemy_Close.gd" id="10_12cqp"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence_random.gd" id="12_3y63b"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/ChasePlayer.gd" id="12_n7eed"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/cooldown.gd" id="14_wc0do"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Dash_In_Direction.gd" id="15_13xrd"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_random.gd" id="15_up1cr"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/AI/Run_Towards_Target.gd" id="17_j2jcl"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/repeater.gd" id="17_lg8cx"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_xrmob"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="2_pk4hk"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="3_berca"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/AI/Is_Enemy_Near.gd" id="4_gsknk"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/AI/Turn_Around.gd" id="5_ewjnl"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/AI/Walk_In_Direction.gd" id="6_ojucv"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/AI/Can_See_Entity.gd" id="7_wunlq"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_random.gd" id="8_b0xfj"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/AI/In_Melee_Range.gd" id="9_vd8yy"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/cooldown.gd" id="10_ar1xu"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/AI/Melee.gd" id="11_oey8o"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/AI/ChasePlayer.gd" id="12_4p3o5"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/inverter.gd" id="13_8vlcs"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/AI/Run_Towards_Target.gd" id="14_f48i6"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence_random.gd" id="15_dokda"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/repeater.gd" id="16_fy0jk"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/AI/Dash_In_Direction.gd" id="17_d674i"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/AI/Is_Enemy_Close.gd" id="18_c4evr"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/time_limiter.gd" id="19_mpwlg"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/AI/Idle.gd" id="20_f2mhq"]
 
 [node name="AI_Tree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
-script = ExtResource("1_2v6jb")
+script = ExtResource("1_xrmob")
 enabled = false
-blackboard = NodePath("@Node@19796")
+blackboard = NodePath("@Node@22393")
 actor = NodePath("")
 
 [node name="WorldInteractions" type="Node" parent="."]
-script = ExtResource("2_fr27o")
+script = ExtResource("2_pk4hk")
 
 [node name="SpaceEnemysApart" type="Node" parent="WorldInteractions"]
-script = ExtResource("3_svdxn")
+script = ExtResource("3_berca")
 
 [node name="Is_Enemy_In_Front?" type="Node" parent="WorldInteractions/SpaceEnemysApart"]
-script = ExtResource("5_bbi2y")
+script = ExtResource("4_gsknk")
 unacceptable_range = 40
 
 [node name="Turn_Around" type="Node" parent="WorldInteractions/SpaceEnemysApart"]
-script = ExtResource("6_i3kc6")
+script = ExtResource("5_ewjnl")
 
 [node name="Walk_In_Direction" type="Node" parent="WorldInteractions/SpaceEnemysApart"]
-script = ExtResource("6_d7367")
+script = ExtResource("6_ojucv")
 movement_speed = 50
 accel_speed = 10
 
 [node name="Fight" type="Node" parent="WorldInteractions"]
-script = ExtResource("3_svdxn")
+script = ExtResource("3_berca")
 
 [node name="Can_See_Player?" type="Node" parent="WorldInteractions/Fight"]
-script = ExtResource("8_4b7ch")
+script = ExtResource("7_wunlq")
 
 [node name="FightOptions" type="Node" parent="WorldInteractions/Fight"]
-script = ExtResource("15_up1cr")
+script = ExtResource("8_b0xfj")
 use_weights = true
 Weights/Chase = 1
 Weights/Dash = 1
 Weights/Walk = 1
 
 [node name="CloseQuartersMelee" type="Node" parent="WorldInteractions/Fight/FightOptions"]
-script = ExtResource("3_svdxn")
+script = ExtResource("3_berca")
 
 [node name="In_Melee_Range?" type="Node" parent="WorldInteractions/Fight/FightOptions/CloseQuartersMelee"]
-script = ExtResource("6_3us3o")
+script = ExtResource("9_vd8yy")
 attack_distance = 30
 
 [node name="Attack_Or_Evade" type="Node" parent="WorldInteractions/Fight/FightOptions/CloseQuartersMelee"]
-script = ExtResource("15_up1cr")
+script = ExtResource("8_b0xfj")
 use_weights = true
 Weights/PreventRunAwaySpam = 1
 
 [node name="PreventMeleeSpam" type="Node" parent="WorldInteractions/Fight/FightOptions/CloseQuartersMelee/Attack_Or_Evade"]
-script = ExtResource("14_wc0do")
+script = ExtResource("10_ar1xu")
 wait_time = 1.7
 
 [node name="Melee" type="Node" parent="WorldInteractions/Fight/FightOptions/CloseQuartersMelee/Attack_Or_Evade/PreventMeleeSpam"]
-script = ExtResource("8_eabr6")
+script = ExtResource("11_oey8o")
 anim_name = "Basic Attack"
 
 [node name="PreventRunAwaySpam" type="Node" parent="WorldInteractions/Fight/FightOptions/CloseQuartersMelee/Attack_Or_Evade"]
-script = ExtResource("14_wc0do")
+script = ExtResource("10_ar1xu")
 wait_time = 0.7
 
 [node name="Run_From_Player" type="Node" parent="WorldInteractions/Fight/FightOptions/CloseQuartersMelee/Attack_Or_Evade/PreventRunAwaySpam"]
-script = ExtResource("12_n7eed")
+script = ExtResource("12_4p3o5")
 escape_speed = 160
 acceleration_speed = 40
 distance_to_run_away = 100
 
 [node name="Chase" type="Node" parent="WorldInteractions/Fight/FightOptions"]
-script = ExtResource("3_svdxn")
+script = ExtResource("3_berca")
 
 [node name="Not_In_Melee_Range?" type="Node" parent="WorldInteractions/Fight/FightOptions/Chase"]
-script = ExtResource("9_7a0x1")
+script = ExtResource("13_8vlcs")
 
 [node name="In_Melee_Range?" type="Node" parent="WorldInteractions/Fight/FightOptions/Chase/Not_In_Melee_Range?"]
-script = ExtResource("6_3us3o")
+script = ExtResource("9_vd8yy")
 
 [node name="ChasePlayer" type="Node" parent="WorldInteractions/Fight/FightOptions/Chase"]
-script = ExtResource("17_j2jcl")
+script = ExtResource("14_f48i6")
 acceptable_range = 30
 
 [node name="Dash" type="Node" parent="WorldInteractions/Fight/FightOptions"]
-script = ExtResource("14_wc0do")
+script = ExtResource("10_ar1xu")
 wait_time = 0.4
 
 [node name="Pick_Random_Dash_Direction" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash"]
-script = ExtResource("12_3y63b")
+script = ExtResource("15_dokda")
 
 [node name="Dash_Right" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash/Pick_Random_Dash_Direction"]
-script = ExtResource("17_lg8cx")
+script = ExtResource("16_fy0jk")
 repetitions = 4
 
 [node name="Dash" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash/Pick_Random_Dash_Direction/Dash_Right"]
-script = ExtResource("15_13xrd")
+script = ExtResource("17_d674i")
 dash_speed = 175
 
 [node name="Dash_Left" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash/Pick_Random_Dash_Direction"]
-script = ExtResource("17_lg8cx")
+script = ExtResource("16_fy0jk")
 repetitions = 4
 
 [node name="Dash" type="Node" parent="WorldInteractions/Fight/FightOptions/Dash/Pick_Random_Dash_Direction/Dash_Left"]
-script = ExtResource("15_13xrd")
+script = ExtResource("17_d674i")
 direction = "Left"
 dash_speed = 175
 
 [node name="Walk" type="Node" parent="WorldInteractions/Fight/FightOptions"]
-script = ExtResource("3_svdxn")
+script = ExtResource("3_berca")
 
 [node name="Not_In_Melee_Range?" type="Node" parent="WorldInteractions/Fight/FightOptions/Walk"]
-script = ExtResource("9_7a0x1")
+script = ExtResource("13_8vlcs")
 
 [node name="In_Melee_Range?" type="Node" parent="WorldInteractions/Fight/FightOptions/Walk/Not_In_Melee_Range?"]
-script = ExtResource("6_3us3o")
+script = ExtResource("9_vd8yy")
 attack_distance = 90
 
 [node name="Random_Walk_Direction" type="Node" parent="WorldInteractions/Fight/FightOptions/Walk"]
-script = ExtResource("15_up1cr")
+script = ExtResource("8_b0xfj")
 
 [node name="Walk_Left" type="Node" parent="WorldInteractions/Fight/FightOptions/Walk/Random_Walk_Direction"]
-script = ExtResource("17_lg8cx")
+script = ExtResource("16_fy0jk")
 repetitions = 15
 
 [node name="Dash" type="Node" parent="WorldInteractions/Fight/FightOptions/Walk/Random_Walk_Direction/Walk_Left"]
-script = ExtResource("15_13xrd")
+script = ExtResource("17_d674i")
 direction = "Left"
 dash_speed = 25
 
 [node name="Walk_Right" type="Node" parent="WorldInteractions/Fight/FightOptions/Walk/Random_Walk_Direction"]
-script = ExtResource("17_lg8cx")
+script = ExtResource("16_fy0jk")
 repetitions = 15
 
 [node name="Dash" type="Node" parent="WorldInteractions/Fight/FightOptions/Walk/Random_Walk_Direction/Walk_Right"]
-script = ExtResource("15_13xrd")
+script = ExtResource("17_d674i")
 dash_speed = 25
 
 [node name="Chase" type="Node" parent="WorldInteractions"]
-script = ExtResource("3_svdxn")
+script = ExtResource("3_berca")
 
 [node name="Can_See_Entity?" type="Node" parent="WorldInteractions/Chase"]
-script = ExtResource("8_4b7ch")
+script = ExtResource("7_wunlq")
 
 [node name="Is_Enemy_Far" type="Node" parent="WorldInteractions/Chase"]
-script = ExtResource("9_7a0x1")
+script = ExtResource("13_8vlcs")
 
 [node name="Is_Enemy_Close?" type="Node" parent="WorldInteractions/Chase/Is_Enemy_Far"]
-script = ExtResource("10_12cqp")
+script = ExtResource("18_c4evr")
 
 [node name="TimeLimiterDecorator" type="Node" parent="WorldInteractions/Chase"]
-script = ExtResource("5_brfy3")
+script = ExtResource("19_mpwlg")
 wait_time = 12.0
 
 [node name="Run_Towards_Target" type="Node" parent="WorldInteractions/Chase/TimeLimiterDecorator"]
-script = ExtResource("17_j2jcl")
+script = ExtResource("14_f48i6")
 
 [node name="WorldMovement" type="Node" parent="WorldInteractions"]
-script = ExtResource("15_up1cr")
+script = ExtResource("8_b0xfj")
 
 [node name="Idle_Limiter" type="Node" parent="WorldInteractions/WorldMovement"]
-script = ExtResource("5_brfy3")
+script = ExtResource("19_mpwlg")
 wait_time = 2.0
 
 [node name="Idle" type="Node" parent="WorldInteractions/WorldMovement/Idle_Limiter"]
-script = ExtResource("7_jl5v3")
+script = ExtResource("20_f2mhq")
 
 [node name="Walk_Around" type="Node" parent="WorldInteractions/WorldMovement"]
-script = ExtResource("17_lg8cx")
+script = ExtResource("16_fy0jk")
 repetitions = 20
 
 [node name="Move_In_Direction" type="Node" parent="WorldInteractions/WorldMovement/Walk_Around"]
-script = ExtResource("6_d7367")
+script = ExtResource("6_ojucv")

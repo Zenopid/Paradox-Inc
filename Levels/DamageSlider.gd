@@ -2,7 +2,7 @@ extends HSlider
 
 @export var disabled_color: Color
 @export var enabled_color: Color
-@onready var damage_box: OutOfBounds = get_parent().get_node("DamageBox")
+@onready var damage_box = get_parent().get_node("DamageBox")
 
 var heal_player: bool 
 

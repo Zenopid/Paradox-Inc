@@ -63,15 +63,15 @@ func _ready() -> void:
   DirAccess.make_dir_absolute(SaveLoadUtils.dir)
   SaveLoadUtils.load_action_to_inputmap(action)
   if clear_button:
-    clear = Button.new()
-    clear.text = clear_text
-    clear.pressed.connect(clear_mappings)
-    clear.size_flags_vertical = SIZE_EXPAND_FILL
-    clear.custom_minimum_size = icon_size
-    clear.add_theme_font_override("font", font)
-    clear.add_theme_font_size_override("font_size", font_size)
-    clear.visible = InputMap.action_get_events(action).size() > 0
-    add_child(clear)
+	clear = Button.new()
+	clear.text = clear_text
+	clear.pressed.connect(clear_mappings)
+	clear.size_flags_vertical = SIZE_EXPAND_FILL
+	clear.custom_minimum_size = icon_size
+	clear.add_theme_font_override("font", font)
+	clear.add_theme_font_size_override("font_size", font_size)
+	clear.visible = InputMap.action_get_events(action).size() > 0
+	add_child(clear)
   button.text = _name
   button.custom_minimum_size = icon_size
   button.size_flags_vertical = SIZE_EXPAND_FILL
@@ -89,27 +89,27 @@ func _pressed():
 
 func _input(event: InputEvent) -> void:
   if (
-      not event.is_pressed()
-      or (
-        (event is InputEventJoypadMotion or event is InputEventJoypadButton) and
-        Input.get_joy_name(event.device) == "HTIX5288:00 0911:5288 Touchpad" # work around https://github.com/godotengine/godot/issues/69153
-      )
-    ):
-    return
+	  not event.is_pressed()
+	  or (
+		(event is InputEventJoypadMotion or event is InputEventJoypadButton) and
+		Input.get_joy_name(event.device) == "HTIX5288:00 0911:5288 Touchpad" # work around https://github.com/godotengine/godot/issues/69153
+	  )
+	):
+	return
 
   if event is InputEventKey and event.physical_keycode == KEY_ESCAPE or not RemapUtilities.is_valid_action(event):
-    get_viewport().set_input_as_handled()
-    button.text = _name
-    set_process_input(false)
-    return
+	get_viewport().set_input_as_handled()
+	button.text = _name
+	set_process_input(false)
+	return
   if event is InputEventJoypadMotion:
-    event.axis_value = sign(event.axis_value)
+	event.axis_value = sign(event.axis_value)
   get_viewport().set_input_as_handled()
   if device != -2 and not event is InputEventKey: # for some reason keys dont have devices, guess you cant connect multiple keyboards smh
-    event.device = device
+	event.device = device
   RemapUtilities.add_action(action, event)
   if not continuous_updating:
-    update()
+	update()
   save()
   button.text = _name
   set_process_input(false)
@@ -118,7 +118,7 @@ func _input(event: InputEvent) -> void:
 func clear_mappings():
   RemapUtilities.clear_mappings(action)
   if not continuous_updating:
-    icons.update()
+	icons.update()
   SaveLoadUtils.action_to_file(action)
   clear.hide()
 
@@ -130,6 +130,6 @@ func save():
 ## Updates the icon visuals.
 func update() -> void:
   if continuous_updating:
-    push_error("Continuous updating set, manually calling update() pointless.")
-    return
+	push_error("Continuous updating set, manually calling update() pointless.")
+	return
   icons.update(true)

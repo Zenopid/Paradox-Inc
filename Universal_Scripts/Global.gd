@@ -7,7 +7,7 @@ var DARKSTALKER_PATH:String = "uid://bsn3xf0byil13"
 var PLAYER_PATH:String = "uid://68mxs8vrodes"
 var SWITCH_PATH:String = "uid://c1qqqb8ugmyry"
 var CHECKPOINT_PATH:String = "uid://c5s048qamwl8p"
-
+var PARAGHOUL_PATH: String = "uid://fcuvx05j2v0y"
 signal setting_changed(setting_name, new_setting)
 signal game_over
 signal level_over()
@@ -55,7 +55,6 @@ var current_level: GenericLevel = null :
 	get: 
 		return current_level
 		
-var save_data := {}
 var game_time_start
 var game_time_end
 var total_game_time
@@ -86,17 +85,25 @@ enum collision_values {
 	WALL_PAST = 12,
 	BOUNDARY_FUTURE = 13,
 	BOUNDARY_PAST = 14,
-	GRAPPLING_HOOK = 15,
+	HOOK_FUTURE = 15,
+	HOOK_PAST = 16
+}
+const LEVEL_PATHS = {
+	"Emergence" = "uid://2ixcpeisj8it",
+	"Training" = "uid://bdka6oxl4bhmn"
 }
 
 #im guessing 127 lines by demo
 #edit: im guessing no demo LMAO (due friday (end of march break), writing this on thursday...
 #edit 2: i deleted the variable, didn't need it lol, also released demo (people thought it was mid)
+#edit 3: i added the variable back, ignore the other 2 nimrods
+#edit 4: variable is dying again, ignore the other 3 goofballs
 
 
-
-
+var save_num: int = 0
 var controller_type: String = "Keyboard"
+
+var main_menu: MainMenu
 func _ready():
 #	SaveSystem.connect("loaded", Callable(self, "load_game"))
 	if !Input.get_connected_joypads() == []:
@@ -221,36 +228,89 @@ func _physics_process(delta):
 func save_game():
 	for nodes in get_tree().get_nodes_in_group("Persist"):
 		nodes.save()
+	SaveSystem.save()
 
+func has_save() -> bool:
+	if SaveSystem.get_var("Player"):
+		#surely the player is in every save right...
+		return true 
+	return false
+	
 func load_game():
-	var delete_objects = true
-	if SaveSystem.get_var("current_level"):
-		if current_level.name == SaveSystem.get_var("current_level")["name"]:
-			delete_objects  = false
-	if delete_objects:
-		for nodes in get_tree().get_nodes_in_group("Persist"):
-			if nodes is MoveableObject:
-				nodes.destroy()
-				#need to destroy current objects and replace them with saved objects
-				#they have to be reinstaintied as they may not have existed in the orignal level scene
-			else:
-				nodes.load_from_file()
-		var object_data = SaveSystem.get_var("MoveableObjects")
-		if typeof(object_data) != TYPE_NIL:
-			for i in object_data.keys():
-		#			print(object_data[i]["type"] + " is the current type.")
-				match object_data[i]["type"]:
-					"Box":
-						var box_path = load(BOX_PATH)
-						var box_instance = box_path.instantiate()
-						for x in object_data[i].keys():
-							if x != "type":
-								box_instance.set(x, object_data[i][x])
-						current_level.add_child(box_instance)
-			#	var save_nodes = get_tree().get_nodes_in_
-	else:
+	if has_save():
+		start_level(SaveSystem.get_var("CurrentLevel")["name"])
 		for nodes in get_tree().get_nodes_in_group("Persist"):
 			nodes.load_from_file()
+			if nodes.is_in_group("MoveableObject"):
+				var moveable_objects = SaveSystem.get_var("MoveableObject")
+				for objects in moveable_objects.keys():
+					var current_object = moveable_objects[objects]
+					if current_object["id"] == nodes.get_id() and current_object["id"] != 0:
+						#if its 0, its the generic value and is not special so it can safely be ignored
+						#if they're equal and 1 isn't 0, then the other also must not be 0
+						nodes.queue_free()
+					var box_path = load(BOX_PATH)
+					var box_instance = box_path.instantiate()
+					var saved_properties = moveable_objects[objects]
+					saved_properties.erase("type")
+					for properties in saved_properties:
+						set(properties, saved_properties[properties])
+		return true
+	return false
+
+func start_level(level:String):
+	print("Starting level " + level)
+	var new_level = load(LEVEL_PATHS[level])
+	current_level = new_level.instantiate()
+	current_level.add_to_group("CurrentLevel")
+	add_child(current_level)
+	var spawn_point = current_level.get_start_point()
+	var player_instance = add_player(spawn_point)
+	current_level.set_player(player_instance)
+	current_level.start_level()
+	game_time_start = Time.get_ticks_msec()
+	
+func add_player(pos) -> Player: 
+	var player = load(PLAYER_PATH)
+	var player_instance = player.instantiate()
+	player_instance.position = pos
+	player_instance.set_spawn(pos)
+	player_instance.set_level( current_level )
+	player_instance.add_to_group("Players")
+	add_child(player_instance) 
+	return player_instance
+#	var level_name = SaveSystem.get_var("current_level")
+#	var delete_objects = true
+#	if SaveSystem.get_var("current_level"):
+#		var level_name = SaveSystem.get_var("current_level")["name"]
+#		print(level_name)
+#		if current_level.name == level_name:
+#			delete_objects  = false
+#			print("not deleting objects, cuz the current level was " + level_name)
+#	if delete_objects:
+#		for nodes in get_tree().get_nodes_in_group("Persist"):
+#			if nodes is MoveableObject:
+#				nodes.destroy()
+#				#need to destroy current objects and replace them with saved objects
+#				#they have to be reinstaintied as they may not have existed in the orignal level scene
+#			else:
+#				nodes.load_from_file()
+#		var object_data = SaveSystem.get_var("MoveableObjects")
+#		if typeof(object_data) != TYPE_NIL:
+#			for i in object_data.keys():
+#		#			print(object_data[i]["type"] + " is the current type.")
+#				match object_data[i]["type"]:
+#					"Box":
+#						var box_path = load(BOX_PATH)
+#						var box_instance = box_path.instantiate()
+#						for x in object_data[i].keys():
+#							if x != "type":
+#								box_instance.set(x, object_data[i][x])
+#						current_level.add_child(box_instance)
+#			#	var save_nodes = get_tree().get_nodes_in_
+#	else:
+#		for nodes in get_tree().get_nodes_in_group("Persist"):
+#			nodes.load_from_file()
 #	for node in save_nodes:
 #		if node.scene_file_path.is_empty():
 #			print_debug("node isn't instanced, skipped " % node.name)

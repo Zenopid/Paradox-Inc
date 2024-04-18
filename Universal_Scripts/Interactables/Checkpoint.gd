@@ -1,4 +1,4 @@
-extends Area2D
+class_name Checkpoint extends Area2D
 
 signal reached_checkpoint()
 
@@ -32,16 +32,29 @@ func _on_body_entered(body):
 			set_deferred("monitorable", false)
 			emit_signal("reached_checkpoint")
 
-func save():
+func save() -> Dictionary:
+	var checkpoints = SaveSystem.get_var("Checkpoint")
+	if !checkpoints:
+		checkpoints = {}
 	var save_dict = {
-		"position": global_position,
+		"global_position": global_position,
 		"checkpoint_reached": checkpoint_reached,
 		"heal_amount": heal_amount,
+		"name": name,
+		"timeline": timeline
 	}
-	SaveSystem.set_var(self.name, save_dict)
+	checkpoints[name] = save_dict
+	SaveSystem.set_var("Checkpoint", checkpoints)
+	return save_dict
+	
 
 func load_from_file():
-	var save_file = SaveSystem.get_var(self.name)
+	var save_file = SaveSystem.get_var("Checkpoint")
 	if save_file:
-		for i in save_file.keys():
-			set(i, save_file[i])
+		save_file = SaveSystem.get_var("Checkpoint:" + name)
+		if save_file:
+			for i in save_file.keys():
+				set(i, save_file[i])
+		else: 
+			print("No save file found for checkpoint " + name)
+		

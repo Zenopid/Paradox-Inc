@@ -48,12 +48,12 @@ func update_extends():
 
 func _ready():
 	hitbox_owner = get_parent()
-	if hitbox_owner is Player:
-		state_machine = hitbox_owner.states
+	if hitbox_owner.has_method("get_state_machine"):
+		state_machine = hitbox_owner.get_state_machine()
 	monitoring = false 
 	hitbox.shape = RectangleShape2D.new()
 	set_physics_process(false)
-	current_level = hitbox_owner.get_level()
+	current_level = get_tree().get_first_node_in_group("CurrentLevel")
 
 func _physics_process(delta:float ) -> void:
 	hitbox.global_position = global_position

@@ -108,6 +108,17 @@ _data = {
 [node name="GrapplingHook" type="Node2D"]
 process_physics_priority = 5
 script = ExtResource("1_vmije")
+launch_speed = null
+damage = null
+time_until_grapple_falls = null
+gravity = null
+max_fall_speed = null
+cooldown = null
+fall_multiplier = null
+rise_multiplier = null
+sideways_multiplier = null
+boost_speed = null
+pull_speed = null
 
 [node name="Chain" type="Line2D" parent="." groups=["Hook"]]
 unique_name_in_owner = true

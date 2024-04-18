@@ -49,7 +49,7 @@ func get_camera():
 func _ready():
 	sprite.position = Vector2.ZERO
 	super._ready()
-	states.init(self, debug_info)
+	states.init(debug_info)
 	effects_aniamtion.play("Rest")
 	timeline_tracker.init(self)
 	backdrops.init(self)
@@ -259,22 +259,23 @@ func change_grapple_status(status:bool):
 	grapple_enabled = status
 	grapple.pointer.visible = status
 	
-func save():
-	var player_data = {
+func save() -> Dictionary:
+	var save_data = {
 		"global_position": global_position,
 		"health": health,
-		"items": items
+		"items": items,
+		"name": "Player",
 	}
-	
-	SaveSystem.set_var("Player", player_data)
-	return player_data
+#	SaveSystem.set_var("Player", player_data)
+	SaveSystem.set_var("Player", save_data)
+	return save_data
 
 func load_from_file():
-	var player_data = SaveSystem.get_var("Player")
-	if player_data:
-		for i in player_data.keys():
-			set(i, player_data[i])
-	print("loaded player data")
+	var save_data = SaveSystem.get_var("Player")
+	if save_data:
+		for i in save_data.keys():
+			set(i, save_data[i])
+		print("loaded player data")
 #		print(str(player_data[i]) + " is the current value.")
 #		if i.contains(":"):
 #			set_indexed(get_indexed(i), player_data[i])

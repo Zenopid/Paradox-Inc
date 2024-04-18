@@ -22,7 +22,7 @@ const N_FLASHES = 4
 #	var update_tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 #	update_tween.tween_property(health_under, "value", entity., 0.5)
 
-func _on_health_updated(health, amount):
+func _on_health_updated(health, amount: int = 0):
 	health_over.value = health
 	var update_tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	update_tween.tween_property(health_under, "value", health, 0.5)

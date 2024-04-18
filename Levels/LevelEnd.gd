@@ -17,7 +17,8 @@ extends Control
 @onready var return_button:Button = $"%ReturnButton"
 @onready var player:Player
 var death_count: int 
-func end_level(current_level: GenericLevel):
+func end_level():
+	var current_level = get_tree().get_first_node_in_group("CurrentLevel")
 	return_button.hide()
 	get_tree().paused = true
 	player = get_tree().get_first_node_in_group("Players")

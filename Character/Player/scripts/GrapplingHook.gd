@@ -56,6 +56,9 @@ func _on_swapped_timeline(new_timeline:String ):
 #	release()
 #	print("Grapple is changing to timeline " + new_timeline)
 	if new_timeline == "Future":
+		hook_body.set_collision_layer_value(GlobalScript.collision_values.HOOK_FUTURE, true)
+		hook_body.set_collision_layer_value(GlobalScript.collision_values.HOOK_PAST, false)
+		
 		hook_body.set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
 		hook_body.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, false)
 		
@@ -69,6 +72,10 @@ func _on_swapped_timeline(new_timeline:String ):
 		hook_body.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
 		
 	else:
+
+		hook_body.set_collision_layer_value(GlobalScript.collision_values.HOOK_FUTURE, true)
+		hook_body.set_collision_layer_value(GlobalScript.collision_values.HOOK_PAST, false)
+
 		hook_body.set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, false)
 		hook_body.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
 		
@@ -147,18 +154,20 @@ func _physics_process(delta):
 
 
 func _on_object_grappled(object):
-	if object is MoveableObject:
+	if object is RigidBody2D:
 		grappled_object = object
 #		grappled_object.remove_from_group("Moveable Object")
-#		grappled_object.add_to_group("Grappled Objects")
-		grappled_object.become_paradox()
+		grappled_object.add_to_group("Grappled Objects")
+		if object.has_method("become_paradox"):
+			grappled_object.become_paradox()
 	attachment_point = object.global_position - hook_body.global_position
 
 func _on_grapple_detatched():
 	if grappled_object:
-#		grappled_object.remove_from_group("Grappled Objects")
+		grappled_object.remove_from_group("Grappled Objects")
 #		grappled_object.add_to_group("Moveable Object")
-		grappled_object.become_normal()
+		if grappled_object.has_method("become_normal"):
+			grappled_object.become_normal()
 	grappled_object = null
 	attachment_point = Vector2.ZERO
 	links.hide()

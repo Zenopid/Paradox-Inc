@@ -1,16 +1,16 @@
 [gd_scene load_steps=27 format=3 uid="uid://bsn3xf0byil13"]
 
-[ext_resource type="Script" path="res://Enemy/DarkStalker.gd" id="1_811do"]
-[ext_resource type="Texture2D" uid="uid://lofcnrqvh2h0" path="res://Sprites/NightBorne/NightBorne.png" id="3_meyua"]
-[ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="7_156oq"]
-[ext_resource type="Script" path="res://Enemy/Attack.gd" id="8_bsslf"]
-[ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="8_bxbni"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/LOS.gd" id="8_stb7w"]
-[ext_resource type="Script" path="res://Enemy/DarkStalker/GroundChecker.gd" id="9_s5haw"]
-[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="9_wp7pv"]
-[ext_resource type="PackedScene" uid="uid://bvewt1lavbj41" path="res://Universal_Scenes/VFX/hitsparks.tscn" id="10_jaece"]
-[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="11_x2s36"]
-[ext_resource type="PackedScene" uid="uid://bgvgjuwnxk7st" path="res://Enemy/DarkStalker/ai_tree.tscn" id="18_t7mad"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/Darkstalker.gd" id="1_f0al6"]
+[ext_resource type="Texture2D" uid="uid://lofcnrqvh2h0" path="res://Sprites/Enemies/NightBorne/NightBorne.png" id="2_i6wfu"]
+[ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="3_4giwc"]
+[ext_resource type="PackedScene" uid="uid://bgvgjuwnxk7st" path="res://Character/Enemy/DarkStalker/ai_tree.tscn" id="4_en7f8"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/LOS.gd" id="5_jovso"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/GroundChecker.gd" id="6_4synv"]
+[ext_resource type="Script" path="res://Character/Enemy/Attack.gd" id="7_d2k0y"]
+[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="8_nnns4"]
+[ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="9_3y36u"]
+[ext_resource type="PackedScene" uid="uid://bvewt1lavbj41" path="res://Universal_Scenes/VFX/hitsparks.tscn" id="10_rbxs7"]
+[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="11_g8rs6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_trnwt"]
 size = Vector2(26.5949, 30.9026)
@@ -296,12 +296,12 @@ process_physics_priority = 3
 collision_layer = 0
 collision_mask = 0
 floor_max_angle = 1.10479
-script = ExtResource("1_811do")
+script = ExtResource("1_f0al6")
 detection_color = Color(0, 0.839216, 0.0156863, 0.235294)
 no_detection_color = Color(0.839216, 0, 0, 0.235294)
 
 [node name="Sprite" type="Sprite2D" parent="."]
-texture = ExtResource("3_meyua")
+texture = ExtResource("2_i6wfu")
 hframes = 23
 vframes = 5
 
@@ -334,18 +334,19 @@ offset_left = -44.0
 offset_top = -32.0
 offset_right = 52.0
 offset_bottom = -9.0
-theme_override_fonts/font = ExtResource("8_bxbni")
+theme_override_fonts/font = ExtResource("3_4giwc")
 text = "Speed: 10,10"
 metadata/_edit_use_anchors_ = true
 
 [node name="Pathfinder" type="NavigationAgent2D" parent="."]
 
-[node name="AI_Tree" parent="." node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("18_t7mad")]
+[node name="AI_Tree" parent="." node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("4_en7f8")]
 enabled = true
 blackboard = NodePath("../Blackboard")
 actor = NodePath("..")
 
 [node name="Raycasts" type="Node" parent="."]
+unique_name_in_owner = true
 
 [node name="LOS" type="RayCast2D" parent="Raycasts" node_paths=PackedStringArray("entity") groups=["Raycasts"]]
 unique_name_in_owner = true
@@ -353,7 +354,7 @@ position = Vector2(0, 12)
 target_position = Vector2(450, 0)
 collision_mask = 805343232
 hit_from_inside = true
-script = ExtResource("8_stb7w")
+script = ExtResource("5_jovso")
 entity = NodePath("../..")
 vision_distance = 450
 
@@ -363,18 +364,18 @@ position = Vector2(14, 10)
 target_position = Vector2(0, 30)
 collision_mask = 805306368
 hit_from_inside = true
-script = ExtResource("9_s5haw")
+script = ExtResource("6_4synv")
 entity = NodePath("../..")
 
 [node name="Attack" type="Node" parent="." node_paths=PackedStringArray("current_entity")]
 unique_name_in_owner = true
-script = ExtResource("8_bsslf")
-hitbox = ExtResource("9_wp7pv")
+script = ExtResource("7_d2k0y")
+hitbox = ExtResource("8_nnns4")
 current_entity = NodePath("..")
 
 [node name="DetectionSphere" type="Area2D" parent="." groups=["Detection"]]
-collision_layer = 128
-collision_mask = 169
+collision_layer = 48
+collision_mask = 3
 collision_priority = 5.0
 priority = 5
 
@@ -386,31 +387,23 @@ debug_color = Color(0, 0.6, 0.701961, 0.419608)
 [node name="UI" type="Node2D" parent="."]
 scale = Vector2(0.1, 0.1)
 
-[node name="HealthBar" parent="UI" instance=ExtResource("7_156oq")]
+[node name="HealthBar" parent="UI" instance=ExtResource("9_3y36u")]
 unique_name_in_owner = true
 offset_left = -135.828
 offset_top = -157.306
 offset_right = -135.828
 offset_bottom = -157.306
 mouse_filter = 2
-healthy_color = null
-caution_color = null
-danger_color = null
-pulse_color = null
-flash_color = null
-caution_zone = null
-danger_zone = null
-will_pulse = null
 
-[node name="Hitsparks" parent="." instance=ExtResource("10_jaece")]
+[node name="Hitsparks" parent="." instance=ExtResource("10_rbxs7")]
 scale = Vector2(-2, 2)
 
 [node name="Blackboard" type="Node" parent="."]
-script = ExtResource("11_x2s36")
+script = ExtResource("11_g8rs6")
 
 [node name="EnemySphere" type="Area2D" parent="." groups=["Detection"]]
-collision_layer = 128
-collision_mask = 128
+collision_layer = 48
+collision_mask = 48
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySphere"]
 shape = SubResource("CircleShape2D_tqq4v")

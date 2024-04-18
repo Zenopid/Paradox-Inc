@@ -4,7 +4,7 @@ class_name BaseState extends State
 
 var state_machine: EntityStateMachine
 
-func init(current_entity: Entity, s_machine: EntityStateMachine):
+func init(current_entity, s_machine: EntityStateMachine):
 	entity = current_entity
 	state_machine = s_machine
 
@@ -12,10 +12,7 @@ func enter(_msg: = {}):
 	entity.anim_player.play(animation_name)
 
 func facing_left() -> bool:
-	if entity.sprite.flip_h:
-		return true
-	else:
-		return false
+	return entity.sprite.flip_h
 
 func default_move_and_slide():
 	entity.set_velocity(entity.motion)

@@ -7,7 +7,7 @@ var previous_state: BaseState
 
 @export var initial_state: String
 
-@export var machine_owner: Entity 
+@export var machine_owner: Node2D 
 
 var debug_info: Node2D = null
 var state_tracker: Label = null
@@ -20,7 +20,7 @@ var ray_nodes = {}
 
 var can_transition:bool = true 
 
-func init(entity: Entity, debug_node: Node2D = null):
+func init(debug_node: Node2D = null):
 	for nodes in get_node("Timers").get_children():
 		timer_nodes[nodes.name] = nodes
 	for nodes in get_node("Raycasts").get_children():
@@ -28,9 +28,8 @@ func init(entity: Entity, debug_node: Node2D = null):
 	for nodes in get_children():
 		if nodes is BaseState:
 			state_nodes[nodes.name] = nodes
-	for nodes in get_children():
-		if nodes is BaseState: 
-			nodes.init(entity, self)
+	for states in state_nodes.keys():
+		get_node(states).init(machine_owner, self)
 	current_state = get_node(initial_state)
 	if !current_state:
 		current_state = get_node("Idle")
@@ -44,11 +43,14 @@ func init(entity: Entity, debug_node: Node2D = null):
 	timer_nodes.make_read_only()
 	ray_nodes.make_read_only()
 
-func physics_update(delta):
+func physics_update(delta:float):
 	current_state.physics_process(delta)
-	motion_tracker.text ="Speed: " + str(round(machine_owner.motion.x)) + "," + str(round(machine_owner.motion.y))
+	if machine_owner is Entity:
+		motion_tracker.text ="Speed: " + str(round(machine_owner.motion.x)) + "," + str(round(machine_owner.motion.y))
+	elif machine_owner is RigidBody2D:
+		motion_tracker.text = "Speed: " + str(round(machine_owner.linear_velocity.x)) + "," + str(round(machine_owner.linear_velocity.y))
 
-func update(delta):
+func update(delta: float):
 	current_state.process(delta)
 
 func input(event: InputEvent):

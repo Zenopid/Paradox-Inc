@@ -10,21 +10,21 @@ signal killed()
 @export var max_fall_speed: int = 150
 
 @onready var health:int = max_health 
-@onready var effects_animation = get_node_or_null("EffectAnimator")
-@onready var sprite: Sprite2D = get_node("Sprite")
+@onready var effects_animation:AnimationPlayer = get_node_or_null("EffectAnimator")
+@onready var sprite = get_node("Sprite")
 @onready var pathfinder: NavigationAgent2D = $Pathfinder
 @onready var beehave_tree: BeehaveTree = get_node_or_null("AI_Tree")
-@onready var attack_node: DarkStalkerAttack = $"%Attack"
-@onready var speed_tracker =  $Debug/MotionTracker
+@onready var attack_node: BaseState = $"%Attack"
+@onready var speed_tracker:Label=  $Debug/MotionTracker
 @onready var detection_sphere: Area2D = $DetectionSphere
 @onready var detection_shape: CollisionShape2D = $DetectionSphere/CollisionShape2D
 @onready var enemy_sphere: Area2D = $EnemySphere
 @onready var enemy_sphere_shape: CollisionShape2D = $EnemySphere/CollisionShape2D
 @onready var hitsparks: GPUParticles2D = $Hitsparks
 @onready var debug_ui: Node2D = $"%Debug"
-@onready var los_raycast = $"%LOS"
-@onready var ground_raycast = $"%GroundChecker"
-
+@onready var los_raycast:RayCast2D = $"%LOS"
+@onready var ground_raycast:RayCast2D = $"%GroundChecker"
+@onready var raycast_node = $"%Raycasts"
 
 var currently_attacking:bool = false
 var in_hitstun: bool = false
@@ -39,17 +39,16 @@ func get_spawn():
 	return spawn_point
 
 func _ready():
-	for nodes in get_node("Raycasts").get_children():
-		if nodes is RayCast2D:
-			nodes.add_exception(self)
+	add_to_group("Enemy")
+	if raycast_node:
+		for nodes in raycast_node.get_children():
+			if nodes is RayCast2D:
+				nodes.add_exception(self)
 	super._ready()
 	current_level = get_tree().get_first_node_in_group("CurrentLevel")
-
-	if get_node_or_null("GroundChecker"):
-		get_node("GroundChecker").queue_free()
 	detection_shape.debug_color = no_detection_color
-	
-	debug_ui.visible = GlobalScript.debug_enabled
+	if debug_ui:
+		debug_ui.visible = GlobalScript.debug_enabled
 	
 	raycasts = get_tree().get_nodes_in_group("Raycasts")
 	detection_areas = get_tree().get_nodes_in_group("Detection")
@@ -71,11 +70,12 @@ func _on_swapped_timeline(timeline: String):
 #				i.queue_free()
 		else:
 			modulate.a = 1
-		print(timeline + "is the current timeline.")
-		if timeline == "Future":
-			set_future_collision()
-		else:
-			set_past_collision()
+#		print(timeline + " is the current timeline.")
+#		if timeline == "Future":
+#			set_future_collision()
+#		else:
+#			set_past_collision()
+		call("set_" +timeline.to_lower() + "_collision")
 #			beehave_tree.enabled = true
 #			set_physics_process(true)
 #			for nodes in raycasts:
@@ -215,9 +215,10 @@ func kill():
 	health_bar.hide()
 	if current_level.is_connected("swapped_timeline", Callable(self, "_on_swapped_timeline")):
 		current_level.disconnect("swapped_timeline", Callable(self, "_on_swapped_timeline"))
-	beehave_tree.free()
+	if beehave_tree:
+		beehave_tree.free()
 	anim_player.play("Dead")
-	being_destroyed = true
+	destroy()
 	
 func get_raycast(ray_name:String) -> RayCast2D:
 #	if ray_name == "Ground Checker":
@@ -251,16 +252,19 @@ func player_near():
 func clear_hitboxes():
 	attack_node.clear_hitboxes()
 
-func save():
+func save() -> Dictionary:
 	var save_dict = {
 	"position": global_position,
 	"health": health,
 	"current_timeline": current_timeline,
+	"name": name,
 	}
-	SaveSystem.set_var(self.name, save_dict)
+#	SaveSystem.set_var(self.name, save_dict)
+	SaveSystem.set_var("Enemies:" + name, save_dict) 
+	return save_dict
 
 func load_from_file():
-	var save_data = SaveSystem.get_var(self.name)
+	var save_data = SaveSystem.get_var("Enemies:" + name)
 	if save_data:
 		for i in save_data.keys():
 			set(i, save_data[i])
@@ -276,16 +280,6 @@ func _on_detection_sphere_body_exited(body):
 		detection_shape.debug_color = no_detection_color
 		player_close = false
 
-func _on_enemy_sphere_body_entered(body):
-	#print(body)
-	if body is Enemy:
-		enemy_sphere_shape.debug_color = detection_color
-		enemy_close = true
-
-func _on_enemy_sphere_body_exited(body):
-	if body is Enemy:
-		enemy_sphere_shape.debug_color = no_detection_color
-		enemy_close = false
 
 func enemy_near():
 	return enemy_close
