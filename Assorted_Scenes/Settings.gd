@@ -3,7 +3,6 @@ extends Control
 var updated_settings = {}
 signal control_changed()
 signal controls_overlap()
-signal exiting_settings()
 signal invalid_control()
 
 @onready var apply_button = $"%Apply"
@@ -171,10 +170,8 @@ func _on_test_music_pressed(button):
 		music_player.play()
 
 func _on_return_button_pressed():
-	emit_signal("exiting_settings")
-	if level:
-		level.show()
-	hide()
+	GlobalScript.exit_settings()
+	
 
 func set_music_volume(value, slider):
 	slider.get_parent().get_node("Test_Sound").volume_db = value 
@@ -230,19 +227,6 @@ func change_control(event_name, button:Button):
 
 func _on_tab_container_tab_changed(tab):
 	current_setting_tab = settings_tab.get_current_tab_control().name.to_lower() + "_settings"
-	
-#Audio Sliders
-#func _on_master_slider_drag_ended(value_changed):
-#	if value_changed:
-#		updated_settings["game_volume"] = game_slider.value
-#
-#func _on_sfx_slider_drag_ended(value_changed):
-#	if value_changed:
-#		updated_settings["sfx_volume"] = sfx_slider.value
-#
-#func _on_music_slider_drag_ended(value_changed):
-#	if value_changed:
-#		updated_settings["bgm_volume"] = music_slider.value
 
 func on_audio_slider_drag_ended(value_changed:bool, slider:HSlider):
 	if value_changed:

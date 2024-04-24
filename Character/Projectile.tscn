@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://b2mtsstdd0n"]
+
+[ext_resource type="Script" path="res://Character/Projectile.gd" id="1_8jggq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jgxju"]
+size = Vector2(30, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rf17s"]
+size = Vector2(30, 20)
+
+[node name="Projectile" type="CharacterBody2D"]
+script = ExtResource("1_8jggq")
+
+[node name="Detection" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 0
+monitoring = false
+monitorable = false
+
+[node name="Shape" type="CollisionShape2D" parent="Detection"]
+unique_name_in_owner = true
+shape = SubResource("RectangleShape2D_jgxju")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("RectangleShape2D_rf17s")
+
+[node name="Duration" type="Timer" parent="."]
+unique_name_in_owner = true
+one_shot = true
+
+[connection signal="body_entered" from="Detection" to="." method="_on_body_entered"]

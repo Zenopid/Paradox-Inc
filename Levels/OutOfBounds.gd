@@ -30,12 +30,13 @@ func enable_past_collision():
 	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.HOOK_PAST, true)
+	
 func _on_body_entered(body):
 	if body is Player:
 		body.damage(damage, 0, 0, 0, true)
 		if destroy_objects:
 			body.respawn()
-	elif body is MoveableObject or body is Enemy:
+	elif body is MoveableObject or body is Enemy or body is EnemyRigid:
 		if destroy_objects:
 			body.remove_from_group("Grappled Objects")
 			body.destroy()

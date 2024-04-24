@@ -1,7 +1,6 @@
 extends Control
 
 @export var player: Player 
-@onready var settings_scene  = $Settings
 @onready var level_label:Label = $Level_Name
 @onready var quit_confirmation = $QuitConfirmation
 @onready var resume_button: Button = $"%Resume"
@@ -23,7 +22,10 @@ func _on_resume_pressed():
 	player.set_process_input(true)
 	
 func _on_settings_pressed():
-	settings_scene.show()
+	self.hide()
+	set_process_input(false)
+	player.set_process_input(false)
+	GlobalScript.enter_settings()
 
 func _on_save_and_exit_pressed():
 	quit_confirmation.show()

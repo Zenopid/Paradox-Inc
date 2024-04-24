@@ -1,17 +1,19 @@
 [gd_scene load_steps=3 format=3 uid="uid://beb270t22q5l5"]
 
-[ext_resource type="Script" path="res://Hitbox.gd" id="1_rc7vj"]
+[ext_resource type="Script" path="res://Character/Hitbox.gd" id="1_tt2li"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dk2i"]
 
 [node name="Hitbox" type="Area2D"]
-scale = Vector2(1e-05, 1e-05)
+z_index = -1
+collision_layer = 0
+collision_mask = 0
 collision_priority = 50.0
-script = ExtResource("1_rc7vj")
-metadata/_edit_group_ = true
+monitoring = false
+script = ExtResource("1_tt2li")
 
 [node name="Shape" type="CollisionShape2D" parent="."]
-top_level = true
+visible = false
 shape = SubResource("RectangleShape2D_7dk2i")
 debug_color = Color(0.701961, 0, 0.0117647, 0.419608)
 

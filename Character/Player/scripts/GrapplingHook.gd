@@ -154,9 +154,8 @@ func _physics_process(delta):
 
 
 func _on_object_grappled(object):
-	if object is RigidBody2D:
+	if object is MoveableObject:
 		grappled_object = object
-#		grappled_object.remove_from_group("Moveable Object")
 		grappled_object.add_to_group("Grappled Objects")
 		if object.has_method("become_paradox"):
 			grappled_object.become_paradox()
@@ -165,7 +164,6 @@ func _on_object_grappled(object):
 func _on_grapple_detatched():
 	if grappled_object:
 		grappled_object.remove_from_group("Grappled Objects")
-#		grappled_object.add_to_group("Moveable Object")
 		if grappled_object.has_method("become_normal"):
 			grappled_object.become_normal()
 	grappled_object = null

@@ -1140,6 +1140,7 @@ bus = &"Music"
 [node name="Labels" type="Node" parent="."]
 
 [node name="BoundaryText" type="Label" parent="Labels"]
+unique_name_in_owner = true
 offset_left = 379.0
 offset_top = -145.0
 offset_right = 466.0
@@ -1206,6 +1207,7 @@ focus_mode = 0
 text = "Clear"
 
 [node name="DamageBox" parent="." instance=ExtResource("4_by1xf")]
+unique_name_in_owner = true
 position = Vector2(423, -116)
 metadata/_edit_group_ = true
 
@@ -1230,6 +1232,7 @@ position = Vector2(354.383, -432.074)
 position = Vector2(213.799, -114.335)
 
 [node name="TrainingUI" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
 
 [node name="PositionTracker" type="Label" parent="TrainingUI"]
 unique_name_in_owner = true
@@ -1289,11 +1292,10 @@ offset_bottom = 650.058
 text = "Reset"
 
 [node name="OutOfBounds" parent="." instance=ExtResource("4_by1xf")]
-position = Vector2(425, -3)
+position = Vector2(425, 110)
 damage = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="OutOfBounds"]
-position = Vector2(2523.38, 513.361)
 shape = SubResource("RectangleShape2D_8dvi6")
 
 [node name="Checkpoint" parent="." instance=ExtResource("9_nssps")]

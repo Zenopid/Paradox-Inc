@@ -10,7 +10,7 @@ extends GenericLevel
 
 @onready var future_player:AnimationPlayer = $"%FutureAnimPlayer"
 @onready var past_player:AnimationPlayer = $"%PastAnimPlayer"
-
+@onready var training_ui:CanvasLayer = $"%TrainingUI"
 func _ready():
 	future_puzzle_tilemap.position = Vector2(388, -719)
 	paradox_puzzle_tilemap.get_parent().position = Vector2(388, -719)
@@ -36,7 +36,7 @@ func _on_clear_enemy_pressed():
 
 func _on_spawn_enemy_pressed():
 	var new_enemy = load(GlobalScript.PARAGHOUL_PATH)
-	var enemy_instance: Paraghoul = new_enemy.instantiate()
+	var enemy_instance: ParaGhoul = new_enemy.instantiate()
 	enemy_instance.position = enemy_spawn_point.position
 	enemy_instance.add_to_group("Training Enemies")
 	var box = _on_spawner_pressed()
@@ -70,4 +70,11 @@ func _on_move_past_puzzle_pieces_status_changed(new_status):
 	else:
 		past_player.pause()
 
+func disable():
+	super.disable()
+	training_ui.hide()
+
+func enable():
+	super.enable()
+	training_ui.show()
 

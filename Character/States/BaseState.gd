@@ -4,7 +4,7 @@ class_name BaseState extends State
 
 var state_machine: EntityStateMachine
 
-func init(current_entity, s_machine: EntityStateMachine):
+func init(current_entity: Entity, s_machine: EntityStateMachine):
 	entity = current_entity
 	state_machine = s_machine
 

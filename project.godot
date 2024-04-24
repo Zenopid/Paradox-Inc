@@ -21,6 +21,7 @@ BeehaveGlobalMetrics="*res://addons/beehave/metrics/beehave_global_metrics.gd"
 BeehaveGlobalDebugger="*res://addons/beehave/debug/global_debugger.gd"
 GlobalScript="*res://Universal_Scenes/Global.tscn"
 SaveSystem="*res://addons/save_system/save_system.gd"
+Spawning="*res://addons/BulletUpHell/Spawning.tscn"
 
 [debug]
 
@@ -36,7 +37,7 @@ window/stretch/mode="viewport"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/beehave/plugin.cfg", "res://addons/camera_2d_plus/plugin.cfg", "res://addons/previous-tab/plugin.cfg", "res://addons/save_system/plugin.cfg", "res://addons/script_search/plugin.cfg", "res://addons/vision_cone_2d/plugin.cfg")
+enabled=PackedStringArray("res://addons/BulletUpHell/plugin.cfg", "res://addons/beehave/plugin.cfg", "res://addons/camera_2d_plus/plugin.cfg", "res://addons/easy_velocity_vector_display/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/previous-tab/plugin.cfg", "res://addons/projectiles_plugin/plugin.cfg", "res://addons/save_system/plugin.cfg", "res://addons/script_search/plugin.cfg", "res://addons/vision_cone_2d/plugin.cfg")
 
 [input]
 

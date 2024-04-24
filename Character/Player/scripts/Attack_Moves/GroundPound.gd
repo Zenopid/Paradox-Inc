@@ -1,9 +1,16 @@
 extends PlayerAirStrike
 
+
+@export_category("Ground Pound")
 @export var fall_speed:int = 400
 @export var minimum_damage:int = 30
 @export var maximum_damage:int = 65
 @export var height_scaler: float = 0.25
+
+@export_category("Hitbox")
+@export var duration: int = 4
+@export var knockback_amount: int = 1
+@export var object_push: Vector2 = Vector2(300, 150)
 
 var attack_status: String 
 
@@ -47,7 +54,19 @@ func physics_process(delta):
 			entity.anim_player.connect("animation_finished", Callable(self, "_on_attack_over"))
 			has_hit_ground = true
 			change_status("Landing")
-			attack_state.create_hitbox(39.625, 14.01,ground_pound_damage,1, 180, 7, "Normal", 1, Vector2(-1.375, 10.505), Vector2(700, -500))
+			var hitbox_info = {
+			"position":  Vector2(-1.375, 10.505),
+			"duration": duration,
+			"damage": ground_pound_damage,
+			"width": 39.625, 
+			"height": 14.01,
+			"knockback_amount": knockback_amount,
+			"knockback_angle": 360,
+			"attack_type": "Normal",
+			"object_push": object_push,
+			"hit_stop": hitstop
+		}
+			attack_state.create_hitbox(hitbox_info)
 			entity.camera.set_shake(camera_shake_strength)
 			#print(str(ground_pound_damage) + " is the ground pound's damage.")
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)

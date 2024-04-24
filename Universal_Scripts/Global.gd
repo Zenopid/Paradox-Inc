@@ -2,13 +2,9 @@ class_name GameManager extends Node
 
 @export var debug_enabled: bool = false 
 
-var BOX_PATH: String = "uid://b812mbppojnhg"
-var DARKSTALKER_PATH:String = "uid://bsn3xf0byil13"
-var PLAYER_PATH:String = "uid://68mxs8vrodes"
-var SWITCH_PATH:String = "uid://c1qqqb8ugmyry"
-var CHECKPOINT_PATH:String = "uid://c5s048qamwl8p"
-var PARAGHOUL_PATH: String = "uid://fcuvx05j2v0y"
 signal setting_changed(setting_name, new_setting)
+signal entering_settings()
+signal exiting_settings()
 signal game_over
 signal level_over()
 signal save_game_state()
@@ -16,6 +12,17 @@ signal starting_game()
 
 signal enabling_menu()
 signal disabling_menu()
+
+const HITSTOP_TIMESCALE: float = 0.2
+const BOX_PATH: String = "uid://b812mbppojnhg"
+const DARKSTALKER_PATH:String = "uid://bsn3xf0byil13"
+const PLAYER_PATH:String = "uid://68mxs8vrodes"
+const SWITCH_PATH:String = "uid://c1qqqb8ugmyry"
+const CHECKPOINT_PATH:String = "uid://c5s048qamwl8p"
+const PARAGHOUL_PATH: String = "uid://fcuvx05j2v0y"
+const SETTINGS_PATH:String = "uid://do42anfb1sgba"
+
+
 
 class VisualSettings:
 	var camera_flash: bool = true 
@@ -43,7 +50,6 @@ class ControlSettings:
 	var vibration:bool = true 
 
 var hitstop_frames_remaining: int = 0
-var HITSTOP_TIMESCALE: float = 0.2
 var in_hitstop: bool = false
 var old_hitstop_timescale: float = 1
 
@@ -54,6 +60,11 @@ var current_level: GenericLevel = null :
 		current_level = value
 	get: 
 		return current_level
+var current_player: Player = null :
+	set (value):
+		current_player = value
+	get:
+		return current_player
 		
 var game_time_start
 var game_time_end
@@ -62,7 +73,7 @@ var total_game_time
 @onready var visual_settings: VisualSettings = VisualSettings.new()
 @onready var audio_settings: AudioSettings = AudioSettings.new()
 @onready var control_settings: ControlSettings = ControlSettings.new()
-
+@onready var hitstop_manager: HitstopManager = $"%HitstopManager"
 
 var setting_class_names: = [
 	"visual_settings",
@@ -104,6 +115,9 @@ var save_num: int = 0
 var controller_type: String = "Keyboard"
 
 var main_menu: MainMenu
+
+var settings_screen : Control
+
 func _ready():
 #	SaveSystem.connect("loaded", Callable(self, "load_game"))
 	if !Input.get_connected_joypads() == []:
@@ -205,25 +219,12 @@ func get_setting(setting_class:String, setting_name:String):
 	print_debug("Couldn't get setting '" + str(setting_name) + "' in class '" + str(setting_class) + "'" )
 
 func apply_hitstop(duration):
-#	print_debug("Applying hitstop...")
-	hitstop_frames_remaining = duration
-	old_hitstop_timescale = Engine.time_scale
 	Engine.time_scale = HITSTOP_TIMESCALE
-	in_hitstop = true 
-	
-func remove_hitstop():
-#	print_debug("Removing hitstop...")
-	in_hitstop = false
-	Engine.time_scale = old_hitstop_timescale
-	hitstop_frames_remaining = 0
+	await get_tree().create_timer(duration).timeout
+	Engine.time_scale = 1
+	return null
 
-func _physics_process(delta):
-	if in_hitstop:
-		Engine.time_scale = HITSTOP_TIMESCALE
-		#print(hitstop_frames_remaining)
-		hitstop_frames_remaining -= 1
-		if hitstop_frames_remaining <= 0:
-			remove_hitstop()
+
 
 func save_game():
 	for nodes in get_tree().get_nodes_in_group("Persist"):
@@ -259,7 +260,7 @@ func load_game():
 	return false
 
 func start_level(level:String):
-	print("Starting level " + level)
+#	print("Starting level " + level)
 	var new_level = load(LEVEL_PATHS[level])
 	current_level = new_level.instantiate()
 	current_level.add_to_group("CurrentLevel")
@@ -269,7 +270,25 @@ func start_level(level:String):
 	current_level.set_player(player_instance)
 	current_level.start_level()
 	game_time_start = Time.get_ticks_msec()
-	
+
+func enter_settings():
+	var new_settings = load(SETTINGS_PATH)
+	settings_screen = new_settings.instantiate()
+	if current_level:
+		current_level.disable()
+	if current_player:
+		current_player.disable()
+	add_child(settings_screen)
+	emit_signal("entering_settings")
+	get_tree().paused = true 
+func exit_settings():
+	if current_level:
+		current_level.enable()
+	if current_player:
+		current_player.enable()
+	settings_screen.queue_free()
+	emit_signal("exiting_settings")
+	get_tree().paused = false
 func add_player(pos) -> Player: 
 	var player = load(PLAYER_PATH)
 	var player_instance = player.instantiate()
@@ -278,6 +297,7 @@ func add_player(pos) -> Player:
 	player_instance.set_level( current_level )
 	player_instance.add_to_group("Players")
 	add_child(player_instance) 
+	current_player = player_instance
 	return player_instance
 #	var level_name = SaveSystem.get_var("current_level")
 #	var delete_objects = true

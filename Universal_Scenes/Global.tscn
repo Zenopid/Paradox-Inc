@@ -1,8 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://du64cseqbsn0k"]
+[gd_scene load_steps=3 format=3 uid="uid://du64cseqbsn0k"]
 
 [ext_resource type="Script" path="res://Universal_Scripts/Global.gd" id="1_oqxpk"]
+[ext_resource type="Script" path="res://Universal_Scenes/HitstopManager.gd" id="2_f7hvv"]
 
 [node name="Singleton" type="Node"]
 script = ExtResource("1_oqxpk")
 
-[connection signal="save_game_state" from="." to="." method="save_game"]
+[node name="HitstopManager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_f7hvv")

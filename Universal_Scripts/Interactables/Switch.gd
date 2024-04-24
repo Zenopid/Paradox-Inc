@@ -79,7 +79,8 @@ func save() -> Dictionary:
 		"timeline": timeline,
 		"name": name,
 		"rotation": rotation,
-		"global_position": global_position
+#		"global_position": global_position,
+		"position": position
 	}
 	switch_data[name] = save_dict
 	SaveSystem.set_var("Switch", switch_data)
@@ -89,8 +90,8 @@ func save() -> Dictionary:
 func load_from_file():
 	var save_data = SaveSystem.get_var("Switch")
 	if save_data:
-		save_data = SaveSystem.get_var("Switch:" + name)
+		save_data = save_data[name]
 		if save_data:
 			for i in save_data.keys():
 				set(i, save_data[i])
-	emit_signal("status_changed", is_on)
+		emit_signal("status_changed", is_on)

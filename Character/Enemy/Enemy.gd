@@ -8,23 +8,24 @@ signal killed()
 @export var no_detection_color: Color
 @export var gravity: int = 25
 @export var max_fall_speed: int = 150
+@export var is_paradox: bool = false
+@export var hitbox: Hitbox
 
 @onready var health:int = max_health 
 @onready var effects_animation:AnimationPlayer = get_node_or_null("EffectAnimator")
 @onready var sprite = get_node("Sprite")
 @onready var pathfinder: NavigationAgent2D = $Pathfinder
 @onready var beehave_tree: BeehaveTree = get_node_or_null("AI_Tree")
-@onready var attack_node: BaseState = $"%Attack"
 @onready var speed_tracker:Label=  $Debug/MotionTracker
 @onready var detection_sphere: Area2D = $DetectionSphere
 @onready var detection_shape: CollisionShape2D = $DetectionSphere/CollisionShape2D
 @onready var enemy_sphere: Area2D = $EnemySphere
 @onready var enemy_sphere_shape: CollisionShape2D = $EnemySphere/CollisionShape2D
 @onready var hitsparks: GPUParticles2D = $Hitsparks
-@onready var debug_ui: Node2D = $"%Debug"
-@onready var los_raycast:RayCast2D = $"%LOS"
+@onready var los_raycast = $"%LOS"
 @onready var ground_raycast:RayCast2D = $"%GroundChecker"
 @onready var raycast_node = $"%Raycasts"
+@onready var shapecast_node = $"StateMachine".get_node_or_null("ShapeCasts")
 
 var currently_attacking:bool = false
 var in_hitstun: bool = false
@@ -42,138 +43,80 @@ func _ready():
 	add_to_group("Enemy")
 	if raycast_node:
 		for nodes in raycast_node.get_children():
-			if nodes is RayCast2D:
-				nodes.add_exception(self)
+			nodes.add_exception(self)
+	if shapecast_node:
+		for nodes in shapecast_node.get_children():
+			nodes.add_exception(self)
 	super._ready()
-	current_level = get_tree().get_first_node_in_group("CurrentLevel")
 	detection_shape.debug_color = no_detection_color
-	if debug_ui:
-		debug_ui.visible = GlobalScript.debug_enabled
-	
 	raycasts = get_tree().get_nodes_in_group("Raycasts")
 	detection_areas = get_tree().get_nodes_in_group("Detection")
 	_on_swapped_timeline(current_level.get_current_timeline())
+	init_collision()
+	
+func init_collision():
+	if is_paradox:
+		set_collision(true, true)
+		modulate.a = 1
+	else:
+		if current_timeline.to_lower() == "future":
+			set_collision(true, false)
+		else:
+			set_collision(false, true)
 	
 func _on_swapped_timeline(timeline: String):
 	if !being_destroyed:
+		if is_paradox:
+			return
 		if current_timeline != timeline:
 			modulate.a = 0.25
-#			beehave_tree.enabled = false
-#			set_physics_process(false)
-#
-#			for nodes in raycasts:
-#				nodes.enabled = false
-#			for nodes in detection_areas:
-#				nodes.set_deferred("monitoring", false)
-#				nodes.set_deferred("monitorable",false)
-#			for i in get_tree().get_nodes_in_group("Chase Locations"):
-#				i.queue_free()
 		else:
 			modulate.a = 1
-#		print(timeline + " is the current timeline.")
-#		if timeline == "Future":
-#			set_future_collision()
-#		else:
-#			set_past_collision()
-		call("set_" +timeline.to_lower() + "_collision")
-#			beehave_tree.enabled = true
-#			set_physics_process(true)
-#			for nodes in raycasts:
-#				nodes.enabled = true
-#			for nodes in detection_areas:
-#				nodes.set_deferred("monitoring", true)
-#				nodes.set_deferred("monitorable",true)
-				
-#	for nodes in raycasts:
-#		nodes.set(get("collision_mask"), get("collision_mask"))
-	#print(being_destroyed)
 
-func set_future_collision():
-	
-	detection_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
-	detection_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, false)
-	
-	enemy_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
-	enemy_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, false)
-	
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
-	
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, false)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, false)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, false)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, false)
-	
-	ground_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
-	ground_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, false)
-	
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
-	set_collision_layer_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
-	set_collision_layer_value(GlobalScript.collision_values.ENTITY_PAST, false)
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
-	
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, false)
-	
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
 
-	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
-	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, false)
+func set_collision(future_value, past_value):
 	
-	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
-	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, false)
+	detection_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, future_value)
+	detection_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, past_value)
 	
-	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
-	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, false)
+	enemy_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, future_value)
+	enemy_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, past_value)
+	
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, future_value)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, future_value)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, future_value)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, future_value)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, future_value)
+	
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, past_value)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, past_value)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, past_value)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, past_value)
+	los_raycast.set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, past_value)
+	
+	if ground_raycast:
+		ground_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, future_value)
+		ground_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, past_value)
+		
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, future_value)
+	set_collision_layer_value(GlobalScript.collision_values.ENTITY_FUTURE, future_value)
+	set_collision_layer_value(GlobalScript.collision_values.ENTITY_PAST, past_value)
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, past_value)
+	
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, future_value)
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, past_value)
+	
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, future_value)
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, past_value)
 
-func set_past_collision():
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, future_value)
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, past_value)
 	
-	detection_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
-	detection_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, future_value)
+	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, past_value)
 	
-	enemy_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
-	enemy_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
-	
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, false)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, false)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, false)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
-	
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
-	los_raycast.set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
-	
-	
-	ground_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, false)
-	ground_raycast.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
-	
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
-	set_collision_layer_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
-	set_collision_layer_value(GlobalScript.collision_values.ENTITY_PAST, true)
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
-	
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
-	
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
-
-	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, false)
-	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
-	
-	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, false)
-	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
-	
-	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, false)
-	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, future_value)
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, past_value)
 
 func _physics_process(delta):
 #	super._physics_process(delta)
@@ -185,6 +128,10 @@ func _physics_process(delta):
 	motion.y = clamp(motion.y, 0, max_fall_speed)
 	if being_destroyed:
 		queue_free()
+	states.physics_update(delta)
+
+func _process(delta):
+	states.update(delta)
 		
 func set_spawn(location: Vector2):
 	spawn_point = location
@@ -243,21 +190,32 @@ func default_move_and_slide():
 	move_and_slide()
 	motion = velocity
 
-func create_hitbox(width,height,attack_damage, kb_amount, angle, duration, type, angle_flipper, points, push, hitlag):
-	attack_node.create_hitbox(width, height,attack_damage, kb_amount, angle, duration, type, angle_flipper, points, push, hitlag)
-
+func create_hitbox(hitbox_info: = {}):
+#	attack_node.create_hitbox(width, height,attack_damage, kb_amount, angle, duration, type, angle_flipper, points, push, hitlag)
+	var hitbox_instance: Hitbox = hitbox.instantiate()
+	if sprite.flip_h:
+		hitbox_info["position"] *= -1 
+		hitbox_info ["object_push"] *= -1
+	add_child(hitbox_instance)
+	hitbox_instance.call("set_" + current_timeline.to_lower() +"_collision")
+	hitbox_instance.set_parameters(hitbox_info)
+	hitbox_instance.add_to_group(name + " Hitboxes")
+	return hitbox_instance
+	
 func player_near():
 	return player_close
 
 func clear_hitboxes():
-	attack_node.clear_hitboxes()
+	for i in get_tree().get_nodes_in_group(name + "Hitboxes"):
+		i.free()
 
 func save() -> Dictionary:
 	var save_dict = {
-	"position": global_position,
+	"global_position": global_position,
 	"health": health,
 	"current_timeline": current_timeline,
 	"name": name,
+	"is_paradox": is_paradox
 	}
 #	SaveSystem.set_var(self.name, save_dict)
 	SaveSystem.set_var("Enemies:" + name, save_dict) 
@@ -268,6 +226,13 @@ func load_from_file():
 	if save_data:
 		for i in save_data.keys():
 			set(i, save_data[i])
+	if !is_paradox:
+		if current_timeline.to_lower() == "future":
+			set_collision(true, false)
+		else:
+			set_collision(false, true)
+	else:
+		set_collision(true, true)
 
 func _on_detection_sphere_body_entered(body):
 	if body is Player:
@@ -286,4 +251,7 @@ func enemy_near():
 
 func destroy():
 	being_destroyed = true
+#	set_physics_process(false)
+#	set_process(false)
 	
+

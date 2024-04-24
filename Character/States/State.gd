@@ -1,6 +1,6 @@
 class_name State extends Node
 
-var entity
+var entity: Entity
 
 func enter(_msg: = {}) -> void:
 	pass

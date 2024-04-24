@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cb6obgb5qrf3s"]
+[gd_scene load_steps=6 format=3 uid="uid://cb6obgb5qrf3s"]
 
 [ext_resource type="Script" path="res://Universal_Scripts/QuickMenu.gd" id="1_j6qhw"]
 [ext_resource type="FontFile" uid="uid://dt2unv0gyk7om" path="res://fonts/TitleFont.tres" id="2_mn42p"]
 [ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="3_hpu16"]
-[ext_resource type="PackedScene" uid="uid://do42anfb1sgba" path="res://Assorted_Scenes/settings.tscn" id="4_o6ace"]
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="5_gxw4n"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w7w8g"]
@@ -115,10 +114,6 @@ theme_override_font_sizes/font_size = 30
 text = "  Quit Game
 "
 alignment = 0
-
-[node name="Settings" parent="." instance=ExtResource("4_o6ace")]
-visible = false
-layout_mode = 1
 
 [node name="QuitConfirmation" type="Panel" parent="."]
 visible = false

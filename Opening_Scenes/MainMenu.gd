@@ -16,6 +16,7 @@ var first_level = preload("res://Levels/Act 1/Emergence.tscn")
 @onready var save_file_text:Label = $"%SaveFileText"
 @onready var level_select:Control = $"%LevelSelect"
 @onready var resume: Button = $"%Resume"
+@onready var exit_button:TextureButton = $"%Exit"
 var current_level: GenericLevel
 
 func _ready():
@@ -31,7 +32,8 @@ func _ready():
 
 func _on_level_over():
 	end_screen.end_level()
-	current_level.queue_free()
+	if current_level:
+		current_level.queue_free()
 	var player_instance = get_tree().get_first_node_in_group("Players")
 	player_instance.queue_free()
 	
@@ -62,6 +64,8 @@ func enable_menu():
 
 func _on_start_pressed():
 	level_select.show()
+	exit_button.hide()
+	exit_button.disabled = true 
 #	start_level("Emergence")
 
 func _on_settings_pressed():
@@ -101,11 +105,10 @@ func _on_clear_data_pressed():
 	var save_file = get_save()
 	debug_screen.show()
 	debug_text.text = "Deleting Save..."
-	var new_file = FileAccess.open(SaveSystem.default_file_path, FileAccess.WRITE)
-	new_file.close()
-	new_file.flush()
+	DirAccess.remove_absolute(SaveSystem.default_file_path)
 	debug_text.text = "Deleted Save File."
 	debug_timer.start()
+	resume.disabled = true
 
 func _on_retrieve_save_pressed():
 	var file = get_save()
@@ -126,13 +129,20 @@ func get_save():
 
 func _on_save_info_back_button_pressed():
 	save_screen.hide()
-
-func _on_select_back_button_pressed():
-	level_select.hide()
+	enable_menu()
 
 func _on_resume_pressed():
-	disable_menu()
-	GlobalScript.load_game()
+	if GlobalScript.has_save():
+		disable_menu()
+		GlobalScript.load_game()
+	else:
+		resume.disabled = true 
 
 func _on_exit_button_pressed():
 	get_tree().quit()
+
+
+func _on_level_select_return_button_pressed():
+	exit_button.disabled = false
+	exit_button.show()
+	level_select.hide()

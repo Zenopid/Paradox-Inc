@@ -36,16 +36,18 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 		nodes.connect("leave_state", Callable(self, "exit_state"))
 		attack_options[nodes.name] = nodes
 
-func create_hitbox(width, height,damage, kb_amount, angle, duration, type, angle_flipper, points, push, hitlag = 1):
-	var hitbox_instance: Hitbox = hitbox.instantiate()
+func create_hitbox(hitbox_info:= {}):
 	if entity.sprite.flip_h:
-		points = Vector2(-points.x, points.y)
-		push = Vector2(-push.x, push.y)
+		hitbox_info["position"].x  *= -1
+		hitbox_info["object_push"] *= -1
+	hitbox_info["hitbox_owner"] = entity
 #	var hitbox_location = Vector2(entity.position.x + points.x, entity.position.y + points.y)
-	var hitbox_location = points
+#	var hitbox_location = points
+	var hitbox_instance: Hitbox = hitbox.instantiate()
 	entity.add_child(hitbox_instance)
+	hitbox_instance.set_parameters(hitbox_info)
+
 	hitbox_instance.call("set_" + entity.get_level().current_timeline.to_lower() + "_collision")
-	hitbox_instance.set_parameters(damage, width, height, kb_amount, angle, type, angle_flipper, hitbox_location, duration, push, hitlag)
 	if active_attack:
 		hitbox_instance.connect("hitbox_collided", Callable(active_attack, "on_attack_hit"))
 	else:
@@ -61,11 +63,11 @@ func enter(msg: = {}):
 	entity.set_collision_mask_value(4,false)
 	super.enter()
 	if entity.is_on_floor():
-		switch_attack("GroundedAttack1")
+		use_attack("GroundedAttack1")
 	else:
 		if Input.is_action_pressed("crouch"):
-			return switch_attack("GroundPound")
-		switch_attack("AirAttack1")
+			return use_attack("GroundPound")
+		use_attack("AirAttack1")
 
 func input(event: InputEvent):
 	active_attack.input(event)
@@ -85,7 +87,7 @@ func physics_process(delta: float) -> void:
 	default_move_and_slide()
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	
-func switch_attack(attack_name) -> bool:
+func use_attack(attack_name) -> bool:
 	if active_attack:
 		active_attack.exit()
 	if attack_options.has(attack_name):

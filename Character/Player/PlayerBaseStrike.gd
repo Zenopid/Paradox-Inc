@@ -17,7 +17,7 @@ var attack_state: PlayerAttack
 var can_dodge:bool 
 func init(current_entity:Entity):
 	entity = current_entity
-	attack_state = current_entity.states.find_state("Attack")
+	attack_state = get_parent()
 
 func enter(_msg: = {}):
 	super.enter()
@@ -38,6 +38,7 @@ func on_attack_hit(object):
 		#if the object is of the enity class, but it's not the entity that spawned the hitbox
 		can_cancel = true 
 		entity.camera.set_shake(camera_shake_strength)
+		GlobalScript.hitstop_manager.apply_hitstop(hitstop)
 
 func physics_process(delta: float):
 	super.physics_process(delta)
@@ -61,7 +62,7 @@ func start_buffer_attack():
 		entity.sprite.flip_h = true
 	elif Input.is_action_pressed("right"):
 		entity.sprite.flip_h = false
-	attack_state.switch_attack(buffer_attack)
+	attack_state.use_attack(buffer_attack)
 	return
 
 func _on_attack_over(name_of_attack):

@@ -10,7 +10,7 @@ class_name PlayerAirStrike extends BaseStrike
 
 @export_category("Air Attack Properties")
 @export var air_acceleration: int = 20
-@export var gravity: float = 1.0
+@export var gravity_modifier: float = 1.0
 @export var landing_lag: int  = 2
 @export_category("")
 @export var hitstop: int = 3
@@ -54,7 +54,7 @@ func physics_process(delta):
 				entity.motion.x += air_acceleration
 				if entity.motion.x > max_speed:
 					entity.motion.x = max_speed
-	entity.motion.y += (attack_state.jump_script.get_gravity() * gravity) * delta 
+	entity.motion.y += (attack_state.jump_script.get_gravity() * gravity_modifier) * delta 
 	if frame >= dodge_window and dodge_window >= 0:
 		can_dodge = false
 	
@@ -91,7 +91,7 @@ func start_buffer_attack():
 		entity.sprite.flip_h = true
 	elif Input.is_action_pressed("right"):
 		entity.sprite.flip_h = false
-	attack_state.switch_attack(buffer_attack)
+	attack_state.use_attack(buffer_attack)
 	return
 
 func _on_attack_over(name_of_attack):

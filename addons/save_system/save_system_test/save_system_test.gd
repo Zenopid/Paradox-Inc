@@ -89,7 +89,7 @@ func _ready():
 	
 	# Quit after printing results
 	await get_tree().create_timer(1.0).timeout
-	get_tree().quit()
+#	get_tree().quit()
 
 
 func _test(input : String, result, expected_result):

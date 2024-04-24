@@ -355,7 +355,7 @@ target_position = Vector2(450, 0)
 collision_mask = 805343232
 hit_from_inside = true
 script = ExtResource("5_jovso")
-entity = NodePath("../..")
+entity = NodePath("")
 vision_distance = 450
 
 [node name="GroundChecker" type="RayCast2D" parent="Raycasts" node_paths=PackedStringArray("entity") groups=["Raycasts"]]
@@ -367,11 +367,11 @@ hit_from_inside = true
 script = ExtResource("6_4synv")
 entity = NodePath("../..")
 
-[node name="Attack" type="Node" parent="." node_paths=PackedStringArray("current_entity")]
+[node name="Attack" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("7_d2k0y")
 hitbox = ExtResource("8_nnns4")
-current_entity = NodePath("..")
+animation_name = null
 
 [node name="DetectionSphere" type="Area2D" parent="." groups=["Detection"]]
 collision_layer = 48
@@ -408,6 +408,8 @@ collision_mask = 48
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySphere"]
 shape = SubResource("CircleShape2D_tqq4v")
 debug_color = Color(0, 0.701961, 0.32549, 0.419608)
+
+[node name="Hitbox" parent="." instance=ExtResource("8_nnns4")]
 
 [connection signal="body_entered" from="DetectionSphere" to="." method="_on_detection_sphere_body_entered"]
 [connection signal="body_exited" from="DetectionSphere" to="." method="_on_detection_sphere_body_exited"]

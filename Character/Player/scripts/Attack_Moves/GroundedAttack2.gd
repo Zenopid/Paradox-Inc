@@ -1,7 +1,9 @@
 extends PlayerBaseStrike
 
 @export var damage: int = 20
-
+@export var duration: int = 4
+@export var knockback_amount: int = 1
+@export var object_push: Vector2 = Vector2(300, 150)
 func physics_process(delta):
 	super.physics_process(delta)
 	if frame == 6:
@@ -10,5 +12,16 @@ func physics_process(delta):
 		else:
 			entity.motion.x += lunge_distance  * ( 1 + get_movement_input() )
 	if frame == 9:
-		attack_state.create_hitbox(14.93, 26, damage,1,180, 4, "Normal", 0,Vector2(16.79, 4.5), Vector2(300, 150),1)
-
+		var hitbox_info = {
+			"position": Vector2(16.79, 4.5),
+			"duration": duration,
+			"damage": damage,
+			"width": 14.93, 
+			"height": 26,
+			"knockback_amount": knockback_amount,
+			"knockback_angle": 360,
+			"attack_type": "Normal",
+			"object_push": object_push,
+			"hit_stop": hitstop
+		}
+		attack_state.create_hitbox(hitbox_info)

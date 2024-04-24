@@ -5,6 +5,8 @@ extends GenericLevel
 @onready var past_lasers:Node2D = $"%Past_Lasers"
 @onready var spinning_platform_1_future: = $"%Spinning_Platform"
 @onready var grapple_item: Area2D = $"%Grapple"
+@onready var future_door:TileMap = $"%FutureDoor"
+
 @export var laser_damage: int = 10
 
 func _ready():
@@ -23,6 +25,7 @@ func _ready():
 		for lasers in nodes.get_children():
 			lasers.get_node("Area2D").add_to_group("Future Lasers")
 	get_tree().get_first_node_in_group("Future Lasers").remove_from_group("Future Lasers")
+	future_door.position = Vector2(1018, -5829)
 	#_on_swapped_timeline(current_timeline)
 	
 	super._ready()

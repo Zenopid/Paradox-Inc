@@ -1,32 +1,31 @@
-[gd_scene load_steps=34 format=3 uid="uid://fcuvx05j2v0y"]
+[gd_scene load_steps=37 format=3 uid="uid://fcuvx05j2v0y"]
 
-[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/paraghoul.gd" id="1_im7ok"]
-[ext_resource type="Texture2D" uid="uid://bgcenq3nxvjn2" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_1.png" id="2_wrdje"]
-[ext_resource type="Texture2D" uid="uid://c4lal3n0bxsvx" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_2.png" id="3_a5bbx"]
-[ext_resource type="Texture2D" uid="uid://di3oo3irfnbu8" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_3.png" id="4_rrr63"]
-[ext_resource type="Texture2D" uid="uid://cah2lrp5fi6cn" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_4.png" id="5_2yssy"]
-[ext_resource type="Texture2D" uid="uid://xm470yc42nnq" path="res://Sprites/Enemies/Paraghoul/FireballStart_1.png" id="6_0hgek"]
-[ext_resource type="Texture2D" uid="uid://bkgq40k36pux8" path="res://Sprites/Enemies/Paraghoul/FireballStart_2.png" id="7_v207r"]
-[ext_resource type="Texture2D" uid="uid://cnb7u4hunrrus" path="res://Sprites/Enemies/Paraghoul/FireballStart_3.png" id="8_kfox0"]
-[ext_resource type="Texture2D" uid="uid://c3eewltjaj0ip" path="res://Sprites/Enemies/Paraghoul/FireballStart_4.png" id="9_8dl77"]
-[ext_resource type="Texture2D" uid="uid://c4y015ag4fyuc" path="res://Sprites/Enemies/Paraghoul/FireballTravel_1.png" id="10_y3i4p"]
-[ext_resource type="Texture2D" uid="uid://byxdm8lq1s8bl" path="res://Sprites/Enemies/Paraghoul/FireballTravel_2.png" id="11_4ilbd"]
-[ext_resource type="Script" path="res://Character/EntityStateMachine.gd" id="12_o0r0w"]
-[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Idle.gd" id="13_h2w2u"]
-[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Shoot.gd" id="14_p7rbq"]
-[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/LookAtPlayer.gd" id="15_2u7ek"]
-[ext_resource type="PackedScene" uid="uid://bvewt1lavbj41" path="res://Universal_Scenes/VFX/hitsparks.tscn" id="16_d0ruf"]
-[ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="17_cap41"]
-[ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="18_l3hn4"]
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_fx7kb"]
-bounce = 0.35
+[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Paraghoul.gd" id="1_0ualm"]
+[ext_resource type="Texture2D" uid="uid://bgcenq3nxvjn2" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_1.png" id="2_8q4jg"]
+[ext_resource type="Texture2D" uid="uid://c4lal3n0bxsvx" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_2.png" id="3_0jr2f"]
+[ext_resource type="Texture2D" uid="uid://di3oo3irfnbu8" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_3.png" id="4_jscd8"]
+[ext_resource type="Texture2D" uid="uid://cah2lrp5fi6cn" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_4.png" id="5_x56g2"]
+[ext_resource type="Texture2D" uid="uid://xm470yc42nnq" path="res://Sprites/Enemies/Paraghoul/FireballStart_1.png" id="6_dqr6v"]
+[ext_resource type="Texture2D" uid="uid://bkgq40k36pux8" path="res://Sprites/Enemies/Paraghoul/FireballStart_2.png" id="7_580jk"]
+[ext_resource type="Texture2D" uid="uid://cnb7u4hunrrus" path="res://Sprites/Enemies/Paraghoul/FireballStart_3.png" id="8_ter1l"]
+[ext_resource type="Texture2D" uid="uid://c3eewltjaj0ip" path="res://Sprites/Enemies/Paraghoul/FireballStart_4.png" id="9_hv86h"]
+[ext_resource type="Texture2D" uid="uid://c4y015ag4fyuc" path="res://Sprites/Enemies/Paraghoul/FireballTravel_1.png" id="10_n2o2v"]
+[ext_resource type="Texture2D" uid="uid://byxdm8lq1s8bl" path="res://Sprites/Enemies/Paraghoul/FireballTravel_2.png" id="11_hyq3v"]
+[ext_resource type="Script" path="res://Character/EntityStateMachine.gd" id="12_k2yyu"]
+[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Idle.gd" id="13_rfhnm"]
+[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Shoot.gd" id="14_pc383"]
+[ext_resource type="PackedScene" uid="uid://54w6tmuksub7" path="res://Character/Enemy/Paraghoul/fireball.tscn" id="15_etijb"]
+[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/LookAtPlayer.gd" id="16_d26je"]
+[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/GroundChecker.gd" id="17_se4gl"]
+[ext_resource type="PackedScene" uid="uid://bvewt1lavbj41" path="res://Universal_Scenes/VFX/hitsparks.tscn" id="18_q6r7h"]
+[ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="19_3x474"]
+[ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="20_tkuy8"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_5e6m6"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_wrdje")
+"texture": ExtResource("2_8q4jg")
 }],
 "loop": true,
 "name": &"Idle",
@@ -34,21 +33,72 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_wrdje")
+"texture": ExtResource("2_8q4jg")
 }, {
 "duration": 1.0,
-"texture": ExtResource("3_a5bbx")
+"texture": ExtResource("3_0jr2f")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_rrr63")
+"texture": ExtResource("4_jscd8")
 }, {
 "duration": 1.0,
-"texture": ExtResource("5_2yssy")
+"texture": ExtResource("5_x56g2")
 }],
 "loop": true,
 "name": &"Shoot",
 "speed": 6.0
 }]
+
+[sub_resource type="Animation" id="Animation_07nvf"]
+resource_name = "Dead"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Idle"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1e-05, 1e-05)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 19.6983),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(100, 65.68, 100, 1)]
+}
 
 [sub_resource type="Animation" id="Animation_nncq0"]
 resource_name = "Idle"
@@ -155,7 +205,6 @@ tracks/7/keys = {
 [sub_resource type="Animation" id="Animation_w2kyi"]
 resource_name = "Shoot"
 length = 0.450002
-loop_mode = 1
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -230,57 +279,6 @@ tracks/5/keys = {
 "values": [Vector2(0, 4), Vector2(1, 2), Vector2(-18, 15)]
 }
 
-[sub_resource type="Animation" id="Animation_07nvf"]
-resource_name = "Dead"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite:animation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"Idle"]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite:scale")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.7),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(1, 1), Vector2(1e-05, 1e-05)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Sprite:modulate")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.7),
-"transitions": PackedFloat32Array(1, 19.6983),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(100, 65.68, 100, 1)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bbk5j"]
 _data = {
 "Dead": SubResource("Animation_07nvf"),
@@ -322,31 +320,26 @@ tracks/0/keys = {
 "values": [Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="Animation" id="Animation_tq0si"]
-resource_name = "Rest"
-length = 0.30001
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_brx4j"]
 _data = {
 "Damaged": SubResource("Animation_ovpgi"),
-"RESET": SubResource("Animation_tpcx1"),
-"Rest": SubResource("Animation_tq0si")
+"RESET": SubResource("Animation_tpcx1")
 }
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_jf4na"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("6_0hgek")
+"texture": ExtResource("6_dqr6v")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_v207r")
+"texture": ExtResource("7_580jk")
 }, {
 "duration": 1.0,
-"texture": ExtResource("8_kfox0")
+"texture": ExtResource("8_ter1l")
 }, {
 "duration": 1.0,
-"texture": ExtResource("9_8dl77")
+"texture": ExtResource("9_hv86h")
 }],
 "loop": true,
 "name": &"Start",
@@ -354,33 +347,40 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("10_y3i4p")
+"texture": ExtResource("10_n2o2v")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_4ilbd")
+"texture": ExtResource("11_hyq3v")
 }],
 "loop": true,
 "name": &"Travel",
 "speed": 5.0
 }]
 
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_eyrv5"]
+points = PackedVector2Array(0, 0, 300, -20, 300, 20)
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_xyb2p"]
+points = PackedVector2Array(0, 0, 50, -40, 50, 40)
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_p8cme"]
 radius = 250.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_bbtwe"]
-size = Vector2(32.1812, 30.3719)
+[sub_resource type="CircleShape2D" id="CircleShape2D_etuxi"]
+radius = 15.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wmn68"]
+radius = 300.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0wmmg"]
 radius = 30.0
 
-[node name="Paraghoul" type="RigidBody2D"]
+[node name="Paraghoul" type="CharacterBody2D"]
 collision_layer = 48
 collision_mask = 69631
-physics_material_override = SubResource("PhysicsMaterial_fx7kb")
-continuous_cd = 2
-max_contacts_reported = 8
-contact_monitor = true
-script = ExtResource("1_im7ok")
+script = ExtResource("1_0ualm")
+gravity = -25
+max_fall_speed = -150
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
@@ -417,27 +417,38 @@ default_color = Color(0.235294, 0, 0.301961, 1)
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("machine_owner")]
 unique_name_in_owner = true
-script = ExtResource("12_o0r0w")
+script = ExtResource("12_k2yyu")
 initial_state = "Idle"
 machine_owner = NodePath("..")
 
 [node name="Idle" type="Node" parent="StateMachine"]
-script = ExtResource("13_h2w2u")
+script = ExtResource("13_rfhnm")
+direction_cooldown = 1.5
+idle_speed = 150
+acceleration = 2.0
+bounce_randomness = 50
+bounce_rand = 0.15
 animation_name = "Idle"
 
 [node name="Shoot" type="Node" parent="StateMachine"]
-script = ExtResource("14_p7rbq")
+script = ExtResource("14_pc383")
+projectile = ExtResource("15_etijb")
+animation_name = "Shoot"
 
 [node name="LookAtPlayer" type="Node" parent="StateMachine"]
-script = ExtResource("15_2u7ek")
+script = ExtResource("16_d26je")
 
 [node name="Raycasts" type="Node" parent="StateMachine"]
 unique_name_in_owner = true
 
-[node name="LOS" type="RayCast2D" parent="StateMachine/Raycasts"]
+[node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts" node_paths=PackedStringArray("entity") groups=["Collision", "Raycasts"]]
 unique_name_in_owner = true
-target_position = Vector2(50, 0)
-collision_mask = 69379
+position = Vector2(14, 10)
+target_position = Vector2(0, 30)
+collision_mask = 805306368
+hit_from_inside = true
+script = ExtResource("17_se4gl")
+entity = NodePath("../../..")
 
 [node name="Timers" type="Node" parent="StateMachine"]
 
@@ -445,37 +456,54 @@ collision_mask = 69379
 one_shot = true
 
 [node name="New_Random_Direction" type="Timer" parent="StateMachine/Timers"]
+wait_time = 0.4
 one_shot = true
 
-[node name="DetectionSphere" type="Area2D" parent="."]
+[node name="ShapeCasts" type="Node" parent="StateMachine"]
 unique_name_in_owner = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionSphere"]
+[node name="LOS" type="ShapeCast2D" parent="StateMachine/ShapeCasts"]
+unique_name_in_owner = true
+shape = SubResource("ConvexPolygonShape2D_eyrv5")
+target_position = Vector2(0, 0)
+max_results = 8
+collision_mask = 51
+
+[node name="WorldScanner" type="ShapeCast2D" parent="StateMachine/ShapeCasts"]
+unique_name_in_owner = true
+shape = SubResource("ConvexPolygonShape2D_xyb2p")
+target_position = Vector2(0, 0)
+max_results = 8
+collision_mask = 16128
+
+[node name="DetectionSphere" type="Area2D" parent="." groups=["Collision"]]
+unique_name_in_owner = true
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionSphere" groups=["Collision"]]
 shape = SubResource("CircleShape2D_p8cme")
 
-[node name="Hurtbox" type="CollisionShape2D" parent="."]
+[node name="Hurtbox" type="CollisionShape2D" parent="." groups=["Collision"]]
 unique_name_in_owner = true
 z_index = 1
-position = Vector2(-0.185955, 0.0469484)
-shape = SubResource("RectangleShape2D_bbtwe")
+position = Vector2(-1.90735e-06, 0.0469484)
+shape = SubResource("CircleShape2D_etuxi")
 
 [node name="Pathfinder" type="NavigationAgent2D" parent="."]
 unique_name_in_owner = true
 debug_enabled = true
 debug_path_custom_color = Color(0.83, 0.0913, 0.103611, 1)
 
-[node name="WanderArea" type="StaticBody2D" parent="."]
-collision_layer = 65536
-collision_mask = 0
+[node name="WanderShape" type="Node" parent="."]
 
-[node name="Collision" type="CollisionPolygon2D" parent="WanderArea"]
-build_mode = 1
-polygon = PackedVector2Array(-250, -250, 250, -250, 250, 250, -250, 250)
+[node name="WanderLimits" type="CollisionShape2D" parent="WanderShape" groups=["Collision"]]
+unique_name_in_owner = true
+position = Vector2(5, 0)
+shape = SubResource("CircleShape2D_wmn68")
+disabled = true
+debug_color = Color(0.631373, 0.701961, 0, 0.419608)
 
-[node name="Timer" type="Timer" parent="."]
-autostart = true
-
-[node name="Hitsparks" parent="." instance=ExtResource("16_d0ruf")]
+[node name="Hitsparks" parent="." instance=ExtResource("18_q6r7h")]
 unique_name_in_owner = true
 rotation = -3.14159
 scale = Vector2(2, -2)
@@ -484,7 +512,7 @@ scale = Vector2(2, -2)
 position = Vector2(0, -10)
 scale = Vector2(0.1, 0.1)
 
-[node name="HealthBar" parent="UI" instance=ExtResource("17_cap41")]
+[node name="HealthBar" parent="UI" instance=ExtResource("19_3x474")]
 unique_name_in_owner = true
 offset_left = -135.828
 offset_top = -157.306
@@ -502,8 +530,8 @@ offset_left = -36.0
 offset_top = -37.0
 offset_right = 36.0
 offset_bottom = -14.0
-theme_override_fonts/font = ExtResource("18_l3hn4")
-text = "State: Idle"
+theme_override_fonts/font = ExtResource("20_tkuy8")
+text = "State: Unknown"
 
 [node name="MotionTracker" type="Label" parent="Debug"]
 unique_name_in_owner = true
@@ -512,13 +540,13 @@ offset_left = -44.0
 offset_top = -53.0
 offset_right = 52.0
 offset_bottom = -30.0
-theme_override_fonts/font = ExtResource("18_l3hn4")
-text = "Speed: 10,10"
+theme_override_fonts/font = ExtResource("20_tkuy8")
+text = "Speed: Unknown"
 
-[node name="EnemySphere" type="Area2D" parent="."]
+[node name="EnemySphere" type="Area2D" parent="." groups=["Collision"]]
 unique_name_in_owner = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySphere"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySphere" groups=["Collision"]]
 shape = SubResource("CircleShape2D_0wmmg")
 
 [node name="Injure_Timer" type="Timer" parent="."]

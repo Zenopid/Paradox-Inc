@@ -3,7 +3,6 @@
 [ext_resource type="Script" path="res://Levels/OutOfBounds.gd" id="1_a2yhh"]
 
 [node name="OutOfBounds" type="Area2D"]
-position = Vector2(426, -101)
 collision_layer = 0
 collision_mask = 16384
 collision_priority = 10.0

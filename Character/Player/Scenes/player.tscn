@@ -1693,7 +1693,6 @@ damage = 2
 time_until_grapple_falls = 0.55
 gravity = 2
 max_fall_speed = 125
-cooldown = 0.1
 fall_multiplier = 5.0
 rise_multiplier = 10.5
 sideways_multiplier = 5.5
@@ -1795,12 +1794,11 @@ text = "You Died"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="QuickMenu" parent="UI" node_paths=PackedStringArray("player") instance=ExtResource("8_ea3g2")]
+[node name="QuickMenu" parent="UI" instance=ExtResource("8_ea3g2")]
 unique_name_in_owner = true
 visible = false
 z_index = 20
 mouse_filter = 2
-player = NodePath("../..")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
@@ -1809,7 +1807,7 @@ texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_vmqdd")
 animation = &"Idle"
 
-[node name="Hurtbox" type="CollisionShape2D" parent="."]
+[node name="Hurtbox" type="CollisionShape2D" parent="." groups=["Collision"]]
 position = Vector2(0, 3.5)
 shape = SubResource("RectangleShape2D_b022k")
 
@@ -1827,28 +1825,40 @@ hitbox = ExtResource("58_tx02o")
 script = ExtResource("71_wsv55")
 buffer_attack = "GroundedAttack2"
 lunge_distance = 150
-hitstop = 4
+hitstop = 8
 animation_name = "Grounded_Attack_1"
 friction = 0.4
 
 [node name="GroundedAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("72_t4ijd")
 buffer_attack = "GroundedAttack3"
-hitstop = 4
+hitstop = 8
 animation_name = "Grounded_Attack_2"
 
 [node name="GroundedAttack3" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("73_5exvu")
+object_push = Vector2(650, 0)
 dodge_window = 0
 lunge_distance = 350
-hitstop = 6
-camera_shake_strength = 0.5
+hitstop = 15
+camera_shake_strength = 3.5
 animation_name = "Grounded_Attack_3"
 
 [node name="AirAttack1" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("74_kxsit")
 damage = 15
+duration = 5
+knockback_amount = null
+object_push = Vector2(500, 50)
+buffer_window = null
 buffer_attack = "AirAttack2"
+dodge_cancellable = null
+dodge_window = null
+camera_shake_strength = null
+air_acceleration = null
+gravity_modifier = null
+landing_lag = null
+hitstop = null
 animation_name = "AirAttack1"
 friction = 1.0
 attack_type = "Air"
@@ -1856,6 +1866,18 @@ attack_type = "Air"
 [node name="AirAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("88_lli4y")
 damage = 10
+duration = 3
+knockback_amount = null
+object_push = Vector2(200, -350)
+buffer_window = null
+buffer_attack = null
+dodge_cancellable = null
+dodge_window = null
+camera_shake_strength = null
+air_acceleration = null
+gravity_modifier = null
+landing_lag = null
+hitstop = null
 animation_name = "AirAttack2"
 friction = 1.0
 attack_type = "Air"
@@ -1866,14 +1888,26 @@ fall_speed = 800
 minimum_damage = 15
 maximum_damage = 45
 height_scaler = 0.1
+duration = 7
+knockback_amount = null
+object_push = Vector2(1000, -650)
+buffer_window = null
+buffer_attack = null
+dodge_cancellable = null
 dodge_window = -1
 camera_shake_strength = 3.0
 air_acceleration = 0
+gravity_modifier = null
 landing_lag = 0
+hitstop = 22
+animation_name = null
+friction = null
 attack_type = "Air"
 
 [node name="LandingLag" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("83_pq2wu")
+lunge_distance = 0
+hitstop = 0
 
 [node name="Crouch" type="Node" parent="StateMachine"]
 script = ExtResource("34_j5ybi")
@@ -1918,7 +1952,7 @@ animation_name = "Jump"
 script = ExtResource("57_2qvn5")
 animation_name = "Cast_Start"
 
-[node name="portal_a" parent="StateMachine/Portal" node_paths=PackedStringArray("sister_portal") instance=ExtResource("62_csbhp")]
+[node name="portal_a" parent="StateMachine/Portal" instance=ExtResource("62_csbhp")]
 visible = false
 modulate = Color(0.364706, 0.321569, 1, 1)
 position = Vector2(17, 0)
@@ -1926,16 +1960,14 @@ collision_layer = 64
 collision_mask = 136
 monitoring = false
 monitorable = false
-sister_portal = NodePath("../portal_b")
 
-[node name="portal_b" parent="StateMachine/Portal" node_paths=PackedStringArray("sister_portal") instance=ExtResource("62_csbhp")]
+[node name="portal_b" parent="StateMachine/Portal" instance=ExtResource("62_csbhp")]
 visible = false
 modulate = Color(1, 0.141176, 0.141176, 1)
 collision_layer = 64
 collision_mask = 136
 monitoring = false
 monitorable = false
-sister_portal = NodePath("../portal_a")
 
 [node name="Run" type="Node" parent="StateMachine"]
 script = ExtResource("4_2r8jj")
@@ -1988,7 +2020,7 @@ one_shot = true
 
 [node name="Raycasts" type="Node" parent="StateMachine"]
 
-[node name="WallChecker" type="RayCast2D" parent="StateMachine/Raycasts"]
+[node name="WallChecker" type="RayCast2D" parent="StateMachine/Raycasts" groups=["Collision"]]
 unique_name_in_owner = true
 position = Vector2(-12.55, -10.5)
 scale = Vector2(4, 1)
@@ -1996,7 +2028,7 @@ target_position = Vector2(0, 25)
 collision_mask = 1024
 hit_from_inside = true
 
-[node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts"]
+[node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts" groups=["Collision"]]
 unique_name_in_owner = true
 position = Vector2(0, 13.5)
 scale = Vector2(2, 1)
@@ -2004,7 +2036,7 @@ target_position = Vector2(0, 10)
 collision_mask = 256
 hit_from_inside = true
 
-[node name="SlopeCheckerRight" type="RayCast2D" parent="StateMachine/Raycasts"]
+[node name="SlopeCheckerRight" type="RayCast2D" parent="StateMachine/Raycasts" groups=["Collision"]]
 unique_name_in_owner = true
 position = Vector2(0, 19)
 enabled = false
@@ -2012,7 +2044,7 @@ target_position = Vector2(30, 0)
 collision_mask = 1024
 hit_from_inside = true
 
-[node name="SlopeCheckerLeft" type="RayCast2D" parent="StateMachine/Raycasts"]
+[node name="SlopeCheckerLeft" type="RayCast2D" parent="StateMachine/Raycasts" groups=["Collision"]]
 unique_name_in_owner = true
 position = Vector2(0, 19)
 enabled = false

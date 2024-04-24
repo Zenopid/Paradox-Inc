@@ -1,11 +1,11 @@
 class_name Player extends Entity
 
+
 signal health_updated(health)
 signal killed()
 signal respawning()
 
 @onready var state_tracker:Label = $Debug/StateTracker
-@onready var debug_info:Node2D = $Debug
 @onready var health:int = max_health 
 @onready var invlv_timer = $Invlv_Timer
 @onready var effects_aniamtion: AnimationPlayer = $EffectAnimator
@@ -23,10 +23,18 @@ signal respawning()
 @export var max_grapple_speed: Vector2
 @export var air_grapple_boosts:int = 1
 @export var air_grapple_boost_amount:float
+@export var level_with_grapple_range: int = 30
+@export var grapple_boost_object_pull_multiplier: float = 0.3
 @export_category("Stats")
 @export var max_health: int = 100
 
-var items = []
+var player_info:PlayerInfo = PlayerInfo.new():
+	set(value):
+		player_info = value
+		set_physics_process(player_info != null)
+	get:
+		return player_info
+var items: = {}
 var respawn_timeline: String = "Future"
 var spawn_point: Vector2
 
@@ -49,13 +57,11 @@ func get_camera():
 func _ready():
 	sprite.position = Vector2.ZERO
 	super._ready()
-	states.init(debug_info)
 	effects_aniamtion.play("Rest")
 	timeline_tracker.init(self)
 	backdrops.init(self)
 	connect_signals()
-
-	debug_info.visible = GlobalScript.debug_enabled
+	
 	_on_swapped_timeline(current_level.current_timeline)
 	
 func connect_signals():
@@ -63,60 +69,50 @@ func connect_signals():
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
 	GlobalScript.connect("enabling_menu", Callable(self, "_on_game_over"))
 	GlobalScript.connect("disabling_menu", Callable(self, "enable"))
-	GlobalScript.connect("save_game_state", Callable(self, "save"))
+#	GlobalScript.connect("save_game_state", Callable(self, "save"))
 
 func _on_swapped_timeline(new_timeline:String):
-	print("changing player location to " + new_timeline)
-	if new_timeline == "Past":
-		print("Changing past right now")
-		set_collision_layer_value(GlobalScript.collision_values.PLAYER_PAST, true)
-		set_collision_layer_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
-		
-		set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, false)
-		set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
-		
-		set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, false)
-		set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
-		
-		set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, false)
-		set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
+#	print("changing player location to " + new_timeline)
+	if new_timeline.to_lower() == "future":
+		set_collision(true, false)
 	else:
-		print("Changing future right now")
-		set_collision_layer_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
-		set_collision_layer_value(GlobalScript.collision_values.PLAYER_PAST, false)
-		
-		set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
-		set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, false)
-		
-		set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
-		set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, false)
-
-		set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
-		set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, false)
+		set_collision(false, true)
 	states._on_level_timeline_swapped(new_timeline)
 	grapple._on_swapped_timeline(new_timeline)
 
+func set_collision(future_value, past_value):
+		set_collision_layer_value(GlobalScript.collision_values.PLAYER_FUTURE, future_value)
+		set_collision_layer_value(GlobalScript.collision_values.PLAYER_PAST, past_value)
+		
+		set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, future_value)
+		set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, past_value)
+		
+		set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, future_value)
+		set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, past_value)
+
+		set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, future_value)
+		set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, past_value)
+		
+		set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, future_value)
+		set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, past_value)
+
 func grapple_boost():
 	if grapple.attached:
-		var boost_dir:Vector2 = (position.direction_to(grapple.hook_body.global_position) * grapple.boost_speed.length()).round()
+		var boost_amount:Vector2 = (position.direction_to(grapple.hook_body.global_position) * grapple.boost_speed.length()).round()
 		if !player_braced:
-			if abs(grapple.hook_location.y - global_position.y) <= 30:
-				boost_dir.y = 0
-				#remove vertical boost if the hook's body is basically level with the player's.
-			#print(boost_dir)
 			if !states.get_current_state().grounded() and grappling_upwards:
 				grapple_boost_tracker += 1
 				if grapple_boost_tracker <= air_grapple_boosts:
-					
 					if motion.y > 0:
 						motion.y = 0
-					boost_dir.y *= 1 + air_grapple_boost_amount
+					boost_amount.y *= 1 + air_grapple_boost_amount
 					#allow grapple to pull you up easier a couple times.
-			print(grapple_boost_tracker)
-			motion += boost_dir
-		if grapple.grappled_object is MoveableObject:
-			#print(grapple.grappled_object.name + " is the name of the object.")
-			grapple.grappled_object.call_deferred("apply_central_impulse", -boost_dir )
+			if abs(grapple.hook_location.y - global_position.y) <= level_with_grapple_range:
+				boost_amount.y = 0
+				#remove vertical boost if the hook's body is basically level with the player's.
+			motion += boost_amount
+		if grapple.grappled_object:
+			grapple.grappled_object.call_deferred("apply_central_impulse", -(boost_amount * (1  + grapple_boost_object_pull_multiplier)) )
 		grapple.release()
 func disable():
 	camera.enabled = false
@@ -223,7 +219,7 @@ func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0
 		effects_aniamtion.queue("Invincible")
 		grapple.release()
 #		camera.flash()
-#		this will give an epilepsy warning lol
+#		this will give an epilepsy attack lol
 
 func heal(amount):
 	_set_health(health + amount)
@@ -247,7 +243,6 @@ func respawn():
 
 func death_logic():
 	GlobalScript.emit_signal("game_over")
-	GlobalScript.player_instance = null
 
 func brace():
 	player_braced = true
@@ -281,4 +276,4 @@ func load_from_file():
 #			set_indexed(get_indexed(i), player_data[i])
 #		else:
 #			set(get(i), player_data[i])
-#
+

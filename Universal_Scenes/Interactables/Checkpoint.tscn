@@ -7,6 +7,8 @@
 size = Vector2(10, 76)
 
 [node name="Checkpoint" type="Area2D"]
+collision_layer = 12288
+collision_mask = 3
 monitorable = false
 script = ExtResource("1_rs0s6")
 disabled_color = Color(92.9, 0, 0, 1)
@@ -18,5 +20,9 @@ position = Vector2(0, -38)
 shape = SubResource("RectangleShape2D_tqhly")
 
 [node name="Laser" parent="." instance=ExtResource("2_h8v3n")]
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+position = Vector2(0, -75)
+rect = Rect2(-10, -10, 20, 100)
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered" flags=18]

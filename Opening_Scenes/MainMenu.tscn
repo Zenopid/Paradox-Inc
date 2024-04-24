@@ -301,7 +301,8 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "Return"
 
-[node name="Exit" type="TextureButton" parent="."]
+[node name="Exit" type="TextureButton" parent="." groups=["Menu"]]
+unique_name_in_owner = true
 modulate = Color(0, 0.8, 1, 1)
 layout_mode = 0
 offset_left = 1198.0
@@ -318,5 +319,5 @@ texture_normal = ExtResource("7_ctq1j")
 [connection signal="pressed" from="Delete_Save" to="." method="_on_clear_data_pressed"]
 [connection signal="pressed" from="Retrieve_Save" to="." method="_on_retrieve_save_pressed"]
 [connection signal="pressed" from="SaveInfo/Back" to="." method="_on_save_info_back_button_pressed"]
-[connection signal="pressed" from="LevelSelect/Return" to="." method="_on_select_back_button_pressed"]
+[connection signal="pressed" from="LevelSelect/Return" to="." method="_on_level_select_return_button_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_button_pressed"]

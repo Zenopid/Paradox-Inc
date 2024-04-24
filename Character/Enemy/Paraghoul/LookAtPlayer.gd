@@ -13,12 +13,17 @@ func init(current_entity, s_machine: EntityStateMachine):
 func enter(_msg:= {}):
 	super.enter()
 	original_target_position = los_raycast.target_position
+	
 func physics_process(delta):
-	var target_position = player.transform.origin
+	los_raycast.look_at(entity.to_local( player.global_position - entity.global_position))
 	if los_raycast.is_colliding():
-		state_machine.transition_to("Shoot", {"target_position" = target_position})
+		state_machine.transition_to("Shoot") #{"target_position" = target_position})
 		return
-	var new_transform = entity.sprite.transform.looking_at(target_position, Vector2.UP)
-	entity.sprite.transform.interpolate_with(new_transform, sprite_turn_speed * delta)
-	var tween = get_tree().create_tween()
-	tween.tween_property(los_raycast, "target_position", target_position, ray_turn_speed)
+#	var target_position = player.transform.origin
+#	if los_raycast.is_colliding():
+#		state_machine.transition_to("Shoot", {"target_position" = target_position})
+#		return
+#	var new_transform = entity.sprite.transform.looking_at(target_position, Vector2.UP)
+#	entity.sprite.transform.interpolate_with(new_transform, sprite_turn_speed * delta)
+#	var tween = get_tree().create_tween()
+#	tween.tween_property(los_raycast, "target_position", target_position, ray_turn_speed)
