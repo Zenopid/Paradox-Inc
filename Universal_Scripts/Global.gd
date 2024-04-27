@@ -1,7 +1,7 @@
 class_name GameManager extends Node
 
 @export var debug_enabled: bool = false 
-
+@export var overwrite_previous_video: bool = false
 signal setting_changed(setting_name, new_setting)
 signal entering_settings()
 signal exiting_settings()
@@ -118,6 +118,7 @@ var main_menu: MainMenu
 
 var settings_screen : Control
 
+
 func _ready():
 #	SaveSystem.connect("loaded", Callable(self, "load_game"))
 	if !Input.get_connected_joypads() == []:
@@ -212,8 +213,15 @@ func set_setting(setting_class:String, setting_name: String, new_setting):
 		return
 	print_debug("Couldn't set setting '" + str(setting_name) + "' in class '" + str(setting_class) + "'" )
 
-func get_setting(setting_class:String, setting_name:String):
-	var setting = (get(setting_class)).get(setting_name)
+func get_setting(setting_name:String, setting_class:String = ""):
+	var setting
+	if setting_class != "":
+		if setting_class in self:
+			setting = (get(setting_class)).get(setting_name)
+	else:
+		for i in setting_class_names:
+			if setting_name in get(i):
+				setting = get(i).get(setting_name)
 	if typeof(setting) != TYPE_NIL:
 		return setting
 	print_debug("Couldn't get setting '" + str(setting_name) + "' in class '" + str(setting_class) + "'" )
@@ -261,6 +269,8 @@ func load_game():
 
 func start_level(level:String):
 #	print("Starting level " + level)
+	if !LEVEL_PATHS.has(level):
+		push_error("Couldn't find level " + level)
 	var new_level = load(LEVEL_PATHS[level])
 	current_level = new_level.instantiate()
 	current_level.add_to_group("CurrentLevel")
@@ -282,13 +292,15 @@ func enter_settings():
 	emit_signal("entering_settings")
 	get_tree().paused = true 
 func exit_settings():
-	if current_level:
+	if current_level and current_player:
 		current_level.enable()
-	if current_player:
 		current_player.enable()
+	else:
+		main_menu.enable_menu()
 	settings_screen.queue_free()
-	emit_signal("exiting_settings")
 	get_tree().paused = false
+	emit_signal("exiting_settings")
+	
 func add_player(pos) -> Player: 
 	var player = load(PLAYER_PATH)
 	var player_instance = player.instantiate()

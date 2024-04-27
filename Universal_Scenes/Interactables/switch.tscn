@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://7bkym6aabrr2" path="res://Sprites/Objects/PressurePlateOff.png" id="3_7fipx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bve7i"]
-size = Vector2(27, 5.01023)
+size = Vector2(30, 12)
 
 [node name="Switch" type="Area2D" groups=["Persist"]]
 collision_layer = 0
@@ -21,7 +21,7 @@ position = Vector2(0, -0.5)
 texture = ExtResource("3_7fipx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.039566, -0.495717)
+position = Vector2(0, -4)
 shape = SubResource("RectangleShape2D_bve7i")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

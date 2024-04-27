@@ -14,7 +14,7 @@ signal killed()
 @onready var health:int = max_health 
 @onready var effects_animation:AnimationPlayer = get_node_or_null("EffectAnimator")
 @onready var sprite = get_node("Sprite")
-@onready var pathfinder: NavigationAgent2D = $Pathfinder
+@onready var pathfinder: NavigationAgent2D = $"%Pathfinder"
 @onready var beehave_tree: BeehaveTree = get_node_or_null("AI_Tree")
 @onready var speed_tracker:Label=  $Debug/MotionTracker
 @onready var detection_sphere: Area2D = $DetectionSphere

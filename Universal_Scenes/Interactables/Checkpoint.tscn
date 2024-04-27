@@ -25,4 +25,4 @@ shape = SubResource("RectangleShape2D_tqhly")
 position = Vector2(0, -75)
 rect = Rect2(-10, -10, 20, 100)
 
-[connection signal="body_entered" from="." to="." method="_on_body_entered" flags=18]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

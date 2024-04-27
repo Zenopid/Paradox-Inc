@@ -27,7 +27,7 @@ func _on_health_updated(health, amount: int = 0):
 	var update_tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	update_tween.tween_property(health_under, "value", health, 0.5)
 	_assign_color(health)
-	if amount < 0:
+	if amount > 0:
 		_flash_damage()
 	
 func _assign_color(health):

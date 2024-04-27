@@ -70,10 +70,8 @@ func _on_start_pressed():
 
 func _on_settings_pressed():
 	disable_menu()
-	settings_scene.show()
-	if !settings_scene.is_connected("exiting_settings", Callable(self, "enable_menu")):
-		settings_scene.connect("exiting_settings", Callable(self, "enable_menu"))
-
+	GlobalScript.enter_settings()
+	
 func _on_game_over():
 	enable_menu() 
 

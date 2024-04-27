@@ -34,13 +34,20 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	bunny_hop_boost = fall_node.bunny_hop_boost
 	
 func enter(_msg: = {}):
+	var move = get_movement_input()
 	frame_tracker = 0
 	super.enter()
 	entity.anim_player.connect("animation_finished", Callable(self, "end_dodge"))
 #	if entity.motion.y > inital_fall_speed:
 #		entity.motion.y = inital_fall_speed
 	entity.motion.y = clamp(entity.motion.y, inital_fall_speed, fall_node.maximum_fall_speed)
-	entity.motion.x += dodge_boost * get_movement_input()
+	if move < 0:
+		if entity.motion.x > 0:
+			entity.motion.x = 0
+	else:
+		if entity.motion.x < 0:
+			entity.motion.x = 0
+	entity.motion.x += dodge_boost * move
 	if abs(entity.motion.x) > dodge_speed: 
 		return
 	if facing_left():
@@ -63,10 +70,10 @@ func physics_process(delta: float):
 	if dodge_over:
 		leave_dodge()
 	if is_actionable:
+		if enter_jump_state():
+			return
 		if grounded():
 			if enter_crouch_state():
-				return
-			if enter_jump_state():
 				return
 			if get_movement_input() != 0:
 				state_machine.transition_to("Run")
@@ -74,6 +81,8 @@ func physics_process(delta: float):
 			
 
 func leave_dodge():
+	if enter_jump_state():
+		return
 	if grounded():
 		if Input.is_action_pressed("jump") or !jump_buffer.is_stopped():
 			if !jump_buffer.is_stopped():

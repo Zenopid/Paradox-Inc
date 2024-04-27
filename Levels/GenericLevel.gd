@@ -3,20 +3,23 @@ class_name GenericLevel extends Node2D
 @export var past_paradox_color: Color
 @export var future_paradox_color: Color
 @export var exit_portal: Area2D
-@onready var future: TileMap = get_node("Future")
-@onready var past: TileMap = get_node("Past")
+@onready var future: TileMap = $"%Future"
+@onready var past: TileMap = $"%Past"
 @onready var paradoxes:Node2D = $"%Paradoxes"
 @onready var future_tileset: TileSet
 @onready var past_tileset: TileSet
 @onready var music_player = $BGM
 @onready var spawn_point = get_node("SpawnPoint")
+@onready var future_nav: NavigationRegion2D
+@onready var past_nav: NavigationRegion2D
+
 
 @export_enum("Future", "Past") var current_timeline: String = "Future"
 
 signal swapped_timeline(new_timeline:String)
 signal starting_level()
 
-const UNFCOUSED_TIMELINE_MODULATE: float = 0.2 
+const UNFCOUSED_TIMELINE_MODULATE: float = 0.35
 
 var music_playlist = []
 var level_conditions = {}
@@ -122,8 +125,10 @@ func set_timeline(new_timeline:String):
 		if !current_timeline_tilemap:
 			print_debug("No tilemap for the timeline " + str(new_timeline))
 			return
-		old_timeline_tilemap.modulate.a = UNFCOUSED_TIMELINE_MODULATE 
-		current_timeline_tilemap.modulate.a = 1
+		for nodes in get_tree().get_nodes_in_group(new_timeline.capitalize()):
+			nodes.modulate.a = 1
+		for nodes in get_tree().get_nodes_in_group(current_timeline.capitalize()):
+			nodes.modulate.a = UNFCOUSED_TIMELINE_MODULATE
 		current_timeline = new_timeline
 		emit_signal("swapped_timeline",current_timeline)
 

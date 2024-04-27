@@ -6,11 +6,14 @@ extends PlayerBaseState
 @export var slide_speed:int = 325 
 @export var slide_duration: float = 0.6
 @export var slide_cooldown: float = 0.7
-
 @export var coyote_duration: float = 0.15
-
+@export var jump_height : float = 400
+@export var jump_time_to_peak: float = 0.7
+@export var gravity_acceleration: int = 20
+@export var max_gravity:int = 200
 @export_range(1, 500) var push: int = 50
 
+@onready var jump_velocity: float = ((2.0 * jump_height) / jump_time_to_peak) * -1.0
 
 var duration_timer: Timer
 var cooldown_timer: Timer
@@ -35,46 +38,54 @@ var slope_checker_left:RayCast2D
 var slope_checker_right: RayCast2D
 var fall_state: Fall
 
+var wall_checker: RayCast2D
+
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	slope_checker_left = state_machine.get_raycast("SlopeCheckerRight")
 	slope_checker_right = state_machine.get_raycast("SlopeCheckerLeft")
 	ground_checker = state_machine.get_raycast("GroundChecker")
+	wall_checker = state_machine.get_raycast("WallChecker")
+	
 	coyote_timer = state_machine.get_timer("Coyote")
 	cooldown_timer = state_machine.get_timer("Slide_Cooldown")
+	
 	fall_state = state_machine.find_state("Fall")
 	jump_node = state_machine.find_state("Jump")
+	
 	cooldown_timer.wait_time = slide_cooldown
 	coyote_timer.wait_time = coyote_duration
-
+	
 func enter(_msg: = {}):
 	super.enter()
-#	ground_checker.enabled = true
 	current_slide_duration = slide_duration
 	if facing_left():
 		slide_direction = -1
 	else:
 		slide_direction = 1
 	hit_max_speed = false 
-#	current_slide_duration = slide_duration
-
+	wall_checker.enabled = true 
+	
+	
 func speed_timer_logic(delta):
-	if hit_max_speed:
+	if hit_max_speed and grounded():
 		current_slide_duration -= delta
 
 func physics_process(delta):
 	
 	speed_timer_logic(delta)
-	
+	wall_checker.position.x = entity.position.x + 12.55 * slide_direction
+	wall_checker.position.y =  entity.position.y - 10.5 
 	
 	slope_checker_right.position = Vector2(entity.position.x + 1, entity.position.y + 13.5)
 	slope_checker_left.position = Vector2(entity.position.x - 1, entity.position.y + 13.5)
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
-	var was_on_floor = grounded()
 	if current_slide_duration <= 0:
 		if is_on_slope() and !ascending_slope():
 			pass
 		else:
+			if can_fall():
+				return
 			entity.motion.x = slow_down(entity.motion.x) 
 	else:
 		if abs(entity.motion.x) < slide_speed:
@@ -83,16 +94,27 @@ func physics_process(delta):
 				entity.motion.x = slide_speed * sign(entity.motion.x)
 #		entity.motion.x += slide_acceleration * slide_direction
 #		entity.motion.x = clamp(entity.motion.x, -slide_speed, slide_speed)
-		
 	hit_max_speed = true if abs(entity.motion.x) >= abs(slide_speed) else false
-	if can_fall():
-		return
+	#if can_fall():
+		#return
 	if entity.motion.x  == 0:
+		if can_fall():
+			return
 		if Input.is_action_pressed("crouch"):
 			state_machine.transition_to("Crouch", {}, "Slide_to_Crouch")
 			return
 		enter_move_state()
 		return
+	if !grounded():
+		entity.motion.y += gravity_acceleration
+		if entity.motion.y > max_gravity:
+			entity.motion.y = max_gravity
+		if entity.is_on_wall():
+			if wall_checker.is_colliding():
+				state_machine.transition_to("WallSlide")
+			else: 
+				state_machine.transition_to("Fall")
+			return
 	if !is_on_slope():
 		default_move_and_slide()
 	else:
@@ -108,10 +130,7 @@ func input(_event: InputEvent):
 	if Input.is_action_just_pressed("jump"):
 		jump_node.remaining_jumps += 1 
 		#for some reason, you can't jump without this.
-		if Input.is_action_pressed("crouch"):
-			state_machine.transition_to("Jump", {bonus_speed = Vector2(0, (-1.0 * jump_node.jump_velocity))})
-		else:
-			state_machine.transition_to("Jump")
+		state_machine.transition_to("Jump", {overwrite_speed = Vector2(-1, jump_velocity)})
 		return
 	if enter_dodge_state():
 		return
@@ -138,7 +157,8 @@ func exit() -> void:
 #	ground_checker.enabled = false
 	entity.sprite.rotation_degrees = 0
 	entity.get_node("Hurtbox").rotation_degrees = 0
-
+	wall_checker.enabled = false
+	
 func push_objects():
 	for i in entity.get_slide_collision_count():
 		var collision = entity.get_slide_collision(i)

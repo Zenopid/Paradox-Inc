@@ -13,6 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_xk36n")
+flash_color = Color(0.117647, 0, 1, 1)
 
 [node name="HealthUnder" type="TextureProgressBar" parent="."]
 layout_mode = 0

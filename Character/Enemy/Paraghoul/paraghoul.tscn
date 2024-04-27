@@ -435,7 +435,7 @@ script = ExtResource("14_pc383")
 projectile = ExtResource("15_etijb")
 animation_name = "Shoot"
 
-[node name="LookAtPlayer" type="Node" parent="StateMachine"]
+[node name="Chase" type="Node" parent="StateMachine"]
 script = ExtResource("16_d26je")
 
 [node name="Raycasts" type="Node" parent="StateMachine"]
@@ -489,11 +489,6 @@ z_index = 1
 position = Vector2(-1.90735e-06, 0.0469484)
 shape = SubResource("CircleShape2D_etuxi")
 
-[node name="Pathfinder" type="NavigationAgent2D" parent="."]
-unique_name_in_owner = true
-debug_enabled = true
-debug_path_custom_color = Color(0.83, 0.0913, 0.103611, 1)
-
 [node name="WanderShape" type="Node" parent="."]
 
 [node name="WanderLimits" type="CollisionShape2D" parent="WanderShape" groups=["Collision"]]
@@ -509,8 +504,8 @@ rotation = -3.14159
 scale = Vector2(2, -2)
 
 [node name="UI" type="Node2D" parent="."]
-position = Vector2(0, -10)
-scale = Vector2(0.1, 0.1)
+position = Vector2(0, 1)
+scale = Vector2(0.2, 0.2)
 
 [node name="HealthBar" parent="UI" instance=ExtResource("19_3x474")]
 unique_name_in_owner = true
@@ -522,6 +517,8 @@ mouse_filter = 2
 
 [node name="Debug" type="Node2D" parent="."]
 unique_name_in_owner = true
+position = Vector2(-10, -10)
+metadata/_edit_group_ = true
 
 [node name="StateTracker" type="Label" parent="Debug"]
 unique_name_in_owner = true
@@ -552,6 +549,18 @@ shape = SubResource("CircleShape2D_0wmmg")
 [node name="Injure_Timer" type="Timer" parent="."]
 unique_name_in_owner = true
 wait_time = 0.4
+one_shot = true
+
+[node name="Navigation" type="Node2D" parent="."]
+
+[node name="Pathfinder" type="NavigationAgent2D" parent="Navigation"]
+unique_name_in_owner = true
+debug_enabled = true
+debug_path_custom_color = Color(0.83, 0.0913, 0.103611, 1)
+
+[node name="Nav_Timer" type="Timer" parent="Navigation"]
+unique_name_in_owner = true
+wait_time = 0.1
 one_shot = true
 
 [connection signal="timeout" from="Injure_Timer" to="." method="_on_injure_timer_timeout"]

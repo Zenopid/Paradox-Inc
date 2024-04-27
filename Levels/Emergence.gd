@@ -29,6 +29,9 @@ func _ready():
 	#_on_swapped_timeline(current_timeline)
 	
 	super._ready()
+	
+	for i in get_node("Checkpoints").get_children():
+		i.connect("checkpoint_reached", Callable(self, "_on_checkpoint_reached").bind(i.name.right(i.name.find("Checkpoint"))))
 
 func start_level():
 	super.start_level()
@@ -66,18 +69,6 @@ func _on_platform_rotate_switch_status_changed(new_status):
 	else:
 		level_animator.pause()
 
-func _on_checkpoint_reached_checkpoint():
-	level_animator.play("move_bounds_1")
-
-func _on_checkpoint_2_reached_checkpoint():
-	level_animator.play("move_bounds_2")
-
-func _on_checkpoint_3_reached_checkpoint():
-	level_animator.play("move_bounds_3")
-
-func _on_checkpoint_4_reached_checkpoint():
-	level_animator.play("move_bounds_4")
-
 
 func _on_laser_switch_past_1_status_changed(new_status):
 	for lasers in get_tree().get_nodes_in_group("Laser_Switch_Past_1"):
@@ -95,6 +86,5 @@ func _on_door_switch_status_changed(activated):
 	if activated:
 		level_animator.play("MoveDoor")
 
-
-func _on_checkpoint_5_reached_checkpoint():
-	level_animator.play("move_bounds_5")
+func _on_checkpoint_reached(checkpoint_number:String):
+	level_animator.play("move_bounds_" + checkpoint_number)

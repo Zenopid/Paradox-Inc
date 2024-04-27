@@ -7,10 +7,10 @@ var duration: int = 0
 func _ready():
 	set_physics_process(false)
 	
-func apply_hitstop(duration):
+func apply_hitstop(amount):
 	Engine.time_scale = HITSTOP_TIMESCALE
 	hitstop_tracker = 0
-	self.duration = duration
+	self.duration = amount
 	set_physics_process(true)
 	hitstop_active = true
 	

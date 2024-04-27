@@ -1794,11 +1794,12 @@ text = "You Died"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="QuickMenu" parent="UI" instance=ExtResource("8_ea3g2")]
+[node name="QuickMenu" parent="UI" node_paths=PackedStringArray("player") instance=ExtResource("8_ea3g2")]
 unique_name_in_owner = true
 visible = false
 z_index = 20
 mouse_filter = 2
+player = NodePath("../..")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
@@ -1983,6 +1984,8 @@ slide_acceleration = 10
 slide_deceleration = 10
 slide_speed = 425
 coyote_duration = 0.1
+jump_height = 40.0
+jump_time_to_peak = 0.25
 push = 500
 animation_name = "Slide"
 
@@ -2075,7 +2078,6 @@ theme_override_fonts/font = ExtResource("4_jysbm")
 text = "Speed: 10,10"
 
 [node name="SpriteAnimator" type="AnimationPlayer" parent="."]
-playback_process_mode = 0
 libraries = {
 "": SubResource("AnimationLibrary_ci1of")
 }
@@ -2122,4 +2124,5 @@ process_callback = 0
 player = NodePath("..")
 SHAKE_DECAY = 0.15
 
+[connection signal="focus_entered" from="UI/QuickMenu" to="UI/QuickMenu" method="_on_focus_entered"]
 [connection signal="timeout" from="Invlv_Timer" to="." method="_on_invlv_timer_timeout"]

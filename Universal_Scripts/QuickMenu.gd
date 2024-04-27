@@ -1,13 +1,16 @@
 extends Control
 
-@export var player: Player 
+@export var player: Player
+
 @onready var level_label:Label = $Level_Name
 @onready var quit_confirmation = $QuitConfirmation
 @onready var resume_button: Button = $"%Resume"
-
+@onready var exit_callable:Callable = Callable(self, "_on_settings_exited" )
 var quitting_to_menu: bool = false 
 
+
 func enable_menu(level_name):
+	GlobalScript.connect("exiting_settings", exit_callable)
 	player.set_process_input(false)
 	set_process_input(true)
 	self.show()
@@ -20,9 +23,10 @@ func _on_resume_pressed():
 	get_tree().paused = false
 	set_process_input(false)
 	player.set_process_input(true)
+	if GlobalScript.is_connected("exiting_settings", exit_callable):
+		GlobalScript.disconnect("exiting_settings", exit_callable)
 	
 func _on_settings_pressed():
-	self.hide()
 	set_process_input(false)
 	player.set_process_input(false)
 	GlobalScript.enter_settings()
@@ -37,6 +41,8 @@ func _on_quit_pressed():
 	else:
 		GlobalScript.main_menu.enable_menu()
 		hide()
+	if GlobalScript.is_connected("exiting_settings", exit_callable):
+		GlobalScript.disconnect("exiting_settings", exit_callable)
 
 func _on_main_menu_pressed():
 	quit_confirmation.show()
@@ -48,3 +54,8 @@ func _on_quit_menu_resume_pressed():
 func _input(event):
 	if Input.is_action_just_pressed("options"):
 		_on_resume_pressed()
+
+func _on_settings_exited():
+	print("you exited?")
+	get_tree().paused = true
+

@@ -13,9 +13,9 @@ var is_tweening: bool = false
 
 func enter(_msg: = {}):
 	super.enter()
+	state_machine.can_transition = false
 	jump_node = state_machine.find_state("Jump")
-	if entity.has_method("get_death_screen"):
-		death_screen = entity.get_death_screen()
+	death_screen = entity.get_death_screen()
 	time_tracker = 0
 	processing_tracker = 0
 	is_tweening = false
@@ -36,6 +36,6 @@ func physics_process(delta):
 		time_tracker += delta
 		#print(time_tracker)
 		if time_tracker >= time_until_exit:
-			entity.death_logic()
+			GlobalScript.emit_signal("game_over")
 	entity.motion.y += jump_node.get_gravity() * delta
 	default_move_and_slide()

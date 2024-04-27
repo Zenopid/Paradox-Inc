@@ -40,11 +40,11 @@ func enter(_msg: = {}):
 	wall_checker.enabled = true
 	if previous_wall_direction != wall_direction:
 		jump_decay = 1
-		#Hopefully means that you jumped on another wall, because you're facing the other direction
 	super.enter()
 	
 func input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("jump"):
+		entity.sprite.flip_h = !entity.sprite.flip_h
 		jump_node.remaining_jumps += 1
 		var speed_bonus:Vector2 = jump_boost
 		speed_bonus.x = jump_boost.x if wall_direction == "left" else -jump_boost.x

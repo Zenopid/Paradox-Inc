@@ -69,6 +69,7 @@ func transition_to(target_state_name: String = "", msg: = {}, trans_anim: String
 	if can_transition:
 		if target_state_name != current_state.name or overide:
 			current_state.exit()
+			previous_state = current_state
 			if get_node(target_state_name) is State:
 				current_state = get_node(target_state_name)
 				if trans_anim:

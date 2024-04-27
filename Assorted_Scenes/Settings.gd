@@ -21,8 +21,8 @@ signal invalid_control()
 @onready var v_sync:CheckButton = $"%v_sync_enabled"
 @onready var fullscreen:CheckButton = $"%fullscreen"
 @onready var resolution: OptionButton = $"%ResolutionOptions"
-@onready var fps: OptionButton = $"%FPSOptions"
-
+@onready var target_fps: OptionButton = $"%FPSOptions"
+@onready var show_fps: CheckButton = $"%show_fps"
 #Controls
 @onready var jump_control:Button = $"%jump"
 @onready var crouch_control:Button = $TabContainer/Control/CrouchButton/crouch
@@ -72,6 +72,7 @@ func _ready():
 	init_audio_settings()
 	init_visual_settings()
 	init_control_settings()
+	GlobalScript.emit_signal("entering_settings")
 
 func init_audio_settings():
 	game_slider.value = db_to_linear(GlobalScript.audio_settings.game_volume)
@@ -91,6 +92,7 @@ func init_visual_settings():
 	camera_shake.button_pressed = GlobalScript.visual_settings.camera_shake
 	v_sync.button_pressed = GlobalScript.visual_settings.v_sync_enabled
 	fullscreen.button_pressed = GlobalScript.visual_settings.fullscreen
+	show_fps.button_pressed = GlobalScript.visual_settings.show_fps
 	
 	for i in resolution.get_item_count():
 		var text = resolution.get_item_text(i)
@@ -141,7 +143,7 @@ func init_control_settings():
 
 func check_if_setting_changed(setting_name, setting_condition):
 	#print(GlobalScript.get_setting(current_setting_tab, setting_name))
-	if setting_condition != GlobalScript.get_setting(current_setting_tab, setting_name):
+	if setting_condition != GlobalScript.get_setting(setting_name, current_setting_tab):
 		updated_settings[setting_name] = {
 			"value": setting_condition,
 			"type": current_setting_tab
@@ -251,4 +253,4 @@ func _on_visibility_changed():
 		level.visible = !visible
 
 func _on_fps_options_item_selected(index):
-	check_if_setting_changed("fps", int(fps.get_item_text(index)))
+	check_if_setting_changed("fps", int(target_fps.get_item_text(index)))

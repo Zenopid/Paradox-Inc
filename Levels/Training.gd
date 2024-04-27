@@ -1,4 +1,4 @@
-extends GenericLevel
+class_name Training extends GenericLevel
 
 @onready var box_spawn_point:Node2D = $BoxSpawnPoint
 @onready var enemy_spawn_point:Node2D = $EnemySpawnerPoint
@@ -12,10 +12,18 @@ extends GenericLevel
 @onready var past_player:AnimationPlayer = $"%PastAnimPlayer"
 @onready var training_ui:CanvasLayer = $"%TrainingUI"
 func _ready():
-	future_puzzle_tilemap.position = Vector2(388, -719)
-	paradox_puzzle_tilemap.get_parent().position = Vector2(388, -719)
-	past_puzzle_tilemap.position = Vector2(388, -719)
 	super._ready()
+	$"%PuzzleLocation".position = Vector2(388, -719)
+	$"%FuturePuzzle".position = Vector2.ZERO
+	$"%PastPuzzle".position = Vector2.ZERO
+	$"%ParadoxPuzzle".position = Vector2.ZERO
+	$"%PuzzleSwitch".position = Vector2(87.5, 2.3)
+	#var puzzle_vector: Vector2 = Vector2(388, -719)
+	#$"%FuturePuzzleNode".position = puzzle_vector
+	#$"%PastPuzzleNode".position = puzzle_vector
+	#$"%ParadoxBoxPuzzle".position = puzzle_vector
+	#$"%FuturePuzzleNode".get_child(0).position = Vector2.ZERO
+	#future_player.play("RESET")
 func _on_setting_changed(new_setting, value):
 	pass
 	
@@ -52,21 +60,22 @@ func _on_reset_pressed():
 	Engine.time_scale = 1
 	speed_slider.value = 1
 
-func _on_rotate_box_left_status_changed(new_status):
-	if new_status:
-		future_player.play("PuzzleFutureSwitch")
+
+func _on_rotate_box_right_status_changed(activated:bool):
+	if activated:
+		future_player.play("RotatePuzzleBox")
 	else:
 		future_player.pause()
 
-func _on_rotate_box_right_status_changed(new_status):
-	if new_status:
-		future_player.play_backwards("PuzzleFutureSwitch")
+func _on_rotate_box_left_activated(activated:bool):
+	if activated:
+		future_player.play_backwards("RotatePuzzleBox")
 	else:
 		future_player.pause()
 
 func _on_move_past_puzzle_pieces_status_changed(new_status):
 	if new_status:
-		past_player.play("PuzzlePastSwitch")
+		past_player.play_backwards("PuzzlePastSwitch")
 	else:
 		past_player.pause()
 

@@ -23,4 +23,5 @@ func _set_health(value: int):
 #			emit_signal("killed")
 
 func update_position(value:Vector2):
-	save_pos
+	pass
+	#save_pos

@@ -5,6 +5,17 @@ signal health_updated(health)
 signal killed()
 signal respawning()
 
+@export_category("Grapple")
+@export var grapple_pull: int = 75
+@export var max_grapple_speed: Vector2
+@export var air_grapple_boosts:int = 1
+@export var air_grapple_boost_amount:float
+@export var level_with_grapple_range: int = 30
+@export var grapple_boost_object_pull_multiplier: float = 0.3
+@export_category("Stats")
+@export var max_health: int = 100
+
+
 @onready var state_tracker:Label = $Debug/StateTracker
 @onready var health:int = max_health 
 @onready var invlv_timer = $Invlv_Timer
@@ -18,15 +29,7 @@ signal respawning()
 @onready var backdrops = $"%Backgrounds"
 @onready var UI:CanvasLayer = $"%UI"
 @onready var timeline_tracker: Label = $"%TimelineTracker"
-@export_category("Grapple")
-@export var grapple_pull: int = 75
-@export var max_grapple_speed: Vector2
-@export var air_grapple_boosts:int = 1
-@export var air_grapple_boost_amount:float
-@export var level_with_grapple_range: int = 30
-@export var grapple_boost_object_pull_multiplier: float = 0.3
-@export_category("Stats")
-@export var max_health: int = 100
+
 
 var player_info:PlayerInfo = PlayerInfo.new():
 	set(value):
@@ -69,7 +72,7 @@ func connect_signals():
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
 	GlobalScript.connect("enabling_menu", Callable(self, "_on_game_over"))
 	GlobalScript.connect("disabling_menu", Callable(self, "enable"))
-#	GlobalScript.connect("save_game_state", Callable(self, "save"))
+	GlobalScript.connect("save_game_state", Callable(self, "save"))
 
 func _on_swapped_timeline(new_timeline:String):
 #	print("changing player location to " + new_timeline)
@@ -202,11 +205,11 @@ func set_spawn(location: Vector2, res_timeline: String = "Future"):
 	respawn_timeline = res_timeline
 
 func _set_health(value):
-	var prev_health = health
-	health = clamp(value, 0, max_health)
-	if health != prev_health:
-		emit_signal("health_updated", health, 5)
-		if health <= 0:
+	var prev_health = player_info.health
+	player_info._set_health(value) 
+	if player_info.health != prev_health:
+		emit_signal("health_updated", player_info.health, 5)
+		if player_info.health <= 0:
 			kill()
 			emit_signal("killed")
 
@@ -225,6 +228,7 @@ func heal(amount):
 	_set_health(health + amount)
 
 func kill():
+	states.can_transition = true
 	states.transition_to("Dead")
 
 func _on_invlv_timer_timeout():
@@ -241,9 +245,6 @@ func respawn():
 		states.transition_to("Fall")
 	emit_signal("respawning")
 
-func death_logic():
-	GlobalScript.emit_signal("game_over")
-
 func brace():
 	player_braced = true
 
@@ -257,9 +258,8 @@ func change_grapple_status(status:bool):
 func save() -> Dictionary:
 	var save_data = {
 		"global_position": global_position,
-		"health": health,
+		"health": player_info.health,
 		"items": items,
-		"name": "Player",
 	}
 #	SaveSystem.set_var("Player", player_data)
 	SaveSystem.set_var("Player", save_data)
@@ -276,4 +276,5 @@ func load_from_file():
 #			set_indexed(get_indexed(i), player_data[i])
 #		else:
 #			set(get(i), player_data[i])
+
 

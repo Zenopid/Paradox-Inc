@@ -122,4 +122,4 @@ libraries = {
 "": SubResource("AnimationLibrary_vp8n7")
 }
 
-[connection signal="body_entered" from="Detection" to="." method="_on_body_entered" flags=18]
+[connection signal="body_entered" from="Detection" to="." method="_on_body_entered"]

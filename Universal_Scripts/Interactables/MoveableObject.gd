@@ -1,3 +1,4 @@
+
 class_name MoveableObject extends RigidBody2D
 
 const MAX_FRAMES_WITHOUT_PUSHING:int = 10
@@ -86,7 +87,7 @@ func check_state(timeline: String):
 #		disable()
 
 func disable():
-	modulate.a  = 0.2
+	modulate.a  = 0.35
 	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_CAST_RAY) #need less collision checks hopefully, so we can demote it to just rays
 	current_state = state.DISABLED
 func enable():
@@ -164,7 +165,12 @@ func become_paradox():
 func become_normal():
 	anim_player.play("Return")
 	is_paradox = false
-	set_timeline(current_level.get_current_timeline())
+	var new_timeline = current_level.get_current_timeline()
+	if new_timeline == "Future":
+		set_collision(true, false)
+	else:
+		set_collision(false, true)
+	current_timeline = new_timeline
 	current_state = state.ENABLED
 
 func get_id():

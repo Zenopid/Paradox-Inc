@@ -44,7 +44,10 @@ func enter(msg: = {}):
 				superjumping = true
 				#print_debug("Superjumping!")
 			"overwrite_speed":
-				jump_speed = msg["overwrite_speed"]
+				if msg["overwrite_speed"].x != -1:
+					jump_speed.x = msg["overwrite_speed"].x
+				if msg["overwrite_speed"].y != -1:
+					jump_speed.y = msg["overwrite_speed"].y
 			"double_jump_multiplier":
 				double_jump_multiplier = msg["double_jump_multiplier"]
 	if grounded() or !state_machine.get_timer("Coyote").is_stopped():
@@ -56,7 +59,9 @@ func enter(msg: = {}):
 			boost = msg["double_jump_bonus_speed"]
 			#print("adding boost of " + str(boost) )
 		double_jump(double_jump_multiplier, boost)
-	
+	if state_machine.previous_state.name == "Slide":
+		print("from slide")
+		print("velocity:" + str(entity.motion))
 
 func physics_process(delta):
 	if enter_dodge_state():
