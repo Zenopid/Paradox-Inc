@@ -1,4 +1,4 @@
-extends MoveState
+extends PlayerMoveState
 
 var superjump_timer: Timer
 var fall_scipt:Fall
@@ -18,12 +18,10 @@ func enter(_msg:= {}):
 
 func physics_process(_delta):
 	var was_on_floor = grounded()
-	entity.motion.x *= decelerate_value
-#	if entity.motion.y < fall_scipt.maximum_fall_speed:
-#		entity.motion.y += jump_script.get_gravity()
-	entity.motion.y = clamp(entity.motion.y, entity.motion.y + jump_script.get_gravity(), fall_scipt.maximum_fall_speed)
+	entity.velocity.x *= decelerate_value
+	entity.velocity.y = clamp(entity.velocity.y, entity.velocity.y + jump_script.get_gravity(), fall_scipt.maximum_fall_speed)
 	get_movement_input()
-	default_move_and_slide()
+	entity.move_and_slide()
 	
 	if was_on_floor and !grounded() and coyote_timer.is_stopped():
 		coyote_timer.start()
@@ -37,10 +35,10 @@ func input(_event):
 	if Input.is_action_just_pressed("jump"):
 		state_machine.transition_to("Jump", {can_superjump = true})
 		return 
+	if enter_dodge_state():
+		return
 	if !Input.is_action_pressed("crouch"):
 		enter_move_state()
-		return
-	if enter_dodge_state():
 		return
 
 func exit() -> void:

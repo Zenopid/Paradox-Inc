@@ -133,11 +133,14 @@ func set_collision(future_collision_values: bool = true, past_collision_values: 
 	
 	set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, future_collision_values)
 	set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, past_collision_values)
+	
+	set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, future_collision_values)
+	set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, past_collision_values)
 
-func damage(amount):
+
+func damage(amount: int):
 	if amount == 0:
 		return
-	amount = roundi(amount)
 	health -= amount
 	if health <= 0:
 		destroy()
@@ -156,6 +159,8 @@ func queued_destruction() -> bool:
 	return being_destroyed
 	
 func become_paradox():
+	if is_paradox:
+		return
 	anim_player.play("Become Paradox")
 	is_paradox = true
 	set_collision(true, true)

@@ -14,12 +14,12 @@ func _ready():
 		textbox.text = "Heal Box"
 
 
-func _on_value_changed(value):
+func _on_value_changed(new_value):
 	if heal_player:
-		damage_box.damage = -value
+		damage_box.damage = -new_value
 	else:
-		damage_box.damage = value
-	if value == 0:
+		damage_box.damage = new_value
+	if new_value == 0:
 		damage_box.monitoring = false
 		damage_box.set_debug_color(enabled_color)
 	else:

@@ -1,9 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://c4fjnew0fybpk"]
+[gd_scene load_steps=7 format=3 uid="uid://c4fjnew0fybpk"]
 
 [ext_resource type="Script" path="res://Opening_Scenes/MainMenu.gd" id="1_3biwq"]
 [ext_resource type="FontFile" uid="uid://by1k102hd7hkp" path="res://fonts/Pixellari.ttf" id="1_l6hr5"]
 [ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="2_l0nly"]
-[ext_resource type="PackedScene" uid="uid://do42anfb1sgba" path="res://Assorted_Scenes/settings.tscn" id="4_krxrd"]
 [ext_resource type="PackedScene" uid="uid://clrxebh7buvqx" path="res://Levels/level_end.tscn" id="5_j4oom"]
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="6_tlju2"]
 [ext_resource type="Texture2D" uid="uid://jpeltdmpbm5p" path="res://Sprites/UI_Sprites/exit_symbol1.png" id="7_ctq1j"]
@@ -115,11 +114,6 @@ focus_neighbor_right = NodePath("../../Exit")
 focus_neighbor_bottom = NodePath("../Start")
 focus_next = NodePath("../Start")
 text = "Settings"
-
-[node name="Settings" parent="." instance=ExtResource("4_krxrd")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
 
 [node name="LevelEnd" parent="." instance=ExtResource("5_j4oom")]
 unique_name_in_owner = true
@@ -260,7 +254,8 @@ theme_override_fonts/font = ExtResource("6_tlju2")
 theme_override_font_sizes/font_size = 96
 text = "SCHEDULE"
 
-[node name="Levels" type="GridContainer" parent="LevelSelect"]
+[node name="LevelButtons" type="GridContainer" parent="LevelSelect"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -274,13 +269,13 @@ grow_vertical = 2
 columns = 2
 metadata/_edit_group_ = true
 
-[node name="Training" parent="LevelSelect/Levels" groups=["Levels"] instance=ExtResource("2_l0nly")]
+[node name="Training" parent="LevelSelect/LevelButtons" groups=["Levels"] instance=ExtResource("2_l0nly")]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 1
 text = "Training"
 
-[node name="Emergence" parent="LevelSelect/Levels" groups=["Levels"] instance=ExtResource("2_l0nly")]
+[node name="Emergence" parent="LevelSelect/LevelButtons" groups=["Levels"] instance=ExtResource("2_l0nly")]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 1
@@ -288,16 +283,13 @@ text = "Emergence"
 
 [node name="Return" parent="LevelSelect" instance=ExtResource("2_l0nly")]
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
+anchors_preset = 2
 anchor_top = 1.0
-anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -122.0
-offset_top = -32.0
-offset_right = -11.0
-offset_bottom = -10.0
-grow_horizontal = 0
+offset_left = 20.0
+offset_top = -42.0
+offset_right = 131.0
+offset_bottom = -20.0
 grow_vertical = 0
 text = "Return"
 

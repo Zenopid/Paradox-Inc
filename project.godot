@@ -167,13 +167,16 @@ boost={
 2d_physics/layer_14="Boundary (Past)"
 2d_physics/layer_15="Hook (Future)"
 2d_physics/layer_16="Hook (Past)"
-2d_physics/layer_17="Wander Area"
+2d_physics/layer_17="Projectile (Future)"
+2d_physics/layer_18="Projectile (Past)"
 
 [physics]
 
-2d/solver/solver_iterations=24
+common/physics_ticks_per_second=120
+common/max_physics_steps_per_frame=16
 
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
 anti_aliasing/quality/msaa_2d=1
+2d/snap/snap_2d_transforms_to_pixel=true

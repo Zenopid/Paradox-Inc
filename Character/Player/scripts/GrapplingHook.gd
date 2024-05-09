@@ -38,10 +38,11 @@ signal detached()
 var flying: bool = false
 var attached:bool = false 
 var direction := Vector2.ZERO
-var grappled_object
+var grappled_object:Node2D
 var attachment_point := Vector2.ZERO
 var gravity_amount: int = 0
 var hook_visible:bool = false 
+var can_pull_object:bool = false
 
 func _ready():
 	connect("attached_object", Callable(self, "_on_object_grappled"))
@@ -94,8 +95,6 @@ func _on_swapped_timeline(new_timeline:String ):
 func shoot(dir: Vector2 = Vector2.ZERO) :
 	anim_player.play("RESET")
 	if cooldown_timer.is_stopped():
-		if dir == Vector2.ZERO:
-			dir = get_viewport().get_mouse_position()
 		direction = dir.normalized()
 		flying = true
 		hook_location = self.global_position
@@ -148,17 +147,18 @@ func _physics_process(delta):
 				object.damage(damage)
 	elif attached:
 		if grappled_object:
-			if !grappled_object.queued_destruction():
+			if !grappled_object.is_queued_for_deletion():
 				hook_body.global_position = grappled_object.global_position + attachment_point
 	hook_location = hook_body.global_position
 
 
 func _on_object_grappled(object):
-	if object is MoveableObject:
+	if !object is TileMap:
 		grappled_object = object
+	if object is MoveableObject:
+		can_pull_object = true 
 		grappled_object.add_to_group("Grappled Objects")
-		if object.has_method("become_paradox"):
-			grappled_object.become_paradox()
+		grappled_object.become_paradox()
 	attachment_point = object.global_position - hook_body.global_position
 
 func _on_grapple_detatched():
@@ -166,6 +166,7 @@ func _on_grapple_detatched():
 		grappled_object.remove_from_group("Grappled Objects")
 		if grappled_object.has_method("become_normal"):
 			grappled_object.become_normal()
+	can_pull_object = false
 	grappled_object = null
 	attachment_point = Vector2.ZERO
 	links.hide()
@@ -188,6 +189,12 @@ func get_speed():
 		gravity_amount = clamp(gravity_amount, 0, max_fall_speed)
 	else:
 		gravity_amount = 0
-	var speed: Vector2 = ((direction * launch_speed ) + player.motion) * get_physics_process_delta_time()
+	var speed: Vector2 = ((direction * launch_speed ) + player.velocity) * get_physics_process_delta_time()
 	speed.y += gravity_amount
 	return speed
+
+func object_pullable() -> bool:
+	if grappled_object:
+		if can_pull_object and !grappled_object.is_queued_for_deletion():
+			return true
+	return false

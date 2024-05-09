@@ -1,1 +1,1 @@
-extends MoveState
+extends PlayerMoveState

@@ -1,17 +1,18 @@
 class_name Entity extends CharacterBody2D
 
-var move = 100
-var motion: Vector2
-var jump_force: int = 200
+@export_enum ("Future", "Past", "Inherit Level's Timeline") var current_timeline:String = "Future"
 
+var move = 100
+var jump_force: int = 200
+var current_level: GenericLevel
 
 @onready var anim_player: AnimationPlayer = get_node("SpriteAnimator")
 @onready var sfx: AudioStreamPlayer = get_node("AudioStreamPlayer")
 @onready var states: EntityStateMachine = get_node_or_null("StateMachine")
-@export_enum ("Future", "Past", "Inherit Level's Timeline") var current_timeline:String = "Future"
 @onready var health_bar:HealthBar = $"%HealthBar"
 @onready var debug_ui:Node2D = get_node_or_null("Debug")
-var current_level: GenericLevel
+
+var invlv_type:String = "None"
 
 func _ready():
 	if typeof(states) == TYPE_NIL:
@@ -50,3 +51,11 @@ func heal(amount):
 
 func get_state_machine():
 	return states
+	
+func get_invlv_type() -> String:
+	return invlv_type
+
+func set_invlv_type(type:String):
+	invlv_type = type
+	if invlv_type == "":
+		invlv_type = "None"

@@ -9,9 +9,9 @@ func physics_process(delta):
 	super.physics_process(delta)
 	if frame == 5:
 		if entity.sprite.flip_h:
-			entity.motion.x -= lunge_distance * ( 1 - get_movement_input() )
+			entity.velocity.x -= lunge_distance * ( 1 - get_movement_input() )
 		else:
-			entity.motion.x += lunge_distance  * ( 1 + get_movement_input() )
+			entity.velocity.x += lunge_distance  * ( 1 + get_movement_input() )
 	if frame == 9:
 		var hitbox_info = {
 			"position": Vector2(17.475, 7.049),

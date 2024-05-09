@@ -1,9 +1,9 @@
-class_name AirState extends PlayerBaseState
+class_name PlayerAirState extends PlayerBaseState
 
 @export var push:int = 100
 
 var remaining_jumps:int = 0
-var air_acceleration: int = 20
+var air_acceleration: int = 17
 var max_speed: int = 250
 
 func enter(_msg: ={}):
@@ -13,21 +13,21 @@ func enter(_msg: ={}):
 func physics_process(_delta):
 	if get_movement_input() != 0:
 		if facing_left():
-			if entity.motion.x > -max_speed:
-				entity.motion.x -= air_acceleration
-				if entity.motion.x < -max_speed:
-					entity.motion.x = -max_speed
+			if entity.velocity.x > -max_speed:
+				entity.velocity.x -= air_acceleration
+				if entity.velocity.x < -max_speed:
+					entity.velocity.x = -max_speed
 		else:
-			if entity.motion.x < max_speed:
-				entity.motion.x += air_acceleration
-				if entity.motion.x > max_speed:
-					entity.motion.x = max_speed
+			if entity.velocity.x < max_speed:
+				entity.velocity.x += air_acceleration
+				if entity.velocity.x > max_speed:
+					entity.velocity.x = max_speed
 		
 	if enter_attack_state():
 		return
 	
 func default_move_and_slide():
-	super.default_move_and_slide()
+	entity.move_and_slide()
 	push_objects()
 
 func push_objects():

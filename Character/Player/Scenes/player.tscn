@@ -1,4 +1,4 @@
-[gd_scene load_steps=154 format=3 uid="uid://68mxs8vrodes"]
+[gd_scene load_steps=156 format=3 uid="uid://68mxs8vrodes"]
 
 [ext_resource type="Script" path="res://Character/Player/scripts/Player.gd" id="1_d84qb"]
 [ext_resource type="Texture2D" uid="uid://ccnj5krx1gyit" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-crouch-00.png" id="2_nbwc8"]
@@ -424,6 +424,8 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b022k"]
 size = Vector2(22.008, 29.1196)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1x5fu"]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_m7p17"]
 size = Vector2(18, 19.4)
 
@@ -705,7 +707,7 @@ tracks/0/path = NodePath("StateMachine/Dodge")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.333333),
+"times": PackedFloat32Array(0.15),
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
@@ -1300,6 +1302,60 @@ tracks/3/keys = {
 "values": [0, 1, 2, 3]
 }
 
+[sub_resource type="Animation" id="Animation_qotqj"]
+resource_name = "Jump Squat"
+length = 0.0166683
+loop_mode = 1
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Crouch"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hurtbox:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 8)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Hurtbox:shape")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("RectangleShape2D_m7p17")]
+}
+
 [sub_resource type="Animation" id="Animation_o4wer"]
 length = 0.001
 tracks/0/type = "value"
@@ -1592,6 +1648,7 @@ _data = {
 "Grounded_Attack_3": SubResource("Animation_l28g0"),
 "Idle": SubResource("Animation_hgcaq"),
 "Jump": SubResource("Animation_wrlkf"),
+"Jump Squat": SubResource("Animation_qotqj"),
 "RESET": SubResource("Animation_o4wer"),
 "Run": SubResource("Animation_pikag"),
 "Slide": SubResource("Animation_444l8"),
@@ -1680,7 +1737,6 @@ collision_layer = 0
 collision_mask = 0
 floor_max_angle = 1.10479
 script = ExtResource("1_d84qb")
-max_grapple_speed = Vector2(900, 900)
 air_grapple_boost_amount = 0.25
 current_timeline = "Inherit Level's Timeline"
 
@@ -1697,7 +1753,7 @@ fall_multiplier = 5.0
 rise_multiplier = 10.5
 sideways_multiplier = 5.5
 boost_speed = Vector2(300, 300)
-pull_speed = Vector2(20, 50)
+pull_speed = Vector2(15, 40)
 
 [node name="UI" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
@@ -1824,6 +1880,7 @@ hitbox = ExtResource("58_tx02o")
 
 [node name="GroundedAttack1" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("71_wsv55")
+buffer_window = 17
 buffer_attack = "GroundedAttack2"
 lunge_distance = 150
 hitstop = 8
@@ -1832,6 +1889,7 @@ friction = 0.4
 
 [node name="GroundedAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("72_t4ijd")
+buffer_window = 17
 buffer_attack = "GroundedAttack3"
 hitstop = 8
 animation_name = "Grounded_Attack_2"
@@ -1849,17 +1907,9 @@ animation_name = "Grounded_Attack_3"
 script = ExtResource("74_kxsit")
 damage = 15
 duration = 5
-knockback_amount = null
 object_push = Vector2(500, 50)
-buffer_window = null
+buffer_window = 17
 buffer_attack = "AirAttack2"
-dodge_cancellable = null
-dodge_window = null
-camera_shake_strength = null
-air_acceleration = null
-gravity_modifier = null
-landing_lag = null
-hitstop = null
 animation_name = "AirAttack1"
 friction = 1.0
 attack_type = "Air"
@@ -1868,17 +1918,7 @@ attack_type = "Air"
 script = ExtResource("88_lli4y")
 damage = 10
 duration = 3
-knockback_amount = null
 object_push = Vector2(200, -350)
-buffer_window = null
-buffer_attack = null
-dodge_cancellable = null
-dodge_window = null
-camera_shake_strength = null
-air_acceleration = null
-gravity_modifier = null
-landing_lag = null
-hitstop = null
 animation_name = "AirAttack2"
 friction = 1.0
 attack_type = "Air"
@@ -1890,19 +1930,11 @@ minimum_damage = 15
 maximum_damage = 45
 height_scaler = 0.1
 duration = 7
-knockback_amount = null
 object_push = Vector2(1000, -650)
-buffer_window = null
-buffer_attack = null
-dodge_cancellable = null
 dodge_window = -1
 camera_shake_strength = 3.0
-air_acceleration = 0
-gravity_modifier = null
 landing_lag = 0
 hitstop = 22
-animation_name = null
-friction = null
 attack_type = "Air"
 
 [node name="LandingLag" type="Node" parent="StateMachine/Attack"]
@@ -1912,9 +1944,9 @@ hitstop = 0
 
 [node name="Crouch" type="Node" parent="StateMachine"]
 script = ExtResource("34_j5ybi")
+decelerate_value = 0.2
 acceleration = 0
 move_speed = 0
-coyote_duration = 0.1
 animation_name = "Crouch"
 
 [node name="Dead" type="Node" parent="StateMachine"]
@@ -1932,20 +1964,21 @@ animation_name = "Dodge"
 script = ExtResource("33_1aox5")
 maximum_fall_speed = 700
 buffer_duration = 0.1
+bunny_hop_boost = null
 push = 150
 animation_name = "Fall"
 
 [node name="Idle" type="Node" parent="StateMachine"]
 script = ExtResource("3_4sr6w")
-coyote_duration = 0.1
+move_speed = 250
 animation_name = "Idle"
 
 [node name="Jump" type="Node" parent="StateMachine"]
 script = ExtResource("32_nkne8")
+jump_squat_frames = 7
 jump_height = 120.0
 jump_time_to_peak = 0.5
 jump_time_to_descent = 0.4
-jump_speed_decrease_on_released_button = 0.35
 minimum_doublejump_speed = 250
 animation_name = "Jump"
 
@@ -1972,10 +2005,7 @@ monitorable = false
 
 [node name="Run" type="Node" parent="StateMachine"]
 script = ExtResource("4_2r8jj")
-acceleration = 31
 move_speed = 250
-coyote_duration = 0.1
-push = 100
 animation_name = "Run"
 
 [node name="Slide" type="Node" parent="StateMachine"]
@@ -1983,9 +2013,12 @@ script = ExtResource("35_tkmwk")
 slide_acceleration = 10
 slide_deceleration = 10
 slide_speed = 425
+slide_cooldown = 0.45
 coyote_duration = 0.1
 jump_height = 40.0
 jump_time_to_peak = 0.25
+gravity_acceleration = 10
+max_gravity = 900
 push = 500
 animation_name = "Slide"
 
@@ -1993,8 +2026,8 @@ animation_name = "Slide"
 script = ExtResource("101_lae4r")
 eject_timer = 0.2
 crouch_slide_boost = 10
-wallslide_cooldown = 0.0
 jump_decay_rate = 0.15
+minimum_jump_decay = 0.05
 animation_name = "WallSlide"
 
 [node name="Timers" type="Node" parent="StateMachine"]
@@ -2011,7 +2044,7 @@ one_shot = true
 wait_time = 0.2
 one_shot = true
 
-[node name="Walljump_Cooldown" type="Timer" parent="StateMachine/Timers"]
+[node name="Wallbounce" type="Timer" parent="StateMachine/Timers"]
 wait_time = 0.2
 one_shot = true
 
@@ -2023,16 +2056,9 @@ one_shot = true
 
 [node name="Raycasts" type="Node" parent="StateMachine"]
 
-[node name="WallChecker" type="RayCast2D" parent="StateMachine/Raycasts" groups=["Collision"]]
-unique_name_in_owner = true
-position = Vector2(-12.55, -10.5)
-scale = Vector2(4, 1)
-target_position = Vector2(0, 25)
-collision_mask = 1024
-hit_from_inside = true
-
 [node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts" groups=["Collision"]]
 unique_name_in_owner = true
+visible = false
 position = Vector2(0, 13.5)
 scale = Vector2(2, 1)
 target_position = Vector2(0, 10)
@@ -2041,6 +2067,7 @@ hit_from_inside = true
 
 [node name="SlopeCheckerRight" type="RayCast2D" parent="StateMachine/Raycasts" groups=["Collision"]]
 unique_name_in_owner = true
+visible = false
 position = Vector2(0, 19)
 enabled = false
 target_position = Vector2(30, 0)
@@ -2049,11 +2076,22 @@ hit_from_inside = true
 
 [node name="SlopeCheckerLeft" type="RayCast2D" parent="StateMachine/Raycasts" groups=["Collision"]]
 unique_name_in_owner = true
+visible = false
 position = Vector2(0, 19)
 enabled = false
 target_position = Vector2(-30, 0)
 collision_mask = 256
 hit_from_inside = true
+
+[node name="ShapeCasts" type="Node" parent="StateMachine"]
+unique_name_in_owner = true
+
+[node name="WallScanner" type="ShapeCast2D" parent="StateMachine/ShapeCasts"]
+unique_name_in_owner = true
+position = Vector2(-12.55, -10.5)
+shape = SubResource("RectangleShape2D_1x5fu")
+target_position = Vector2(0, 25)
+collision_mask = 1024
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 

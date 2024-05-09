@@ -19,7 +19,7 @@ var hit_stop: int = 0
 var duration:int = 10
 
 @onready var state_machine: EntityStateMachine
-@onready var hitbox_owner 
+@onready var hitbox_owner : Entity
 @onready var hitbox: CollisionShape2D = get_node("Shape")
 
 var framez = 0.0
@@ -56,19 +56,19 @@ func set_parameters(hitbox_info: = {}):
 			print("-------------------------------------------")
 		visible = true 
 	else:
-		print_debug(hitbox_owner + " created hitbox without info.")
+		print_debug(hitbox_owner.name + " created hitbox without info.")
 		queue_free()
 	
 
 func update_extends():
 	hitbox.shape.size = Vector2(width, height)
-#	hitbox.position = position
+	#hitbox.position = position
 	if GlobalScript.debug_enabled:
 		print("making rectangle")
 		var rect:ColorRect = ColorRect.new()
 		rect.size = hitbox.shape.size
 		rect.color = hitbox.debug_color
-		rect.position = position
+		#rect.position += hitbox.position
 		add_child(rect)
 
 func _ready():
@@ -97,14 +97,20 @@ func _physics_process(delta:float ) -> void:
 
 func _on_body_entered(body):
 	if body is RigidBody2D:
+		if global_position > body.global_position:
+			object_push = -abs(object_push)
+		else:
+			object_push = abs(object_push)
 		body.call_deferred("apply_central_impulse",object_push)
 		emit_signal("hitbox_collided", body)
 		body.damage(damage)
 	elif body is Entity:
 		if body != hitbox_owner:
-			damage_entity(body)
-			if body.has_method("apply_push"):
-				body.apply_push(object_push)
+			var invlv_type:String = body.get_invlv_type()
+			if !invlv_type.contains("Strike"):
+				damage_entity(body)
+				if body.has_method("apply_push"):
+					body.apply_push(object_push)
 	elif body is Hitbox:
 		#Check to see if one person is actually hitting the other.
 		for i in get_overlapping_bodies():

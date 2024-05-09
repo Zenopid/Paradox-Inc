@@ -2,6 +2,7 @@ class_name Checkpoint extends Area2D
 
 signal reached_checkpoint()
 
+@export var checkpoint_number:int = 1
 @export var disabled_color: Color
 @export var enabled_color: Color
 
@@ -30,7 +31,7 @@ func _on_body_entered(body):
 			GlobalScript.emit_signal("save_game_state")
 			set_deferred("monitoring",false)
 			set_deferred("monitorable", false)
-			emit_signal("reached_checkpoint")
+			emit_signal("reached_checkpoint", checkpoint_number)
 
 func save() -> Dictionary:
 	var checkpoints = SaveSystem.get_var("Checkpoint")

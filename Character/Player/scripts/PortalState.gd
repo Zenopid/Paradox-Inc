@@ -22,11 +22,11 @@ func enter(msg: = {}) -> void:
 	active_portal = get(active_portal_name.to_lower())
 	original_state_name = original_state.name
 	
-
-func input(event):
-	original_state.input(event)
-	if !Input.is_action_pressed(active_portal_name):
-		state_machine.transition_to(original_state_name,{},"",false, true)
+#
+#func input(event):
+	#original_state.input(event)
+	#if !Input.is_action_pressed(active_portal_name):
+		#state_machine.transition_to(original_state_name,{},"",false, true)
 
 func process(delta):
 	original_state.process(delta)
@@ -38,5 +38,5 @@ func anim_over():
 	if active_portal:
 		active_portal.position = get_viewport().get_camera_2d().get_global_mouse_position()
 		active_portal.change_portal_state()
-	state_machine.transition_to(original_state_name,{},"", false, true)
+	#state_machine.transition_to(original_state_name,{},"", false, true)
 	return

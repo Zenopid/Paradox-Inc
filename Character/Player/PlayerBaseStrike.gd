@@ -1,5 +1,7 @@
 class_name PlayerBaseStrike extends BaseStrike
 
+const STICK_TO_GROUND: int = 140
+
 @export_category("Buffer Variables")
 @export var buffer_window: int = 13
 @export var buffer_attack: String = "None"
@@ -15,6 +17,8 @@ class_name PlayerBaseStrike extends BaseStrike
 
 var attack_state: PlayerAttack
 var can_dodge:bool 
+
+
 func init(current_entity:Entity):
 	entity = current_entity
 	attack_state = get_parent()
@@ -41,6 +45,7 @@ func on_attack_hit(object):
 		GlobalScript.hitstop_manager.apply_hitstop(hitstop)
 
 func physics_process(delta: float):
+	entity.velocity.y = STICK_TO_GROUND
 	super.physics_process(delta)
 	if !grounded():
 		entity.states.transition_to("Fall")
@@ -48,6 +53,7 @@ func physics_process(delta: float):
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)
 	if frame >= dodge_window:
 		can_dodge = false
+	entity.move_and_slide()
 
 func input(event):
 	super.input(event)
@@ -65,7 +71,7 @@ func start_buffer_attack():
 	attack_state.use_attack(buffer_attack)
 	return
 
-func _on_attack_over(name_of_attack):
+func _on_attack_over(name_of_attack:String):
 	if !can_cancel:
 		emit_signal("attack_whiffed", animation_name)
 	if buffer_tracker > 0 and buffer_attack != "None" or buffer_window == -1:
@@ -76,3 +82,4 @@ func _on_attack_over(name_of_attack):
 func exit():
 	super.exit()
 	buffer_tracker = 0
+	entity.velocity.y = 0

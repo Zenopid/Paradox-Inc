@@ -1,0 +1,28 @@
+Paradox v0.4.3 Patch Notes
+
+I hate using Pixels Per Second so
+
+100 pixels = 1 meter
+
+MPS = Meters Per Second
+
+Bug Fixes
+-Fixed a bug where you could triple jump out of a slide.
+-Fixed a bug where fireballs acted like walls and stopped your movement.
+
+Player
+
+Attack buffer window for 3 hit combo increased (13 -> 17)
+
+Can now wallslide out of a jump
+	-Previously could only wallslide while falling
+	-If you don't want to wallslide, hold the jump button
+
+Jump squat frames increased (0 frames -> 2 frames)
+
+Reduced grapple pull speed (0.2 mps horizontally, 0.5 mps vertically) -> (0.15 mps, 0.4 mps )
+Increased grapple projectile speed (105 mps -> 115 mps)
+
+Paraghoul
+-Fireballs now actually do damage
+-Fireballs now point in the direction they're going

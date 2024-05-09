@@ -1,6 +1,8 @@
-class_name MoveState extends PlayerBaseState
+class_name PlayerMoveState extends PlayerBaseState
 
 signal turned_around()
+
+const STICK_TO_GROUND: int = 140
 
 @export var acceleration = 25
 @export var move_speed = 125
@@ -64,13 +66,14 @@ func physics_process(delta:float) -> void:
 	slope_ray_right.position = Vector2(entity.position.x + 1, entity.position.y + 13.5)
 	var slope_checker:RayCast2D
 
-	var was_on_floor = entity.is_on_floor()
+	var was_on_floor = grounded()
 	var move = get_movement_input()
+	entity.velocity.y  = STICK_TO_GROUND
 	if move != 0:
-		entity.motion.x += acceleration * move
-		entity.motion.x = clamp(entity.motion.x, -move_speed, move_speed)
+		entity.velocity.x += acceleration * move
+		entity.velocity.x = clamp(entity.velocity.x, -move_speed, move_speed)
 	else:
-		entity.motion.x *= DECEL_VALUE
+		entity.velocity.x *= DECEL_VALUE
 	var normal = (ground_checker.get_collision_normal().angle_to(entity.up_direction))
 	if normal < 0.02 and normal > -0.02:
 		default_move_and_slide()
@@ -94,11 +97,15 @@ func push_objects():
 		if collision.get_collider() is MoveableObject:
 			collision.get_collider().call_deferred("apply_central_impulse", -collision.get_normal() * push ) 
 
+func default_move_and_slide():
+	entity.set_max_slides(4)
+	entity.set_floor_max_angle(PI/4)
+	entity.move_and_slide()
+	
 func move_and_slide_with_slopes(delta):
 	if state_machine.get_current_state().name != "Idle":
-		entity.motion.y += jump_script.get_gravity() * delta
-		entity.motion.y = clamp(entity.motion.y, 0, fall_script.maximum_fall_speed)
-	entity.set_velocity(entity.motion)
+		entity.velocity.y += jump_script.get_gravity() 
+		entity.velocity.y = clamp(entity.velocity.y, 0, fall_script.maximum_fall_speed)
 	entity.set_floor_stop_on_slope_enabled(true)
 	entity.set_max_slides(1)
 	entity.set_floor_max_angle(PI/2)
@@ -126,7 +133,7 @@ func calculate_slope(delta, ray: RayCast2D):
 			entity.set_up_direction(ray.get_collision_normal())
 		else:
 			entity.set_up_direction(Vector2.UP)
-#		entity.motion -= entity.up_direction * delta
+#		entity.velocity -= entity.up_direction * delta
 
 func ascending_slope() -> bool:
 	if facing_left():
@@ -138,6 +145,7 @@ func ascending_slope() -> bool:
 	return true 
 
 func exit() -> void:
+	entity.velocity.y = 0
 	coyote_timer.stop()
 	entity.floor_snap_length = 1
 	entity.safe_margin = 0.08

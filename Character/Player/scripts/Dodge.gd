@@ -9,7 +9,8 @@ extends PlayerBaseState
 @export var dodge_speed: int = 50
 @export var inital_fall_speed: int = 100
 @export var dodge_cooldown: float = 0.9
-@export var dodge_invlv_frames: int = 13
+@export var strike_invlv_frames: int = 7
+@export var proj_invlv_frames: int = 13
 
 var facing: String 
 
@@ -34,51 +35,61 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	bunny_hop_boost = fall_node.bunny_hop_boost
 	
 func enter(_msg: = {}):
+	entity.set_collision_layer_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
+	entity.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PAST, false)
+	entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, false)
+	entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, false)
+	entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
+	entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
+	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, false)
+	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, false)
+	entity.set_invlv_type("StrikeProj")
 	var move = get_movement_input()
 	frame_tracker = 0
 	super.enter()
 	entity.anim_player.connect("animation_finished", Callable(self, "end_dodge"))
-#	if entity.motion.y > inital_fall_speed:
-#		entity.motion.y = inital_fall_speed
-	entity.motion.y = clamp(entity.motion.y, inital_fall_speed, fall_node.maximum_fall_speed)
+	entity.velocity.y = clamp(entity.velocity.y, inital_fall_speed, fall_node.maximum_fall_speed)
 	if move < 0:
-		if entity.motion.x > 0:
-			entity.motion.x = 0
+		if entity.velocity.x > 0:
+			entity.velocity.x = 0
 	else:
-		if entity.motion.x < 0:
-			entity.motion.x = 0
-	entity.motion.x += dodge_boost * move
-	if abs(entity.motion.x) > dodge_speed: 
-		return
-	if facing_left():
-		entity.motion.x = -dodge_speed
-	else:
-		entity.motion.x = dodge_speed
-	entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, false)
-	entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, false)
-
+		if entity.velocity.x < 0:
+			entity.velocity.x = 0
+	entity.velocity.x += dodge_boost * move
 func physics_process(delta: float):
 	frame_tracker += 1
-	if frame_tracker >= dodge_invlv_frames:
-		if entity.current_level.name == "Future":
-			entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, true)
-		else:
-			entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, true)
-	entity.motion.y += jump_node.get_gravity() * delta
-	entity.motion.y = clamp(entity.motion.y, 0, fall_node.maximum_fall_speed)
-	default_move_and_slide()
-	if dodge_over:
-		leave_dodge()
+	if frame_tracker >= strike_invlv_frames: 
+		entity.set_invlv_type( entity.invlv_type.replace("Strike", "") )
+	if frame_tracker >= proj_invlv_frames:
+		entity.set_invlv_type ( entity.invlv_type.replace("Proj", "") )
+	entity.velocity.y += jump_node.get_gravity() 
+	entity.velocity.y = clamp(entity.velocity.y, 0, fall_node.maximum_fall_speed)
+	entity.move_and_slide()
+	if grounded():
+		entity.velocity.y = -1
 	if is_actionable:
-		if enter_jump_state():
-			return
-		if grounded():
+		if Input.is_action_just_pressed("jump"):
+			if !grounded() and jump_node.remaining_jumps > 0:
+				if !jump_buffer.is_stopped():
+					entity.velocity.x *= 1 + bunny_hop_boost
+				state_machine.transition_to("Jump")
+				return
+			elif grounded():
+				state_machine.transition_to("Jump")
+				return
+		elif grounded():
+			if enter_jump_state():
+				return
 			if enter_crouch_state():
 				return
 			if get_movement_input() != 0:
 				state_machine.transition_to("Run")
 				return
-			
+	if abs(entity.velocity.x) < dodge_speed: 
+		if facing_left():
+			entity.velocity.x = -dodge_speed
+		else:
+			entity.velocity.x = dodge_speed
 
 func leave_dodge():
 	if enter_jump_state():
@@ -86,7 +97,7 @@ func leave_dodge():
 	if grounded():
 		if Input.is_action_pressed("jump") or !jump_buffer.is_stopped():
 			if !jump_buffer.is_stopped():
-				entity.motion.x *= 1 + bunny_hop_boost
+				entity.velocity.x *= 1 + bunny_hop_boost
 			state_machine.transition_to("Jump", {can_superjump = superjump_timer.is_stopped()})
 			return
 		if enter_crouch_state():
@@ -100,7 +111,7 @@ func become_actionable():
 	is_actionable = true
 	
 func end_dodge(_anim_name):
-	dodge_over = true
+	leave_dodge()
 
 func get_movement_input() -> float:
 	return Input.get_axis("left", "right")
@@ -111,3 +122,14 @@ func exit():
 	dodge_over = false
 	is_actionable = false
 	entity.anim_player.disconnect("animation_finished", Callable(self, "end_dodge"))
+	if entity.get_level().get_current_timeline() == "Future":
+		entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
+		entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, true)
+		entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, true )
+		entity.set_collision_layer_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
+	else:
+		entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
+		entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, true)
+		entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, true)
+		entity.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PAST, true)
+	entity.set_invlv_type("None")

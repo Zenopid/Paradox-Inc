@@ -1,5 +1,7 @@
 class_name Training extends GenericLevel
 
+@export var elevator_speed: float = 5
+
 @onready var box_spawn_point:Node2D = $BoxSpawnPoint
 @onready var enemy_spawn_point:Node2D = $EnemySpawnerPoint
 #@onready var animation_player = $AnimationPlayer
@@ -11,6 +13,9 @@ class_name Training extends GenericLevel
 @onready var future_player:AnimationPlayer = $"%FutureAnimPlayer"
 @onready var past_player:AnimationPlayer = $"%PastAnimPlayer"
 @onready var training_ui:CanvasLayer = $"%TrainingUI"
+
+@onready var level_player:AnimationPlayer = $"%LevelAnimPlayer"
+
 func _ready():
 	super._ready()
 	$"%PuzzleLocation".position = Vector2(388, -719)
@@ -18,12 +23,13 @@ func _ready():
 	$"%PastPuzzle".position = Vector2.ZERO
 	$"%ParadoxPuzzle".position = Vector2.ZERO
 	$"%PuzzleSwitch".position = Vector2(87.5, 2.3)
-	#var puzzle_vector: Vector2 = Vector2(388, -719)
-	#$"%FuturePuzzleNode".position = puzzle_vector
-	#$"%PastPuzzleNode".position = puzzle_vector
-	#$"%ParadoxBoxPuzzle".position = puzzle_vector
-	#$"%FuturePuzzleNode".get_child(0).position = Vector2.ZERO
-	#future_player.play("RESET")
+	$"%Elevator".position = Vector2(-35, 124)
+	for i in $"%Elevator".get_children():
+		i.position = Vector2.ZERO
+	#level_player.play("MoveElevator")
+
+#func _process(delta):
+	#print(Engine.get_frames_per_second())
 func _on_setting_changed(new_setting, value):
 	pass
 	
@@ -36,7 +42,7 @@ func _on_spawner_pressed():
 	return box_instance
 func _on_clear_box_pressed():
 	for nodes in get_tree().get_nodes_in_group("Boxes"):
-		nodes.queue_free()
+		nodes.destroy()
 
 func _on_clear_enemy_pressed():
 	for nodes in get_tree().get_nodes_in_group("Training Enemies"):
@@ -86,4 +92,3 @@ func disable():
 func enable():
 	super.enable()
 	training_ui.show()
-

@@ -32,9 +32,9 @@ func _process(delta: float) -> void:
 	prev_camera_pos = get_camera_position()
 
 #func change_zoom() -> Vector2:
-#	if player.motion > Vector2(-2, -2) and player.motion < Vector2(2,2):
+#	if player.velocity > Vector2(-2, -2) and player.velocity < Vector2(2,2):
 #		return Vector2.ZERO
-#	var new_zoom = (player.motion / Vector2(125,125)) * zoom_multiplier
+#	var new_zoom = (player.velocity / Vector2(125,125)) * zoom_multiplier
 #	if zoom != new_zoom:
 #		var tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 #		tween.tween_property(self, "zoom", new_zoom,1.4 )
@@ -50,7 +50,7 @@ func _check_facing():
 		tween.tween_property(self, "position:x", target_offset, SHIFT_DURATION)
 
 #func _input(event):
-#	if event is InputEventMouseMotion:
+#	if event is InputEventMousevelocity:
 #		var target:Vector2 = event.position - get_viewport().size * 0.5
 #		if target.length() < DEAD_ZONE_MOUSE:
 #			return

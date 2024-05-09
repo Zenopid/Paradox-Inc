@@ -1,10 +1,14 @@
 class_name PlayerBaseState extends BaseState
 
+func _ready():
+	pass
+	
 func input(event):
 	if Input.is_action_just_pressed("jump"):
 		state_machine.get_timer("Jump_Buffer").start()
 	if Input.is_action_just_released("crouch"):
 		state_machine.get_timer("Superjump").start()
+	
 
 func casting_portal() -> bool:
 #	if !Input.is_action_pressed("portal_a") and !Input.is_action_pressed("portal_b"):
@@ -16,7 +20,6 @@ func enter_move_state():
 	var move_state = "Run" if get_movement_input() != 0 else "Idle"
 	state_machine.transition_to(move_state)
 	return true
-
 
 func get_movement_input() -> float:
 	var move = Input.get_axis("left", "right")
@@ -42,10 +45,10 @@ func get_inverse_movement_input(type:String ):
 
 func enter_crouch_state():
 	if Input.is_action_pressed("crouch") and grounded():
-		var movestate: MoveState = state_machine.find_state("Run")
+		var movestate: PlayerMoveState = state_machine.find_state("Run")
 		if state_machine.get_timer("Slide_Cooldown").is_stopped():
 			if get_movement_input() != 0:
-				if abs(entity.motion.x) >= movestate.move_speed:
+				if abs(entity.velocity.x) >= movestate.move_speed:
 					state_machine.transition_to("Slide")
 					return true
 		state_machine.transition_to("Crouch")
@@ -55,8 +58,10 @@ func enter_crouch_state():
 func enter_jump_state():
 	var jump_buffer:Timer = state_machine.get_timer("Jump_Buffer")
 	if Input.is_action_just_pressed("jump") or !jump_buffer.is_stopped():
+		if !grounded() and state_machine.find_state("Jump").get_jumps() <= 0:
+			return
 		if !jump_buffer.is_stopped():
-			entity.motion.x *= 1 + state_machine.find_state("Fall").bunny_hop_boost
+			entity.velocity.x *= 1 + state_machine.find_state("Fall").bunny_hop_boost
 		if Input.is_action_pressed("crouch") or !state_machine.get_timer("Superjump").is_stopped():
 			state_machine.transition_to("Jump", {can_superjump = true})
 		else: 
@@ -85,22 +90,18 @@ func enter_attack_state():
 		return true
 	return false
 
-func can_wallslide():
-	var wall_checker = state_machine.get_raycast("WallChecker")
+func can_wallslide(current_speed: float = 0):
+	var wall_checker = state_machine.get_shapecast("WallScanner")
 	var ground_checker = state_machine.get_raycast("GroundChecker")
-	var wall_jump_timer = state_machine.get_timer("Walljump_Cooldown")
-	if wall_jump_timer.is_stopped():
-		if wall_checker.is_colliding():
-			ground_checker.force_raycast_update()
-			if !ground_checker.is_colliding():
-				if wall_checker.position.x < entity.position.x:
-					if get_movement_input() < 0:
-						state_machine.transition_to("WallSlide")
-						return true
-				else:
-					if get_movement_input() > 0:
-						state_machine.transition_to("WallSlide")
-						return true
+	if wall_checker.is_colliding():
+		ground_checker.force_raycast_update()
+		if !ground_checker.is_colliding():
+			if wall_checker.position.x < entity.position.x and get_movement_input() < 0:
+				state_machine.transition_to("WallSlide", {previous_speed = current_speed})
+				return true
+			elif wall_checker.position.x > entity.position.x and get_movement_input() > 0:
+				state_machine.transition_to("WallSlide", {previous_speed = current_speed})
+				return true
 	return false
 
 func can_fall():

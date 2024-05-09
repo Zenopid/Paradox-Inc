@@ -31,7 +31,7 @@ func _ready():
 	super._ready()
 	
 	for i in get_node("Checkpoints").get_children():
-		i.connect("checkpoint_reached", Callable(self, "_on_checkpoint_reached").bind(i.name.right(i.name.find("Checkpoint"))))
+		i.connect("reached_checkpoint", Callable(self, "_on_checkpoint_reached"))
 
 func start_level():
 	super.start_level()
@@ -86,5 +86,5 @@ func _on_door_switch_status_changed(activated):
 	if activated:
 		level_animator.play("MoveDoor")
 
-func _on_checkpoint_reached(checkpoint_number:String):
-	level_animator.play("move_bounds_" + checkpoint_number)
+func _on_checkpoint_reached(checkpoint_number:int):
+	level_animator.play("move_bounds_" + str(checkpoint_number))

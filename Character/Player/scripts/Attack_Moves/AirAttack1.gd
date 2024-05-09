@@ -9,15 +9,12 @@ extends PlayerAirStrike
 #var air_hitbox:Hitbox
 
 func physics_process(delta:float):
+	super.physics_process(delta)
 	if Input.is_action_just_pressed("attack"):
 		if Input.is_action_pressed("crouch"):
 			buffer_attack = "GroundPound"
 		else:
 			buffer_attack = "AirAttack2"
-#	entity.motion.x += air_accel * get_movement_input()
-	super.physics_process(delta)
-
-	air_attack_logic()
 	if frame == 7:
 		var hitbox_info = {
 			"position": Vector2(0.375, -2.125),

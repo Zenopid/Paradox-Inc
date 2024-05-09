@@ -20,7 +20,7 @@ func _on_body_entered(body):
 			pass
 			#portals sorta ruin platforming... maybe in some form but not here.
 #			current_level.emit_signal("swap_timeline")
-#			player.motion = Vector2(player.motion.y * -1,player.motion.x * -1)
+#			player.velocity = Vector2(player.velocity.y * -1,player.velocity.x * -1)
 #			move_object(body)
 		elif body is MoveableObject and !body.sleeping:
 #				body.swap_timeline() 

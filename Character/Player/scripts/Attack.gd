@@ -39,7 +39,6 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 func create_hitbox(hitbox_info:= {}):
 	if entity.sprite.flip_h:
 		hitbox_info["position"].x  *= -1
-		hitbox_info["object_push"] *= -1
 	hitbox_info["hitbox_owner"] = entity
 #	var hitbox_location = Vector2(entity.position.x + points.x, entity.position.y + points.y)
 #	var hitbox_location = points
@@ -50,8 +49,6 @@ func create_hitbox(hitbox_info:= {}):
 	hitbox_instance.call("set_" + entity.get_level().current_timeline.to_lower() + "_collision")
 	if active_attack:
 		hitbox_instance.connect("hitbox_collided", Callable(active_attack, "on_attack_hit"))
-	else:
-		print("there's no attack.")
 	hitbox_instance.add_to_group("Player Hitboxes")
 	return hitbox_instance
 
@@ -60,7 +57,6 @@ func enter(msg: = {}):
 	ground_checker.target_position.y += 3
 	#just to make attacks more consistant. sometimes they wouldn't work on slopes
 	#cuz of hurtbox shifts
-	entity.set_collision_mask_value(4,false)
 	super.enter()
 	if entity.is_on_floor():
 		use_attack("GroundedAttack1")
@@ -84,7 +80,7 @@ func physics_process(delta: float) -> void:
 		return
 	if active_attack:
 		active_attack.physics_process(delta)
-	default_move_and_slide()
+	#entity.move_and_slide()
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	
 func use_attack(attack_name) -> bool:
@@ -125,5 +121,4 @@ func apply_lag(amount):
 func exit():
 	if active_attack:
 		active_attack.exit()
-	entity.set_collision_mask_value(4, true)
 	ground_checker.target_position = temp_position

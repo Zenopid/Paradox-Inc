@@ -1,13 +1,17 @@
 extends BaseState
 
 @export var projectile:PackedScene
+@export var random_target_amount: float = 50
+@export var acceleration: int = 1
+@export var max_speed: int = 200
 
 @onready var shoot_cooldown:Timer
 @onready var target_position:Vector2
-@onready var los_raycast: RayCast2D
+@onready var los_raycast: ShapeCast2D
+@onready var player:Player
 
 #
-const PROJECTILE_SPAWN_LOCATION = Vector2(-18, 15)
+const PROJECTILE_SPAWN_LOCATION = Vector2(18, 15)
 
 #
 #@onready var state_machine: EntityStateMachine
@@ -17,37 +21,58 @@ const PROJECTILE_SPAWN_LOCATION = Vector2(-18, 15)
 #@onready var area_node: Area2D = $"%Detection"
 #@onready var duration_timer:Timer = $"%Duration"
 
+@onready var debug_sphere:Area2D
+@onready var sphere_shape:CollisionShape2D
+@onready var chase_node
+
+var do_physics_process:bool = false
+
 func init(current_entity, s_machine: EntityStateMachine):
 	super.init(current_entity, s_machine)
 	shoot_cooldown = state_machine.get_timer("Shoot_Cooldown")
-	los_raycast = state_machine.get_raycast("LOS")
-	
-func enter(msg: = {}):
-	super.enter()
-#	print_debug(entity.name + " entered shoot state, but we don't have code for that yet, so going to idle")
-#	los_raycast.target_position = msg["target_position"]
-#	state_machine.transition_to("Idle")
-	entity.anim_player.connect("animation_finished", Callable(self, "_on_shoot_anim_over"))
+	los_raycast = state_machine.get_shapecast("LOS")
+	player = get_tree().get_first_node_in_group("Players")
+	chase_node = state_machine.find_state("Chase")
+	if GlobalScript.debug_enabled:
+		debug_sphere = Area2D.new()
+		sphere_shape = CollisionShape2D.new()
+		var shape:CircleShape2D = CircleShape2D.new()
+		shape.radius = 20
+		sphere_shape.set_shape(shape)
+		debug_sphere.add_child(sphere_shape)
+		add_child(debug_sphere)
+		debug_sphere.visible = true
 
-func _on_shoot_anim_over(anim_name):
+func enter(msg: = {}):
+	entity.anim_player.connect("animation_finished", Callable(self, "projectile_attack"))
+	super.enter()
+
+func projectile_attack(attack_name):
 	var fireball_instance = projectile.instantiate()
 	GlobalScript.add_child(fireball_instance)
 	var points:Vector2 = entity.global_position + PROJECTILE_SPAWN_LOCATION
 	var push:Vector2 = fireball_instance.object_push
-	if entity.sprite.flip_h:
+	if !entity.sprite.flip_h:
 		points.x = abs(points.x)
 		push.x = abs(push.x)
+	
 	var hitbox_info = {
 		"global_position": points,
-		"object_push": push,
-		"direction": los_raycast.rotation
+		"projectile_owner": entity,
+		"direction": entity.global_position.direction_to(player.global_position).rotated(entity.sprite.rotation )
 	}
 	fireball_instance.set_parameters(hitbox_info)
 	fireball_instance.set_future_collision()
 	fireball_instance.set_past_collision()
-	fireball_instance.add_to_group(name + "Projectiles")
-	state_machine.transition_to("Idle")
+	state_machine.transition_to("Chase")
+
+func get_new_target() -> Vector2:
+	target_position.x = randf_range(player.global_position.x - random_target_amount, player.global_position.x + random_target_amount)
+	target_position.y = randf_range(player.global_position.y - random_target_amount, player.global_position.y + random_target_amount)
+	if GlobalScript.debug_enabled:
+		sphere_shape.global_position = target_position
+	return target_position
 
 func exit() -> void:
-	entity.anim_player.disconnect("animation_finished", Callable(self, "_on_shoot_anim_over"))
-
+	shoot_cooldown.start()
+	entity.anim_player.disconnect("animation_finished", Callable(self, "projectile_attack"))

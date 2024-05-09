@@ -118,17 +118,20 @@ func set_collision(future_value, past_value):
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, future_value)
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, past_value)
 
+	set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, future_value)
+	set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, past_value)
+
+
 func _physics_process(delta):
-#	super._physics_process(delta)
+	super._physics_process(delta)
 	stun_cnt = clamp(stun_cnt, 0, stun_cnt - 1)
 	if stun_cnt <= 0:
 		in_hitstun = false
-	speed_tracker.text = "Speed: (" + str(round(motion.x)) + "," + str(round(motion.y)) + ")"
-	motion.y += gravity
-	motion.y = clamp(motion.y, 0, max_fall_speed)
+	speed_tracker.text = "Speed: (" + str(round(velocity.x)) + "," + str(round(velocity.y)) + ")"
+	velocity.y += gravity
+	velocity.y = clamp(velocity.y, 0, velocity.y)
 	if being_destroyed:
 		queue_free()
-	states.physics_update(delta)
 
 func _process(delta):
 	states.update(delta)
@@ -165,6 +168,7 @@ func kill():
 	if beehave_tree:
 		beehave_tree.free()
 	anim_player.play("Dead")
+	await anim_player.animation_finished
 	destroy()
 	
 func get_raycast(ray_name:String) -> RayCast2D:
@@ -181,14 +185,14 @@ func get_raycast(ray_name:String) -> RayCast2D:
 func is_in_hitstun():
 	return in_hitstun
 	
-func default_move_and_slide():
-	set_velocity(motion)
-	set_up_direction(Vector2.UP)
-	set_floor_stop_on_slope_enabled(true)
-	set_max_slides(4)
-	set_floor_max_angle(PI/4)
-	move_and_slide()
-	motion = velocity
+#func default_move_and_slide():
+	#set_velocity(motion)
+	#set_up_direction(Vector2.UP)
+	#set_floor_stop_on_slope_enabled(true)
+	#set_max_slides(4)
+	#set_floor_max_angle(PI/4)
+	#move_and_slide()
+	#motion = velocity
 
 func create_hitbox(hitbox_info: = {}):
 #	attack_node.create_hitbox(width, height,attack_damage, kb_amount, angle, duration, type, angle_flipper, points, push, hitlag)

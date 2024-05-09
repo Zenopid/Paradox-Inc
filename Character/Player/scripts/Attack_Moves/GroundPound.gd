@@ -44,9 +44,9 @@ func physics_process(delta):
 	ground_pound_damage = min(maximum_damage, minimum_damage + additional_damage)
 	match attack_status:
 		"Start":
-			entity.motion *= 0.15
+			entity.velocity *= 0.15
 		"Falling":
-			entity.motion.y = fall_speed
+			entity.velocity.y = fall_speed
 	if entity.is_on_floor():
 		if !has_hit_ground:
 			entity.anim_player.disconnect("animation_finished", Callable(self, "change_status"))
@@ -70,3 +70,4 @@ func physics_process(delta):
 			entity.camera.set_shake(camera_shake_strength)
 			#print(str(ground_pound_damage) + " is the ground pound's damage.")
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)
+	entity.move_and_slide()

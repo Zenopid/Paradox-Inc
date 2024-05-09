@@ -4,7 +4,6 @@ var training_scene = preload("res://Levels/Training.tscn")
 var player = preload("res://Character/Player/Scenes/player.tscn")
 var camera_path = preload("res://Universal_Scenes/camera.tscn")
 var first_level = preload("res://Levels/Act 1/Emergence.tscn")
-@onready var settings_scene:Control = $"%Settings"
 @onready var end_screen:Control = $"%LevelEnd"
 
 @onready var start_button: Button = $"%Start"
@@ -51,6 +50,7 @@ func disable_menu():
 	set_process_input(false)
 
 func enable_menu():
+	Engine.time_scale = 1
 	GlobalScript.emit_signal("enabling_menu")
 	get_tree().paused = true 
 	for nodes in get_tree().get_nodes_in_group("Menu"):
@@ -59,13 +59,14 @@ func enable_menu():
 	for nodes in get_tree().get_nodes_in_group("Debug"):
 		nodes.visible = GlobalScript.debug_enabled
 	resume.disabled = !GlobalScript.has_save()
-	settings_scene.hide()
 	set_process_input(true)
+	start_button.grab_focus()
 
 func _on_start_pressed():
 	level_select.show()
 	exit_button.hide()
 	exit_button.disabled = true 
+	$"%LevelButtons".get_child(0).grab_focus()
 #	start_level("Emergence")
 
 func _on_settings_pressed():
@@ -128,7 +129,8 @@ func get_save():
 func _on_save_info_back_button_pressed():
 	save_screen.hide()
 	enable_menu()
-
+	start_button.grab_focus()
+	
 func _on_resume_pressed():
 	if GlobalScript.has_save():
 		disable_menu()

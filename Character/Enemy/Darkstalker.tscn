@@ -369,7 +369,6 @@ entity = NodePath("../..")
 unique_name_in_owner = true
 script = ExtResource("7_d2k0y")
 hitbox = ExtResource("8_nnns4")
-animation_name = null
 
 [node name="DetectionSphere" type="Area2D" parent="." groups=["Detection"]]
 collision_layer = 48

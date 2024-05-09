@@ -7,7 +7,7 @@ signal respawning()
 
 @export_category("Grapple")
 @export var grapple_pull: int = 75
-@export var max_grapple_speed: Vector2
+@export var max_grapple_speed: int = 900
 @export var air_grapple_boosts:int = 1
 @export var air_grapple_boost_amount:float
 @export var level_with_grapple_range: int = 30
@@ -51,6 +51,8 @@ var grappling_upwards: bool = false
 #func set_camera(camera_name: Camera2DPlus):
 #	camera = camera_name
 
+var state_machine_states := {}
+
 func get_spawn():
 	return spawn_point
 
@@ -66,6 +68,7 @@ func _ready():
 	connect_signals()
 	
 	_on_swapped_timeline(current_level.current_timeline)
+	state_machine_states = states.get_all_states()
 	
 func connect_signals():
 	GlobalScript.connect("level_over", Callable(self, "_on_level_over"))
@@ -75,7 +78,6 @@ func connect_signals():
 	GlobalScript.connect("save_game_state", Callable(self, "save"))
 
 func _on_swapped_timeline(new_timeline:String):
-#	print("changing player location to " + new_timeline)
 	if new_timeline.to_lower() == "future":
 		set_collision(true, false)
 	else:
@@ -98,6 +100,7 @@ func set_collision(future_value, past_value):
 		
 		set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, future_value)
 		set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, past_value)
+		
 
 func grapple_boost():
 	if grapple.attached:
@@ -106,15 +109,17 @@ func grapple_boost():
 			if !states.get_current_state().grounded() and grappling_upwards:
 				grapple_boost_tracker += 1
 				if grapple_boost_tracker <= air_grapple_boosts:
-					if motion.y > 0:
-						motion.y = 0
+					if velocity.y > 0:
+						velocity.y = 0
 					boost_amount.y *= 1 + air_grapple_boost_amount
 					#allow grapple to pull you up easier a couple times.
 			if abs(grapple.hook_location.y - global_position.y) <= level_with_grapple_range:
 				boost_amount.y = 0
 				#remove vertical boost if the hook's body is basically level with the player's.
-			motion += boost_amount
-		if grapple.grappled_object:
+			if velocity.length() < max_grapple_speed:
+				velocity += boost_amount
+				velocity = velocity.limit_length(max_grapple_speed)
+		if grapple.object_pullable():
 			grapple.grappled_object.call_deferred("apply_central_impulse", -(boost_amount * (1  + grapple_boost_object_pull_multiplier)) )
 		grapple.release()
 func disable():
@@ -144,14 +149,14 @@ func _on_level_over():
 	queue_free()
 
 func _physics_process(delta):
-	if Input.get_connected_joypads() == []:
-		grapple.set_pointer_direction(get_global_mouse_position() - global_position)
-	else:
-		grapple.set_pointer_direction(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
-	
+	#if Input.get_connected_joypads() == []:
+		#grapple.set_pointer_direction(get_global_mouse_position() - global_position)
+	#else:
+		#grapple.set_pointer_direction(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
+	#
 	super._physics_process(delta)
-	
-	var walk = (Input.get_action_strength("right") - Input.get_action_strength("left")) * states.find_state("Run").move_speed
+	var grounded = states.get_current_state().grounded()
+	var walk = (Input.get_action_strength("right") - Input.get_action_strength("left")) * state_machine_states["Run"].move_speed
 	if grapple.attached and !player_braced:
 		grapple_velocity = to_local(grapple.hook_location).normalized()
 		if grapple_velocity.y < 0:
@@ -165,20 +170,22 @@ func _physics_process(delta):
 	else: 
 		grapple_velocity = Vector2.ZERO
 	
-	if states.get_current_state().grounded():
+	if grounded:
 		grapple_velocity.y = 0
 		#no pulling up/down while running/sliding/idle/crouching, only airborne states
 		#also helps with pushing around objects n stuff
 		grapple_boost_tracker = 0
-	if grapple.grappled_object:
+	if grapple.object_pullable():
 		var object_pull = grapple.hook_location.direction_to(global_position) * grapple.pull_speed
-		if abs(grapple.hook_location.y - global_position.y) <= 30:
+		if abs(grapple.hook_location.y - global_position.y) <= level_with_grapple_range :
 			object_pull.y = -2
-			#if you're on the , apply a light lift upwards to prevent being stuck, otherwise try to keep it level
+			#if you're trying to pull an object horiztonally , apply a light lift upwards to prevent being stuck, otherwise try to keep it level
 		grapple.grappled_object.call_deferred("apply_central_impulse", object_pull)
 		#grapple.grappled_object.set_timeline(current_level.current_timeline)
-	motion += grapple_velocity
-	motion = motion.clamp(-max_grapple_speed, max_grapple_speed)
+	if velocity.length() < max_grapple_speed:
+		velocity += grapple_velocity
+		velocity = velocity.limit_length(max_grapple_speed)
+	#velocity = velocity.clamp(-max_grapple_speed, max_grapple_speed)
 
 
 func _input(event):
@@ -217,10 +224,10 @@ func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0
 	if invlv_timer.is_stopped() or ignores_invuln:
 		Input.start_joy_vibration(0, 0.5,0, 0.2)
 		invlv_timer.start()
-		_set_health(health - amount)
+		_set_health(player_info.health - amount)
 		effects_aniamtion.play("Damaged")
 		effects_aniamtion.queue("Invincible")
-		grapple.release()
+		#grapple.release()
 #		camera.flash()
 #		this will give an epilepsy attack lol
 
@@ -228,7 +235,6 @@ func heal(amount):
 	_set_health(health + amount)
 
 func kill():
-	states.can_transition = true
 	states.transition_to("Dead")
 
 func _on_invlv_timer_timeout():
@@ -240,8 +246,8 @@ func get_death_screen():
 func respawn():
 	position = spawn_point
 	grapple.release()
-	motion = Vector2.ZERO
-	if health > 0:
+	velocity = Vector2.ZERO
+	if player_info.health > 0:
 		states.transition_to("Fall")
 	emit_signal("respawning")
 
@@ -254,6 +260,9 @@ func relax():
 func change_grapple_status(status:bool):
 	grapple_enabled = status
 	grapple.pointer.visible = status
+
+func get_max_speed() -> int:
+	return max_grapple_speed
 	
 func save() -> Dictionary:
 	var save_data = {

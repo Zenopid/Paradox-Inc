@@ -1,0 +1,42 @@
+Paradox v0.4.2 Demo Patch Notes
+
+Bug Fixes
+-Fixed a bug where you couldn't go from the main menu to the settings screen
+-Fixed a bug where the fps tracker wasn't visible even if enabled in settings
+-Fixed a bug where going from settings menu back to quick menu unpaused the game
+-Fixed a bug where going to the 'Exit Game' button didn't allow you to move around in the menu using your movement buttons.
+-Fixed a bug where the fps tracker button didn't get updated when you reopened settings
+-Fixed a bug where releasing a grappled a box still makes it act like a paradox despite not being one
+-Fixed a bug where the player was immortal and didn't take any damage.
+-Fixed a bug with jumping out of a slide (see Player section) 
+-Fixed a bug where rotating the puzzle box in training would tank fps
+-Fps tracker now updates mid level instead of having to restart
+
+Generic Level
+-Unfocused timeline visiblity increased from 20% to 35% (maybe i need better glasses...)
+
+All Entities
+Health bar now flashes when entity is damaged.
+
+Player:
+
+-Increased object yank by 30%
+	Player pull remains unchanged 
+
+-Dodge boost now can overwrite your speed in the other direction
+	In the previous version, if you're moving 1000 units to the right, and you dodged to the left, you would slow down.
+	Now, in the same situation, your speed will be overwritten and it'll be as if you dodged to the left from a stand still.
+	Great as an airbreak in case you overshot a jump or something
+
+-Dodge now jump cancellable from the air when you're actionable (you can cancel dodge starting frame 20)
+
+-Jumping from a slide adjusted slightly
+	For some reason, the slide jump code that I haven't changed in over 3 months decided to stop working
+	with my upgrade to a newer version of the engine, so i had to create new code, and i cannot 100% replicate the old one.
+
+-Can now continue sliding mid air (its funny)
+-Sliding mid air pauses slide
+
+Paraghoul
+-Increased health bar UI size.
+	-Health remains unchanged (inherits link object's health)

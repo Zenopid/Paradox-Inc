@@ -1,4 +1,4 @@
-class_name Fall extends AirState
+class_name Fall extends PlayerAirState
 
 var jump_node: Jump
 var walljump_node
@@ -9,12 +9,14 @@ var jump_buffer: Timer
 
 @export var buffer_duration: float = 0.6
 @export_range(0,1) var bunny_hop_boost: float = 0.05
-var wall_checker: RayCast2D 
+var wall_checker: ShapeCast2D 
 var ground_checker: RayCast2D
+
+var speed_before_wallslide:float 
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
-	wall_checker = state_machine.get_raycast("WallChecker")
+	wall_checker = state_machine.get_shapecast("WallScanner")
 	ground_checker = state_machine.get_raycast("GroundChecker")
 	jump_node = state_machine.find_state("Jump")
 	jump_buffer = state_machine.get_timer("Jump_Buffer")
@@ -34,22 +36,24 @@ func input(_event: InputEvent):
 			return
 
 func physics_process(delta):
-	if can_wallslide():
+	if can_wallslide(speed_before_wallslide):
 		return
+	elif !wall_checker.is_colliding():
+		speed_before_wallslide = entity.velocity.x
 	if enter_dodge_state():
 		return
 	super.physics_process(delta)
-	entity.motion.y = clamp(entity.motion.y, entity.motion.y + jump_node.get_gravity() * delta, maximum_fall_speed)
+	entity.velocity.y = clamp(entity.velocity.y, entity.velocity.y + jump_node.get_gravity(), maximum_fall_speed)
 	if grounded():
-		walljump_node.jump_decay = 1
+		walljump_node.reset_wallslide_conditions()
 		if !jump_buffer.is_stopped():
-			entity.motion.x *= 1 + bunny_hop_boost
+			entity.velocity.x *= 1 + bunny_hop_boost
 			state_machine.transition_to("Jump")
 			jump_buffer.stop()
 			return
 		if enter_crouch_state():
 			return
-		entity.motion.x *= 0.8
+		entity.velocity.x *= 0.8
 		enter_move_state()
 		return
 	set_raycast_positions()

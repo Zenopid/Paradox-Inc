@@ -18,7 +18,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_rf17s"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jfhos"]
 size = Vector2(30, 20)
 
 [sub_resource type="Animation" id="Animation_0olqg"]
@@ -26,7 +26,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Fireball:animation")
+tracks/0/path = NodePath("FireballSprite:animation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -38,7 +38,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Fireball:frame")
+tracks/1/path = NodePath("FireballSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -56,7 +56,7 @@ step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Fireball:animation")
+tracks/0/path = NodePath("FireballSprite:animation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -68,7 +68,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Fireball:frame")
+tracks/1/path = NodePath("FireballSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -85,36 +85,27 @@ _data = {
 }
 
 [node name="Fireball" type="CharacterBody2D"]
+collision_layer = 196608
+collision_mask = 3
 script = ExtResource("1_dg647")
-damage = 10
+STEER_FORCE = 3.0
+damage = 5
 width = 30
 height = 20
-object_push = Vector2(150, 25)
+object_push = Vector2(500, 100)
 hit_stop = 0
-duration = -1
-speed = Vector2(110, 0)
+duration = 2000
+speed = 750
+timeline = "All"
 
-[node name="Fireball" type="AnimatedSprite2D" parent="."]
+[node name="FireballSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_2ecq3")
-
-[node name="Detection" type="Area2D" parent="."]
-unique_name_in_owner = true
-visible = false
-monitoring = false
-monitorable = false
-
-[node name="Shape" type="CollisionShape2D" parent="Detection"]
-shape = SubResource("RectangleShape2D_rf17s")
-debug_color = Color(0.831373, 0.0901961, 0.101961, 0.196078)
+flip_h = true
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
-shape = SubResource("RectangleShape2D_rf17s")
+shape = SubResource("RectangleShape2D_jfhos")
 debug_color = Color(0.831373, 0.0901961, 0.101961, 0.196078)
-
-[node name="Duration" type="Timer" parent="."]
-unique_name_in_owner = true
-one_shot = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
@@ -122,4 +113,7 @@ libraries = {
 "": SubResource("AnimationLibrary_vp8n7")
 }
 
-[connection signal="body_entered" from="Detection" to="." method="_on_body_entered"]
+[node name="OnScreen" type="VisibleOnScreenEnabler2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-2.86102e-06, 0)
+scale = Vector2(2, 1.5)

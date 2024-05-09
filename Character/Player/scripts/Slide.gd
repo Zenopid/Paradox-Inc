@@ -38,14 +38,14 @@ var slope_checker_left:RayCast2D
 var slope_checker_right: RayCast2D
 var fall_state: Fall
 
-var wall_checker: RayCast2D
+var wall_checker: ShapeCast2D
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	slope_checker_left = state_machine.get_raycast("SlopeCheckerRight")
 	slope_checker_right = state_machine.get_raycast("SlopeCheckerLeft")
 	ground_checker = state_machine.get_raycast("GroundChecker")
-	wall_checker = state_machine.get_raycast("WallChecker")
+	wall_checker = state_machine.get_shapecast("WallScanner")
 	
 	coyote_timer = state_machine.get_timer("Coyote")
 	cooldown_timer = state_machine.get_timer("Slide_Cooldown")
@@ -86,18 +86,18 @@ func physics_process(delta):
 		else:
 			if can_fall():
 				return
-			entity.motion.x = slow_down(entity.motion.x) 
+			entity.velocity.x = slow_down(entity.velocity.x) 
 	else:
-		if abs(entity.motion.x) < slide_speed:
-			entity.motion.x += slide_acceleration * sign(entity.motion.x)
-			if abs(entity.motion.x) > slide_speed:
-				entity.motion.x = slide_speed * sign(entity.motion.x)
-#		entity.motion.x += slide_acceleration * slide_direction
-#		entity.motion.x = clamp(entity.motion.x, -slide_speed, slide_speed)
-	hit_max_speed = true if abs(entity.motion.x) >= abs(slide_speed) else false
+		if abs(entity.velocity.x) < slide_speed:
+			entity.velocity.x += slide_acceleration * sign(entity.velocity.x)
+			if abs(entity.velocity.x) > slide_speed:
+				entity.velocity.x = slide_speed * sign(entity.velocity.x)
+#		entity.velocity.x += slide_acceleration * slide_direction
+#		entity.velocity.x = clamp(entity.velocity.x, -slide_speed, slide_speed)
+	hit_max_speed = true if abs(entity.velocity.x) >= abs(slide_speed) else false
 	#if can_fall():
 		#return
-	if entity.motion.x  == 0:
+	if entity.velocity.x  == 0:
 		if can_fall():
 			return
 		if Input.is_action_pressed("crouch"):
@@ -106,9 +106,9 @@ func physics_process(delta):
 		enter_move_state()
 		return
 	if !grounded():
-		entity.motion.y += gravity_acceleration
-		if entity.motion.y > max_gravity:
-			entity.motion.y = max_gravity
+		entity.velocity.y += gravity_acceleration
+		if entity.velocity.y > max_gravity:
+			entity.velocity.y = max_gravity
 		if entity.is_on_wall():
 			if wall_checker.is_colliding():
 				state_machine.transition_to("WallSlide")
@@ -116,7 +116,7 @@ func physics_process(delta):
 				state_machine.transition_to("Fall")
 			return
 	if !is_on_slope():
-		default_move_and_slide()
+		entity.move_and_slide()
 	else:
 		move_and_slide_with_slopes(delta)
 #	var test_num = randi_range(0,2)
@@ -128,7 +128,7 @@ func input(_event: InputEvent):
 	if enter_attack_state():
 		return
 	if Input.is_action_just_pressed("jump"):
-		jump_node.remaining_jumps += 1 
+		#jump_node.remaining_jumps += 1 
 		#for some reason, you can't jump without this.
 		state_machine.transition_to("Jump", {overwrite_speed = Vector2(-1, jump_velocity)})
 		return
@@ -167,9 +167,9 @@ func push_objects():
 
 func move_and_slide_with_slopes(delta):
 	if state_machine.get_current_state().name != "Idle":
-		entity.motion.y += jump_node.get_gravity() * delta
-		entity.motion.y = clamp(entity.motion.y, 0, fall_state.maximum_fall_speed)
-	entity.set_velocity(entity.motion)
+		entity.velocity.y += jump_node.get_gravity() 
+		entity.velocity.y = clamp(entity.velocity.y, 0, fall_state.maximum_fall_speed)
+	entity.set_velocity(entity.velocity)
 	entity.set_floor_stop_on_slope_enabled(true)
 	entity.set_max_slides(1)
 	entity.set_floor_max_angle(PI/2)
@@ -182,8 +182,8 @@ func move_and_slide_with_slopes(delta):
 		entity.apply_floor_snap()
 	
 func calculate_slope():
-	var point_a = ground_checker.get_collision_point()
-	var point_b
+	var point_a:Vector2 = ground_checker.get_collision_point()
+	var point_b:Vector2
 	if slope_checker_right.is_colliding():
 		point_b = slope_checker_right.get_collision_point()
 	else:

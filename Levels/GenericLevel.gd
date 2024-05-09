@@ -1,5 +1,9 @@
 class_name GenericLevel extends Node2D
 
+@export var bronze_time: float = 5
+@export var sliver_time:float = 3
+@export var gold_time:float = 1
+
 @export var past_paradox_color: Color
 @export var future_paradox_color: Color
 @export var exit_portal: Area2D
@@ -95,29 +99,14 @@ func load_music():
 					music_playlist.append(load(folder_path + music_file))
 
 func _input(event):
-#	if Input.is_action_just_pressed("play_music"):
-#		if music_player.playing:
-#			music_player.stop()
-#		else:
-#			var index = randi() % music_playlist.size()
-#			music_player.stream = music_playlist[index]
-#			music_player.play()
-#		return
 	if Input.is_action_just_pressed("swap_timeline"):
 		if !lock_timeline:
 			set_timeline(get_next_timeline_swap())
 			return
-#	var old_timeline = get(str(current_timeline.to_lower()))
-#	var new_timeline = get(next_timeline.to_lower())
-#	if Input.is_action_pressed("view_timeline"):
-#		if next_timeline:
-#			new_timeline.visible = true 
-#			new_timeline.modulate.a = 0.15
-#	else:
-#		if new_timeline:
-#			new_timeline.visible = false
-#			new_timeline.modulate.a = 1
-#
+	
+func _physics_process(delta):
+	pass
+
 func set_timeline(new_timeline:String):
 	var old_timeline_tilemap: TileMap = get(current_timeline.to_lower())
 	var current_timeline_tilemap: TileMap = get(new_timeline.to_lower())

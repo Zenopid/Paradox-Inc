@@ -97,7 +97,9 @@ enum collision_values {
 	BOUNDARY_FUTURE = 13,
 	BOUNDARY_PAST = 14,
 	HOOK_FUTURE = 15,
-	HOOK_PAST = 16
+	HOOK_PAST = 16,
+	PROJECTILE_FUTURE = 17,
+	PROJECTILE_PAST = 18,
 }
 const LEVEL_PATHS = {
 	"Emergence" = "uid://2ixcpeisj8it",
@@ -127,7 +129,7 @@ func _ready():
 	change_ui_controls()
 	SaveSystem.set_var("MoveableObject", {})
 	print(SaveSystem.get_var("MoveableObject"))
-	
+
 func change_ui_controls():
 	set_ui_input("ui_up")
 	set_ui_input("ui_down")
@@ -231,8 +233,6 @@ func apply_hitstop(duration):
 	await get_tree().create_timer(duration).timeout
 	Engine.time_scale = 1
 	return null
-
-
 
 func save_game():
 	for nodes in get_tree().get_nodes_in_group("Persist"):

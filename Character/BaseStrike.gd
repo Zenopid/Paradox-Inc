@@ -34,8 +34,9 @@ func input(event):
 	pass
 
 func physics_process(delta: float):
-	entity.motion.x *= friction
+	entity.velocity.x *= friction
 	frame += 1
+
 
 func on_attack_hit(object):
 	pass
