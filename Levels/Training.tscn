@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://bdka6oxl4bhmn"]
+[gd_scene load_steps=46 format=3 uid="uid://bdka6oxl4bhmn"]
 
 [ext_resource type="PackedScene" uid="uid://cuaf8p6wx6aun" path="res://Levels/Future.tscn" id="1_0jmtq"]
 [ext_resource type="Script" path="res://Levels/Training.gd" id="1_di3ua"]
@@ -13,8 +13,9 @@
 [ext_resource type="PackedScene" uid="uid://c1qqqb8ugmyry" path="res://Universal_Scenes/Interactables/switch.tscn" id="11_wnuvr"]
 [ext_resource type="PackedScene" uid="uid://b812mbppojnhg" path="res://Universal_Scenes/Interactables/box.tscn" id="12_l8y4q"]
 [ext_resource type="Texture2D" uid="uid://bxmqcr1u77plg" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Assets/Tiles.png" id="12_vjtgw"]
+[ext_resource type="Texture2D" uid="uid://bl7n6wgvoartc" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Props-01.png" id="13_2u14t"]
 [ext_resource type="Texture2D" uid="uid://bbkd3lq1g38s1" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Background Props.png" id="13_tqnl8"]
-[ext_resource type="Texture2D" uid="uid://bl7n6wgvoartc" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Assets/Props-01.png" id="14_hrbcl"]
+[ext_resource type="PackedScene" uid="uid://qdbmrdg5rvrr" path="res://Universal_Scenes/Interactables/garbagebag.tscn" id="16_b2hqd"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_3u240"]
 vertices = PackedVector2Array(1843, -9, -596, -6, -597, -10, 1843, -10, 1252, -521, 1252, -557, 1827, -941, 1842, -47, -667, -961, 1215, -560, 1251, -520, 1251, -521, 1830, -50, 1800, -50, 50, -106, 50, -142, 158, -520, -599, -512, -634, -512, 162, -560, 117, -557, 1217, -557, 1210, -557, 1185, -560, 1187, -557, 1180, -557, 1155, -560, 1157, -557, 1150, -557, 1125, -560, 1127, -557, 1120, -557, 1095, -560, 1097, -557, 1090, -557, 1065, -560, 1067, -557, 1060, -557, 1035, -560, 1037, -557, 1030, -557, 1005, -560, 1007, -557, 1000, -557, 975, -560, 977, -557, 970, -557, 945, -560, 947, -557, 940, -557, 915, -560, 917, -557, 910, -557, 885, -560, 887, -557, 880, -557, 855, -560, 857, -557, 850, -557, 825, -560, 827, -557, 820, -557, 795, -560, 797, -557, 790, -557, 765, -560, 767, -557, 760, -557, 735, -560, 737, -557, 730, -557, 705, -560, 707, -557, 700, -557, 675, -560, 677, -557, 670, -557, 612, -560, 614, -557, 607, -557, 582, -560, 584, -557, 577, -557, 552, -560, 554, -557, 547, -557, 522, -560, 524, -557, 517, -557, 492, -560, 494, -557, 487, -557, 462, -560, 464, -557, 457, -557, 432, -560, 434, -557, 427, -557, 402, -560, 404, -557, 397, -557, 372, -560, 374, -557, 367, -557, 342, -560, 344, -557, 337, -557, 312, -560, 314, -557, 307, -557, 282, -560, 284, -557, 277, -557, 252, -560, 254, -557, 247, -557, 222, -560, 224, -557, 217, -557, 192, -560, 194, -557, 187, -557, 164, -557, 1832, -47, 115, -521, -122, -142, 1825, -47, 1802, -47, 1795, -47, 1772, -47, 1770, -50, 1765, -47, 1742, -47, 1740, -50, 1735, -47, 1712, -47, 1710, -50, 1705, -47, 1682, -47, 1680, -50, 1675, -47, 1652, -47, 1650, -50, 1645, -47, 1622, -47, 1620, -50, 1615, -47, 1592, -47, 1590, -50, 1585, -47, 1562, -47, 1560, -50, 1555, -47, 1532, -47, 1530, -50, 1525, -47, 1502, -47, 1500, -50, 1495, -47, 1472, -47, 1470, -50, 1465, -47, 1442, -47, 1440, -50, 1435, -47, 1412, -47, 1410, -50, 1405, -47, 1382, -47, 1380, -50, 1375, -47, 1352, -47, 1350, -50, 1345, -47, 1322, -47, 1320, -50, 1315, -47, 1292, -47, 1290, -50, 1285, -47, 1262, -47, 1260, -50, 1255, -47, 1232, -47, 1230, -50, 1225, -47, 1202, -47, 1200, -50, 1195, -47, 1172, -47, 1170, -50, 1165, -47, 1142, -47, 1140, -50, 1135, -47, 1112, -47, 1110, -50, 1105, -47, 1082, -47, 1080, -50, 1075, -47, 1052, -47, 1050, -50, 1045, -47, 1022, -47, 1020, -50, 1015, -47, 992, -47, 990, -50, 985, -47, 962, -47, 960, -50, 955, -47, 932, -47, 930, -50, 925, -47, 902, -47, 900, -50, 895, -47, 872, -47, 870, -50, 865, -47, 842, -47, 840, -50, 835, -47, 812, -47, 810, -50, 805, -47, 782, -47, 780, -50, 775, -47, 752, -47, 750, -50, 745, -47, 722, -47, 720, -50, 715, -47, 692, -47, 690, -50, 685, -47, 662, -47, 660, -50, 655, -47, 632, -47, 630, -50, 625, -47, 569, -47, 567, -50, 562, -47, 539, -47, 537, -50, 532, -47, 509, -47, 507, -50, 502, -47, 479, -47, 477, -50, 472, -47, 449, -47, 447, -50, 442, -47, 419, -47, 417, -50, 412, -47, 389, -47, 387, -50, 382, -47, 359, -47, 357, -50, 352, -47, 329, -47, 327, -50, 322, -47, 299, -47, 297, -50, 292, -47, 269, -47, 267, -50, 262, -47, 239, -47, 237, -50, 232, -47, 209, -47, 207, -50, 202, -47, 179, -47, 177, -50, 172, -47, 149, -47, 147, -50, 142, -47, 119, -47, 117, -50, 112, -47, 89, -47, 87, -50, 82, -47, 59, -47, 57, -50, 52, -47, 29, -47, 27, -50, -122, -106, 22, -47, -599, -47, 117, -547, 157, -557)
@@ -472,7 +473,7 @@ texture = ExtResource("13_tqnl8")
 11:11/0/physics_layer_1/angular_velocity = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qc3hi"]
-texture = ExtResource("14_hrbcl")
+texture = ExtResource("13_2u14t")
 2:4/0 = 0
 2:4/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 2:4/0/physics_layer_0/angular_velocity = 0.0
@@ -1830,45 +1831,45 @@ offset_bottom = -173.0
 unique_name_in_owner = true
 position = Vector2(-213.538, -73)
 
-[node name="RotateBoxRight" parent="." instance=ExtResource("11_wnuvr")]
+[node name="AnimPlayers" type="Node" parent="."]
+
+[node name="PastAnimPlayer" type="AnimationPlayer" parent="AnimPlayers"]
 unique_name_in_owner = true
-position = Vector2(787.221, -545.565)
-
-[node name="RotateBoxLeft" parent="." instance=ExtResource("11_wnuvr")]
-position = Vector2(702.827, -545.602)
-
-[node name="MovePastPuzzlePieces" parent="." instance=ExtResource("11_wnuvr")]
-position = Vector2(643.601, -544.801)
-timeline = "Past"
-
-[node name="PuzzleBox" parent="." instance=ExtResource("12_l8y4q")]
-position = Vector2(448.19, -653.709)
-collision_layer = 4
-collision_mask = 4
-health = 1000000
-id = 1234567890
-
-[node name="PastAnimPlayer" type="AnimationPlayer" parent="."]
-unique_name_in_owner = true
+root_node = NodePath("../..")
 callback_mode_method = 1
 libraries = {
 "": SubResource("AnimationLibrary_mjncn")
 }
 
-[node name="FutureAnimPlayer" type="AnimationPlayer" parent="."]
+[node name="FutureAnimPlayer" type="AnimationPlayer" parent="AnimPlayers"]
 unique_name_in_owner = true
+root_node = NodePath("../..")
 libraries = {
 "": SubResource("AnimationLibrary_eoq48")
 }
 playback_default_blend_time = 0.01
 
-[node name="LevelAnimPlayer" type="AnimationPlayer" parent="."]
+[node name="LevelAnimPlayer" type="AnimationPlayer" parent="AnimPlayers"]
 unique_name_in_owner = true
 process_priority = 25
+root_node = NodePath("../..")
 callback_mode_method = 1
 libraries = {
 "": SubResource("AnimationLibrary_kykka")
 }
+
+[node name="Switches" type="Node" parent="."]
+
+[node name="MovePastPuzzlePieces" parent="Switches" instance=ExtResource("11_wnuvr")]
+position = Vector2(643.601, -544.801)
+timeline = "Past"
+
+[node name="RotateBoxLeft" parent="Switches" instance=ExtResource("11_wnuvr")]
+position = Vector2(702.827, -545.602)
+
+[node name="RotateBoxRight" parent="Switches" instance=ExtResource("11_wnuvr")]
+unique_name_in_owner = true
+position = Vector2(787.221, -545.565)
 
 [node name="Elevator" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -1910,6 +1911,18 @@ position = Vector2(14.4949, 0)
 tile_set = SubResource("TileSet_dohaw")
 layer_0/tile_data = PackedInt32Array(720874, 917504, 3, -1179661, 917504, 4)
 
+[node name="MoveableObjects" type="Node" parent="."]
+
+[node name="PuzzleBox" parent="MoveableObjects" instance=ExtResource("12_l8y4q")]
+position = Vector2(448.19, -653.709)
+collision_layer = 4
+collision_mask = 4
+health = 1000000
+id = 1234567890
+
+[node name="GarbageBag" parent="MoveableObjects" instance=ExtResource("16_b2hqd")]
+position = Vector2(-90.7691, -365.746)
+
 [connection signal="pressed" from="Buttons/SpawnBox" to="." method="_on_spawner_pressed"]
 [connection signal="pressed" from="Buttons/SpawnEnemy" to="." method="_on_spawn_enemy_pressed"]
 [connection signal="pressed" from="Buttons/ClearEnemy" to="." method="_on_clear_enemy_pressed"]
@@ -1918,6 +1931,6 @@ layer_0/tile_data = PackedInt32Array(720874, 917504, 3, -1179661, 917504, 4)
 [connection signal="value_changed" from="TrainingUI/Speed_Slider" to="." method="_on_h_slider_value_changed"]
 [connection signal="pressed" from="TrainingUI/Reset_Speed" to="." method="_on_reset_pressed"]
 [connection signal="toggled" from="CheckButton" to="DamageSlider" method="_on_check_button_toggled"]
-[connection signal="status_changed" from="RotateBoxRight" to="." method="_on_rotate_box_right_status_changed"]
-[connection signal="status_changed" from="RotateBoxLeft" to="." method="_on_rotate_box_left_activated"]
-[connection signal="status_changed" from="MovePastPuzzlePieces" to="." method="_on_move_past_puzzle_pieces_status_changed"]
+[connection signal="status_changed" from="Switches/MovePastPuzzlePieces" to="." method="_on_move_past_puzzle_pieces_status_changed"]
+[connection signal="status_changed" from="Switches/RotateBoxLeft" to="." method="_on_rotate_box_left_activated"]
+[connection signal="status_changed" from="Switches/RotateBoxRight" to="." method="_on_rotate_box_right_status_changed"]

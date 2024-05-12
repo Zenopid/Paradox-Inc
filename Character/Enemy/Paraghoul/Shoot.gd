@@ -1,9 +1,7 @@
 extends BaseState
 
 @export var projectile:PackedScene
-@export var random_target_amount: float = 50
-@export var acceleration: int = 1
-@export var max_speed: int = 200
+@export var entity_speed_multiplier: float = 0.15
 
 @onready var shoot_cooldown:Timer
 @onready var target_position:Vector2
@@ -27,6 +25,8 @@ const PROJECTILE_SPAWN_LOCATION = Vector2(18, 15)
 
 var do_physics_process:bool = false
 
+var target
+
 func init(current_entity, s_machine: EntityStateMachine):
 	super.init(current_entity, s_machine)
 	shoot_cooldown = state_machine.get_timer("Shoot_Cooldown")
@@ -44,9 +44,11 @@ func init(current_entity, s_machine: EntityStateMachine):
 		debug_sphere.visible = true
 
 func enter(msg: = {}):
+	player = get_tree().get_first_node_in_group("Players")
 	entity.anim_player.connect("animation_finished", Callable(self, "projectile_attack"))
 	super.enter()
-
+	entity.velocity *= entity_speed_multiplier
+	
 func projectile_attack(attack_name):
 	var fireball_instance = projectile.instantiate()
 	GlobalScript.add_child(fireball_instance)
@@ -66,12 +68,8 @@ func projectile_attack(attack_name):
 	fireball_instance.set_past_collision()
 	state_machine.transition_to("Chase")
 
-func get_new_target() -> Vector2:
-	target_position.x = randf_range(player.global_position.x - random_target_amount, player.global_position.x + random_target_amount)
-	target_position.y = randf_range(player.global_position.y - random_target_amount, player.global_position.y + random_target_amount)
-	if GlobalScript.debug_enabled:
-		sphere_shape.global_position = target_position
-	return target_position
+func physics_process(delta:float):
+	entity.move_and_slide()
 
 func exit() -> void:
 	shoot_cooldown.start()

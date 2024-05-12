@@ -22,7 +22,6 @@ class_name Jump extends PlayerAirState
 
 @export var minimum_doublejump_speed: int = 100
 
-var superjumping: bool = false
 var jump_squat_over: bool = false
 var jump_squat_frames_tracker: int = 0
 var jump_speed:Vector2
@@ -36,7 +35,6 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 
 func enter(msg: = {}):
 	jump_squat_over = true
-	superjumping = false
 	jump_speed = Vector2(0, jump_velocity)
 	var double_jump_multiplier: float = 1
 	wall_checker.enabled = true
@@ -46,7 +44,6 @@ func enter(msg: = {}):
 				jump_speed += Vector2(msg["bonus_speed"].x * get_facing_as_int(), msg["bonus_speed"].y)
 			"can_superjump":
 				jump_speed.y *= superjump_bonus
-				superjumping = true
 			"overwrite_speed":
 				if msg["overwrite_speed"].x != -1:
 					jump_speed.x = msg["overwrite_speed"].x
@@ -61,7 +58,7 @@ func enter(msg: = {}):
 		if msg.has("double_jump_bonus_speed"):
 			boost = msg["double_jump_bonus_speed"]
 		double_jump(double_jump_multiplier, boost)
-	super.enter()
+		super.enter()
 
 	
 
@@ -73,29 +70,28 @@ func physics_process(delta):
 		if entity.velocity.y >= 0:
 			state_machine.transition_to("Fall")
 			return
-		var facing = -1 if facing_left() else 1
-		wall_checker.position = Vector2( entity.position.x + 12.55 * facing, entity.position.y - 10.5)
+		wall_checker.position = Vector2( entity.position.x + 12.55 * get_facing_as_int(), entity.position.y - 10.5)
 		if wall_checker.is_colliding() and !ground_checker.is_colliding() and !Input.is_action_pressed("jump") and get_movement_input() != 0:
 			state_machine.transition_to("WallSlide", {previous_speed = speed_before_wallslide})
 			return
 		elif !wall_checker.is_colliding():
 			speed_before_wallslide = entity.velocity.x
-	else:
-		jump_squat_frames_tracker += 1
-		if jump_squat_frames_tracker >= jump_squat_frames:
-			leave_jump_squat()
+	#else:
+		#jump_squat_frames_tracker += 1
+		#if jump_squat_frames_tracker >= jump_squat_frames:
+			#leave_jump_squat()
 	default_move_and_slide()
 
 func apply_jump_squat():
 	entity.velocity.x += jump_speed.x
-	entity.anim_player.play("Jump Squat")
 	jump_squat_over = false 
-	jump_squat_frames_tracker = 0
-	
-func leave_jump_squat():
-	entity.velocity.y += jump_speed.y
-	entity.anim_player.play("Jump")
+	entity.anim_player.play("Jump Squat")
+	await entity.anim_player.animation_finished
 	jump_squat_over = true
+	entity.anim_player.play("Jump")
+	entity.velocity.y += jump_speed.y
+
+	
 
 func input(_event:InputEvent):
 	
@@ -109,7 +105,6 @@ func input(_event:InputEvent):
 
 func double_jump(additional_multiplier: float = 1, boost: Vector2 = Vector2.ZERO):
 	entity.velocity.y = (jump_velocity * double_jump_strength) * additional_multiplier
-	var facing = -1 if get_movement_input() < 0 else 1
 	if abs(entity.velocity.x) < entity.max_grapple_speed:
 		entity.velocity.x += double_jump_boost * get_movement_input()
 		entity.velocity.x = clamp(entity.velocity.x, -entity.max_grapple_speed, entity.max_grapple_speed)

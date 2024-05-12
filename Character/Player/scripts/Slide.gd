@@ -119,9 +119,6 @@ func physics_process(delta):
 		entity.move_and_slide()
 	else:
 		move_and_slide_with_slopes(delta)
-#	var test_num = randi_range(0,2)
-#	if test_num == 1:
-#		print(calculate_slope())
 	push_objects()
 
 func input(_event: InputEvent):
@@ -140,21 +137,10 @@ func input(_event: InputEvent):
 func slow_down(speed: float):
 	speed = int(round(speed))
 	speed = move_toward(speed, 0, slide_deceleration)
-#	if facing_left():
-#		speed += slide_deceleration
-#		if speed > 0:
-#			speed = 0
-#	else:
-#		speed -= slide_deceleration
-#		if speed < 0:
-#			speed = 0
 	return speed
 
 func exit() -> void:
 	cooldown_timer.start()
-#	hit_max_speed = false
-#	current_slide_duration = slide_duration
-#	ground_checker.enabled = false
 	entity.sprite.rotation_degrees = 0
 	entity.get_node("Hurtbox").rotation_degrees = 0
 	wall_checker.enabled = false
@@ -162,7 +148,7 @@ func exit() -> void:
 func push_objects():
 	for i in entity.get_slide_collision_count():
 		var collision = entity.get_slide_collision(i)
-		if collision.get_collider() is MoveableObject:
+		if collision.get_collider() is RigidBody2D:
 			collision.get_collider().apply_central_impulse(- collision.get_normal() * push)
 
 func move_and_slide_with_slopes(delta):

@@ -41,10 +41,13 @@ func air_attack_logic():
 			attack_state.apply_lag(landing_lag)
 		else:
 			attack_state.apply_lag(int(round((landing_lag/2))))
-	entity.velocity.y = clamp(entity.velocity.y, entity.velocity.y + jump_node.get_gravity(), fall_node.maximum_fall_speed)
+	entity.velocity.y += jump_node.get_gravity()
+	if entity.velocity.y > fall_node.maximum_fall_speed:
+		entity.velocity.y = fall_node.maximum_fall_speed
 
 func physics_process(delta):
 	air_attack_logic()
+	entity.move_and_slide()
 	super.physics_process(delta)
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)
 	if abs(entity.velocity.x) < max_speed:
@@ -52,7 +55,6 @@ func physics_process(delta):
 		entity.velocity.x = clamp(entity.velocity.x, -max_speed, max_speed)
 	if frame >= dodge_window and dodge_window >= 0:
 		can_dodge = false
-	entity.move_and_slide()
 
 
 func get_movement_input() -> int:

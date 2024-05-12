@@ -21,7 +21,7 @@ signal damaged(new_health)
 @onready var current_level:GenericLevel 
 @onready var collision:CollisionShape2D = $"%Collision"
 @onready var timer:Timer = $"%Destruction_Timer"
-@onready var anim_player = $"%ColorChanger"
+@onready var anim_player:AnimationPlayer = $"ColorChanger"
 
 var being_pushed: bool = false
 var push_speed: int
@@ -147,13 +147,7 @@ func damage(amount: int):
 	emit_signal("damaged", health)
 
 func destroy():
-	if !being_destroyed:
-		being_destroyed = true 
-		timer.start()
-		current_level.remove_child(self)
-		await timer.timeout
-		self.queue_free()
-		
+	queue_free()
 
 func queued_destruction() -> bool:
 	return being_destroyed
@@ -161,7 +155,8 @@ func queued_destruction() -> bool:
 func become_paradox():
 	if is_paradox:
 		return
-	anim_player.play("Become Paradox")
+	if typeof(anim_player) != TYPE_NIL:
+		anim_player.play("Become Paradox")
 	is_paradox = true
 	set_collision(true, true)
 	enable()

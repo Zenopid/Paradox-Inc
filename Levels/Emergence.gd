@@ -26,6 +26,7 @@ func _ready():
 			lasers.get_node("Area2D").add_to_group("Future Lasers")
 	get_tree().get_first_node_in_group("Future Lasers").remove_from_group("Future Lasers")
 	future_door.position = Vector2(1018, -5829)
+
 	#_on_swapped_timeline(current_timeline)
 	
 	super._ready()

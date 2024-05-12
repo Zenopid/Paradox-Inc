@@ -75,7 +75,6 @@ func set_time_text():
 	return minutes_played
 	
 func _on_return_button_pressed():
-	var menu = get_tree().get_first_node_in_group("Main")
 	GlobalScript.emit_signal("game_over")
 	hide()
 	get_tree().paused = false

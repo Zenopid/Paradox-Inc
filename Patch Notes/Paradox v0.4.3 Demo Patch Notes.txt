@@ -8,21 +8,58 @@ MPS = Meters Per Second
 
 Bug Fixes
 -Fixed a bug where you could triple jump out of a slide.
--Fixed a bug where fireballs acted like walls and stopped your movement.
+-Fixed a bug where you could jump for free out of a dodge.
+-Fixed a bug where dodge wasn't projectile invlv.
+-Fixed a bug where you could roll in place (maybe i'll add a spotdodge with art update)
+-Fixed a bug where changing the speed of the game in Training still effected the game after leaving the level.
+-Fixed a bug where paraghouls would teleport after restarting a chase
 
 Player
 
-Attack buffer window for 3 hit combo increased (13 -> 17)
+
+Grapple now sticks to all objects (haven't figured out calculating rotated object positions though...)
+
+Slide max fall speed increased (4 mps -> 9 mps)
+Slide fall speed acceleration decreased(0.2 mps -> 0.1 mps)
+Attack buffer window for ground combo increased (13 -> 17)
+
+Air acceleration decreased to allow for more precise movement (0.2mps -> 0.17 mps)
+
+Wallslide
 
 Can now wallslide out of a jump
 	-Previously could only wallslide while falling
 	-If you don't want to wallslide, hold the jump button
+Wallslide minimum jump height decreased (35% height -> 5% height)
+Wallslide will now make you slide down a wall faster after repeatly sticking to the same wall multiple times.
+	- These 2 changes are so that you can't go up a wall using grapple and just mashing jump.
+Wallslide is now cancellable into attacks and dodge.
+Can now wall bounce (remembers previous velocity and adds it to wall jump speed)
 
-Jump squat frames increased (0 frames -> 2 frames)
+	
+
+Jump
+
+Jump squat frames increased (0 -> 3)
+	-Jump squat is cancellable into attacks/dodge
 
 Reduced grapple pull speed (0.2 mps horizontally, 0.5 mps vertically) -> (0.15 mps, 0.4 mps )
-Increased grapple projectile speed (105 mps -> 115 mps)
+
+
+Slide
+
+Cooldown reduced (0.7 -> 0.45)
+
+Attack
+
+Friction reduced on 3 hit combo
+Attack buffer window for ground combo increased (13 -> 17)
+
+	
 
 Paraghoul
 -Fireballs now actually do damage
 -Fireballs now point in the direction they're going
+-Fireballs now follow the player around
+-Fireball max duration decreased (inf -> 3000 frames)
+-Increased fireball speed 

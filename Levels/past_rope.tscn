@@ -1,0 +1,84 @@
+[gd_scene load_steps=4 format=3 uid="uid://bi1cpo00q3d3"]
+
+[ext_resource type="PackedScene" uid="uid://cmcurlpklixd" path="res://Levels/Past.tscn" id="1_soal2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0l88i"]
+size = Vector2(15.6529, 16.5548)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_d45u2"]
+radius = 4.99674
+height = 70.0566
+
+[node name="PastRope" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 512
+collision_mask = 8
+
+[node name="Past" parent="StaticBody2D" instance=ExtResource("1_soal2")]
+layer_0/tile_data = PackedInt32Array(-65536, 393216, 3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(2.0015, -1.1911)
+shape = SubResource("RectangleShape2D_0l88i")
+
+[node name="Joint1" type="PinJoint2D" parent="."]
+node_a = NodePath("../StaticBody2D")
+node_b = NodePath("../Segment1")
+
+[node name="Past" parent="Joint1" instance=ExtResource("1_soal2")]
+layer_0/tile_data = PackedInt32Array(-1, 851968, 2)
+
+[node name="Segment1" type="RigidBody2D" parent="."]
+collision_layer = 512
+collision_mask = 0
+
+[node name="SegmentArt" parent="Segment1" instance=ExtResource("1_soal2")]
+rotation = 1.5708
+layer_0/tile_data = PackedInt32Array(-65526, 1376256, 24)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Segment1"]
+position = Vector2(1, 31.666)
+shape = SubResource("CapsuleShape2D_d45u2")
+
+[node name="Joint2" type="PinJoint2D" parent="."]
+position = Vector2(1, 68)
+node_a = NodePath("../Segment1")
+node_b = NodePath("../Segment2")
+
+[node name="Past" parent="Joint2" instance=ExtResource("1_soal2")]
+layer_0/tile_data = PackedInt32Array(-1, 851968, 2)
+
+[node name="Segment2" type="RigidBody2D" parent="."]
+position = Vector2(0, 74)
+collision_layer = 512
+collision_mask = 0
+
+[node name="SegmentArt" parent="Segment2" instance=ExtResource("1_soal2")]
+rotation = 1.5708
+layer_0/tile_data = PackedInt32Array(-65526, 1376256, 24)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Segment2"]
+position = Vector2(1, 31.666)
+shape = SubResource("CapsuleShape2D_d45u2")
+
+[node name="Joint3" type="PinJoint2D" parent="."]
+position = Vector2(1, 143)
+node_a = NodePath("../Segment2")
+node_b = NodePath("../Segment3")
+
+[node name="Past" parent="Joint3" instance=ExtResource("1_soal2")]
+layer_0/tile_data = PackedInt32Array(-1, 851968, 2)
+
+[node name="Segment3" type="RigidBody2D" parent="."]
+position = Vector2(0, 148)
+collision_layer = 512
+collision_mask = 0
+
+[node name="SegmentArt" parent="Segment3" instance=ExtResource("1_soal2")]
+rotation = 1.5708
+layer_0/tile_data = PackedInt32Array(-65526, 1376256, 24)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Segment3"]
+position = Vector2(1, 31.666)
+shape = SubResource("CapsuleShape2D_d45u2")

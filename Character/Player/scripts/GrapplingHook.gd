@@ -147,7 +147,7 @@ func _physics_process(delta):
 				object.damage(damage)
 	elif attached:
 		if grappled_object:
-			if !grappled_object.is_queued_for_deletion():
+			if is_instance_valid(grappled_object):
 				hook_body.global_position = grappled_object.global_position + attachment_point
 	hook_location = hook_body.global_position
 
@@ -195,6 +195,7 @@ func get_speed():
 
 func object_pullable() -> bool:
 	if grappled_object:
-		if can_pull_object and !grappled_object.is_queued_for_deletion():
-			return true
+		if is_instance_valid(grappled_object):
+			if can_pull_object and !grappled_object.is_queued_for_deletion():
+				return true
 	return false

@@ -52,7 +52,7 @@ func physics_process(delta):
 			return
 	if direction_timer.is_stopped() or abs(target_position - entity.global_position) <= target_reached_range:
 		get_new_target()
-	#apply_speed()
+	apply_speed()
 	entity.move_and_slide()
 	if worldscanner_shapecast.is_colliding():
 		var collision = worldscanner_shapecast.get_collider(0)

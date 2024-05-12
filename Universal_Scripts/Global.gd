@@ -55,6 +55,8 @@ var old_hitstop_timescale: float = 1
 
 var levels_beaten: int = 0
 
+var free_play_enabled: bool = false
+
 var current_level: GenericLevel = null :
 	set (value):
 		current_level = value
@@ -74,6 +76,7 @@ var total_game_time
 @onready var audio_settings: AudioSettings = AudioSettings.new()
 @onready var control_settings: ControlSettings = ControlSettings.new()
 @onready var hitstop_manager: HitstopManager = $"%HitstopManager"
+@onready var transition_screen: ColorRect = $"%TransitionScreen"
 
 var setting_class_names: = [
 	"visual_settings",
@@ -122,6 +125,7 @@ var settings_screen : Control
 
 
 func _ready():
+	disable_transition_screen()
 #	SaveSystem.connect("loaded", Callable(self, "load_game"))
 	if !Input.get_connected_joypads() == []:
 		controller_type = "Controller"
@@ -280,17 +284,34 @@ func start_level(level:String):
 	current_level.set_player(player_instance)
 	current_level.start_level()
 	game_time_start = Time.get_ticks_msec()
+	if free_play_enabled:
+		player_instance.change_grapple_status(true)
+	main_menu.hide()
+	
+func restart_level():
+	var level_name = current_level.name
+	main_menu.hide()
+	enable_transition_screen()
+	emit_signal("game_over")
+	await get_tree().create_timer(1).timeout
+	enable_transition_screen()
+	main_menu.disable_menu()
+	start_level(level_name)
+	disable_transition_screen()
+
 
 func enter_settings():
+
 	var new_settings = load(SETTINGS_PATH)
 	settings_screen = new_settings.instantiate()
-	if current_level:
+	if is_instance_valid(current_level):
 		current_level.disable()
-	if current_player:
+	if is_instance_valid(current_player):
 		current_player.disable()
 	add_child(settings_screen)
 	emit_signal("entering_settings")
 	get_tree().paused = true 
+	
 func exit_settings():
 	if current_level and current_player:
 		current_level.enable()
@@ -391,21 +412,15 @@ func add_player(pos) -> Player:
 func _on_game_starting():
 	game_time_start = Time.get_ticks_msec()
 
-#func get_save_files():
-#	return save_files
-#
-#func load_save_file(file_number):
-#	var requested_file = save_files["File" + str(file_number)]
-#	if requested_file != OK:
-#		return
-#	requested_file = save_files["File" + str(file_number)]["game_data"]
-#	var player_data = requested_file["player_info"]
-#	var level_data = requested_file["level_info"]
-#	total_game_time = requested_file["playtimme"]
-#	var level_path = "res://Levels/"
-#	var level:PackedScene = load (level_path + level_data["level_name"] + ".tscn")
-#	var level_instance: GenericLevel = level.instantiate()
-#	level_instance = requested_file["level_conditions"]
-#	var main = get_tree().get_first_node_in_group("Main")
-#	main.add_child(level_instance)
+func enable_free_play():
+	free_play_enabled = true 
 
+func disable_free_play():
+	free_play_enabled = false 
+
+func enable_transition_screen(text:String = "Loading"):
+	transition_screen.show()
+	transition_screen.get_node("Title").text = text
+
+func disable_transition_screen():
+	transition_screen.hide()

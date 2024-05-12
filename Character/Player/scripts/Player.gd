@@ -101,6 +101,9 @@ func set_collision(future_value, past_value):
 		set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, future_value)
 		set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, past_value)
 		
+		set_collision_mask_value(GlobalScript.collision_values.BOUNDARY_FUTURE, future_value)
+		set_collision_mask_value(GlobalScript.collision_values.BOUNDARY_PAST, future_value)
+		
 
 func grapple_boost():
 	if grapple.attached:
@@ -227,9 +230,7 @@ func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0
 		_set_health(player_info.health - amount)
 		effects_aniamtion.play("Damaged")
 		effects_aniamtion.queue("Invincible")
-		#grapple.release()
 #		camera.flash()
-#		this will give an epilepsy attack lol
 
 func heal(amount):
 	_set_health(health + amount)

@@ -94,7 +94,7 @@ func physics_process(delta:float) -> void:
 func push_objects():
 	for i in entity.get_slide_collision_count():
 		var collision = entity.get_slide_collision(i)
-		if collision.get_collider() is MoveableObject:
+		if collision.get_collider() is RigidBody2D:
 			collision.get_collider().call_deferred("apply_central_impulse", -collision.get_normal() * push ) 
 
 func default_move_and_slide():

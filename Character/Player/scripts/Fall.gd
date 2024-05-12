@@ -60,8 +60,7 @@ func physics_process(delta):
 	default_move_and_slide()
 	
 func set_raycast_positions():
-	var facing = -1 if facing_left() else 1
-	wall_checker.position.x = entity.position.x + 12.55 * facing
+	wall_checker.position.x = entity.position.x + 12.55 * get_facing_as_int()
 	wall_checker.position.y =  entity.position.y - 10.5 
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 

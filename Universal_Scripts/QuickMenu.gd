@@ -7,6 +7,7 @@ extends Control
 @onready var resume_button: Button = $"%Resume"
 @onready var exit_callable:Callable = Callable(self, "_on_settings_exited" )
 var quitting_to_menu: bool = false 
+var restarting_level:bool = false 
 
 
 func enable_menu(level_name):
@@ -34,19 +35,23 @@ func _on_settings_pressed():
 func _on_save_and_exit_pressed():
 	quit_confirmation.show()
 	quitting_to_menu = false
+	restarting_level = false
 
 func _on_quit_pressed():
-	if !quitting_to_menu:
-		get_tree().quit()
-	else:
+	if restarting_level:
+		GlobalScript.restart_level()
+	elif quitting_to_menu:
 		GlobalScript.main_menu.enable_menu()
 		hide()
+	else:
+		get_tree().quit()
 	if GlobalScript.is_connected("exiting_settings", exit_callable):
 		GlobalScript.disconnect("exiting_settings", exit_callable)
+		
 
 func _on_main_menu_pressed():
 	quit_confirmation.show()
-	quitting_to_menu = true 
+	quitting_to_menu = true
 
 func _on_quit_menu_resume_pressed():
 	quit_confirmation.hide()
@@ -59,3 +64,6 @@ func _on_settings_exited():
 	print("you exited?")
 	get_tree().paused = true
 
+func _on_restart_pressed():
+	restarting_level = true 
+	quit_confirmation.show()

@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://bxmqcr1u77plg" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Assets/Tiles.png" id="1_0pjxx"]
 [ext_resource type="Texture2D" uid="uid://bbkd3lq1g38s1" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Background Props.png" id="2_ohlfq"]
-[ext_resource type="Texture2D" uid="uid://bl7n6wgvoartc" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Assets/Props-01.png" id="3_b8d4w"]
+[ext_resource type="Texture2D" uid="uid://bl7n6wgvoartc" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Props-01.png" id="3_b8d4w"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_f8mng"]
 vertices = PackedVector2Array(-16, -8, 16.5, -8, 16, 8, -16, 8)

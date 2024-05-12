@@ -50,6 +50,7 @@ func disable_menu():
 	set_process_input(false)
 
 func enable_menu():
+	show()
 	Engine.time_scale = 1
 	GlobalScript.emit_signal("enabling_menu")
 	get_tree().paused = true 
@@ -61,13 +62,14 @@ func enable_menu():
 	resume.disabled = !GlobalScript.has_save()
 	set_process_input(true)
 	start_button.grab_focus()
+	GlobalScript.disable_free_play()
 
 func _on_start_pressed():
 	level_select.show()
 	exit_button.hide()
 	exit_button.disabled = true 
 	$"%LevelButtons".get_child(0).grab_focus()
-#	start_level("Emergence")
+	GlobalScript.disable_free_play()
 
 func _on_settings_pressed():
 	disable_menu()
@@ -146,3 +148,8 @@ func _on_level_select_return_button_pressed():
 	exit_button.disabled = false
 	exit_button.show()
 	level_select.hide()
+
+
+func _on_free_play_pressed():
+	_on_start_pressed()
+	GlobalScript.enable_free_play()

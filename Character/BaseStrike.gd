@@ -16,7 +16,6 @@ var perform_attack_logic:bool = true
 var entity: Entity
 var frame: int
 
-
 func init(current_entity:Entity):
 	entity = current_entity
 
@@ -36,7 +35,6 @@ func input(event):
 func physics_process(delta: float):
 	entity.velocity.x *= friction
 	frame += 1
-
 
 func on_attack_hit(object):
 	pass

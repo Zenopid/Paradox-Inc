@@ -1,0 +1,93 @@
+[gd_scene load_steps=8 format=3 uid="uid://qdbmrdg5rvrr"]
+
+[ext_resource type="Script" path="res://Universal_Scripts/Interactables/MoveableObject.gd" id="1_robjn"]
+[ext_resource type="Texture2D" uid="uid://bl7n6wgvoartc" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Props-01.png" id="2_2rmwh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h4uon"]
+size = Vector2(31, 26)
+
+[sub_resource type="Animation" id="Animation_4l2om"]
+resource_name = "Become Paradox"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BagSprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0.235294, 0, 0.301961, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_rqamv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BagSprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_yjceo"]
+resource_name = "Return"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BagSprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.235294, 0, 0.301961, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hk24e"]
+_data = {
+"Become Paradox": SubResource("Animation_4l2om"),
+"RESET": SubResource("Animation_rqamv"),
+"Return": SubResource("Animation_yjceo")
+}
+
+[node name="GarbageBag" type="RigidBody2D" groups=["Moveable Object", "Persist"]]
+collision_layer = 0
+collision_mask = 0
+mass = 0.7
+continuous_cd = 2
+max_contacts_reported = 8
+script = ExtResource("1_robjn")
+health = 25
+
+[node name="BagSprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_2rmwh")
+region_enabled = true
+region_rect = Rect2(49.1302, 5.58116, 30.4667, 26.529)
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-0.5, 0)
+shape = SubResource("RectangleShape2D_h4uon")
+
+[node name="Destruction_Timer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.1
+one_shot = true
+
+[node name="ColorChanger" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_hk24e")
+}

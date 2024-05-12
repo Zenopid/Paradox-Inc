@@ -103,7 +103,8 @@ func _on_body_entered(body):
 			object_push = abs(object_push)
 		body.call_deferred("apply_central_impulse",object_push)
 		emit_signal("hitbox_collided", body)
-		body.damage(damage)
+		if body.has_method("damage"):
+			body.damage(damage)
 	elif body is Entity:
 		if body != hitbox_owner:
 			var invlv_type:String = body.get_invlv_type()

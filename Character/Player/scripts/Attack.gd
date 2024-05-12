@@ -80,7 +80,6 @@ func physics_process(delta: float) -> void:
 		return
 	if active_attack:
 		active_attack.physics_process(delta)
-	#entity.move_and_slide()
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	
 func use_attack(attack_name) -> bool:

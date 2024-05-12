@@ -71,6 +71,7 @@ script = ExtResource("1_1hej8")
 
 [node name="Box" type="Sprite2D" parent="."]
 texture = ExtResource("2_fqxhm")
+region_rect = Rect2(0, 0, 128, 224)
 
 [node name="Collision" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
