@@ -18,9 +18,12 @@ const N_FLASHES = 4
 @export var danger_zone:float = 0.2
 @export var will_pulse:bool = false
 
-#func _ready():
-#	var update_tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-#	update_tween.tween_property(health_under, "value", entity., 0.5)
+func init(max_health:int ):
+	health_over.max_value = max_health
+	health_under.max_value = max_health
+	health_over.value = max_health
+	health_under.value = max_health
+
 
 func _on_health_updated(health, amount: int = 0):
 	health_over.value = health

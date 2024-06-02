@@ -61,7 +61,6 @@ func _input(event):
 		_on_resume_pressed()
 
 func _on_settings_exited():
-	print("you exited?")
 	get_tree().paused = true
 
 func _on_restart_pressed():

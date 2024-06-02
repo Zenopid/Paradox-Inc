@@ -14,7 +14,7 @@ func _on_level_timeline_swapped(new_timeline:String):
 func set_collision(future_value:bool, past_value:bool):
 	#wall_ray.set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, future_value)
 	#wall_ray.set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, past_value)
-	#
+	
 	ground_ray.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, future_value)
 	ground_ray.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, past_value)
 	

@@ -6,22 +6,36 @@ const UNFOCUSED_PRIORITY: int = -5
 const FOCUSED_PRIORITY: int = 0
 
 signal status_changed(activated: bool )
-@export_enum ("Future", "Past") var timeline:String = "Future"
+@export_enum ("Paradox", "Future", "Past") var timeline:String = "Future"
+@export var on_sprite_paradox_color:Color
+@export var off_sprite_paradox_color:Color
 @onready var level: GenericLevel
 @onready var on_sprite: Sprite2D = $OnSprite
 @onready var off_sprite: Sprite2D = $OffSprite
 @onready var activation_count: int = 0
+
+@onready var is_paradox:bool = false 
+
 func _ready():
 	add_to_group("Switch")
 	level = get_tree().get_first_node_in_group("CurrentLevel")
 	level.connect("swapped_timeline", Callable(self, "swap_view"))
 	if timeline == "Future":
 		enable_future_collision()
-	else:
+	elif timeline == "Past":
 		enable_past_collision()
+	else:
+		enable_future_collision()
+		enable_past_collision()
+		is_paradox = true 
+		on_sprite.modulate = on_sprite_paradox_color
+		off_sprite.modulate = off_sprite_paradox_color
 	swap_view(level.current_timeline)
 
 func swap_view(new_timeline):
+	if is_paradox:
+		modulate.a = 1
+		return
 	if new_timeline != timeline:
 		modulate.a = 0.35
 	else:

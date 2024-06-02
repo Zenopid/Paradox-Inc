@@ -1,17 +1,17 @@
 class_name PlayerInfo extends Resource
 
+@export var stopwatch_time: int = 0
 @export var items:= []
+var all_items:= []
 @export var max_health:int = 100
 @export var health:int = max_health:
 	set(value):
 		health = clamp(value, 0, max_health)
 	get:
 		return health
-@export var save_pos:Vector2:
-	set(value):
-		save_pos = value
-	get:
-		return save_pos
+@export var global_position:Vector2 
+@export var spawn_point:Vector2
+@export var respawn_timeline:String
 
 func _set_health(value: int):
 #	var prev_health = health
@@ -22,6 +22,5 @@ func _set_health(value: int):
 #			kill()
 #			emit_signal("killed")
 
-func update_position(value:Vector2):
-	pass
-	#save_pos
+func enable_all_items():
+	items = all_items

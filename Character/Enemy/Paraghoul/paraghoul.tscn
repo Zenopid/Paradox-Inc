@@ -541,6 +541,9 @@ one_shot = true
 wait_time = 0.4
 one_shot = true
 
+[node name="Chase_Duration" type="Timer" parent="StateMachine/Timers"]
+one_shot = true
+
 [node name="ShapeCasts" type="Node" parent="StateMachine"]
 unique_name_in_owner = true
 

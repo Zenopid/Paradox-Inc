@@ -1,4 +1,4 @@
-[gd_scene load_steps=156 format=3 uid="uid://68mxs8vrodes"]
+[gd_scene load_steps=168 format=3 uid="uid://68mxs8vrodes"]
 
 [ext_resource type="Script" path="res://Character/Player/scripts/Player.gd" id="1_d84qb"]
 [ext_resource type="Texture2D" uid="uid://ccnj5krx1gyit" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-crouch-00.png" id="2_nbwc8"]
@@ -90,20 +90,22 @@
 [ext_resource type="Script" path="res://Character/Player/scripts/Dodge.gd" id="46_cwimo"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Dead.gd" id="48_10113"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack.gd" id="52_61mr7"]
-[ext_resource type="Script" path="res://Character/Player/scripts/PortalState.gd" id="57_2qvn5"]
 [ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="58_tx02o"]
 [ext_resource type="Script" path="res://Levels/Backgrounds.gd" id="58_wunj3"]
 [ext_resource type="Texture2D" uid="uid://dfl65b0g1jhq8" path="res://Sprites/Stages/Tiles/Assets/Background_2.png" id="60_ihivh"]
-[ext_resource type="PackedScene" uid="uid://dicbkcloxwqty" path="res://Character/Player/Scenes/portal.tscn" id="62_csbhp"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundedAttack1.gd" id="71_wsv55"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundedAttack2.gd" id="72_t4ijd"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundedAttack3.gd" id="73_5exvu"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/AirAttack1.gd" id="74_kxsit"]
 [ext_resource type="Script" path="res://Character/Player/scripts/StateMachine.gd" id="81_fmllj"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/LandingLag.gd" id="83_pq2wu"]
+[ext_resource type="AudioStream" uid="uid://f6e0dp68alkl" path="res://Character/Player/SFX/Attacks/Hit/GenericHit.wav" id="85_rhng2"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/AirAttack2.gd" id="88_lli4y"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundPound.gd" id="89_tqgg8"]
+[ext_resource type="AudioStream" uid="uid://cmhynxa2310sa" path="res://Character/Player/SFX/Land.wav" id="96_7j2db"]
+[ext_resource type="AudioStream" uid="uid://dm5fxawgdqci5" path="res://Character/Player/SFX/Jump.wav" id="97_vrqk0"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/WallSlide.gd" id="101_lae4r"]
+[ext_resource type="AudioStream" uid="uid://g7aweg5jsk1h" path="res://Character/Player/SFX/Slide.wav" id="102_jlbyr"]
 [ext_resource type="Texture2D" uid="uid://cmvmd1suu7ptj" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Base Color.png" id="104_w3v4d"]
 [ext_resource type="PackedScene" uid="uid://d18ny0w4wlb1h" path="res://Universal_Scenes/camera.tscn" id="105_tcjc0"]
 
@@ -424,6 +426,70 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b022k"]
 size = Vector2(22.008, 29.1196)
 
+[sub_resource type="Curve" id="Curve_6qo18"]
+max_value = 5.0
+_data = [Vector2(0, 8.75), 0.0, 0.0, 0, 0, Vector2(0.344221, 0), 0.0, 0.0, 0, 0, Vector2(1, -92.5), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_aim0q"]
+curve_y = SubResource("Curve_6qo18")
+
+[sub_resource type="Curve" id="Curve_ftw4b"]
+max_value = 5.0
+_data = [Vector2(0.0376884, 3.96875), 0.0, 0.0, 0, 0, Vector2(1, 0.84375), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_fuvnx"]
+curve = SubResource("Curve_ftw4b")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_h5o11"]
+lifetime_randomness = 0.75
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(5, 5, 1)
+spread = 0.0
+initial_velocity_min = 500.0
+initial_velocity_max = 800.0
+directional_velocity_min = 1.0
+directional_velocity_max = 1.0
+directional_velocity_curve = SubResource("CurveXYZTexture_aim0q")
+gravity = Vector3(300, -500, 0)
+scale_curve = SubResource("CurveTexture_fuvnx")
+color = Color(0.878431, 0.996078, 1, 1)
+collision_mode = 2
+
+[sub_resource type="Curve" id="Curve_vnu61"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_he1n3"]
+min_value = 0.99
+max_value = 760.26
+_data = [Vector2(0.00753769, 100.644), 0.0, 0.0, 0, 0, Vector2(1, 0.99), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_vh4hc"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_cyljq"]
+curve_x = SubResource("Curve_vnu61")
+curve_y = SubResource("Curve_he1n3")
+curve_z = SubResource("Curve_vh4hc")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_d8wme"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(12, 0.5, 1)
+direction = Vector3(0, 1, 0)
+spread = 0.0
+initial_velocity_min = 950.0
+initial_velocity_max = 950.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveXYZTexture_cyljq")
+color = Color(0.878431, 0.996078, 1, 1)
+collision_mode = 2
+
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_ffhr5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_m7p17"]
@@ -542,39 +608,25 @@ tracks/1/keys = {
 "update": 0,
 "values": [Vector2(0, 5.10508)]
 }
-tracks/2/type = "method"
+tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("StateMachine/Portal")
+tracks/2/path = NodePath("AnimatedSprite2D:animation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0.383334),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [],
-"method": &"anim_over"
-}]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("AnimatedSprite2D:animation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [&"Cast_Start"]
 }
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("AnimatedSprite2D:frame")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AnimatedSprite2D:frame")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
 "times": PackedFloat32Array(0, 0.116667, 0.233334, 0.316667),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
@@ -1301,6 +1353,20 @@ tracks/3/keys = {
 "update": 1,
 "values": [0, 1, 2, 3]
 }
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("StateMachine/Jump")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"emit_particles"
+}]
+}
 
 [sub_resource type="Animation" id="Animation_qotqj"]
 resource_name = "Jump Squat"
@@ -1492,7 +1558,7 @@ size = Vector2(20, 14.5)
 
 [sub_resource type="Animation" id="Animation_444l8"]
 resource_name = "Slide"
-length = 0.200002
+length = 0.4
 loop_mode = 1
 step = 0.0166667
 tracks/0/type = "value"
@@ -1538,10 +1604,24 @@ tracks/3/path = NodePath("AnimatedSprite2D:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.1),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [0, 1]
+"values": [0, 1, 0, 1]
+}
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("StateMachine/Slide/Sfx")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [0.0],
+"method": &"play"
+}]
 }
 
 [sub_resource type="Animation" id="Animation_cyr2q"]
@@ -1758,7 +1838,6 @@ pull_speed = Vector2(15, 40)
 unique_name_in_owner = true
 
 [node name="FPSTracker" type="Label" parent="UI"]
-visible = false
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -1792,7 +1871,7 @@ future_color = Color(0.00784314, 0.0627451, 0.0941176, 1)
 past_color = Color(1, 0.883333, 0, 1)
 extra_color = Color(0.623529, 0.0509804, 0.74902, 1)
 
-[node name="Stopwatch" type="Label" parent="UI"]
+[node name="Stopwatch" type="Label" parent="UI" node_paths=PackedStringArray("player")]
 unique_name_in_owner = true
 texture_filter = 1
 anchors_preset = 1
@@ -1807,6 +1886,9 @@ theme_override_font_sizes/font_size = 33
 text = "00:00:00:00"
 horizontal_alignment = 2
 script = ExtResource("4_wefng")
+player = NodePath("../..")
+better_than_ghost_time_color = Color(0, 44.38, 0.02, 1)
+worse_than_ghost_time_color = Color(0.83, 0.0913, 0.103611, 1)
 
 [node name="HealthBar" parent="UI" node_paths=PackedStringArray("entity") instance=ExtResource("6_62s4t")]
 unique_name_in_owner = true
@@ -1886,6 +1968,12 @@ hitstop = 8
 animation_name = "Grounded_Attack_1"
 friction = 0.9
 
+[node name="Hit" type="AudioStreamPlayer" parent="StateMachine/Attack/GroundedAttack1"]
+unique_name_in_owner = true
+stream = ExtResource("85_rhng2")
+
+[node name="Whiff" type="AudioStreamPlayer" parent="StateMachine/Attack/GroundedAttack1"]
+
 [node name="GroundedAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("72_t4ijd")
 buffer_window = 17
@@ -1894,8 +1982,12 @@ hitstop = 8
 animation_name = "Grounded_Attack_2"
 friction = 0.85
 
+[node name="Hit" type="AudioStreamPlayer" parent="StateMachine/Attack/GroundedAttack2"]
+stream = ExtResource("85_rhng2")
+
 [node name="GroundedAttack3" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("73_5exvu")
+damage = 25
 object_push = Vector2(650, 0)
 dodge_window = 0
 lunge_distance = 350
@@ -1903,6 +1995,9 @@ hitstop = 15
 camera_shake_strength = 3.5
 animation_name = "Grounded_Attack_3"
 friction = 0.8
+
+[node name="Hit" type="AudioStreamPlayer" parent="StateMachine/Attack/GroundedAttack3"]
+stream = ExtResource("85_rhng2")
 
 [node name="AirAttack1" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("74_kxsit")
@@ -1915,6 +2010,9 @@ animation_name = "AirAttack1"
 friction = 1.0
 attack_type = "Air"
 
+[node name="Hit" type="AudioStreamPlayer" parent="StateMachine/Attack/AirAttack1"]
+stream = ExtResource("85_rhng2")
+
 [node name="AirAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("88_lli4y")
 damage = 10
@@ -1924,12 +2022,16 @@ animation_name = "AirAttack2"
 friction = 1.0
 attack_type = "Air"
 
+[node name="Hit" type="AudioStreamPlayer" parent="StateMachine/Attack/AirAttack2"]
+stream = ExtResource("85_rhng2")
+
 [node name="GroundPound" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("89_tqgg8")
 fall_speed = 800
-minimum_damage = 15
+minimum_damage = 25
 maximum_damage = 45
 height_scaler = 0.1
+decel_rate = 0.75
 duration = 7
 object_push = Vector2(1000, -650)
 dodge_window = -1
@@ -1943,11 +2045,11 @@ script = ExtResource("83_pq2wu")
 lunge_distance = 0
 hitstop = 0
 
+[node name="Hit" type="AudioStreamPlayer" parent="StateMachine/Attack/LandingLag"]
+
 [node name="Crouch" type="Node" parent="StateMachine"]
 script = ExtResource("34_j5ybi")
 decelerate_value = 0.2
-acceleration = 0
-move_speed = 0
 animation_name = "Crouch"
 
 [node name="Dead" type="Node" parent="StateMachine"]
@@ -1967,10 +2069,15 @@ maximum_fall_speed = 700
 buffer_duration = 0.1
 push = 150
 animation_name = "Fall"
+has_inactive_process = true
+
+[node name="Land" type="AudioStreamPlayer" parent="StateMachine/Fall"]
+unique_name_in_owner = true
+stream = ExtResource("96_7j2db")
+bus = &"Sfx"
 
 [node name="Idle" type="Node" parent="StateMachine"]
 script = ExtResource("3_4sr6w")
-move_speed = 250
 animation_name = "Idle"
 
 [node name="Jump" type="Node" parent="StateMachine"]
@@ -1981,27 +2088,41 @@ jump_time_to_peak = 0.5
 jump_time_to_descent = 0.4
 minimum_doublejump_speed = 250
 animation_name = "Jump"
+has_inactive_process = true
 
-[node name="Portal" type="Node" parent="StateMachine"]
-script = ExtResource("57_2qvn5")
-animation_name = "Cast_Start"
+[node name="Sfx" type="AudioStreamPlayer" parent="StateMachine/Jump"]
+stream = ExtResource("97_vrqk0")
+bus = &"Sfx"
 
-[node name="portal_a" parent="StateMachine/Portal" instance=ExtResource("62_csbhp")]
-visible = false
-modulate = Color(0.364706, 0.321569, 1, 1)
-position = Vector2(17, 0)
-collision_layer = 64
-collision_mask = 136
-monitoring = false
-monitorable = false
+[node name="ParticlesRight" type="GPUParticles2D" parent="StateMachine/Jump"]
+unique_name_in_owner = true
+position = Vector2(0, 18)
+emitting = false
+amount = 20
+process_material = SubResource("ParticleProcessMaterial_h5o11")
+lifetime = 0.15
+one_shot = true
+fixed_fps = 60
 
-[node name="portal_b" parent="StateMachine/Portal" instance=ExtResource("62_csbhp")]
-visible = false
-modulate = Color(1, 0.141176, 0.141176, 1)
-collision_layer = 64
-collision_mask = 136
-monitoring = false
-monitorable = false
+[node name="ParticlesLeft" type="GPUParticles2D" parent="StateMachine/Jump"]
+unique_name_in_owner = true
+position = Vector2(0, 18)
+scale = Vector2(-1, -1)
+emitting = false
+amount = 20
+process_material = SubResource("ParticleProcessMaterial_h5o11")
+lifetime = 0.15
+one_shot = true
+fixed_fps = 60
+
+[node name="SuperJump" type="GPUParticles2D" parent="StateMachine/Jump"]
+unique_name_in_owner = true
+z_index = -1
+position = Vector2(0, 35)
+emitting = false
+process_material = SubResource("ParticleProcessMaterial_d8wme")
+lifetime = 0.35
+one_shot = true
 
 [node name="Run" type="Node" parent="StateMachine"]
 script = ExtResource("4_2r8jj")
@@ -2022,26 +2143,52 @@ max_gravity = 900
 push = 500
 animation_name = "Slide"
 
+[node name="Sfx" type="AudioStreamPlayer" parent="StateMachine/Slide"]
+stream = ExtResource("102_jlbyr")
+volume_db = -30.0
+bus = &"Sfx"
+
+[node name="Particles" type="GPUParticles2D" parent="StateMachine/Slide"]
+unique_name_in_owner = true
+position = Vector2(0, 18)
+rotation = -3.14159
+scale = Vector2(-1, 1)
+emitting = false
+amount = 15
+process_material = SubResource("ParticleProcessMaterial_h5o11")
+lifetime = 0.2
+fixed_fps = 60
+
 [node name="WallSlide" type="Node" parent="StateMachine"]
 script = ExtResource("101_lae4r")
 eject_timer = 0.2
 crouch_slide_boost = 10
+Wallbouce_timer = 0.35
 jump_decay_rate = 0.15
 minimum_jump_decay = 0.05
 animation_name = "WallSlide"
+has_inactive_process = true
 
 [node name="Timers" type="Node" parent="StateMachine"]
 
+[node name="Jump_Buffer" type="Timer" parent="StateMachine/Timers"]
+wait_time = 0.2
+one_shot = true
+
+[node name="Attack_Buffer" type="Timer" parent="StateMachine/Timers"]
+wait_time = 0.1
+one_shot = true
+
+[node name="Dodge_Buffer" type="Timer" parent="StateMachine/Timers"]
+wait_time = 0.1
+one_shot = true
+
 [node name="Coyote" type="Timer" parent="StateMachine/Timers"]
-process_callback = 0
+wait_time = 0.1
 one_shot = true
 
 [node name="Slide_Cooldown" type="Timer" parent="StateMachine/Timers"]
 process_callback = 0
-one_shot = true
-
-[node name="Jump_Buffer" type="Timer" parent="StateMachine/Timers"]
-wait_time = 0.2
 one_shot = true
 
 [node name="Wallbounce" type="Timer" parent="StateMachine/Timers"]
@@ -2052,6 +2199,10 @@ one_shot = true
 one_shot = true
 
 [node name="Dodge_Cooldown" type="Timer" parent="StateMachine/Timers"]
+one_shot = true
+
+[node name="Fastfall_Lockout" type="Timer" parent="StateMachine/Timers"]
+wait_time = 0.1
 one_shot = true
 
 [node name="Raycasts" type="Node" parent="StateMachine"]
@@ -2092,8 +2243,6 @@ position = Vector2(-12.55, -10.5)
 shape = SubResource("SegmentShape2D_ffhr5")
 target_position = Vector2(0, 25)
 collision_mask = 1024
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
 [node name="Debug" type="Node2D" parent="."]
 
@@ -2141,6 +2290,7 @@ motion_scale = Vector2(0, 0)
 [node name="Sprite2D" type="Sprite2D" parent="Backgrounds/PastBackground"]
 modulate = Color(0.85, 0.85, 0.85, 1)
 texture_filter = 1
+position = Vector2(1, -1)
 scale = Vector2(2.3246, 2.37132)
 texture = ExtResource("60_ihivh")
 centered = false
@@ -2151,6 +2301,7 @@ motion_scale = Vector2(0, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="Backgrounds/FutureBackground"]
 texture_filter = 1
+position = Vector2(2, 0)
 scale = Vector2(2.4, 2.025)
 texture = ExtResource("104_w3v4d")
 centered = false

@@ -1,0 +1,268 @@
+[gd_scene load_steps=16 format=3 uid="uid://b7575dsho2xwu"]
+
+[ext_resource type="Script" path="res://Character/Dummy/dummy.gd" id="1_ihgov"]
+[ext_resource type="Texture2D" uid="uid://rd8xwjonl16v" path="res://Sprites/Objects/Training Dummy Sprite Sheet.png" id="2_cqepd"]
+[ext_resource type="Script" path="res://Character/EntityStateMachine.gd" id="3_22hde"]
+[ext_resource type="Script" path="res://Character/States/BaseState.gd" id="4_7h26l"]
+[ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="5_vpfsp"]
+[ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="6_c0vyf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cjpqm"]
+size = Vector2(22.4413, 23.0649)
+
+[sub_resource type="Animation" id="Animation_p3nrl"]
+resource_name = "Damaged"
+length = 0.400002
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.383333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 0]
+}
+
+[sub_resource type="Animation" id="Animation_puwby"]
+resource_name = "Damaged2"
+length = 0.400002
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.0833333, 0.183333, 0.283333, 0.383333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [8, 9, 10, 11, 12, 8]
+}
+
+[sub_resource type="Animation" id="Animation_dc8bf"]
+resource_name = "Damaged3"
+length = 0.583335
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0666667, 0.116667, 0.183333, 0.283333, 0.383333, 0.466667, 0.5678),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [16, 17, 18, 19, 20, 21, 23, 16]
+}
+
+[sub_resource type="Animation" id="Animation_byoul"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_q7peh"]
+_data = {
+"Damaged": SubResource("Animation_p3nrl"),
+"Damaged2": SubResource("Animation_puwby"),
+"Damaged3": SubResource("Animation_dc8bf"),
+"RESET": SubResource("Animation_byoul")
+}
+
+[sub_resource type="Animation" id="Animation_0xog8"]
+resource_name = "DamageNumber"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/DamageNumber:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(2, 2), Vector2(3, 3), Vector2(3, 3), Vector2(2, 2), Vector2(1.5, 1.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("UI/DamageNumber:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(-69, -244), Vector2(-103, -278), Vector2(-103, -278), Vector2(-69, -244), Vector2(-53, -216)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("UI/DamageNumber:theme_override_colors/font_color")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.83, 0.0913, 0.103611, 1), Color(0.878431, 0.996078, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("UI/DamageNumber:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.6, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_8xej4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/DamageNumber:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(2, 2)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("UI/DamageNumber:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-69, -244)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("UI/DamageNumber:theme_override_colors/font_color")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.83, 0.0913, 0.103611, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("UI/DamageNumber:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_61nhs"]
+_data = {
+"DamageNumber": SubResource("Animation_0xog8"),
+"RESET": SubResource("Animation_8xej4")
+}
+
+[node name="Dummy" type="CharacterBody2D"]
+scale = Vector2(2, 2)
+collision_layer = 48
+collision_mask = 0
+script = ExtResource("1_ihgov")
+max_health = 500
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_cqepd")
+hframes = 8
+vframes = 3
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(1.22066, 1.53245)
+shape = SubResource("RectangleShape2D_cjpqm")
+
+[node name="SpriteAnimator" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_q7peh")
+}
+
+[node name="EffectAnimator" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_61nhs")
+}
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("machine_owner")]
+script = ExtResource("3_22hde")
+initial_state = "Idle"
+machine_owner = NodePath("..")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("4_7h26l")
+animation_name = "RESET"
+
+[node name="Timers" type="Node" parent="StateMachine"]
+
+[node name="Raycasts" type="Node" parent="StateMachine"]
+
+[node name="UI" type="Node2D" parent="."]
+position = Vector2(0, 1)
+scale = Vector2(0.2, 0.2)
+
+[node name="HealthBar" parent="UI" node_paths=PackedStringArray("entity") instance=ExtResource("5_vpfsp")]
+unique_name_in_owner = true
+offset_left = -135.828
+offset_top = -157.306
+offset_right = -135.828
+offset_bottom = -157.306
+mouse_filter = 2
+entity = NodePath("../..")
+
+[node name="DamageNumber" type="Label" parent="UI"]
+unique_name_in_owner = true
+offset_left = -69.0
+offset_top = -244.0
+offset_right = 3.0
+offset_bottom = -196.0
+scale = Vector2(2, 2)
+theme_override_colors/font_color = Color(0.83, 0.0913, 0.103611, 1)
+theme_override_fonts/font = ExtResource("6_c0vyf")
+theme_override_font_sizes/font_size = 48
+text = "0
+"
+horizontal_alignment = 1
+
+[node name="HealTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+one_shot = true
+
+[connection signal="timeout" from="HealTimer" to="." method="_on_timer_timeout"]

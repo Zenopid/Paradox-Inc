@@ -1,4 +1,4 @@
-extends PlayerBaseState
+class_name Walljump extends PlayerBaseState
 
 @export var eject_timer: float = 0.4
 @export var base_slide_speed: int = 45
@@ -34,29 +34,30 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	wall_checker = state_machine.get_shapecast("WallScanner")
 	current_slide_speed = base_slide_speed
 func enter(msg: = {}):
+	wallbounce_timer.start()
 	if msg.has("previous_speed"):
 		previous_speed = msg["previous_speed"]
-	if Input.is_action_pressed("left"):
+	var move = get_movement_input()
+	if move < 0:
 		wall_direction = "left"
-		wall_checker.position.x  = entity.position.x - offset_x
-	elif Input.is_action_pressed("right"):
+	elif move > 0:
 		wall_direction = "right"
-		wall_checker.position.x = entity.position.x + offset_x
+	wall_checker.position.x = entity.position.x + offset_x * sign(move)
 	wall_checker.enabled = true
 	if previous_wall_direction != wall_direction:
 		jump_decay = 1
 		current_slide_speed = base_slide_speed
 	super.enter()
-	wallbounce_timer.start()
 	
 func input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("jump"):
 		entity.sprite.flip_h = !entity.sprite.flip_h
-		jump_node.add_jump()
+		jump_node.add_jump(1, true)
 		var speed_bonus:Vector2 = jump_boost
 		speed_bonus.x = jump_boost.x if wall_direction == "left" else -jump_boost.x
 		if wallbounce_timer.is_stopped():
 			previous_speed = 0
+		wallbounce_timer.stop() 
 		state_machine.transition_to("Jump", {
 			"double_jump_multiplier" = jump_decay, 
 			"double_jump_bonus_speed" = Vector2((abs(previous_speed) * sign(jump_boost.x)) + speed_bonus.x, speed_bonus.y)
@@ -66,23 +67,23 @@ func input(_event: InputEvent) -> void:
 		current_slide_speed += slide_speed_increase
 		if jump_decay < minimum_jump_decay:
 			jump_decay = minimum_jump_decay
-	if enter_dodge_state():
+	if state_machine.transition_if_available([
+		"Dodge",
+		"Attack"
+	]):
 		entity.sprite.flip_h = !entity.sprite.flip_h
-		return
-	if enter_attack_state():
-		entity.sprite.flip_h = !entity.sprite.flip_h
-		return
 
 func physics_process(delta):
-	var facing = -1 if facing_left() else 1
-	wall_checker.position = Vector2(entity.position.x + (offset_x * facing), entity.position.y - offset_y)
+	wall_checker.position = Vector2(entity.position.x + (offset_x * get_facing_as_int()), entity.position.y - offset_y)
 	if grounded():
-		if enter_dodge_state():
-			return
-		if enter_crouch_state():
-			return
-		if enter_move_state():
-			return
+		state_machine.transition_if_available([
+			"Dodge",
+			"Slide",
+			"Crouch",
+			"Run",
+			"Idle"
+		])
+		return
 	if !wall_checker.is_colliding():
 		state_machine.transition_to("Fall")
 		return
@@ -99,6 +100,7 @@ func physics_process(delta):
 		entity.velocity.y *= decel_rate
 	else:
 		entity.velocity.y = current_slide_speed
+		
 	current_slide_speed = clamp(current_slide_speed, base_slide_speed, max_slide_speed)
 	if eject_tracker <= 0:
 		entity.sprite.flip_h = ! entity.sprite.flip_h
@@ -106,6 +108,10 @@ func physics_process(delta):
 		state_machine.transition_to("Fall")
 		return
 	entity.move_and_slide() 
+
+func inactive_process(_delta:float ) -> void:
+	if grounded():
+		reset_wallslide_conditions()
 
 func reset_wallslide_conditions():
 	jump_decay = 1
@@ -115,3 +121,11 @@ func exit() -> void:
 	previous_wall_direction = wall_direction
 	eject_tracker = eject_timer
 	wall_checker.enabled = false
+
+func conditions_met() -> bool:
+	if wall_checker.is_colliding() and !grounded() and !Input.is_action_pressed("jump"):
+		if entity.sprite.flip_h and get_movement_input() < 0:
+			return true
+		elif !entity.sprite.flip_h and get_movement_input() > 0:
+			return true
+	return false

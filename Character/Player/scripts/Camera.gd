@@ -15,8 +15,8 @@ func _ready():
 	super._ready()
 
 	
-	ENABLE_CAMERA_FLASHING = GlobalScript.visual_settings.camera_flash 
-	if GlobalScript.visual_settings.camera_shake:
+	ENABLE_CAMERA_FLASHING = GlobalScript.get_setting("camera_flash") 
+	if ENABLE_CAMERA_FLASHING:
 		SHAKE_ANGLE_MULTIPLIER = 0
 	else:
 		SHAKE_POSITION_MULTIPLIER = 1

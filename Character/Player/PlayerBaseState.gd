@@ -1,24 +1,22 @@
 class_name PlayerBaseState extends BaseState
 
-func _ready():
-	pass
+
+func init(current_entity: Entity, s_machine: EntityStateMachine):
+	super.init(current_entity, s_machine)
 	
 func input(event):
+	entity = entity as Player
 	if Input.is_action_just_pressed("jump"):
 		state_machine.get_timer("Jump_Buffer").start()
 	if Input.is_action_just_released("crouch"):
 		state_machine.get_timer("Superjump").start()
-	
-
-func casting_portal() -> bool:
-#	if !Input.is_action_pressed("portal_a") and !Input.is_action_pressed("portal_b"):
-#		return false
-#	return true
-	return false
+	if Input.is_action_just_pressed("dodge"):
+		state_machine.get_timer("Dodge_Buffer").start()
+	if Input.is_action_just_pressed("attack"):
+		state_machine.get_timer("Attack_Buffer").start()
 
 func enter_move_state():
-	var move_state = "Run" if get_movement_input() != 0 else "Idle"
-	state_machine.transition_to(move_state)
+	state_machine.transition_to("Run") if get_movement_input() != 0 else state_machine.transition_to("Idle")
 	return true
 
 func get_movement_input() -> float:
@@ -70,24 +68,10 @@ func enter_jump_state():
 	return false
 
 func enter_dodge_state():
-	if Input.is_action_just_pressed("dodge") and state_machine.get_timer("Dodge_Cooldown").is_stopped():
-		state_machine.transition_to("Dodge")
-		return true
-	return false
-
-func enter_portal_state():
-#	if Input.is_action_just_pressed("portal_a"):
-#		state_machine.transition_to("Portal", {state = state_machine.get_current_state(),portal_type = "A"})
-#		return true
-#	if Input.is_action_just_pressed("portal_b"):
-#		state_machine.transition_to("Portal", {state = state_machine.get_current_state(), portal_type = "B"})
-#		return true
-	return false
-
-func enter_attack_state():
-	if Input.is_action_just_pressed("attack"):
-		state_machine.transition_to("Attack")
-		return true
+	if !state_machine.get_timer("Dodge_Buffer") or Input.is_action_just_pressed("dodge"):
+		if state_machine.get_timer("Dodge_Cooldown").is_stopped():
+			state_machine.transition_to("Dodge")
+			return true
 	return false
 
 func can_wallslide(current_speed: float = 0):
@@ -104,10 +88,6 @@ func can_wallslide(current_speed: float = 0):
 				return true
 	return false
 
-func can_fall():
-	var coyote_timer = state_machine.get_timer("Coyote")
-	if !grounded() and coyote_timer.is_stopped():
-		state_machine.transition_to("Fall")
 
 func grounded():
 	var ground_checker = state_machine.get_raycast("GroundChecker")
@@ -115,3 +95,8 @@ func grounded():
 	if ground_checker.is_colliding() or entity.is_on_floor():
 		return true
 	return false
+
+func physics_process(delta:float):
+	super.physics_process(delta)
+	entity = entity as Player
+	

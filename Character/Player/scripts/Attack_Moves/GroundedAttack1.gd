@@ -15,7 +15,7 @@ func physics_process(delta):
 	super.physics_process(delta)
 	if frame == 4:
 		if entity.sprite.flip_h:
-			entity.velocity.x -= lunge_distance * ( 1 - get_movement_input())
+			entity.velocity.x -= lunge_distance * ( 1 - get_movement_input() )
 		else:
 			entity.velocity.x += lunge_distance * ( 1 + get_movement_input() )
 	if frame == 7:

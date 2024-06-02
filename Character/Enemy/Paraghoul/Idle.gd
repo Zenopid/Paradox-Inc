@@ -74,3 +74,5 @@ func set_raycast_position():
 	los_raycast.position = entity.position
 	los_raycast.look_at(target_position)
 	
+func conditions_met():
+	return true

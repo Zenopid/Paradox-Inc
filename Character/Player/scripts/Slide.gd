@@ -1,6 +1,7 @@
 extends PlayerBaseState
 
 
+@export var speed_to_slide:int = 250
 @export var slide_acceleration:int = 5
 @export var slide_deceleration: int = 5
 @export var slide_speed:int = 325 
@@ -14,7 +15,7 @@ extends PlayerBaseState
 @export_range(1, 500) var push: int = 50
 
 @onready var jump_velocity: float = ((2.0 * jump_height) / jump_time_to_peak) * -1.0
-
+@onready var particles:GPUParticles2D = $"%Particles"
 var duration_timer: Timer
 var cooldown_timer: Timer
 
@@ -59,10 +60,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 func enter(_msg: = {}):
 	super.enter()
 	current_slide_duration = slide_duration
-	if facing_left():
-		slide_direction = -1
-	else:
-		slide_direction = 1
+	slide_direction = get_facing_as_int()
 	hit_max_speed = false 
 	wall_checker.enabled = true 
 	
@@ -72,6 +70,9 @@ func speed_timer_logic(delta):
 		current_slide_duration -= delta
 
 func physics_process(delta):
+	
+	particles.position = Vector2(entity.position.x, entity.position.y + 18)
+	
 	
 	speed_timer_logic(delta)
 	wall_checker.position.x = entity.position.x + 12.55 * slide_direction
@@ -84,67 +85,67 @@ func physics_process(delta):
 		if is_on_slope() and !ascending_slope():
 			pass
 		else:
-			if can_fall():
+			if !grounded():
 				return
-			entity.velocity.x = slow_down(entity.velocity.x) 
+			entity.velocity.x = float(slow_down(entity.velocity.x) )
 	else:
 		if abs(entity.velocity.x) < slide_speed:
-			entity.velocity.x += slide_acceleration * sign(entity.velocity.x)
+			entity.velocity.x += slide_acceleration * get_movement_input()
 			if abs(entity.velocity.x) > slide_speed:
 				entity.velocity.x = slide_speed * sign(entity.velocity.x)
 #		entity.velocity.x += slide_acceleration * slide_direction
 #		entity.velocity.x = clamp(entity.velocity.x, -slide_speed, slide_speed)
 	hit_max_speed = true if abs(entity.velocity.x) >= abs(slide_speed) else false
-	#if can_fall():
-		#return
+	
 	if entity.velocity.x  == 0:
-		if can_fall():
-			return
+		particles.emitting = false
 		if Input.is_action_pressed("crouch"):
 			state_machine.transition_to("Crouch", {}, "Slide_to_Crouch")
 			return
 		enter_move_state()
 		return
 	if !grounded():
+		particles.emitting = false
 		entity.velocity.y += gravity_acceleration
 		if entity.velocity.y > max_gravity:
 			entity.velocity.y = max_gravity
-		if entity.is_on_wall():
-			if wall_checker.is_colliding():
-				state_machine.transition_to("WallSlide")
-			else: 
-				state_machine.transition_to("Fall")
-			return
+		if state_machine.transition_if_available(["WallSlide"]):
+			pass
+		else: 
+			state_machine.transition_to("Fall")
+		return
+	else:
+		emit_particles()
 	if !is_on_slope():
 		entity.move_and_slide()
 	else:
 		move_and_slide_with_slopes(delta)
 	push_objects()
 
-func input(_event: InputEvent):
-	if enter_attack_state():
+
+func input(event: InputEvent):
+	super.input(event)
+	if state_machine.transition_if_available(["Attack"]):
 		return
 	if Input.is_action_just_pressed("jump"):
-		#jump_node.remaining_jumps += 1 
-		#for some reason, you can't jump without this.
 		state_machine.transition_to("Jump", {overwrite_speed = Vector2(-1, jump_velocity)})
 		return
-	if enter_dodge_state():
+	if state_machine.transition_if_available(["Dodge"]):
 		return
 	if !Input.is_action_pressed("crouch"):
-		enter_move_state()
+		state_machine.transition_if_available([
+			"Run",
+			"Idle",
+		])
 
-func slow_down(speed: float):
-	speed = int(round(speed))
-	speed = move_toward(speed, 0, slide_deceleration)
-	return speed
+func slow_down(speed: int) -> float:
+	return float(move_toward(speed, 0, slide_deceleration))
 
 func exit() -> void:
 	cooldown_timer.start()
-	entity.sprite.rotation_degrees = 0
-	entity.get_node("Hurtbox").rotation_degrees = 0
 	wall_checker.enabled = false
-	
+	particles.emitting = false
+
 func push_objects():
 	for i in entity.get_slide_collision_count():
 		var collision = entity.get_slide_collision(i)
@@ -192,3 +193,17 @@ func ascending_slope():
 	if get("slope_checker_" + facing).is_colliding():
 		return true
 	return false
+
+func conditions_met() -> bool:
+	var move = get_movement_input()
+	if cooldown_timer.is_stopped() and move != 0 and grounded():
+		if abs(entity.velocity.x) >= speed_to_slide and Input.is_action_pressed("crouch"):
+			if sign(entity.velocity.x) == sign(move):
+				return true
+	return false
+
+func emit_particles() -> void:
+	particles.scale.x = get_facing_as_int()
+	particles.speed_scale = lerp(0.5, float(1.0), entity.velocity / entity.max_grapple_speed)
+	if !particles.emitting:
+		particles.emitting = true 

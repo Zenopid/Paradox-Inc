@@ -26,8 +26,8 @@ func physics_process(delta:float):
 			"knockback_angle": 360,
 			"attack_type": "Normal",
 			"object_push": object_push,
-			"hit_stop": hitstop
-		}
+			"hit_stop": hitstop,
+		}  
 		attack_state.create_hitbox(hitbox_info)
 #	elif frame > 7 and frame < 12:
 #		air_hitbox.position = Vector2(entity.position.x + 0.375, entity.position.y - 2.125)

@@ -1,6 +1,5 @@
 class_name Enemy extends Entity
 
-signal health_updated(health)
 signal killed()
 
 @export var max_health: int = 100
@@ -36,6 +35,7 @@ var enemy_close: bool = false
 var raycasts = []
 var detection_areas = []
 var being_destroyed:bool = false 
+
 func get_spawn():
 	return spawn_point
 
@@ -213,31 +213,6 @@ func clear_hitboxes():
 	for i in get_tree().get_nodes_in_group(name + "Hitboxes"):
 		i.free()
 
-func save() -> Dictionary:
-	var save_dict = {
-	"global_position": global_position,
-	"health": health,
-	"current_timeline": current_timeline,
-	"name": name,
-	"is_paradox": is_paradox
-	}
-#	SaveSystem.set_var(self.name, save_dict)
-	SaveSystem.set_var("Enemies:" + name, save_dict) 
-	return save_dict
-
-func load_from_file():
-	var save_data = SaveSystem.get_var("Enemies:" + name)
-	if save_data:
-		for i in save_data.keys():
-			set(i, save_data[i])
-	if !is_paradox:
-		if current_timeline.to_lower() == "future":
-			set_collision(true, false)
-		else:
-			set_collision(false, true)
-	else:
-		set_collision(true, true)
-
 func _on_detection_sphere_body_entered(body):
 	if body is Player:
 		detection_shape.debug_color = detection_color
@@ -257,5 +232,7 @@ func destroy():
 	being_destroyed = true
 #	set_physics_process(false)
 #	set_process(false)
-	
+
+func get_max_health() -> int:
+	return max_health
 

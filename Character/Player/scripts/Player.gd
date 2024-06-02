@@ -1,21 +1,23 @@
 class_name Player extends Entity
 
 
-signal health_updated(health)
+const SAVE_FILE_PATH:String =  "user://save_info/player_data.tres"
+
+
 signal killed()
 signal respawning()
 
 @export_category("Grapple")
 @export var grapple_pull: int = 75
 @export var max_grapple_speed: int = 900
+@export var max_grapple_pull_speed:int = 500
 @export var air_grapple_boosts:int = 1
 @export var air_grapple_boost_amount:float
 @export var level_with_grapple_range: int = 30
 @export var grapple_boost_object_pull_multiplier: float = 0.3
+
 @export_category("Stats")
 @export var max_health: int = 100
-
-
 @onready var state_tracker:Label = $Debug/StateTracker
 @onready var health:int = max_health 
 @onready var invlv_timer = $Invlv_Timer
@@ -53,6 +55,15 @@ var grappling_upwards: bool = false
 
 var state_machine_states := {}
 
+#Ghost info
+var ghost_info: PlayerGhost = PlayerGhost.new()
+var update_ghost:bool = true
+var player_positions: PackedVector2Array  = []
+var player_animations: PackedStringArray = []
+var checkpoint_timestamps: PackedInt32Array= []
+
+var checkpoints_reached:int = 0
+
 func get_spawn():
 	return spawn_point
 
@@ -70,12 +81,15 @@ func _ready():
 	_on_swapped_timeline(current_level.current_timeline)
 	state_machine_states = states.get_all_states()
 	
+	
+
 func connect_signals():
 	GlobalScript.connect("level_over", Callable(self, "_on_level_over"))
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
 	GlobalScript.connect("enabling_menu", Callable(self, "_on_game_over"))
 	GlobalScript.connect("disabling_menu", Callable(self, "enable"))
 	GlobalScript.connect("save_game_state", Callable(self, "save"))
+
 
 func _on_swapped_timeline(new_timeline:String):
 	if new_timeline.to_lower() == "future":
@@ -106,6 +120,7 @@ func set_collision(future_value, past_value):
 		
 
 func grapple_boost():
+	grapple = grapple as Hook
 	if grapple.attached:
 		var boost_amount:Vector2 = (position.direction_to(grapple.hook_body.global_position) * grapple.boost_speed.length()).round()
 		if !player_braced:
@@ -123,8 +138,11 @@ func grapple_boost():
 				velocity += boost_amount
 				velocity = velocity.limit_length(max_grapple_speed)
 		if grapple.object_pullable():
-			grapple.grappled_object.call_deferred("apply_central_impulse", -(boost_amount * (1  + grapple_boost_object_pull_multiplier)) )
+			if grapple.grappled_object.velocity.length() < max_grapple_pull_speed:
+				grapple.grappled_object.call_deferred("apply_central_impulse", -(boost_amount * (1  + grapple_boost_object_pull_multiplier)) )
+				grapple.grappled_object.velocity = grapple.grappled_object.velocity.limit_length(max_grapple_pull_speed)
 		grapple.release()
+
 func disable():
 	camera.enabled = false
 	
@@ -149,6 +167,8 @@ func _on_game_over():
 	queue_free()
 
 func _on_level_over():
+	update_ghost = false
+	ghost_info.save_ghost_data()
 	queue_free()
 
 func _physics_process(delta):
@@ -188,6 +208,9 @@ func _physics_process(delta):
 	if velocity.length() < max_grapple_speed:
 		velocity += grapple_velocity
 		velocity = velocity.limit_length(max_grapple_speed)
+	if update_ghost:
+		player_positions.append(global_position)
+		player_animations.append(anim_player.get_current_animation())
 	#velocity = velocity.clamp(-max_grapple_speed, max_grapple_speed)
 
 
@@ -211,8 +234,8 @@ func _input(event):
 		quick_menu.enable_menu(current_level.name)
 
 func set_spawn(location: Vector2, res_timeline: String = "Future"):
-	spawn_point = location
-	respawn_timeline = res_timeline
+	player_info.spawn_point = location
+	player_info.respawn_timeline = res_timeline
 
 func _set_health(value):
 	var prev_health = player_info.health
@@ -245,12 +268,18 @@ func get_death_screen():
 	return death_screen
 	
 func respawn():
-	position = spawn_point
+	position = player_info.spawn_point
 	grapple.release()
 	velocity = Vector2.ZERO
 	if player_info.health > 0:
 		states.transition_to("Fall")
 	emit_signal("respawning")
+
+func on_checkpoint_reached(heal_amount:int, new_timeline:String, new_spawn:Vector2):
+	set_spawn(new_spawn)
+	heal(heal_amount)
+	respawn_timeline = new_timeline
+	checkpoint_timestamps.append(stopwatch.get_total_time())
 
 func brace():
 	player_braced = true
@@ -264,27 +293,11 @@ func change_grapple_status(status:bool):
 
 func get_max_speed() -> int:
 	return max_grapple_speed
-	
-func save() -> Dictionary:
-	var save_data = {
-		"global_position": global_position,
-		"health": player_info.health,
-		"items": items,
-	}
-#	SaveSystem.set_var("Player", player_data)
-	SaveSystem.set_var("Player", save_data)
-	return save_data
 
-func load_from_file():
-	var save_data = SaveSystem.get_var("Player")
-	if save_data:
-		for i in save_data.keys():
-			set(i, save_data[i])
-		print("loaded player data")
-#		print(str(player_data[i]) + " is the current value.")
-#		if i.contains(":"):
-#			set_indexed(get_indexed(i), player_data[i])
-#		else:
-#			set(get(i), player_data[i])
+func get_checkpoints_reached():
+	#warning-ignore: Integer
 
+	return checkpoints_reached
 
+func get_max_health() -> int:
+	return player_info.max_health

@@ -1,8 +1,95 @@
-[gd_scene load_steps=7 format=3 uid="uid://clrxebh7buvqx"]
+[gd_scene load_steps=9 format=3 uid="uid://clrxebh7buvqx"]
 
 [ext_resource type="Script" path="res://Levels/LevelEnd.gd" id="1_2capq"]
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="2_kn272"]
 [ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="3_h2acp"]
+
+[sub_resource type="Animation" id="Animation_ptf0y"]
+resource_name = "OpenGhostScreen"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("GhostScreen/Backdrop/GhostCreator:size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 143), Vector2(400, 143)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("GhostScreen/Backdrop/GhostCreator:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("GhostScreen/Backdrop:size")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(420, 0), Vector2(420, 162), Vector2(420, 162)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("GhostScreen/Backdrop:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("ScreenDarkener:color")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 0.764706)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("GhostScreen:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("GhostScreen/Backdrop:custom_minimum_size")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(420, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_ixdtq"]
 length = 0.001
@@ -41,6 +128,150 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("GhostScreen/Backdrop/GhostCreator:size")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(400, 143)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("GhostScreen/Backdrop/GhostCreator:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("GhostScreen/Backdrop:size")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(420, 162)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("GhostScreen/Backdrop:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("ScreenDarkener:color")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 0)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("GhostScreen:visible")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("PostGameOptions:visible")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("GhostScreen/Backdrop:custom_minimum_size")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(420, 0)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("PostGameOptions/ReturnButton:visible")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0.001),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("PostGameOptions/CreateGhost:visible")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0.001),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("GhostScreen/Backdrop:color")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 0.883333, 0, 1)]
+}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("GhostScreen/Backdrop/GhostCreator/GhostTitle:text")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["Saved Ghost."]
 }
 
 [sub_resource type="Animation" id="Animation_fukff"]
@@ -83,9 +314,76 @@ tracks/2/keys = {
 "update": 1,
 "values": [false, true]
 }
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("ScreenDarkener:color")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("GhostScreen:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("PostGameOptions:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="Animation" id="Animation_u3aly"]
+resource_name = "GhostSaved"
+length = 0.25
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("GhostScreen/Backdrop:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 0.883333, 0, 1), Color(0.878431, 0.996078, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("GhostScreen/Backdrop/GhostCreator/GhostTitle:text")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": ["Saved Ghost.", "Ghost Name :"]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_5res1"]
 _data = {
+"GhostSaved": SubResource("Animation_u3aly"),
+"OpenGhostScreen": SubResource("Animation_ptf0y"),
 "RESET": SubResource("Animation_ixdtq"),
 "Win": SubResource("Animation_fukff")
 }
@@ -105,6 +403,18 @@ gold_color = Color(0, 44.38, 0.02, 1)
 sliver_color = Color(0.701961, 0.698039, 0.666667, 1)
 bronze_color = Color(0.760784, 0.372549, 0.0745098, 1)
 
+[node name="ScreenDarkener" type="ColorRect" parent="."]
+unique_name_in_owner = true
+z_index = 10
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
 [node name="Backdrop" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -112,6 +422,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0.00784314, 0.0627451, 0.0941176, 1)
 
 [node name="SceneTitle" type="Label" parent="."]
@@ -124,6 +435,7 @@ offset_top = 50.0
 offset_right = 400.0
 offset_bottom = 153.0
 grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 0.741176, 1, 1)
 theme_override_fonts/font = ExtResource("2_kn272")
 theme_override_font_sizes/font_size = 100
 text = "Level Complete"
@@ -135,15 +447,15 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -400.0
-offset_top = 563.0
-offset_right = 400.0
-offset_bottom = 666.0
+offset_left = -516.5
+offset_top = 461.0
+offset_right = 516.5
+offset_bottom = 564.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.364706, 1, 0.0901961, 1)
 theme_override_fonts/font = ExtResource("2_kn272")
 theme_override_font_sizes/font_size = 100
-text = "Needs Improvement"
+text = "Acceptable"
 horizontal_alignment = 1
 uppercase = true
 
@@ -152,14 +464,15 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -400.0
-offset_top = 488.0
-offset_right = 400.0
-offset_bottom = 591.0
+offset_left = -507.5
+offset_top = 374.0
+offset_right = 507.5
+offset_bottom = 477.0
 grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 0.741176, 1, 1)
 theme_override_fonts/font = ExtResource("2_kn272")
 theme_override_font_sizes/font_size = 75
-text = "Performance evaulation:"
+text = "evaulation:"
 horizontal_alignment = 1
 uppercase = true
 
@@ -171,22 +484,25 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -350.0
-offset_top = -20.0
+offset_top = -169.0
 offset_right = 350.0
-offset_bottom = 20.0
+offset_bottom = -17.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
+metadata/_edit_group_ = true
 
 [node name="Time" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 0
+metadata/_edit_group_ = true
 
 [node name="TotalTime" type="Label" parent="VBoxContainer/Time"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 11
+theme_override_colors/font_color = Color(0, 0.741176, 1, 1)
 theme_override_fonts/font = ExtResource("2_kn272")
 theme_override_font_sizes/font_size = 50
 text = "00:00:00:00"
@@ -196,6 +512,7 @@ uppercase = true
 [node name="TimeLabel" type="Label" parent="VBoxContainer/Time"]
 layout_mode = 2
 size_flags_horizontal = 6
+theme_override_colors/font_color = Color(0, 0.741176, 1, 1)
 theme_override_fonts/font = ExtResource("2_kn272")
 theme_override_font_sizes/font_size = 50
 text = "Time"
@@ -223,6 +540,7 @@ uppercase = true
 [node name="DeathLabel" type="Label" parent="VBoxContainer/Deaths"]
 layout_mode = 2
 size_flags_horizontal = 6
+theme_override_colors/font_color = Color(0, 0.741176, 1, 1)
 theme_override_fonts/font = ExtResource("2_kn272")
 theme_override_font_sizes/font_size = 50
 text = "Accidents"
@@ -235,27 +553,159 @@ libraries = {
 
 [node name="Sfx" type="AudioStreamPlayer" parent="."]
 
-[node name="Timer" type="Timer" parent="."]
-unique_name_in_owner = true
-wait_time = 2.5
-one_shot = true
-
-[node name="ReturnButton" parent="." instance=ExtResource("3_h2acp")]
-unique_name_in_owner = true
+[node name="PostGameOptions" type="HBoxContainer" parent="."]
 visible = false
+z_index = 7
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -205.5
-offset_top = -65.0
-offset_right = 205.5
-offset_bottom = -12.0
+offset_left = -465.0
+offset_top = -90.0
+offset_right = 465.0
+offset_bottom = -33.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="ReturnButton" parent="PostGameOptions" instance=ExtResource("3_h2acp")]
+unique_name_in_owner = true
+layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Back to Main Menu"
 
-[connection signal="pressed" from="ReturnButton" to="." method="_on_return_button_pressed"]
+[node name="MarginContainer" type="MarginContainer" parent="PostGameOptions"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="CreateGhost" parent="PostGameOptions" instance=ExtResource("3_h2acp")]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Create New Ghost"
+
+[node name="GhostScreen" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+z_index = 11
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Backdrop" type="ColorRect" parent="GhostScreen"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -81.0
+offset_right = 210.0
+offset_bottom = 81.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 0.883333, 0, 1)
+
+[node name="GhostCreator" type="ColorRect" parent="GhostScreen/Backdrop"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+z_index = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -71.5
+offset_right = 200.0
+offset_bottom = 71.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0509804, 0, 0.6, 1)
+
+[node name="GhostName" type="LineEdit" parent="GhostScreen/Backdrop/GhostCreator"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 35.0
+offset_right = -1.0
+offset_bottom = -51.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_uneditable_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_kn272")
+theme_override_font_sizes/font_size = 32
+placeholder_text = "Player"
+
+[node name="GhostTitle" type="Label" parent="GhostScreen/Backdrop/GhostCreator"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 4.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_kn272")
+theme_override_font_sizes/font_size = 32
+text = "Saved Ghost."
+
+[node name="Save" parent="GhostScreen/Backdrop/GhostCreator" instance=ExtResource("3_h2acp")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -45.0
+offset_top = -25.0
+offset_right = -5.0
+offset_bottom = -3.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Save"
+
+[node name="Label" type="Label" parent="GhostScreen/Backdrop/GhostCreator"]
+z_index = 2
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -20.0
+offset_bottom = 32.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("2_kn272")
+theme_override_font_sizes/font_size = 32
+text = "X"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+metadata/_edit_group_ = true
+
+[node name="CloseGhostCreator" type="TextureButton" parent="GhostScreen/Backdrop/GhostCreator/Label"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="pressed" from="PostGameOptions/ReturnButton" to="." method="_on_return_button_pressed"]
+[connection signal="pressed" from="PostGameOptions/CreateGhost" to="." method="_on_create_ghost_pressed"]
+[connection signal="pressed" from="GhostScreen/Backdrop/GhostCreator/Save" to="." method="_on_save_ghost_pressed"]
+[connection signal="pressed" from="GhostScreen/Backdrop/GhostCreator/Label/CloseGhostCreator" to="." method="_on_close_ghost_creator_pressed"]

@@ -1,5 +1,12 @@
 class_name GenericLevel extends Node2D
 
+
+const SAVE_FILE_PATH:String = "user://save_info/level_data.tres"
+
+@export var sliver_deaths:int = 3
+@export var bronze_deaths:int = 5
+
+
 @export var bronze_time: float = 5
 @export var sliver_time:float = 3
 @export var gold_time:float = 1
@@ -20,8 +27,12 @@ class_name GenericLevel extends Node2D
 
 @export_enum("Future", "Past") var current_timeline: String = "Future"
 
+var level_info: LevelInfo = LevelInfo.new()
+
 signal swapped_timeline(new_timeline:String)
 signal starting_level()
+signal level_over()
+
 
 const UNFCOUSED_TIMELINE_MODULATE: float = 0.35
 
@@ -46,6 +57,7 @@ func _ready():
 	init_timeline()
 	connect_signals()
 	self.add_to_group("CurrentLevel")
+	level_info.level_name = self.name
 
 func connect_signals():
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
@@ -58,13 +70,14 @@ func connect_signals():
 
 func _on_exit_portal_entered(body):
 	if body is Player:
-		GlobalScript.emit_signal("level_over")
+		GlobalScript.end_level()
 
 func _on_swapped_timeline(new_timeline):
 	pass
 
 func start_level():
 	current_player.connect("respawning", Callable(self, "_on_player_respawning"))
+	emit_signal("starting_level")
 
 func enable():
 	show()
@@ -82,7 +95,7 @@ func _on_game_over():
 	self.queue_free()
 
 func _on_player_respawning():
-	set_timeline(current_player.respawn_timeline)
+	set_timeline(current_player.player_info.respawn_timeline)
 	player_deaths += 1
 
 func load_music():
@@ -127,6 +140,8 @@ func init_timeline():
 	for nodes in get_tree().get_nodes_in_group("Timelines"):
 		nodes.modulate.a = UNFCOUSED_TIMELINE_MODULATE
 	for paradox in get_tree().get_nodes_in_group("Paradoxes"):
+			paradox.remove_from_group("Past")
+			paradox.remove_from_group("Future")
 			paradox.modulate.a = 1
 	get(timeline).modulate.a = 1
 
@@ -143,21 +158,28 @@ func get_current_timeline():
 	return current_timeline
 
 func save() -> Dictionary:
-	var save_dict = {
-		"level_conditions": level_conditions,
-		"current_timeline": current_timeline,
-		"music_playlist": music_playlist,
-		"name": name,
-		"player_deaths": player_deaths,
-	}
-	SaveSystem.set_var("CurrentLevel", save_dict)
-	return save_dict
-	# return it for level specfic save functions 
-	
+	#bronze_time = bronze_time
+	#sliver_time = sliver_time
+	#gold_time = gold_time
+#
+	#var packed_level_scene = PackedScene.new()
+	#packed_level_scene.pack(self)
+	#var error = ResourceSaver.save(packed_level_scene, SAVE_FILE_PATH)
+	#assert(error == 0, "Error " + str(error) + " occured when saving level")
+	ResourceSaver.save(level_info, SAVE_FILE_PATH)
+	return {}
+
 func load_from_file():
-	var save_data = SaveSystem.get_var("CurrentLevel")
-	if save_data:
-		for i in save_data.keys():
-			set(i, save_data[i])
+	level_info = ResourceLoader.load(SAVE_FILE_PATH)
+
 func set_player(new_player):
 	current_player = new_player
+
+func get_endscreen_info():
+	var endscreen_info = {
+		"SliverDeaths": sliver_deaths,
+		"BronzeDeaths": bronze_deaths,
+		"BronzeTime": bronze_time,
+		"SliverTime":sliver_time,
+		"GoldTime":gold_time
+	}

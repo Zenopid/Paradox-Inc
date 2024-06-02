@@ -67,5 +67,3 @@ func _on_injure_timer_timeout():
 func apply_push(push_amount:Vector2):
 	#velocity += push_amount
 	print("applying push of " + str(push_amount))
-
-

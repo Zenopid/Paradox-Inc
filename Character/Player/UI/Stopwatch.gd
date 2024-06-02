@@ -1,6 +1,11 @@
 extends Label
 
-var start_time: int
+@export var player: Player
+
+@export var better_than_ghost_time_color: Color
+@export var worse_than_ghost_time_color:Color
+
+var start_time: int = 0
 var total_time: int
 
 func _ready() -> void:
@@ -8,6 +13,11 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	#warning-ignore: Integer
+	if GlobalScript.time_trial_enabled:
+		if GlobalScript.get_current_ghost().get_checkpoint_timestamp(player.get_checkpoints_reached()) < total_time:
+			set("theme_override_colors/font_color", better_than_ghost_time_color )
+		else:
+			set("theme_override_colors/font_color", worse_than_ghost_time_color )
 	total_time = Time.get_ticks_msec() - start_time
 	var minutes_played = roundi(total_time / 1000 /60)
 	var seconds_played = roundi(total_time / 1000 % 60)

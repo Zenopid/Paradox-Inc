@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://c2q6x3xnvtvqh"]
 
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="1_ayrui"]
-[ext_resource type="Script" path="res://Assorted_Scenes/SaveFiles.gd" id="1_phdc5"]
+[ext_resource type="Script" path="res://Assorted_Scenes/SaveFile.gd" id="1_phdc5"]
 [ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="2_plcfh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3fvei"]
@@ -101,7 +101,30 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Delete"
 
+[node name="Timer" type="Timer" parent="SaveFile/SaveFileOptions/Delete"]
+one_shot = true
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
 libraries = {
 "": SubResource("AnimationLibrary_6p3yj")
 }
+
+[node name="Return" parent="." instance=ExtResource("2_plcfh")]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -47.0
+offset_top = -32.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+text = " Return "
+
+[connection signal="pressed" from="SaveFile/SaveFileOptions/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="SaveFile/SaveFileOptions/Delete" to="." method="_on_delete_pressed"]
+[connection signal="pressed" from="Return" to="." method="_on_return_pressed"]

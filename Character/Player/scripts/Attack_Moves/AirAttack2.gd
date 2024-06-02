@@ -38,9 +38,6 @@ func physics_process(delta):
 		}
 		attack_state.create_hitbox(hitbox_info)
 		attack_state.create_hitbox(second_hitbox_info)
-#	elif frame > 4 and frame < 7:
-#		air_hitbox_1.position = Vector2(entity.position.x + 15.55 * facing, entity.position.y + 1.235)
-#		air_hitbox_2.position = Vector2(entity.position.x + 0.327 * facing, entity.position.y - 10.528)
 
 func current_active_hitbox():
 	if frame > 7:

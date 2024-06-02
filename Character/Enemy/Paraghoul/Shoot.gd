@@ -74,3 +74,6 @@ func physics_process(delta:float):
 func exit() -> void:
 	shoot_cooldown.start()
 	entity.anim_player.disconnect("animation_finished", Callable(self, "projectile_attack"))
+
+func conditions_met():
+	return shoot_cooldown.is_stopped()

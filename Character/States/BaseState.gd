@@ -20,12 +20,9 @@ func get_facing_as_int() -> int:
 	return 1
 
 func default_move_and_slide():
-	entity.set_velocity(entity.motion)
 	entity.set_max_slides(4)
 	entity.set_floor_max_angle(PI/4)
 	entity.move_and_slide()
-	entity.motion = entity.velocity
-
-func update():
-	pass
 	
+func conditions_met() -> bool:
+	return true 

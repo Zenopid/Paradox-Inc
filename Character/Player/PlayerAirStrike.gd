@@ -30,9 +30,9 @@ func init(current_entity:Entity):
 	super.init(current_entity)
 	attack_state = current_entity.states.find_state("Attack")
 	max_speed = attack_state.jump_script.max_speed
+	air_acceleration = attack_state.jump_script.air_acceleration
 	jump_node = current_entity.states.find_state("Jump")
 	fall_node = current_entity.states.find_state("Fall")
-	air_acceleration = attack_state.jump_script.air_acceleration
 	
 func air_attack_logic():
 
@@ -40,19 +40,19 @@ func air_attack_logic():
 		if current_active_hitbox():
 			attack_state.apply_lag(landing_lag)
 		else:
-			attack_state.apply_lag(int(round((landing_lag/2))))
-	entity.velocity.y += jump_node.get_gravity()
-	if entity.velocity.y > fall_node.maximum_fall_speed:
-		entity.velocity.y = fall_node.maximum_fall_speed
+			attack_state.apply_lag(roundi((landing_lag/2)))
+	entity.velocity.y = clamp(entity.velocity.y, entity.velocity.y + jump_node.get_gravity(), fall_node.maximum_fall_speed)
+	entity.move_and_slide()
+
 
 func physics_process(delta):
 	air_attack_logic()
-	entity.move_and_slide()
 	super.physics_process(delta)
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)
 	if abs(entity.velocity.x) < max_speed:
 		entity.velocity.x += air_acceleration * get_movement_input()
 		entity.velocity.x = clamp(entity.velocity.x, -max_speed, max_speed)
+	
 	if frame >= dodge_window and dodge_window >= 0:
 		can_dodge = false
 
@@ -66,7 +66,6 @@ func get_movement_input() -> int:
 	return move
 
 func on_attack_hit(object):
-#	print_debug(object)
 	if object is Entity and object != entity:
 		#if the object is of the enity class, but it's not the entity that spawned the hitbox
 		can_cancel = true 
@@ -76,6 +75,7 @@ func enter(_msg: = {}):
 	super.enter()
 	buffer_tracker = 0
 	can_dodge = dodge_cancellable
+
 
 func input(event):
 	super.input(event)
@@ -90,13 +90,15 @@ func start_buffer_attack():
 	attack_state.use_attack(buffer_attack)
 	return
 
-func _on_attack_over(name_of_attack):
-	if !can_cancel:
-		emit_signal("attack_whiffed", animation_name)
-	if buffer_tracker > 0 and buffer_attack != "None" or buffer_window == -1 and buffer_attack != "None":
-		start_buffer_attack()
-	else:
-		emit_signal("leave_state")
+func _on_attack_over(name_of_attack:String):
+	if frame > 5:    
+		if !can_cancel:
+			emit_signal("attack_whiffed", animation_name)
+		if buffer_tracker > 0 and buffer_attack != "None" or buffer_window == -1 and buffer_attack != "None":
+			start_buffer_attack()
+		else:
+			attack_state.state_machine.transition_to("Fall")
+			return
 
 func exit():
 	super.exit()

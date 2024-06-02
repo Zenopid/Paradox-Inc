@@ -39,10 +39,6 @@ signal invalid_control()
 @onready var timer:Timer = rebind_screen.get_node("Timer")
 
 var current_setting_tab: String 
-var new_visual_settings = GlobalScript.VisualSettings.new()
-var new_audio_settings = GlobalScript.AudioSettings.new()
-var new_control_settings = GlobalScript.ControlSettings.new()
-
 
 var invalid_inputs = [
 	KEY_AMPERSAND,
@@ -57,12 +53,15 @@ var last_input: InputEvent
 
 var level:GenericLevel
 
+var settings_resource:SettingsInfo = GlobalScript.settings_info
+
 func _ready():
+	settings_resource = ResourceLoader.load(settings_resource.get_save_path(), "", ResourceLoader.CACHE_MODE_REPLACE)
 	set_process_input(false)
 	level = get_tree().get_first_node_in_group("CurrentLevel")
 	current_setting_tab = settings_tab.get_current_tab_control().name.to_lower() + "_settings"
 	rebind_screen.hide()
-	
+	#
 	connect("controls_overlap", Callable(self, "_on_overlapping_controls").bind("Controls overlap."))
 	connect("invalid_control", Callable(self, "_on_overlapping_controls").bind("Invalid input."))
 	
@@ -75,10 +74,10 @@ func _ready():
 	GlobalScript.emit_signal("entering_settings")
 
 func init_audio_settings():
-	game_slider.value = db_to_linear(GlobalScript.audio_settings.game_volume)
-	music_slider.value = db_to_linear(GlobalScript.audio_settings.bgm_volume)
-	sfx_slider.value = db_to_linear(GlobalScript.audio_settings.sfx_volume)
-	enable_ui_sfx.button_pressed = GlobalScript.audio_settings.ui_sfx_enabled
+	game_slider.value = db_to_linear(settings_resource.get_setting("game_volume"))
+	music_slider.value = db_to_linear(settings_resource.get_setting("bgm_volume"))
+	sfx_slider.value = db_to_linear(settings_resource.get_setting("sfx_volume"))
+	enable_ui_sfx.button_pressed = settings_resource.get_setting("ui_sfx_enabled")
 	
 	for nodes in get_tree().get_nodes_in_group("Music Sliders"):
 		nodes.connect("value_changed", Callable(self, "set_music_volume").bind(nodes))
@@ -88,21 +87,21 @@ func init_audio_settings():
 		nodes.connect("pressed", Callable(self, "_on_test_music_pressed").bind(nodes))
 
 func init_visual_settings():
-	camera_flash.button_pressed = GlobalScript.visual_settings.camera_flash
-	camera_shake.button_pressed = GlobalScript.visual_settings.camera_shake
-	v_sync.button_pressed = GlobalScript.visual_settings.v_sync_enabled
-	fullscreen.button_pressed = GlobalScript.visual_settings.fullscreen
-	show_fps.button_pressed = GlobalScript.visual_settings.show_fps
+	camera_flash.button_pressed = settings_resource.get_setting("camera_flash")
+	camera_shake.button_pressed = settings_resource.get_setting("camera_shake")
+	v_sync.button_pressed = settings_resource.get_setting("v_sync_enabled")
+	fullscreen.button_pressed = settings_resource.get_setting("fullscreen")
+	show_fps.button_pressed = settings_resource.get_setting("show_fps")
 	
 	for i in resolution.get_item_count():
 		var text = resolution.get_item_text(i)
 		var item_text = text.split_floats("x")
 		var res = Vector2i(int(item_text[0]), int(item_text[1]))
-		if res == GlobalScript.visual_settings.resolution:
+		if res == settings_resource.get_setting("resolution"):
 			resolution.select(i)
 			return
 #		print_debug(res)
-	print_debug("Couldn't find the current resolution " + str(GlobalScript.visual_settings.resolution) + " in the available options.")
+	print_debug("Couldn't find the current resolution " + str(settings_resource.get_setting("resolution")) + " in the available options.")
 
 func _on_setting_toggled(toggled:bool, button:Button):
 	check_if_setting_changed(button.name.to_lower(), toggled)
@@ -116,11 +115,9 @@ func init_control_settings():
 		input_type = "Controller"
 		print("Detected controller " + Input.get_joy_name(0))
 	if input_type == "Keyboard":
-		for i in GlobalScript.control_settings.get_property_list():
-			var current_button:String = i["name"]
-			if !current_button.contains("button"):
-				continue
-			for input in GlobalScript.control_settings.get(current_button):
+		for i in settings_resource.get_control_buttons():
+			var current_button:String = i
+			for input in settings_resource.get_setting(current_button):
 				if input is InputEventKey:
 					get(current_button.left(current_button.find("_")) + "_control").text = OS.get_keycode_string(input.unicode).capitalize()
 					continue 
@@ -128,11 +125,9 @@ func init_control_settings():
 				elif input is InputEventMouseButton:
 					get(current_button.left(current_button.find("_")) + "_control").text = input.as_text()
 	else:
-		for i in GlobalScript.control_settings.get_property_list():
-			var current_button:String = i["name"]
-			if !current_button.contains("button"):
-				continue
-			for input in GlobalScript.control_settings.get(current_button):
+		for i in settings_resource.get_button_names():
+			var current_button:String = i
+			for input in settings_resource.get_setting(current_button):
 				if input is InputEventJoypadButton :
 					get(current_button.left(current_button.find("_")) + "_control").text = input.as_text()
 					continue
@@ -141,9 +136,9 @@ func init_control_settings():
 			options_control.text = "Escape"
 			#engine bug i think
 
-func check_if_setting_changed(setting_name, setting_condition):
+func check_if_setting_changed(setting_name:String, setting_condition: Variant):
 	#print(GlobalScript.get_setting(current_setting_tab, setting_name))
-	if setting_condition != GlobalScript.get_setting(setting_name, current_setting_tab):
+	if setting_condition != settings_resource.get_setting(setting_name):
 		updated_settings[setting_name] = {
 			"value": setting_condition,
 			"type": current_setting_tab
@@ -156,7 +151,8 @@ func _on_apply_pressed():
 	for new_setting in updated_settings.keys():
 		var setting = updated_settings[new_setting]
 		
-		GlobalScript.set_setting(setting["type"], new_setting, setting["value"])
+		settings_resource.set_setting(setting["value"], new_setting)
+		GlobalScript.apply_setting(setting["value"], new_setting)
 	updated_settings.clear()
 	apply_button.hide()
 
@@ -172,6 +168,7 @@ func _on_test_music_pressed(button):
 		music_player.play()
 
 func _on_return_button_pressed():
+	ResourceSaver.save(settings_resource, settings_resource.get_save_path())
 	GlobalScript.exit_settings()
 	
 

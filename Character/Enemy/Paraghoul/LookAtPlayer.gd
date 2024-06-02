@@ -4,6 +4,7 @@ var original_target_position:Vector2
 var los_shapecast: ShapeCast2D
 #@export var sprite_turn_speed: int = 20
 #@export var ray_turn_speed: float = 0.7
+@export var max_chase_duration:float = 7
 @export var chase_speed: float = 450
 @export var acceleration: int = 20
 @export var random_spread:float = 0.75
@@ -19,6 +20,7 @@ var target_sphere:Area2D
 var sphere_shape:CollisionShape2D
 
 var shoot_cd: Timer
+var chase_timer:Timer
 
 
 
@@ -26,9 +28,14 @@ func init(current_entity, s_machine: EntityStateMachine):
 	super.init(current_entity, s_machine)
 	los_shapecast = state_machine.get_shapecast("LOS")
 	shoot_cd = state_machine.get_timer("Shoot_Cooldown")
+	chase_timer = state_machine.get_timer("Chase_Duration")
+	chase_timer.wait_time = max_chase_duration
 	nav_timer = entity.nav_timer
 	nav_timer.wait_time = chase_location_update_rate
 	pathfinder = entity.pathfinder
+	init_sphere()
+
+func init_sphere(): 
 	target_sphere = Area2D.new()
 	sphere_shape = CollisionShape2D.new()
 	var shape:CircleShape2D = CircleShape2D.new()
@@ -40,6 +47,7 @@ func init(current_entity, s_machine: EntityStateMachine):
 	target_sphere.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
 	target_sphere.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
 func enter(_msg:= {}):
+	chase_timer.start()
 	player = get_tree().get_first_node_in_group("Players")
 	nav_timer.connect("timeout", Callable(self, "_on_nav_timer_timeout"))
 	nav_timer.start()
@@ -48,28 +56,32 @@ func enter(_msg:= {}):
 	add_child(target_sphere)
 	
 func get_new_target() -> Vector2:
-	var target_position:Vector2
+	var target_position:Vector2 = Vector2.ZERO
 	target_position.x = randf_range(player.global_position.x - target_position_randomness, player.global_position.x + target_position_randomness)
 	target_position.y = randf_range(player.global_position.y - target_position_randomness, player.global_position.y - target_position_randomness * 2)
 	return target_position
 	
 func physics_process( delta:float ):
+	if chase_timer.is_stopped():
+		state_machine.transition_to("Idle")
+		return
 	if los_shapecast.is_colliding():
+		chase_timer.start()
 		for i in los_shapecast.get_collision_count():
 			var collision = los_shapecast.get_collider(i)
-			if collision is Player and shoot_cd.is_stopped():
-				state_machine.transition_to("Shoot")
-				return
+			if collision is Player:
+				if state_machine.transition_if_available(["Shoot"]):
+					return
 	for i in target_sphere.get_overlapping_bodies():
-		if i == entity and shoot_cd.is_stopped():
-			state_machine.transition_to("Shoot")
-			return
+		if i == entity :
+			if state_machine.transition_if_available(["Shoot"]):
+				return
 	los_shapecast.position = entity.position
 	los_shapecast.look_at(player.global_position)
 	var dir = entity.global_position.direction_to(target_sphere.global_position)
 	entity.velocity += (acceleration * dir).rotated(randf_range(-random_spread, random_spread))
 	entity.velocity = entity.velocity.limit_length(chase_speed)
-	await get_tree().create_timer(0.0001).timeout
+	await get_tree().create_timer(0.001).timeout
 	entity.move_and_slide()
 	push_objects()
 
@@ -86,3 +98,13 @@ func _on_nav_timer_timeout():
 func exit(): 
 	nav_timer.disconnect("timeout", Callable(self, "_on_nav_timer_timeout"))
 	remove_child(target_sphere)
+
+func conditions_met():
+	if los_shapecast.is_colliding():
+		return true
+	else:
+		for i in entity.detection_sphere.get_overlapping_bodies():
+			if i is Player:
+				return true
+				
+	return false

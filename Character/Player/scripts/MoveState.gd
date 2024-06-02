@@ -23,9 +23,9 @@ var DECEL_VALUE: float = 0.6
 
 var test_num: int = 0
 
-var jump_script: Jump 
-var fall_script: Fall 
-var run_state
+var jump_script : PlayerBaseState
+var fall_script : PlayerBaseState
+var run_state : PlayerBaseState
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
@@ -47,20 +47,19 @@ func enter(_msg: = {}):
 
 func input(event):
 	super.input(event)
-	if enter_attack_state():
-		return
-	if enter_portal_state():
-		return
-	if enter_dodge_state():
-		return
-	if enter_jump_state():
-		return
-	if enter_crouch_state():
-		return
-	enter_move_state()
-	return
+	state_machine.transition_if_available([
+		"Attack",
+		"Dodge",
+		"Jump",
+		"Slide",
+		"Crouch",
+		"Run", 
+		"Idle"
+	])
+	
 
 func physics_process(delta:float) -> void:
+	super.physics_process(delta)
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	slope_ray_left.position = Vector2(entity.position.x - 1, entity.position.y + 13.5)
 	slope_ray_right.position = Vector2(entity.position.x + 1, entity.position.y + 13.5)
@@ -82,12 +81,8 @@ func physics_process(delta:float) -> void:
 			move_and_slide_with_slopes(delta)
 		else:
 			default_move_and_slide()
-	if !entity.is_on_floor() and coyote_timer.is_stopped():
-		if was_on_floor:
-			coyote_timer.start()
-		if coyote_timer.is_stopped():
-			state_machine.transition_to("Fall")
-			return
+	if state_machine.transition_if_available(["Fall"]):
+		return
 	if state_machine.get_current_state() == run_state:
 		push_objects()
 
@@ -153,3 +148,6 @@ func exit() -> void:
 	entity.up_direction = Vector2.UP
 	slope_ray_left.enabled = false
 	slope_ray_right.enabled = false
+
+func conditions_met() -> bool:
+	return true

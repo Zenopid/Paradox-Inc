@@ -16,12 +16,15 @@ class_name Training extends GenericLevel
 
 @onready var level_player:AnimationPlayer = $"%LevelAnimPlayer"
 
+@onready var rotate_speed: int = 6
+@onready var puzzle_box: Node2D = $"%PuzzleLocation"
+
 func _ready():
 	super._ready()
-	$"%PuzzleLocation".position = Vector2(388, -719)
+	puzzle_box.position = Vector2(388, -719)
 	$"%FuturePuzzle".position = Vector2.ZERO
 	$"%PastPuzzle".position = Vector2.ZERO
-	$"%ParadoxPuzzle".position = Vector2.ZERO
+	$"%ParadoxPuzzle".position = Vector2.ZERO 
 	$"%PuzzleSwitch".position = Vector2(87.5, 2.3)
 	$"%Elevator".position = Vector2(-35, 124)
 	for i in $"%Elevator".get_children():

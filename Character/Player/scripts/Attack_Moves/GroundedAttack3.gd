@@ -11,8 +11,8 @@ func physics_process(delta):
 		if entity.sprite.flip_h:
 			entity.velocity.x -= lunge_distance * ( 1 - get_movement_input() )
 		else:
-			entity.velocity.x += lunge_distance  * ( 1 + get_movement_input() )
-	if frame == 9:
+			entity.velocity.x += lunge_distance  * ( 1 + get_movement_input() ) 
+	if frame == 11:
 		var hitbox_info = {
 			"position": Vector2(17.475, 7.049),
 			"duration": duration,

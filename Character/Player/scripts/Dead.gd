@@ -41,3 +41,6 @@ func physics_process(delta):
 			GlobalScript.emit_signal("game_over")
 	entity.velocity.y += jump_node.get_gravity() 
 	entity.move_and_slide()
+
+func conditions_met() -> bool:
+	return (entity.health < 0)

@@ -15,11 +15,11 @@ var motion_tracker: Label = null
 
 var state_nodes: = {}
 
-var timer_nodes = {}
-var ray_nodes = {}
-var shapecast_nodes = {}
+var timer_nodes: = {}
+var ray_nodes: = {}
+var shapecast_nodes: = {}
 
-
+var states_with_inactive_process: = {}
 
 func init(debug_node: Node2D = null):
 	for nodes in get_node("Timers").get_children():
@@ -34,6 +34,8 @@ func init(debug_node: Node2D = null):
 	for nodes in get_children():
 		if nodes is BaseState:
 			state_nodes[nodes.name] = nodes
+			if state_nodes[nodes.name].has_inactive_process:
+				states_with_inactive_process[nodes.name] = nodes
 	for states in state_nodes.keys():
 		get_node(states).init(machine_owner, self)
 	current_state = get_node(initial_state)
@@ -49,7 +51,10 @@ func init(debug_node: Node2D = null):
 
 func physics_update(delta:float):
 	current_state.physics_process(delta)
-	motion_tracker.text ="Speed: " + str(round(machine_owner.velocity.x)) + "," + str(round(machine_owner.velocity.y))
+	for state in states_with_inactive_process.keys():
+		states_with_inactive_process[state].inactive_process(delta)
+	if motion_tracker:
+		motion_tracker.text ="Speed: " + str(round(machine_owner.velocity.x)) + "," + str(round(machine_owner.velocity.y))
 	
 func update(delta: float):
 	current_state.process(delta)
@@ -104,3 +109,18 @@ func get_current_state():
 
 func get_all_states():
 	return state_nodes
+	
+func state_available(state_name:String) -> bool:
+	var state_to_check:BaseState = state_nodes[state_name]
+	if !typeof(state_to_check) == TYPE_NIL:
+		return state_to_check.conditions_met()
+	push_error("Couldn't find state " + state_name)
+	return false 
+
+func transition_if_available(state_names:= []) -> bool:
+	if state_names != []:
+		for state in state_names:
+			if state_available(state):
+				transition_to(state)
+				return true 
+	return false

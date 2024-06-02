@@ -40,3 +40,6 @@ func anim_over():
 		active_portal.change_portal_state()
 	#state_machine.transition_to(original_state_name,{},"", false, true)
 	return
+
+func conditions_met() -> bool:
+	return false

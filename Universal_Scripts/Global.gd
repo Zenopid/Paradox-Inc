@@ -2,16 +2,21 @@ class_name GameManager extends Node
 
 @export var debug_enabled: bool = false 
 @export var overwrite_previous_video: bool = false
+
 signal setting_changed(setting_name, new_setting)
 signal entering_settings()
 signal exiting_settings()
 signal game_over
 signal level_over()
 signal save_game_state()
-signal starting_game()
+signal level_start()
 
 signal enabling_menu()
 signal disabling_menu()
+
+
+const SAVE_FILE_PATH:String  = "user://save_info/game_data.tscn"
+const SAVE_FILE_FOLDER:String = "user://save_info"
 
 const HITSTOP_TIMESCALE: float = 0.2
 const BOX_PATH: String = "uid://b812mbppojnhg"
@@ -21,33 +26,35 @@ const SWITCH_PATH:String = "uid://c1qqqb8ugmyry"
 const CHECKPOINT_PATH:String = "uid://c5s048qamwl8p"
 const PARAGHOUL_PATH: String = "uid://fcuvx05j2v0y"
 const SETTINGS_PATH:String = "uid://do42anfb1sgba"
+const GHOSTPLAYER_PATH:String = "uid://420r82wgwh4m"
+const ENDSCREEN_PATH:String = "uid://clrxebh7buvqx"
 
-
-
-class VisualSettings:
-	var camera_flash: bool = true 
-	var camera_shake: bool = true
-	var resolution: Vector2i = Vector2i(120, 70)
-	var v_sync_enabled: bool = true
-	var fullscreen: bool = false
-	var show_fps:bool = false
-	var fps:int = Engine.physics_ticks_per_second
-class AudioSettings:
-	var sfx_volume: int = 1
-	var bgm_volume: int = 1
-	var game_volume: int = 1
-	var ui_sfx_enabled: bool = true
-class ControlSettings:
-	var jump_button = InputMap.action_get_events("jump")
-	var crouch_button = InputMap.action_get_events("crouch")
-	var left_button = InputMap.action_get_events("left")
-	var right_button = InputMap.action_get_events("right")
-	var attack_button = InputMap.action_get_events("attack")
-	var dodge_button = InputMap.action_get_events("dodge")
-	var timeline_button = InputMap.action_get_events("swap_timeline")
-	var options_button = InputMap.action_get_events("options")
-	var boost_button = InputMap.action_get_events("boost")
-	var vibration:bool = true 
+#
+#
+#class VisualSettings:
+	#var camera_flash: bool = true 
+	#var camera_shake: bool = true
+	#var resolution: Vector2i = Vector2i(120, 70)
+	#var v_sync_enabled: bool = true
+	#var fullscreen: bool = false
+	#var show_fps:bool = false
+	#var fps:int = Engine.physics_ticks_per_second
+#class AudioSettings:
+	#var sfx_volume: int = 1
+	#var bgm_volume: int = 1
+	#var game_volume: int = 1
+	#var ui_sfx_enabled: bool = true
+#class ControlSettings:
+	#var jump_button = InputMap.action_get_events("jump")
+	#var crouch_button = InputMap.action_get_events("crouch")
+	#var left_button = InputMap.action_get_events("left")
+	#var right_button = InputMap.action_get_events("right")
+	#var attack_button = InputMap.action_get_events("attack")
+	#var dodge_button = InputMap.action_get_events("dodge")
+	#var timeline_button = InputMap.action_get_events("swap_timeline")
+	#var options_button = InputMap.action_get_events("options")
+	#var boost_button = InputMap.action_get_events("boost")
+	#var vibration:bool = true 
 
 var hitstop_frames_remaining: int = 0
 var in_hitstop: bool = false
@@ -56,6 +63,7 @@ var old_hitstop_timescale: float = 1
 var levels_beaten: int = 0
 
 var free_play_enabled: bool = false
+var time_trial_enabled:bool = false
 
 var current_level: GenericLevel = null :
 	set (value):
@@ -67,16 +75,22 @@ var current_player: Player = null :
 		current_player = value
 	get:
 		return current_player
-		
+
+var current_ghost:GhostEntity = null
+
 var game_time_start
 var game_time_end
 var total_game_time
 
-@onready var visual_settings: VisualSettings = VisualSettings.new()
-@onready var audio_settings: AudioSettings = AudioSettings.new()
-@onready var control_settings: ControlSettings = ControlSettings.new()
+@onready var settings_info: SettingsInfo = SettingsInfo.new()
+#
+#@onready var visual_settings: VisualSettings = VisualSettings.new()
+#@onready var audio_settings: AudioSettings = AudioSettings.new()
+#@onready var control_settings: ControlSettings = ControlSettings.new()
 @onready var hitstop_manager: HitstopManager = $"%HitstopManager"
 @onready var transition_screen: ColorRect = $"%TransitionScreen"
+@onready var end_screen: EndScreen = $"%LevelEnd"
+@onready var game_node:Node = $"Game"
 
 var setting_class_names: = [
 	"visual_settings",
@@ -98,7 +112,7 @@ enum collision_values {
 	WALL_FUTURE = 11,
 	WALL_PAST = 12,
 	BOUNDARY_FUTURE = 13,
-	BOUNDARY_PAST = 14,
+	BOUNDARY_PAST = 14, 
 	HOOK_FUTURE = 15,
 	HOOK_PAST = 16,
 	PROJECTILE_FUTURE = 17,
@@ -114,6 +128,7 @@ const LEVEL_PATHS = {
 #edit 2: i deleted the variable, didn't need it lol, also released demo (people thought it was mid)
 #edit 3: i added the variable back, ignore the other 2 nimrods
 #edit 4: variable is dying again, ignore the other 3 goofballs
+#edit 5: edit 4 guy's pretty smart, now save and load is working
 
 
 var save_num: int = 0
@@ -122,18 +137,27 @@ var controller_type: String = "Keyboard"
 var main_menu: MainMenu
 
 var settings_screen : Control
-
+var ghost_data:PlayerGhost = PlayerGhost.new()
 
 func _ready():
+	init_files()
+
 	disable_transition_screen()
 #	SaveSystem.connect("loaded", Callable(self, "load_game"))
 	if !Input.get_connected_joypads() == []:
 		controller_type = "Controller"
-	visual_settings.resolution = get_window().size
+	settings_info.resolution = get_window().size
 	change_ui_controls()
-	SaveSystem.set_var("MoveableObject", {})
-	print(SaveSystem.get_var("MoveableObject"))
-
+	ghost_data.init_dictionary()
+	
+func init_files():
+	DirAccess.make_dir_recursive_absolute(SAVE_FILE_FOLDER)
+	DirAccess.make_dir_recursive_absolute(PlayerGhost.SAVE_FILE_FOLDER)
+	if ResourceLoader.exists(ghost_data.SAVE_FILE_PATH):
+		ghost_data = ResourceLoader.load(ghost_data.SAVE_FILE_PATH)
+	if ResourceLoader.exists(settings_info.get_save_path()):
+		settings_info = ResourceLoader.load(settings_info.get_save_path(), "", ResourceLoader.CACHE_MODE_REPLACE)
+		
 func change_ui_controls():
 	set_ui_input("ui_up")
 	set_ui_input("ui_down")
@@ -161,9 +185,9 @@ func set_ui_input(input_name: String):
 		for i in InputMap.action_get_events(input_name):
 			if i is InputEventKey:
 				InputMap.action_erase_event(input_name, i)
-		var current_control = control_settings.get(button_controls)
+		var current_control = settings_info.get(button_controls)
 		if current_control != null:
-			for i in control_settings.get(button_controls):
+			for i in settings_info.get(button_controls):
 				if i is InputEventKey:
 					if !InputMap.action_has_event(input_name, i):
 						InputMap.action_add_event(input_name, i)
@@ -172,104 +196,98 @@ func set_ui_input(input_name: String):
 		for i in InputMap.action_get_events(input_name):
 			if i is InputEventJoypadButton:
 				InputMap.action_erase_event(input_name, i)
-		if control_settings.get(button_controls + "_button") != null:
-			for i in control_settings.get(button_controls + "_button"):
+		if settings_info.get(button_controls + "_button") != null:
+			for i in settings_info.get(button_controls + "_button"):
 				if i is InputEventJoypadButton:
 					if !InputMap.action_has_event(input_name, i):
 						InputMap.action_add_event(input_name, i)
-func set_setting(setting_class:String, setting_name: String, new_setting):
-	if setting_name in get(setting_class):
-		get(setting_class).set(setting_name, new_setting)
-		#updates records
-		emit_signal("setting_changed", setting_name, new_setting)
-		match setting_class:
-			#actually applies changes to the game
-			"visual_settings":
-				match setting_name:
-					"fps":
-						Engine.max_fps = new_setting
-						Engine.physics_ticks_per_second = new_setting
-						Engine.max_physics_steps_per_frame = new_setting
-					"v_sync_enabled": 
-						if new_setting:
-							DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
-						else:
-							DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
-					"resolution": get_window().size = new_setting
-					"fullscreen":
-						if new_setting:
-							DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-						else:
-							DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-			"audio_settings":
-				match setting_name:
-					"sfx_volume":
-						var index = AudioServer.get_bus_index("Sfx")
-						AudioServer.set_bus_volume_db(index, linear_to_db(new_setting))
-					"bgm_volume":
-						var index = AudioServer.get_bus_index("Music")
-						AudioServer.set_bus_volume_db(index, linear_to_db(new_setting))
-					"game_volume":
-						var index = AudioServer.get_bus_index("Game")
-						AudioServer.set_bus_volume_db(index, linear_to_db(new_setting))
-			"control_settings": 
-				pass
+func get_setting(setting_name:String):
+	return settings_info.get_setting(setting_name)
+	
+func apply_setting(new_setting:Variant, setting_name: String):
+	if settings_info.has_setting(setting_name):
+		settings_info.set_setting(new_setting,setting_name)
+		var setting = settings_info.get_setting(setting_name)
+		match setting_name:
+			"fps":
+				Engine.max_fps = new_setting
+				Engine.physics_ticks_per_second = new_setting
+				Engine.max_physics_steps_per_frame = new_setting
+			"v_sync_enabled": 
+				if new_setting:
+					DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
+				else:
+					DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+			"resolution": 
+				get_window().size = new_setting
+			"fullscreen":
+				if new_setting:
+					DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+				else:
+					DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			"sfx_volume":
+				var index = AudioServer.get_bus_index("Sfx")
+				AudioServer.set_bus_volume_db(index, linear_to_db(new_setting))
+			"bgm_volume":
+				var index = AudioServer.get_bus_index("Music")
+				AudioServer.set_bus_volume_db(index, linear_to_db(new_setting))
+			"game_volume":
+				var index = AudioServer.get_bus_index("Game")
+				AudioServer.set_bus_volume_db(index, linear_to_db(new_setting))
 			_:
-				print_debug("Could not find class name " + setting_class)
-		return
-	print_debug("Couldn't set setting '" + str(setting_name) + "' in class '" + str(setting_class) + "'" )
-
-func get_setting(setting_name:String, setting_class:String = ""):
-	var setting
-	if setting_class != "":
-		if setting_class in self:
-			setting = (get(setting_class)).get(setting_name)
-	else:
-		for i in setting_class_names:
-			if setting_name in get(i):
-				setting = get(i).get(setting_name)
-	if typeof(setting) != TYPE_NIL:
-		return setting
-	print_debug("Couldn't get setting '" + str(setting_name) + "' in class '" + str(setting_class) + "'" )
+				print_debug("Couldn't set setting '" + str(setting_name) + "'")
+	emit_signal("setting_changed", setting_name, new_setting)
+	return
+	#updates records
 
 func apply_hitstop(duration):
 	Engine.time_scale = HITSTOP_TIMESCALE
 	await get_tree().create_timer(duration).timeout
 	Engine.time_scale = 1
-	return null
 
 func save_game():
-	for nodes in get_tree().get_nodes_in_group("Persist"):
-		nodes.save()
-	SaveSystem.save()
+	settings_info.save()
+	var game_as_packed_scene = PackedScene.new()
+	current_level.set_owner(game_node)
+	current_player.set_owner(game_node)
+	set_children_owner(current_level)
+	set_children_owner(current_player)
+	for i in get_tree().get_nodes_in_group("MoveableObjects"):
+		i.set_owner(game_node)
+	game_as_packed_scene.pack(game_node)
+	var error = ResourceSaver.save(game_as_packed_scene,SAVE_FILE_PATH,)
+	if error != OK:
+		print("Error " + str(error))
+	error = ResourceSaver.save(ghost_data, ghost_data.SAVE_FILE_PATH)
+	if error != OK:
+		print("Error " + str(error))
+
+func set_children_owner(node_to_check:Node):
+	for child in node_to_check.get_children():
+		child.set_owner(node_to_check)
+		if child.get_children() != []:
+			set_children_owner(child)
 
 func has_save() -> bool:
-	if SaveSystem.get_var("Player"):
-		#surely the player is in every save right...
-		return true 
-	return false
-	
+	return ResourceLoader.exists(SAVE_FILE_PATH)
+
 func load_game():
 	if has_save():
-		start_level(SaveSystem.get_var("CurrentLevel")["name"])
-		for nodes in get_tree().get_nodes_in_group("Persist"):
-			nodes.load_from_file()
-			if nodes.is_in_group("MoveableObject"):
-				var moveable_objects = SaveSystem.get_var("MoveableObject")
-				for objects in moveable_objects.keys():
-					var current_object = moveable_objects[objects]
-					if current_object["id"] == nodes.get_id() and current_object["id"] != 0:
-						#if its 0, its the generic value and is not special so it can safely be ignored
-						#if they're equal and 1 isn't 0, then the other also must not be 0
-						nodes.queue_free()
-					var box_path = load(BOX_PATH)
-					var box_instance = box_path.instantiate()
-					var saved_properties = moveable_objects[objects]
-					saved_properties.erase("type")
-					for properties in saved_properties:
-						set(properties, saved_properties[properties])
-		return true
-	return false
+		var game_resource = ResourceLoader.load(SAVE_FILE_PATH)
+		game_node.free()
+		game_node = game_resource.instantiate()
+		game_node.name = "Game"
+		game_node.unique_name_in_owner = true 
+		for i in game_node.get_children():
+			if i is Player:
+				current_player = i
+			else:
+				current_level = i
+		
+		current_level.add_to_group("CurrentLevel")
+		current_player.add_to_group("Players")
+		
+		add_child(game_node)
 
 func start_level(level:String):
 #	print("Starting level " + level)
@@ -278,7 +296,7 @@ func start_level(level:String):
 	var new_level = load(LEVEL_PATHS[level])
 	current_level = new_level.instantiate()
 	current_level.add_to_group("CurrentLevel")
-	add_child(current_level)
+	game_node.add_child(current_level)
 	var spawn_point = current_level.get_start_point()
 	var player_instance = add_player(spawn_point)
 	current_level.set_player(player_instance)
@@ -286,6 +304,11 @@ func start_level(level:String):
 	game_time_start = Time.get_ticks_msec()
 	if free_play_enabled:
 		player_instance.change_grapple_status(true)
+		player_instance.player_info.enable_all_items()
+	if time_trial_enabled:
+		var ghost_instance:GhostEntity = load(GHOSTPLAYER_PATH).instantiate()
+		ghost_instance.add_to_group("PlayerGhosts")
+		game_node.add_child(ghost_instance)
 	main_menu.hide()
 	
 func restart_level():
@@ -293,13 +316,22 @@ func restart_level():
 	main_menu.hide()
 	enable_transition_screen()
 	emit_signal("game_over")
-	await get_tree().create_timer(1).timeout
-	enable_transition_screen()
+	await get_tree().create_timer(2).timeout
 	main_menu.disable_menu()
 	start_level(level_name)
 	disable_transition_screen()
 
-
+func end_level():
+	current_level.disable()
+	current_player.disable()
+	end_screen.show()
+	end_screen.end_level()
+	await end_screen.screen_closed
+	emit_signal("game_over")
+	enable_transition_screen()
+	await get_tree().create_timer(5).timeout
+	disable_transition_screen()
+	main_menu.enable_menu()
 func enter_settings():
 
 	var new_settings = load(SETTINGS_PATH)
@@ -308,7 +340,7 @@ func enter_settings():
 		current_level.disable()
 	if is_instance_valid(current_player):
 		current_player.disable()
-	add_child(settings_screen)
+	game_node.add_child(settings_screen)
 	emit_signal("entering_settings")
 	get_tree().paused = true 
 	
@@ -320,95 +352,19 @@ func exit_settings():
 		main_menu.enable_menu()
 	settings_screen.queue_free()
 	get_tree().paused = false
+	settings_info = ResourceLoader.load(settings_info.get_save_path(), "", ResourceLoader.CACHE_MODE_REPLACE)
 	emit_signal("exiting_settings")
 	
 func add_player(pos) -> Player: 
-	var player = load(PLAYER_PATH)
-	var player_instance = player.instantiate()
+	var player_instance = load(PLAYER_PATH).instantiate()
 	player_instance.position = pos
 	player_instance.set_spawn(pos)
 	player_instance.set_level( current_level )
 	player_instance.add_to_group("Players")
-	add_child(player_instance) 
+	game_node.add_child(player_instance) 
 	current_player = player_instance
 	return player_instance
-#	var level_name = SaveSystem.get_var("current_level")
-#	var delete_objects = true
-#	if SaveSystem.get_var("current_level"):
-#		var level_name = SaveSystem.get_var("current_level")["name"]
-#		print(level_name)
-#		if current_level.name == level_name:
-#			delete_objects  = false
-#			print("not deleting objects, cuz the current level was " + level_name)
-#	if delete_objects:
-#		for nodes in get_tree().get_nodes_in_group("Persist"):
-#			if nodes is MoveableObject:
-#				nodes.destroy()
-#				#need to destroy current objects and replace them with saved objects
-#				#they have to be reinstaintied as they may not have existed in the orignal level scene
-#			else:
-#				nodes.load_from_file()
-#		var object_data = SaveSystem.get_var("MoveableObjects")
-#		if typeof(object_data) != TYPE_NIL:
-#			for i in object_data.keys():
-#		#			print(object_data[i]["type"] + " is the current type.")
-#				match object_data[i]["type"]:
-#					"Box":
-#						var box_path = load(BOX_PATH)
-#						var box_instance = box_path.instantiate()
-#						for x in object_data[i].keys():
-#							if x != "type":
-#								box_instance.set(x, object_data[i][x])
-#						current_level.add_child(box_instance)
-#			#	var save_nodes = get_tree().get_nodes_in_
-#	else:
-#		for nodes in get_tree().get_nodes_in_group("Persist"):
-#			nodes.load_from_file()
-#	for node in save_nodes:
-#		if node.scene_file_path.is_empty():
-#			print_debug("node isn't instanced, skipped " % node.name)
-#			continue
-#		if !node.has_method("save"):
-#			print_debug("node doesn't have save func, skipped " % node.name)
-#
-#		var node_data = node.call("save")
-#		var json_string = JSON.stringify(node_data)
-#	var player_spawn = player_status.get_spawn()
-#	var starting_position:Vector2 = Vector2(player_spawn.global_position.x, player_spawn.global_position.y)
-#	game_time_end = Time.get_ticks_msec() 
-#	total_game_time += abs(game_time_end - game_time_start)
-#	var enemy_data = {}
-#	var enemy_cnt = 1
-#	for i in get_tree().get_nodes_in_group("Enemy"):
-#		var current_enemy: Enemy = i
-#		enemy_data[i.name + " " + str(enemy_cnt)] = {
-#			"position": {
-#				"x": current_enemy.global_position.x,
-#				"y": current_enemy.global_position.y 
-#				},
-#			"type": current_enemy.name,
-#			"health": current_enemy.health
-#		}
-#	var player_data = {
-#	"player_position" = {
-#		"x": starting_position.x,
-#		"y": starting_position.y
-#	},
-#	"player_health" = player_status.health,
-#	"items" = player_status.items
-#	}
-#	var level_data = {
-#		"level_conditions" = player_status.get_level().level_conditions,
-#		"level_name" = player_status.get_level().name
-#	}
-#	game_data = {
-#		"player_info": player_data,
-#		"enemy_info": enemy_data,
-#		"level_info": level_data,
-#		"playtime": total_game_time
-#	}
-#	save_files["File" + str(current_save_file)] = game_data
-
+	
 func _on_game_starting():
 	game_time_start = Time.get_ticks_msec()
 
@@ -418,9 +374,44 @@ func enable_free_play():
 func disable_free_play():
 	free_play_enabled = false 
 
-func enable_transition_screen(text:String = "Loading"):
+func enable_time_trial():
+	time_trial_enabled = true
+
+func disable_time_trial():
+	time_trial_enabled = false
+
+func enable_transition_screen():
 	transition_screen.show()
-	transition_screen.get_node("Title").text = text
+	transition_screen.get_node("TransitionAnim").play("Loading")
 
 func disable_transition_screen():
 	transition_screen.hide()
+	transition_screen.get_node("TransitionAnim").stop()
+
+
+func _on_level_start():
+	pass
+
+func add_ghost(level_name:String, ghost_name:String):
+	level_name = level_name.capitalize()
+	if ghost_data.saved_ghosts.has(level_name):
+		if ghost_data.saved_ghosts[level_name].has(ghost_name):
+			var new_ghost: GhostEntity = load(GHOSTPLAYER_PATH).instantiate()
+			new_ghost.set_ghost_info(ghost_data.saved_ghosts[level_name][ghost_name])
+			game_node.add_child(new_ghost)
+			current_ghost = new_ghost
+
+func get_current_ghost() -> GhostEntity:
+	return current_ghost
+
+func _on_level_over():
+	pass
+	#var end_screen = load(ENDSCREEN_PATH).instantiate()
+	#add_child(end_screen)
+	#end_screen.end_level()
+	#await game_over
+	#enable_transition_screen()
+	#await get_tree().create_timer(5).timeout
+	##gives the game 5 seconds to clear everything out. seems pretty reasonable.
+	#disable_transition_screen()
+	#main_menu.enable_menu()

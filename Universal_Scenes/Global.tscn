@@ -1,11 +1,96 @@
-[gd_scene load_steps=4 format=3 uid="uid://du64cseqbsn0k"]
+[gd_scene load_steps=9 format=3 uid="uid://du64cseqbsn0k"]
 
 [ext_resource type="Script" path="res://Universal_Scripts/Global.gd" id="1_oqxpk"]
 [ext_resource type="Script" path="res://Universal_Scenes/HitstopManager.gd" id="2_f7hvv"]
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="3_onyl6"]
+[ext_resource type="PackedScene" uid="uid://clrxebh7buvqx" path="res://Levels/level_end.tscn" id="4_c6jm4"]
+
+[sub_resource type="Animation" id="Animation_50o7w"]
+resource_name = "EndLoading"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TransitionScreen:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TransitionScreen/Title:text")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [""]
+}
+
+[sub_resource type="Animation" id="Animation_ot8br"]
+resource_name = "Loading"
+length = 1.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TransitionScreen/Title:text")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8, 1.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": ["LOADING", "LOADING.", "LOADING..", "LOADING..."]
+}
+
+[sub_resource type="Animation" id="Animation_q7vjo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TransitionScreen/Title:text")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["LOADING"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TransitionScreen:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_u7kd2"]
+_data = {
+"EndLoading": SubResource("Animation_50o7w"),
+"Loading": SubResource("Animation_ot8br"),
+"RESET": SubResource("Animation_q7vjo")
+}
 
 [node name="Singleton" type="Node"]
+process_mode = 3
 script = ExtResource("1_oqxpk")
+
+[node name="Game" type="Node" parent="."]
+unique_name_in_owner = true
+process_mode = 1
 
 [node name="HitstopManager" type="Node" parent="."]
 unique_name_in_owner = true
@@ -33,7 +118,23 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0.741176, 1, 1)
 theme_override_fonts/font = ExtResource("3_onyl6")
 theme_override_font_sizes/font_size = 100
-text = "LOADING..."
+text = "LOADING"
 horizontal_alignment = 1
+
+[node name="TransitionAnim" type="AnimationPlayer" parent="TransitionScreen"]
+unique_name_in_owner = true
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_u7kd2")
+}
+
+[node name="LevelEnd" parent="." instance=ExtResource("4_c6jm4")]
+unique_name_in_owner = true
+visible = false
+z_index = 0
+
+[connection signal="level_over" from="." to="." method="_on_level_over"]
+[connection signal="level_start" from="." to="." method="_on_level_start"]

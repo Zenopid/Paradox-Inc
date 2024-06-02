@@ -1,14 +1,18 @@
 class_name Fall extends PlayerAirState
 
-var jump_node: Jump
-var walljump_node
+
+@onready var land_sfx:AudioStreamPlayer = $"%Land"
 
 @export var maximum_fall_speed: int = 400
-
-var jump_buffer: Timer
-
 @export var buffer_duration: float = 0.6
 @export_range(0,1) var bunny_hop_boost: float = 0.05
+
+var jump_buffer: Timer
+var coyote_timer:Timer 
+
+var jump_node: Jump
+var walljump_node:Walljump
+
 var wall_checker: ShapeCast2D 
 var ground_checker: RayCast2D
 
@@ -22,39 +26,45 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	jump_buffer = state_machine.get_timer("Jump_Buffer")
 	jump_buffer.wait_time = buffer_duration
 	walljump_node = state_machine.find_state("WallSlide")
+	
+	coyote_timer = state_machine.get_timer("Coyote")
 
 func enter(_msg: = {}) -> void:
 	super.enter()
 	wall_checker.enabled = true
 	ground_checker.enabled = true
 
-func input(_event: InputEvent):
-	if Input.is_action_just_pressed("jump"):
-		jump_buffer.start()
-		if jump_node.remaining_jumps > 0: 
-			state_machine.transition_to("Jump")
-			return
+func input(event: InputEvent):
+	super.input(event)
+	if !jump_buffer.is_stopped() and grounded():
+		entity.velocity.x *=  1 + bunny_hop_boost
+	state_machine.transition_if_available([
+		"Jump",
+		"Attack",
+		"Dodge",
+		"Slide",
+		"Crouch", 
+		"Run",
+		"Idle",
+	])
 
 func physics_process(delta):
-	if can_wallslide(speed_before_wallslide):
-		return
+	if state_machine.state_available("WallSlide"):
+		state_machine.transition_to("WallSlide", {previous_speed = speed_before_wallslide})
 	elif !wall_checker.is_colliding():
 		speed_before_wallslide = entity.velocity.x
-	if enter_dodge_state():
-		return
+
 	super.physics_process(delta)
 	entity.velocity.y = clamp(entity.velocity.y, entity.velocity.y + jump_node.get_gravity(), maximum_fall_speed)
 	if grounded():
-		walljump_node.reset_wallslide_conditions()
-		if !jump_buffer.is_stopped():
-			entity.velocity.x *= 1 + bunny_hop_boost
-			state_machine.transition_to("Jump")
-			jump_buffer.stop()
-			return
-		if enter_crouch_state():
-			return
-		entity.velocity.x *= 0.8
-		enter_move_state()
+		state_machine.transition_if_available([
+			"Jump",
+			"Slide",
+			"Crouch",
+			"Dodge",
+			"Run",
+			"Idle",
+		])
 		return
 	set_raycast_positions()
 	default_move_and_slide()
@@ -66,6 +76,17 @@ func set_raycast_positions():
 
 func exit() -> void:
 	if grounded():
+		walljump_node.reset_wallslide_conditions()
 		jump_node.remaining_jumps = jump_node.double_jumps
+		land_sfx.play()
 	wall_checker.enabled = false
 	ground_checker.enabled = false
+
+func inactive_process(delta:float) -> void:
+	if !grounded() and coyote_timer.is_stopped():
+		coyote_timer.start()
+
+func conditions_met() -> bool:
+	if coyote_timer.is_stopped() and !grounded():
+		return true
+	return false

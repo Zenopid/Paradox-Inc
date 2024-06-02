@@ -16,31 +16,34 @@ func enter(_msg:= {}):
 	super.enter()
 	entity.brace()
 
-func physics_process(_delta):
+func physics_process(delta):
+	entity = entity as Player
 	var was_on_floor = grounded()
 	entity.velocity.x *= decelerate_value
 	entity.velocity.y = clamp(entity.velocity.y, entity.velocity.y + jump_script.get_gravity(), fall_scipt.maximum_fall_speed)
-	get_movement_input()
 	entity.move_and_slide()
-	
-	if was_on_floor and !grounded() and coyote_timer.is_stopped():
-		coyote_timer.start()
-	if can_fall():
-		return
 
-func input(_event):
-	super.input(_event)
-	if enter_attack_state():
+	state_machine.transition_if_available(["Fall"])
+
+func input(event):
+	super.input(event)
+	if state_machine.transition_if_available(["Attack"]):
 		return
 	if Input.is_action_just_pressed("jump"):
 		state_machine.transition_to("Jump", {can_superjump = true})
 		return 
-	if enter_dodge_state():
+	if state_machine.transition_if_available(["Dodge"]):
 		return
 	if !Input.is_action_pressed("crouch"):
-		enter_move_state()
-		return
+		state_machine.transition_if_available([
+			"Run",
+			"Idle"
+		])
 
 func exit() -> void:
 	superjump_timer.start()
 	entity.relax()
+
+func conditions_met() -> bool:
+	return Input.is_action_pressed("crouch") and grounded()
+

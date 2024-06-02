@@ -1,12 +1,16 @@
 class_name MainMenu extends Control
 
+signal level_selected()
+
+const GHOST_BUTTON_PATH:String = "uid://ddb6v8avcjany"
+
 var training_scene = preload("res://Levels/Training.tscn")
 var player = preload("res://Character/Player/Scenes/player.tscn")
 var camera_path = preload("res://Universal_Scenes/camera.tscn")
 var first_level = preload("res://Levels/Act 1/Emergence.tscn")
-@onready var end_screen:Control = $"%LevelEnd"
 
 @onready var start_button: Button = $"%Start"
+@onready var anim_player:AnimationPlayer = $AnimationPlayer
 
 @onready var debug_screen:Panel = $"%Debug_Screen"
 @onready var debug_text:Label = $"%Debug_Text"
@@ -16,7 +20,15 @@ var first_level = preload("res://Levels/Act 1/Emergence.tscn")
 @onready var level_select:Control = $"%LevelSelect"
 @onready var resume: Button = $"%Resume"
 @onready var exit_button:TextureButton = $"%Exit"
-var current_level: GenericLevel
+@onready var selected_level:String 
+
+@onready var screen_darkener:ColorRect = $"%ScreenDarkener"
+@onready var ghost_screen:Control = $"%GhostScreen"
+
+@onready var selected_ghost:String = "Training"
+@onready var start_game_on_level_button_pressed:bool = true
+
+@onready var ghost_data:PlayerGhost
 
 func _ready():
 	GlobalScript.main_menu = self
@@ -28,14 +40,10 @@ func _ready():
 	for i in get_tree().get_nodes_in_group("Levels"):
 		i.connect("pressed", Callable(self, "start_level").bind(i.name))
 	resume.disabled = !GlobalScript.has_save()
+	exit_button.disabled = false
+	enable_menu()
 
-func _on_level_over():
-	end_screen.end_level()
-	if current_level:
-		current_level.queue_free()
-	var player_instance = get_tree().get_first_node_in_group("Players")
-	player_instance.queue_free()
-	
+
 func disable_menu():
 	GlobalScript.emit_signal("disabling_menu")
 	get_tree().paused = false
@@ -48,8 +56,11 @@ func disable_menu():
 	for nodes in get_tree().get_nodes_in_group("Debug"):
 		nodes.visible = false
 	set_process_input(false)
+	
+
 
 func enable_menu():
+	start_game_on_level_button_pressed = true
 	show()
 	Engine.time_scale = 1
 	GlobalScript.emit_signal("enabling_menu")
@@ -63,6 +74,11 @@ func enable_menu():
 	set_process_input(true)
 	start_button.grab_focus()
 	GlobalScript.disable_free_play()
+	ghost_screen.hide()
+	level_select.hide()
+	if ResourceLoader.exists(ghost_data.SAVE_FILE_PATH):
+		ghost_data = ResourceLoader.load(ghost_data.SAVE_FILE_PATH)
+	
 
 func _on_start_pressed():
 	level_select.show()
@@ -92,21 +108,23 @@ func _input(event):
 		debug_screen.show()
 		debug_timer.start()
 
-#	GlobalScript.load_game()
-
-func start_level(level_name):
+func start_level(level_name:String):
 	disable_menu()
-	GlobalScript.start_level(level_name)
+	if start_game_on_level_button_pressed:
+		GlobalScript.start_level(level_name)
+		return
+	selected_level = level_name.strip_edges()
+	emit_signal("level_selected")
 
 func _on_debug_timer_timeout():
 	debug_screen.hide()
 
 func _on_clear_data_pressed():
-	SaveSystem.delete_all()
-	var save_file = get_save()
 	debug_screen.show()
 	debug_text.text = "Deleting Save..."
-	DirAccess.remove_absolute(SaveSystem.default_file_path)
+	DirAccess.remove_absolute(Player.SAVE_FILE_PATH)
+	DirAccess.remove_absolute(GenericLevel.SAVE_FILE_PATH)
+	DirAccess.remove_absolute(GlobalScript.SAVE_FILE_PATH)
 	debug_text.text = "Deleted Save File."
 	debug_timer.start()
 	resume.disabled = true
@@ -143,13 +161,46 @@ func _on_resume_pressed():
 func _on_exit_button_pressed():
 	get_tree().quit()
 
-
 func _on_level_select_return_button_pressed():
 	exit_button.disabled = false
 	exit_button.show()
 	level_select.hide()
 
-
 func _on_free_play_pressed():
+	start_game_on_level_button_pressed = true
 	_on_start_pressed()
 	GlobalScript.enable_free_play()
+
+
+func _on_time_attack_pressed():
+	start_game_on_level_button_pressed  = false
+	_on_start_pressed()
+	await level_selected
+	anim_player.play("GetGhosts")
+
+func init_ghost_buttons():
+	GlobalScript.enable_time_trial()
+	var ghost_container: VBoxContainer = $"%GhostContainer"
+
+	for i in ghost_data.saved_ghosts[selected_level].keys():
+		
+		var new_button :ColorRect = load(GHOST_BUTTON_PATH).instantiate()
+		ghost_container.add_child(new_button)
+		new_button.init(ghost_data, selected_level, str(i))
+		new_button.get_node("Race").connect("pressed", Callable(self, "_on_ghost_button_pressed").bind(str(i)))
+		var spacer_node:MarginContainer = MarginContainer.new()
+		spacer_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		spacer_node.set_custom_minimum_size(Vector2(0, 50))
+		ghost_container.add_child(spacer_node)
+		
+func _on_ghost_button_pressed(ghost_name:String):
+	GlobalScript.add_ghost(selected_level, ghost_name)
+	GlobalScript.start_level(selected_level)
+	
+func _on_exit_ghost_screen_pressed():
+
+	screen_darkener.hide()
+	ghost_screen.hide()
+	GlobalScript.disable_time_trial()
+	start_game_on_level_button_pressed = true
+	enable_menu()

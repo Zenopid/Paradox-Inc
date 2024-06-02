@@ -20,7 +20,6 @@ func physics_process(delta):
 		emit_signal("leave_state")
 	lag_duration -= 1
 	entity.velocity.x *= decelerate_value
-#	entity.velocity.y += attack_state.jump_script.get_gravity() * delta
 
 func clear_hitboxes():
 	for hitboxes in get_tree().get_nodes_in_group("Player Hitboxes"):

@@ -1,5 +1,7 @@
 class_name Entity extends CharacterBody2D
 
+signal health_updated(new_health)
+
 @export_enum ("Future", "Past", "Inherit Level's Timeline") var current_timeline:String = "Future"
 
 var move = 100
@@ -7,7 +9,6 @@ var jump_force: int = 200
 var current_level: GenericLevel
 
 @onready var anim_player: AnimationPlayer = get_node("SpriteAnimator")
-@onready var sfx: AudioStreamPlayer = get_node("AudioStreamPlayer")
 @onready var states: EntityStateMachine = get_node_or_null("StateMachine")
 @onready var health_bar:HealthBar = $"%HealthBar"
 @onready var debug_ui:Node2D = get_node_or_null("Debug")
@@ -27,6 +28,7 @@ func _ready():
 		states.init(null)
 	for nodes in get_tree().get_nodes_in_group("Collision"):
 		nodes.visible = GlobalScript.debug_enabled
+	health_bar.init(get_max_health())
 
 func _physics_process(delta: float) -> void:
 	states.physics_update(delta)
@@ -59,3 +61,6 @@ func set_invlv_type(type:String):
 	invlv_type = type
 	if invlv_type == "":
 		invlv_type = "None"
+
+func get_max_health() -> int:
+	return 100

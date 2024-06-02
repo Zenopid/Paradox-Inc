@@ -2,6 +2,8 @@ class_name PlayerBaseStrike extends BaseStrike
 
 const STICK_TO_GROUND: int = 140
 
+@onready var hit_sfx:AudioStreamPlayer = $Hit
+
 @export_category("Buffer Variables")
 @export var buffer_window: int = 13
 @export var buffer_attack: String = "None"
@@ -37,14 +39,15 @@ func get_movement_input() -> int:
 	return move
 
 func on_attack_hit(object):
-#	print_debug(object)
 	if object is Entity and object != entity:
 		#if the object is of the enity class, but it's not the entity that spawned the hitbox
 		can_cancel = true 
 		entity.camera.set_shake(camera_shake_strength)
 		GlobalScript.hitstop_manager.apply_hitstop(hitstop)
+		hit_sfx.play()
 
 func physics_process(delta: float):
+	entity = entity as Player
 	entity.velocity.y = STICK_TO_GROUND
 	super.physics_process(delta)
 	if !grounded():

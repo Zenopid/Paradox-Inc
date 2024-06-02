@@ -6,6 +6,7 @@ extends PlayerAirStrike
 @export var minimum_damage:int = 30
 @export var maximum_damage:int = 65
 @export var height_scaler: float = 0.25
+@export var decel_rate:float = 0.4
 
 @export_category("Hitbox")
 @export var duration: int = 4
@@ -20,6 +21,7 @@ var starting_position: float
 var ground_pound_damage: int
 
 var has_hit_ground: bool = false
+
 
 
 func enter(_msg: = {}):
@@ -40,11 +42,12 @@ func change_status(new_status):
 
 
 func physics_process(delta):
+	frame += 1
 	var additional_damage = roundi(min(maximum_damage, abs((entity.global_position.y - starting_position) * height_scaler )))
 	ground_pound_damage = min(maximum_damage, minimum_damage + additional_damage)
 	match attack_status:
 		"Start":
-			entity.velocity *= 0.15
+			entity.velocity *= decel_rate
 		"Falling":
 			entity.velocity.y = fall_speed
 	if entity.is_on_floor():
@@ -64,7 +67,7 @@ func physics_process(delta):
 			"knockback_angle": 360,
 			"attack_type": "Normal",
 			"object_push": object_push,
-			"hit_stop": hitstop
+			"hit_stop": hitstop,
 		}
 			attack_state.create_hitbox(hitbox_info)
 			entity.camera.set_shake(camera_shake_strength)
