@@ -19,18 +19,18 @@ signal status_changed(activated: bool )
 func _ready():
 	add_to_group("Switch")
 	level = get_tree().get_first_node_in_group("CurrentLevel")
-	level.connect("swapped_timeline", Callable(self, "swap_view"))
 	if timeline == "Future":
-		enable_future_collision()
+		set_collision(true, false)
 	elif timeline == "Past":
-		enable_past_collision()
+		set_collision(false, true)
 	else:
-		enable_future_collision()
-		enable_past_collision()
+		set_collision(true, true)
 		is_paradox = true 
 		on_sprite.modulate = on_sprite_paradox_color
 		off_sprite.modulate = off_sprite_paradox_color
 	swap_view(level.current_timeline)
+	if !is_paradox:
+		level.connect("swapped_timeline", Callable(self, "swap_view"))
 
 func swap_view(new_timeline):
 	if is_paradox:
@@ -41,32 +41,23 @@ func swap_view(new_timeline):
 	else:
 		modulate.a = 1
 
-func enable_future_collision():
-	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
-	set_collision_layer_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
+func set_collision(f_value:bool, p_value:bool):
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, f_value)
+	set_collision_layer_value(GlobalScript.collision_values.OBJECT_FUTURE, f_value)
 	
-	set_collision_layer_value(GlobalScript.collision_values.OBJECT_PAST, false)
-	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, false)
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, p_value)
+	set_collision_layer_value(GlobalScript.collision_values.OBJECT_PAST, p_value)
 	
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, false)
+	set_collision_layer_value(GlobalScript.collision_values.OBJECT_FUTURE, f_value)
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, p_value)
 	
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, f_value)
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, p_value)
+	
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, f_value)
+	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, p_value)
 	
 
-func enable_past_collision():
-	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, false)
-	set_collision_layer_value(GlobalScript.collision_values.OBJECT_FUTURE, false)
-	
-	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
-	set_collision_layer_value(GlobalScript.collision_values.OBJECT_PAST,true)
-	
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
-	
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
 
 func _on_body_entered(body):
 	activated = true
@@ -79,31 +70,5 @@ func _on_body_exited(body):
 		activated = false
 		on_sprite.hide()
 		off_sprite.show()
-		emit_signal("status_changed", activated)
-
-func save() -> Dictionary:
-	var switch_data = SaveSystem.get_var("Switch")
-	if !switch_data:
-		switch_data = {}
-	var save_dict = {
-		"monitoring": monitoring,
-		"visible": visible,
-		"activated": activated,
-		"timeline": timeline,
-		"name": name,
-		"rotation": rotation,
-		"global_position": global_position,
-	}
-	switch_data[name] = save_dict
-	SaveSystem.set_var("Switch", switch_data)
-	return save_dict
-
-func load_from_file():
-	var save_data = SaveSystem.get_var("Switch")
-	if save_data:
-		save_data = save_data[name]
-		if save_data:
-			for i in save_data.keys():
-				set(i, save_data[i])
 		emit_signal("status_changed", activated)
 

@@ -35,9 +35,8 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	dodge_buffer = state_machine.get_timer("Dodge_Buffer")
 	cooldown_timer.wait_time = dodge_cooldown
 	bunny_hop_boost = fall_node.bunny_hop_boost
-	
-func enter(_msg: = {}):
-	entity.set_collision_layer_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
+
+func set_collision_values():
 	entity.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PAST, false)
 	entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, false)
 	entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, false)
@@ -45,6 +44,8 @@ func enter(_msg: = {}):
 	entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
 	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, false)
 	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, false)
+func enter(_msg: = {}):
+	set_collision_values()
 	entity.set_invlv_type("StrikeProj")
 	var move = get_movement_input()
 	frame_tracker = 0
@@ -69,43 +70,39 @@ func physics_process(delta: float):
 	entity.velocity.y = clamp(entity.velocity.y, 0, fall_node.maximum_fall_speed)
 	entity.move_and_slide()
 	if is_actionable:
-		if Input.is_action_just_pressed("jump"):
-			if !grounded() and jump_node.remaining_jumps > 0:
-				if !jump_buffer.is_stopped():
-					entity.velocity.x *= 1 + bunny_hop_boost
-				state_machine.transition_to("Jump")
-				return
-			elif grounded():
-				state_machine.transition_to("Jump")
-				return
-		elif grounded():
-			if enter_jump_state():
-				return
-			if enter_crouch_state():
-				return
-			if get_movement_input() != 0:
-				state_machine.transition_to("Run")
-				return
+		if !entity.entity_near():
+			state_machine.transition_if_available([
+					"Attack",
+					"Jump",
+					"Slide",
+					"Crouch",
+					"Run", 
+				])
+			if Input.is_action_pressed("dodge") : 
+				if !grounded():
+					state_machine.transition_to("Fall")
+					return
+				else:
+					state_machine.transition_to("Idle")
+					return
 	if abs(entity.velocity.x) < dodge_speed: 
 		entity.velocity.x = dodge_speed * get_facing_as_int()
 
 func leave_dodge():
 	if !grounded():
-		if state_machine.transition_if_available(["Jump"]):
-			return
-	else:
-		if !jump_buffer.is_stopped():
-			entity.velocity.x *= 1 + bunny_hop_boost
-			state_machine.transition_to("Jump", {can_superjump = superjump_timer.is_stopped()})
-			return
 		state_machine.transition_if_available([
+			"Jump",
+			"Fall",
+			"Idle", #Contingency
+			])
+	else:
+		state_machine.transition_if_available([
+			"Jump",
 			"Slide",
 			"Crouch",
 			"Run", 
-			"Idle"
+			"Idle",
 		])
-	state_machine.transition_to("Fall")
-	return
 
 func become_actionable():
 	is_actionable = true

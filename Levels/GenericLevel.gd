@@ -19,7 +19,6 @@ const SAVE_FILE_PATH:String = "user://save_info/level_data.tres"
 @onready var paradoxes:Node2D = $"%Paradoxes"
 @onready var future_tileset: TileSet
 @onready var past_tileset: TileSet
-@onready var music_player = $BGM
 @onready var spawn_point = get_node("SpawnPoint")
 @onready var future_nav: NavigationRegion2D
 @onready var past_nav: NavigationRegion2D
@@ -69,14 +68,12 @@ func connect_signals():
 		exit_portal.connect("body_entered", Callable(self, "_on_exit_portal_entered"))
 
 func _on_exit_portal_entered(body):
-	if body is Player:
-		GlobalScript.end_level()
+	GlobalScript.end_level()
 
 func _on_swapped_timeline(new_timeline):
 	pass
 
 func start_level():
-	current_player.connect("respawning", Callable(self, "_on_player_respawning"))
 	emit_signal("starting_level")
 
 func enable():
@@ -95,7 +92,7 @@ func _on_game_over():
 	self.queue_free()
 
 func _on_player_respawning():
-	set_timeline(current_player.player_info.respawn_timeline)
+	set_timeline(current_player.get_respawn_timeline())
 	player_deaths += 1
 
 func load_music():
@@ -113,10 +110,9 @@ func load_music():
 
 func _input(event):
 	if Input.is_action_just_pressed("swap_timeline"):
-		if !lock_timeline:
-			set_timeline(get_next_timeline_swap())
-			return
-	
+		set_timeline(get_next_timeline_swap())
+		return
+
 func _physics_process(delta):
 	pass
 
@@ -158,14 +154,7 @@ func get_current_timeline():
 	return current_timeline
 
 func save() -> Dictionary:
-	#bronze_time = bronze_time
-	#sliver_time = sliver_time
-	#gold_time = gold_time
-#
-	#var packed_level_scene = PackedScene.new()
-	#packed_level_scene.pack(self)
-	#var error = ResourceSaver.save(packed_level_scene, SAVE_FILE_PATH)
-	#assert(error == 0, "Error " + str(error) + " occured when saving level")
+	level_info.player_time = current_player.stopwatch.get_total_time()
 	ResourceSaver.save(level_info, SAVE_FILE_PATH)
 	return {}
 

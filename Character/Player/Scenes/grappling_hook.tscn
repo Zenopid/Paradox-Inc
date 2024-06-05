@@ -140,7 +140,9 @@ libraries = {
 
 [node name="GrapplePointer" type="Sprite2D" parent="."]
 unique_name_in_owner = true
+visible = false
 position = Vector2(0, -36)
+rotation = 0.436332
 texture = ExtResource("4_liijc")
 flip_h = true
 

@@ -22,7 +22,8 @@ func physics_process(delta):
 	entity.velocity.x *= decelerate_value
 	entity.velocity.y = clamp(entity.velocity.y, entity.velocity.y + jump_script.get_gravity(), fall_scipt.maximum_fall_speed)
 	entity.move_and_slide()
-
+	if was_on_floor and !grounded() and coyote_timer.is_stopped():
+		coyote_timer.start()
 	state_machine.transition_if_available(["Fall"])
 
 func input(event):

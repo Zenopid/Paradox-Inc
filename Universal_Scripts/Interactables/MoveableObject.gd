@@ -62,10 +62,10 @@ func _ready():
 func _on_link_object_object_status(new_status):
 	pass
 
-func _on_link_object_position_changed(new_pos):
+func _on_link_object_position_changed(new_pos:Vector2):
 	pass
 
-func _on_link_object_timeline_changed(new_timeline):
+func _on_link_object_timeline_changed(new_timeline:String):
 	pass
 
 func check_state(timeline: String):
@@ -95,12 +95,12 @@ func enable():
 	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_CAST_SHAPE)
 	current_state = state.ENABLED
 
-func set_new_location(pos):
+func set_new_location(pos:Vector2):
 	movement_speed = linear_velocity
 	new_position = pos
 	should_reset = true
 
-func set_timeline(new_timeline):
+func set_timeline(new_timeline:String ):
 	if current_timeline != new_timeline:
 		if !is_paradox:
 			current_timeline = new_timeline
@@ -143,10 +143,10 @@ func damage(amount: int):
 		return
 	health -= amount
 	if health <= 0:
-		destroy()
+		kill()
 	emit_signal("damaged", health)
 
-func destroy():
+func kill():
 	queue_free()
 
 func queued_destruction() -> bool:
@@ -175,26 +175,7 @@ func become_normal():
 
 func get_id():
 	return id
-func save() -> Dictionary:
-	var moveable_objects = SaveSystem.get_var("MoveableObject")
-	if !moveable_objects:
-		moveable_objects = {}
-	var save_dict = {
-		"is_paradox": is_paradox,
-		"global_position": global_position,
-		"health": health,
-		"current_timeline": current_timeline,
-		"rotation": rotation,
-		"name": name,
-		"id": id,
-		"current_state": current_state
-	}
-	moveable_objects[name] = save_dict
-	SaveSystem.set_var("MoveableObject", moveable_objects)
-	return save_dict
 
-func load_from_file():
-	pass
 
 func link_to_object(object):
 	link_object = object

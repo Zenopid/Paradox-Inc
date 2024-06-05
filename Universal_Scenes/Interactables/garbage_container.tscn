@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://csxln62gm0sa6"]
+
+[ext_resource type="Script" path="res://Universal_Scripts/Interactables/garbage_container.gd" id="1_p3iea"]
+[ext_resource type="Texture2D" uid="uid://bl7n6wgvoartc" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Props-01.png" id="2_acyui"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uqrdc"]
+
+[node name="GarbageContainer" type="RigidBody2D"]
+mass = 35.0
+script = ExtResource("1_p3iea")
+health = 450
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+top_level = true
+shape = SubResource("RectangleShape2D_uqrdc")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(115.62, 109.253)
+texture = ExtResource("2_acyui")
+region_enabled = true
+region_rect = Rect2(0, 87.6219, 46.733, 56.107)

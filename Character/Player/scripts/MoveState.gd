@@ -81,6 +81,8 @@ func physics_process(delta:float) -> void:
 			move_and_slide_with_slopes(delta)
 		else:
 			default_move_and_slide()
+	if was_on_floor and !grounded() and coyote_timer.is_stopped():
+		coyote_timer.start()
 	if state_machine.transition_if_available(["Fall"]):
 		return
 	if state_machine.get_current_state() == run_state:
@@ -140,7 +142,6 @@ func ascending_slope() -> bool:
 	return true 
 
 func exit() -> void:
-	entity.velocity.y = 0
 	coyote_timer.stop()
 	entity.floor_snap_length = 1
 	entity.safe_margin = 0.08

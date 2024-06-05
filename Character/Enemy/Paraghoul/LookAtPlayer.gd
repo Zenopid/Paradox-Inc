@@ -46,16 +46,16 @@ func init_sphere():
 	target_sphere.set_collision_mask_value(1, false)
 	target_sphere.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
 	target_sphere.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
+	
 func enter(_msg:= {}):
 	chase_timer.start()
 	player = get_tree().get_first_node_in_group("Players")
-	nav_timer.connect("timeout", Callable(self, "_on_nav_timer_timeout"))
-	nav_timer.start()
 	los_shapecast.look_at(player.global_position)
 	target_sphere.global_position = get_new_target()
 	add_child(target_sphere)
 	
 func get_new_target() -> Vector2:
+	entity = entity as ParaGhoul
 	var target_position:Vector2 = Vector2.ZERO
 	target_position.x = randf_range(player.global_position.x - target_position_randomness, player.global_position.x + target_position_randomness)
 	target_position.y = randf_range(player.global_position.y - target_position_randomness, player.global_position.y - target_position_randomness * 2)
@@ -91,9 +91,6 @@ func push_objects():
 		if collision.get_collider() is MoveableObject:
 			collision.get_collider().call_deferred("apply_central_impulse", -collision.get_normal() * entity.velocity.length()  )
 
-func _on_nav_timer_timeout():
-	#pathfinder.target_position = player.global_position
-	nav_timer.start()
 
 func exit(): 
 	nav_timer.disconnect("timeout", Callable(self, "_on_nav_timer_timeout"))

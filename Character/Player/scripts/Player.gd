@@ -18,11 +18,12 @@ signal respawning()
 
 @export_category("Stats")
 @export var max_health: int = 100
+
 @onready var state_tracker:Label = $Debug/StateTracker
 @onready var health:int = max_health 
-@onready var invlv_timer = $Invlv_Timer
-@onready var effects_aniamtion: AnimationPlayer = $EffectAnimator
-@onready var death_screen = $"%UI/DeathScreen"
+@onready var invlv_timer:Timer = $Invlv_Timer
+@onready var effects_animation: AnimationPlayer = $EffectAnimator
+@onready var death_screen:ColorRect = $"%UI/DeathScreen"
 @onready var sprite: AnimatedSprite2D = $"%AnimatedSprite2D"
 @onready var camera: Camera2DPlus = $Camera
 @onready var quick_menu:Control = $"%QuickMenu"
@@ -31,6 +32,8 @@ signal respawning()
 @onready var backdrops = $"%Backgrounds"
 @onready var UI:CanvasLayer = $"%UI"
 @onready var timeline_tracker: Label = $"%TimelineTracker"
+@onready var detection_area: Area2D = $"%DetectionArea"
+
 
 
 var player_info:PlayerInfo = PlayerInfo.new():
@@ -73,7 +76,7 @@ func get_camera():
 func _ready():
 	sprite.position = Vector2.ZERO
 	super._ready()
-	effects_aniamtion.play("Rest")
+	effects_animation.play("Rest")
 	timeline_tracker.init(self)
 	backdrops.init(self)
 	connect_signals()
@@ -81,15 +84,19 @@ func _ready():
 	_on_swapped_timeline(current_level.current_timeline)
 	state_machine_states = states.get_all_states()
 	
-	
-
+	set_grapple_cursor(grapple_enabled)
+	if GlobalScript.controller_type == "Keyboard":
+		grapple.pointer.visible = false
+	else:
+		grapple.pointer.visible = true
+	camera.make_current()
 func connect_signals():
 	GlobalScript.connect("level_over", Callable(self, "_on_level_over"))
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
 	GlobalScript.connect("enabling_menu", Callable(self, "_on_game_over"))
 	GlobalScript.connect("disabling_menu", Callable(self, "enable"))
 	GlobalScript.connect("save_game_state", Callable(self, "save"))
-
+	connect("respawning", Callable(current_level, "_on_player_respawning"))
 
 func _on_swapped_timeline(new_timeline:String):
 	if new_timeline.to_lower() == "future":
@@ -99,7 +106,19 @@ func _on_swapped_timeline(new_timeline:String):
 	states._on_level_timeline_swapped(new_timeline)
 	grapple._on_swapped_timeline(new_timeline)
 
+func entity_near() -> bool:
+	for body in detection_area.get_overlapping_bodies():
+		if body != self:
+			return true
+	return false
+
 func set_collision(future_value, past_value):
+		detection_area.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, future_value)
+		detection_area.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, past_value)
+		
+		detection_area.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, future_value)
+		detection_area.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, past_value)
+	
 		set_collision_layer_value(GlobalScript.collision_values.PLAYER_FUTURE, future_value)
 		set_collision_layer_value(GlobalScript.collision_values.PLAYER_PAST, past_value)
 		
@@ -138,9 +157,7 @@ func grapple_boost():
 				velocity += boost_amount
 				velocity = velocity.limit_length(max_grapple_speed)
 		if grapple.object_pullable():
-			if grapple.grappled_object.velocity.length() < max_grapple_pull_speed:
-				grapple.grappled_object.call_deferred("apply_central_impulse", -(boost_amount * (1  + grapple_boost_object_pull_multiplier)) )
-				grapple.grappled_object.velocity = grapple.grappled_object.velocity.limit_length(max_grapple_pull_speed)
+			grapple.grappled_object.call_deferred("apply_central_impulse", -(boost_amount * (1  + grapple_boost_object_pull_multiplier)) )
 		grapple.release()
 
 func disable():
@@ -172,11 +189,6 @@ func _on_level_over():
 	queue_free()
 
 func _physics_process(delta):
-	#if Input.get_connected_joypads() == []:
-		#grapple.set_pointer_direction(get_global_mouse_position() - global_position)
-	#else:
-		#grapple.set_pointer_direction(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
-	#
 	super._physics_process(delta)
 	var grounded = states.get_current_state().grounded()
 	var walk = (Input.get_action_strength("right") - Input.get_action_strength("left")) * state_machine_states["Run"].move_speed
@@ -217,16 +229,17 @@ func _physics_process(delta):
 func _input(event):
 	states.input(event)
 	if grapple_enabled:
-		if event is InputEventMouseMotion:
-			grapple.set_pointer_direction(get_global_mouse_position())
-		elif event is InputEventJoypadMotion:
-			grapple.set_pointer_direction(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
-		if Input.is_action_just_pressed("grapple"):
-			if GlobalScript.controller_type == "Keyboard":
+		if GlobalScript.controller_type == "Keyboard":
+			if event is InputEventMouseMotion:
+				grapple.set_pointer_direction(get_global_mouse_position())
+			if Input.is_action_just_pressed("grapple"):
 				grapple.shoot(get_global_mouse_position() - global_position)
-			else:
+		elif GlobalScript.controller_type == "Controller":
+			if event is InputEventJoypadMotion:
+				grapple.pointer.visible = true 
+				grapple.set_pointer_direction(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
 				grapple.shoot(Vector2(Input.get_joy_axis(0,JOY_AXIS_RIGHT_X), Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y)))
-		elif Input.is_action_just_released("grapple"):
+		if Input.is_action_just_released("grapple"):
 			grapple.release()
 		if Input.is_action_just_pressed("boost"):
 			grapple_boost()
@@ -251,9 +264,8 @@ func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0
 		Input.start_joy_vibration(0, 0.5,0, 0.2)
 		invlv_timer.start()
 		_set_health(player_info.health - amount)
-		effects_aniamtion.play("Damaged")
-		effects_aniamtion.queue("Invincible")
-#		camera.flash()
+		effects_animation.play("Damaged")
+		effects_animation.queue("Invincible")
 
 func heal(amount):
 	_set_health(health + amount)
@@ -262,7 +274,7 @@ func kill():
 	states.transition_to("Dead")
 
 func _on_invlv_timer_timeout():
-	effects_aniamtion.play("Rest")
+	effects_animation.play("Rest")
 
 func get_death_screen():
 	return death_screen
@@ -280,6 +292,7 @@ func on_checkpoint_reached(heal_amount:int, new_timeline:String, new_spawn:Vecto
 	heal(heal_amount)
 	respawn_timeline = new_timeline
 	checkpoint_timestamps.append(stopwatch.get_total_time())
+	emit_signal("respawning")
 
 func brace():
 	player_braced = true
@@ -289,7 +302,13 @@ func relax():
 
 func change_grapple_status(status:bool):
 	grapple_enabled = status
-	grapple.pointer.visible = status
+	set_grapple_cursor(status)
+
+func set_grapple_cursor(status:bool):
+	if status:
+		Input.set_custom_mouse_cursor(grapple.pointer.texture)
+	else:
+		Input.set_custom_mouse_cursor(null)
 
 func get_max_speed() -> int:
 	return max_grapple_speed
@@ -301,3 +320,6 @@ func get_checkpoints_reached():
 
 func get_max_health() -> int:
 	return player_info.max_health
+
+func get_respawn_timeline() -> String:
+	return player_info.respawn_timeline

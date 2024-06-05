@@ -43,6 +43,7 @@ func change_status(new_status):
 
 func physics_process(delta):
 	frame += 1
+	
 	var additional_damage = roundi(min(maximum_damage, abs((entity.global_position.y - starting_position) * height_scaler )))
 	ground_pound_damage = min(maximum_damage, minimum_damage + additional_damage)
 	match attack_status:
@@ -61,7 +62,7 @@ func physics_process(delta):
 			"position":  Vector2(-1.375, 10.505),
 			"duration": duration,
 			"damage": ground_pound_damage,
-			"width": 39.625, 
+			"width": 55, 
 			"height": 14.01,
 			"knockback_amount": knockback_amount,
 			"knockback_angle": 360,

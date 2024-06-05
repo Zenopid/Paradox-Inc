@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://dmit1ftupbfvv"]
+
+[ext_resource type="Texture2D" uid="uid://dvwle04dxgr5" path="res://Sprites/Stages/Sidescroller Shooter - Central City/Assets/Tiles.png" id="1_wseuw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mlsrw"]
+size = Vector2(155.042, 15.5449)
+
+[node name="FutureElevator" type="AnimatableBody2D"]
+position = Vector2(-62, 0)
+collision_layer = 256
+collision_mask = 0
+
+[node name="Tiles" type="Sprite2D" parent="."]
+texture = ExtResource("1_wseuw")
+region_enabled = true
+region_rect = Rect2(32.8629, 0, 30.9449, 15.9181)
+
+[node name="Tiles2" type="Sprite2D" parent="."]
+position = Vector2(31, 0)
+texture = ExtResource("1_wseuw")
+region_enabled = true
+region_rect = Rect2(32.8629, 0, 30.9449, 15.9181)
+
+[node name="Tiles3" type="Sprite2D" parent="."]
+position = Vector2(62, 0)
+texture = ExtResource("1_wseuw")
+region_enabled = true
+region_rect = Rect2(32.8629, 0, 30.9449, 15.9181)
+
+[node name="Tiles4" type="Sprite2D" parent="."]
+position = Vector2(93, 0)
+texture = ExtResource("1_wseuw")
+region_enabled = true
+region_rect = Rect2(32.8629, 0, 30.9449, 15.9181)
+
+[node name="Tiles5" type="Sprite2D" parent="."]
+position = Vector2(124, 0)
+texture = ExtResource("1_wseuw")
+region_enabled = true
+region_rect = Rect2(32.8629, 0, 30.9449, 15.9181)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(61.9241, 0.378046)
+shape = SubResource("RectangleShape2D_mlsrw")

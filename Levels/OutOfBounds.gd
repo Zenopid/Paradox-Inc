@@ -39,7 +39,7 @@ func _on_body_entered(body):
 	elif body is MoveableObject or body is Enemy or body is EnemyRigid:
 		if destroy_objects:
 			body.remove_from_group("Grappled Objects")
-			body.destroy()
+			body.kill()
 	else:
 		var body_parent = body.get_parent()
 		if body_parent is Hook:
@@ -49,20 +49,4 @@ func _on_body_entered(body):
 func set_debug_color(color: Color):
 	$CollisionShape2D.debug_color = color
 
-func save() -> Dictionary:
-	var save_dict = {
-		"damage": damage,
-		"global_position": global_position,
-		"name": name,
-		"destroy_objects": destroy_objects,
-	}
-	SaveSystem.set_var("Boundary:" + name, save_dict)
-	return save_dict
 
-func load_from_file():
-	var save_data = SaveSystem.get_var("Boundary:" + name)
-	if save_data:
-		save_data.erase("type")
-		for i in save_data.keys():
-			if i != "type":
-				set(i, save_data[i])

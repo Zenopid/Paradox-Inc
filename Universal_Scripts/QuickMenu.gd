@@ -6,11 +6,17 @@ extends Control
 @onready var quit_confirmation = $QuitConfirmation
 @onready var resume_button: Button = $"%Resume"
 @onready var exit_callable:Callable = Callable(self, "_on_settings_exited" )
+@onready var cheat_bar:Control = $"%Cheats"
+@onready var cheat_text:LineEdit = $"%CheatName"
 var quitting_to_menu: bool = false 
 var restarting_level:bool = false 
 
+var previous_cursor
+
 
 func enable_menu(level_name):
+	
+	Input.set_custom_mouse_cursor(null)
 	GlobalScript.connect("exiting_settings", exit_callable)
 	player.set_process_input(false)
 	set_process_input(true)
@@ -20,6 +26,8 @@ func enable_menu(level_name):
 	resume_button.grab_focus()
 
 func _on_resume_pressed():
+	if player.grapple_enabled:
+		Input.set_custom_mouse_cursor(player.grapple.pointer.texture)
 	self.hide()
 	get_tree().paused = false
 	set_process_input(false)
@@ -38,16 +46,15 @@ func _on_save_and_exit_pressed():
 	restarting_level = false
 
 func _on_quit_pressed():
-	if restarting_level:
-		GlobalScript.restart_level()
-	elif quitting_to_menu:
+
+	if quitting_to_menu:
 		GlobalScript.main_menu.enable_menu()
 		hide()
 	else:
 		get_tree().quit()
+	GlobalScript.stop_music()
 	if GlobalScript.is_connected("exiting_settings", exit_callable):
 		GlobalScript.disconnect("exiting_settings", exit_callable)
-		
 
 func _on_main_menu_pressed():
 	quit_confirmation.show()
@@ -63,6 +70,24 @@ func _input(event):
 func _on_settings_exited():
 	get_tree().paused = true
 
-func _on_restart_pressed():
-	restarting_level = true 
-	quit_confirmation.show()
+
+
+
+func _on_enter_cheat_pressed():
+	cheat_bar.show()
+
+func _on_close_cheat_screen_pressed():
+	cheat_bar.hide()
+
+
+func _on_cheat_button_pressed():
+	var new_text:String = cheat_text.text
+	if new_text.contains("tp"):
+		print(get_tree().get_first_node_in_group("CurrentLevel").get_node("Checkpoints"))
+		var checkpoint = get_tree().get_first_node_in_group("CurrentLevel").get_node("Checkpoints").get_node_or_null("Checkpoint" + new_text[new_text.length() - 1])
+		if checkpoint:
+			player.global_position = checkpoint.global_position
+	if new_text == "restore_hp":
+		print("restored hp")
+		player.heal(player.player_info.max_health - player.player_info.health)
+	print("CHEATING with option " + new_text)

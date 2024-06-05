@@ -15,7 +15,7 @@ signal enabling_menu()
 signal disabling_menu()
 
 
-const SAVE_FILE_PATH:String  = "user://save_info/game_data.tscn"
+const SAVE_FILE_PATH:String  = "user://save_info/game_data.scn"
 const SAVE_FILE_FOLDER:String = "user://save_info"
 
 const HITSTOP_TIMESCALE: float = 0.2
@@ -90,7 +90,9 @@ var total_game_time
 @onready var hitstop_manager: HitstopManager = $"%HitstopManager"
 @onready var transition_screen: ColorRect = $"%TransitionScreen"
 @onready var end_screen: EndScreen = $"%LevelEnd"
-@onready var game_node:Node = $"Game"
+@onready var time_trial_end_screen: TimeTrialEndScreen = $"%GhostLevelEnd"
+@onready var game_node:Node = $"%Game"
+@onready var bgm:AudioStreamPlayer = $"%BGM"
 
 var setting_class_names: = [
 	"visual_settings",
@@ -123,6 +125,11 @@ const LEVEL_PATHS = {
 	"Training" = "uid://bdka6oxl4bhmn"
 }
 
+const BGM_PATHS = {
+	"Training" = "uid://bpo757a5s16mi",
+	"Emergence" = "uid://7cf3e500ewld"
+}
+
 #im guessing 127 lines by demo
 #edit: im guessing no demo LMAO (due friday (end of march break), writing this on thursday...
 #edit 2: i deleted the variable, didn't need it lol, also released demo (people thought it was mid)
@@ -139,13 +146,13 @@ var main_menu: MainMenu
 var settings_screen : Control
 var ghost_data:PlayerGhost = PlayerGhost.new()
 
+
+
 func _ready():
 	init_files()
 
 	disable_transition_screen()
 #	SaveSystem.connect("loaded", Callable(self, "load_game"))
-	if !Input.get_connected_joypads() == []:
-		controller_type = "Controller"
 	settings_info.resolution = get_window().size
 	change_ui_controls()
 	ghost_data.init_dictionary()
@@ -181,7 +188,7 @@ func set_ui_input(input_name: String):
 		"focus_next": button_controls = "next_timeline"
 		_: button_controls = ui_input
 	button_controls += "_button"
-	if Input.get_connected_joypads() == []:
+	if controller_type == "Keyboard":
 		for i in InputMap.action_get_events(input_name):
 			if i is InputEventKey:
 				InputMap.action_erase_event(input_name, i)
@@ -195,12 +202,18 @@ func set_ui_input(input_name: String):
 	else:
 		for i in InputMap.action_get_events(input_name):
 			if i is InputEventJoypadButton:
+				print("Deleting input " + str(i))
 				InputMap.action_erase_event(input_name, i)
-		if settings_info.get(button_controls + "_button") != null:
-			for i in settings_info.get(button_controls + "_button"):
+		var current_control = settings_info.get(button_controls)
+		if current_control != null:
+			for i in settings_info.get(button_controls):
 				if i is InputEventJoypadButton:
 					if !InputMap.action_has_event(input_name, i):
 						InputMap.action_add_event(input_name, i)
+			current_control = InputMap.action_get_events(button_controls.left(button_controls.find("_")))
+		else:
+			print(button_controls + " is null." )
+			
 func get_setting(setting_name:String):
 	return settings_info.get_setting(setting_name)
 	
@@ -247,6 +260,9 @@ func apply_hitstop(duration):
 
 func save_game():
 	settings_info.save()
+	await get_tree().create_timer(0.5).timeout
+	current_level.save()
+	await get_tree().create_timer(0.5).timeout
 	var game_as_packed_scene = PackedScene.new()
 	current_level.set_owner(game_node)
 	current_player.set_owner(game_node)
@@ -254,6 +270,7 @@ func save_game():
 	set_children_owner(current_player)
 	for i in get_tree().get_nodes_in_group("MoveableObjects"):
 		i.set_owner(game_node)
+		await get_tree().create_timer(0.5).timeout
 	game_as_packed_scene.pack(game_node)
 	var error = ResourceSaver.save(game_as_packed_scene,SAVE_FILE_PATH,)
 	if error != OK:
@@ -266,7 +283,9 @@ func set_children_owner(node_to_check:Node):
 	for child in node_to_check.get_children():
 		child.set_owner(node_to_check)
 		if child.get_children() != []:
-			set_children_owner(child)
+			await get_tree().create_timer(0.1).timeout
+			if is_instance_valid(child):
+				set_children_owner(child)
 
 func has_save() -> bool:
 	return ResourceLoader.exists(SAVE_FILE_PATH)
@@ -286,10 +305,13 @@ func load_game():
 		
 		current_level.add_to_group("CurrentLevel")
 		current_player.add_to_group("Players")
-		
 		add_child(game_node)
+		main_menu.disable_menu()
+		current_player.request_ready()
+		current_level.request_ready()
 
 func start_level(level:String):
+	main_menu.bgm.stop()
 #	print("Starting level " + level)
 	if !LEVEL_PATHS.has(level):
 		push_error("Couldn't find level " + level)
@@ -310,7 +332,9 @@ func start_level(level:String):
 		ghost_instance.add_to_group("PlayerGhosts")
 		game_node.add_child(ghost_instance)
 	main_menu.hide()
-	
+	bgm.stream = load(BGM_PATHS[current_level.name])
+	bgm.play()
+
 func restart_level():
 	var level_name = current_level.name
 	main_menu.hide()
@@ -322,14 +346,21 @@ func restart_level():
 	disable_transition_screen()
 
 func end_level():
+	bgm.stop()
+	current_level.emit_signal("level_over")
 	current_level.disable()
 	current_player.disable()
-	end_screen.show()
-	end_screen.end_level()
-	await end_screen.screen_closed
+	if !time_trial_enabled:
+		end_screen.show()
+		end_screen.end_level()
+		await end_screen.screen_closed
+	else:
+		time_trial_end_screen.show()
+		time_trial_end_screen.end_level()
+		await time_trial_end_screen.screen_closed
 	emit_signal("game_over")
 	enable_transition_screen()
-	await get_tree().create_timer(5).timeout
+	await get_tree().create_timer(3).timeout
 	disable_transition_screen()
 	main_menu.enable_menu()
 func enter_settings():
@@ -345,7 +376,7 @@ func enter_settings():
 	get_tree().paused = true 
 	
 func exit_settings():
-	if current_level and current_player:
+	if is_instance_valid(current_level) and is_instance_valid(current_player):
 		current_level.enable()
 		current_player.enable()
 	else:
@@ -415,3 +446,10 @@ func _on_level_over():
 	##gives the game 5 seconds to clear everything out. seems pretty reasonable.
 	#disable_transition_screen()
 	#main_menu.enable_menu()
+
+
+func _on_bgm_finished():
+	bgm.play()
+
+func stop_music():
+	bgm.stop()

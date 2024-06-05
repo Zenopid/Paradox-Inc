@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://du64cseqbsn0k"]
+[gd_scene load_steps=10 format=3 uid="uid://du64cseqbsn0k"]
 
 [ext_resource type="Script" path="res://Universal_Scripts/Global.gd" id="1_oqxpk"]
 [ext_resource type="Script" path="res://Universal_Scenes/HitstopManager.gd" id="2_f7hvv"]
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="3_onyl6"]
 [ext_resource type="PackedScene" uid="uid://clrxebh7buvqx" path="res://Levels/level_end.tscn" id="4_c6jm4"]
+[ext_resource type="PackedScene" uid="uid://5opr061l3pjm" path="res://Assorted_Scenes/ghost_level_end.tscn" id="5_ebug0"]
 
 [sub_resource type="Animation" id="Animation_50o7w"]
 resource_name = "EndLoading"
@@ -136,5 +137,13 @@ unique_name_in_owner = true
 visible = false
 z_index = 0
 
+[node name="GhostLevelEnd" parent="." instance=ExtResource("5_ebug0")]
+unique_name_in_owner = true
+visible = false
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+
 [connection signal="level_over" from="." to="." method="_on_level_over"]
 [connection signal="level_start" from="." to="." method="_on_level_start"]
+[connection signal="finished" from="BGM" to="." method="_on_bgm_finished"]

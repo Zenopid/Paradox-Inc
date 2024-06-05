@@ -371,6 +371,7 @@ script = ExtResource("7_d2k0y")
 hitbox = ExtResource("8_nnns4")
 
 [node name="DetectionSphere" type="Area2D" parent="." groups=["Detection"]]
+visible = false
 collision_layer = 48
 collision_mask = 3
 collision_priority = 5.0
@@ -399,6 +400,7 @@ scale = Vector2(-2, 2)
 script = ExtResource("11_g8rs6")
 
 [node name="EnemySphere" type="Area2D" parent="." groups=["Detection"]]
+visible = false
 collision_layer = 48
 collision_mask = 48
 

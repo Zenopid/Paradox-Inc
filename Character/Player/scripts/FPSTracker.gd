@@ -2,7 +2,6 @@ extends Label
 
 func _ready():
 	var show_fps:bool = GlobalScript.get_setting("show_fps")
-	print(show_fps)
 	visible = show_fps
 	GlobalScript.connect("setting_changed", Callable(self, "_on_setting_changed"))
 

@@ -53,6 +53,7 @@ func _ready():
 	detection_areas = get_tree().get_nodes_in_group("Detection")
 	_on_swapped_timeline(current_level.get_current_timeline())
 	init_collision()
+	current_level.connect("level_over", Callable(self, "queue_free"))
 	
 func init_collision():
 	if is_paradox:
@@ -169,11 +170,9 @@ func kill():
 		beehave_tree.free()
 	anim_player.play("Dead")
 	await anim_player.animation_finished
-	destroy()
+	queue_free()
 	
 func get_raycast(ray_name:String) -> RayCast2D:
-#	if ray_name == "Ground Checker":
-#		ray_name = "GroundChecker"
 	if ray_name.contains(" "):
 		ray_name.replace(" ", "")
 		#get rid of spaces because something is calling it with spaces
@@ -182,17 +181,11 @@ func get_raycast(ray_name:String) -> RayCast2D:
 		return raycast
 	print_debug("Cannot find the raycast called " + ray_name)
 	return null
+	
 func is_in_hitstun():
 	return in_hitstun
 	
-#func default_move_and_slide():
-	#set_velocity(motion)
-	#set_up_direction(Vector2.UP)
-	#set_floor_stop_on_slope_enabled(true)
-	#set_max_slides(4)
-	#set_floor_max_angle(PI/4)
-	#move_and_slide()
-	#motion = velocity
+
 
 func create_hitbox(hitbox_info: = {}):
 #	attack_node.create_hitbox(width, height,attack_damage, kb_amount, angle, duration, type, angle_flipper, points, push, hitlag)
@@ -219,7 +212,6 @@ func _on_detection_sphere_body_entered(body):
 		player_close = true
 
 func _on_detection_sphere_body_exited(body):
-	#print(body)
 	if body is Player:
 		detection_shape.debug_color = no_detection_color
 		player_close = false
@@ -228,10 +220,6 @@ func _on_detection_sphere_body_exited(body):
 func enemy_near():
 	return enemy_close
 
-func destroy():
-	being_destroyed = true
-#	set_physics_process(false)
-#	set_process(false)
 
 func get_max_health() -> int:
 	return max_health

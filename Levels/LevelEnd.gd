@@ -15,7 +15,6 @@ signal screen_closed()
 @onready var anim_player:AnimationPlayer = $"%Anim_Player"
 
 @onready var sfx = $Sfx
-@onready var timer:Timer = $"%Timer"
 
 @onready var return_button:Button = $"%ReturnButton"
 @onready var player:Player
@@ -55,6 +54,8 @@ func end_level():
 	var score:int = get_death_score(current_level.player_deaths) + get_time_score(minutes)
 	set_rating_text(score)
 	anim_player.play("Win")
+	await anim_player.animation_finished
+	return_button.show()
 
 func get_death_score(death_num:int):
 	var death_score: int = 0
@@ -67,6 +68,7 @@ func get_death_score(death_num:int):
 	elif death_count <= bronze_deaths:
 		death_score += 1
 	return death_score
+	
 func get_time_score(minutes) -> int:
 	var time_score:int = 0
 	if minutes <= gold_time:

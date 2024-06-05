@@ -19,6 +19,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 
 
 func enter(_msg: = {}):
+	GlobalScript.stop_music()
 	super.enter()
 	time_tracker = 0
 	processing_tracker = 0

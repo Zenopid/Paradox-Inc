@@ -52,6 +52,8 @@ func init(debug_node: Node2D = null):
 func physics_update(delta:float):
 	current_state.physics_process(delta)
 	for state in states_with_inactive_process.keys():
+		if state == current_state.name:
+			continue
 		states_with_inactive_process[state].inactive_process(delta)
 	if motion_tracker:
 		motion_tracker.text ="Speed: " + str(round(machine_owner.velocity.x)) + "," + str(round(machine_owner.velocity.y))
@@ -76,6 +78,7 @@ func transition_to(target_state_name: String = "", msg: = {}, trans_anim: String
 		current_state.enter(msg)
 		state_tracker.text = "State: " + str(current_state.name)
 		emit_signal("transitioned", current_state)
+		#print("Transitioning from state " + previous_state.name + " to state " + current_state.name)
 	
 
 func find_state(state:String) -> BaseState:

@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://cc00ywbec23cf"]
+
+[ext_resource type="Texture2D" uid="uid://du0bn8weaabrk" path="res://Sprites/Stages/Tiles/Assets/Assets.png" id="1_qq1rt"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oi7jv"]
+size = Vector2(155.063, 11.96)
+
+[node name="past_elevator" type="AnimatableBody2D"]
+collision_layer = 512
+
+[node name="Assets" type="Sprite2D" parent="."]
+position = Vector2(47, 0)
+texture = ExtResource("1_qq1rt")
+region_enabled = true
+region_rect = Rect2(159.291, 272.044, 65.0418, 10.7915)
+
+[node name="Assets2" type="Sprite2D" parent="."]
+position = Vector2(-41, 0)
+texture = ExtResource("1_qq1rt")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(159.291, 272.044, 65.0418, 10.7915)
+
+[node name="Assets3" type="Sprite2D" parent="."]
+position = Vector2(-7, 0)
+texture = ExtResource("1_qq1rt")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(159.291, 272.044, 65.0418, 10.7915)
+
+[node name="Assets4" type="Sprite2D" parent="."]
+position = Vector2(7, 0)
+texture = ExtResource("1_qq1rt")
+region_enabled = true
+region_rect = Rect2(159.291, 272.044, 65.0418, 10.7915)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(2.35549, 0.816465)
+shape = SubResource("RectangleShape2D_oi7jv")

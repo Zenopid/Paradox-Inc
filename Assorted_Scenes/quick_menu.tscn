@@ -101,6 +101,20 @@ text = "  Return to Main Menu
 "
 alignment = 0
 
+[node name="MarginContainer4" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="Enter Cheat" parent="VBoxContainer" instance=ExtResource("3_hpu16")]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 30
+text = "  Enter Cheat
+"
+alignment = 0
+
 [node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer"]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
@@ -195,9 +209,113 @@ text = "Nevermind"
 custom_minimum_size = Vector2(10, 0)
 layout_mode = 2
 
+[node name="Cheats" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GhostCreator" type="ColorRect" parent="Cheats"]
+unique_name_in_owner = true
+z_index = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -71.5
+offset_right = 200.0
+offset_bottom = 71.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0509804, 0, 0.6, 1)
+
+[node name="CheatName" type="LineEdit" parent="Cheats/GhostCreator"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 35.0
+offset_right = -1.0
+offset_bottom = -51.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_uneditable_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5_gxw4n")
+theme_override_font_sizes/font_size = 32
+placeholder_text = "Player"
+
+[node name="Title" type="Label" parent="Cheats/GhostCreator"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 4.0
+offset_right = -214.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("5_gxw4n")
+theme_override_font_sizes/font_size = 32
+text = "Cheat"
+
+[node name="CheatButton" parent="Cheats/GhostCreator" instance=ExtResource("3_hpu16")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -45.0
+offset_top = -25.0
+offset_right = -5.0
+offset_bottom = -3.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "CHEAT"
+
+[node name="Label" type="Label" parent="Cheats/GhostCreator"]
+z_index = 2
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -20.0
+offset_bottom = 32.0
+grow_horizontal = 0
+mouse_filter = 0
+theme_override_fonts/font = ExtResource("5_gxw4n")
+theme_override_font_sizes/font_size = 32
+text = "X"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+metadata/_edit_group_ = true
+
+[node name="CloseCheatScreen" type="TextureButton" parent="Cheats/GhostCreator/Label"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [connection signal="pressed" from="VBoxContainer/Resume" to="." method="_on_resume_pressed"]
 [connection signal="pressed" from="VBoxContainer/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="VBoxContainer/MainMenu" to="." method="_on_main_menu_pressed"]
+[connection signal="pressed" from="VBoxContainer/Enter Cheat" to="." method="_on_enter_cheat_pressed"]
 [connection signal="pressed" from="VBoxContainer/Exit" to="." method="_on_save_and_exit_pressed"]
 [connection signal="pressed" from="QuitConfirmation/ButtonContainer/Quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="QuitConfirmation/ButtonContainer/Resume" to="." method="_on_quit_menu_resume_pressed"]
+[connection signal="text_submitted" from="Cheats/GhostCreator/CheatName" to="." method="_on_ghost_name_text_submitted"]
+[connection signal="pressed" from="Cheats/GhostCreator/CheatButton" to="." method="_on_cheat_button_pressed"]
+[connection signal="pressed" from="Cheats/GhostCreator/Label/CloseCheatScreen" to="." method="_on_close_cheat_screen_pressed"]

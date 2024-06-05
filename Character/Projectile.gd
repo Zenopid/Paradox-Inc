@@ -25,13 +25,14 @@ const CLASH_RANGE = 10
 @onready var state_machine: EntityStateMachine
 @onready var projectile_owner:Entity
 @onready var hitbox: CollisionShape2D = $"%Hitbox"
-@onready var is_on_screen_checker: VisibleOnScreenEnabler2D = $"%OnScreen"
-
+@onready var player:Player
 @onready var starting_position:Vector2
 
 var gravity_tracker = 0
 var current_level: GenericLevel
 var framez: int = 0
+
+
 
 func set_parameters(hitbox_info: = {}):
 	set_physics_process(false)
@@ -44,7 +45,6 @@ func set_parameters(hitbox_info: = {}):
 		update_extends()
 		set_physics_process(true)
 		direction = direction.normalized()
-		is_on_screen_checker.connect("screen_exited", Callable(self, "_on_proj_exiting_screen"))
 		match timeline:
 			"Future":
 				set_future_collision()
@@ -57,9 +57,16 @@ func set_parameters(hitbox_info: = {}):
 		add_to_group(projectile_owner.name + " Projectiles")
 	else:
 		print_debug("Projectile was created with no info.")
-	
+	player = get_tree().get_first_node_in_group("Players")
 func _physics_process(delta):
-	
+	var status = player.get_invlv_type().contains("Proj")
+	if timeline == "All":
+			set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)
+			set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, status)
+	elif timeline == "Past":
+		set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, status)
+	else:
+		set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)
 	#gravity_tracker += gravity_amount
 	#if gravity_amount > max_fall_speed:
 		#gravity_amount = max_fall_speed
@@ -96,8 +103,7 @@ func _on_body_entered(body):
 	if body == projectile_owner:
 		return
 	elif body is TileMap:
-		
-		num_of_hits -= 1
+		queue_free()
 	elif body is RigidBody2D:
 		if global_position > body.global_position:
 			object_push = -abs(object_push + (int(velocity_effects_object_push) * velocity))
@@ -109,10 +115,8 @@ func _on_body_entered(body):
 		true_collision = true
 	elif body is Entity or body is EnemyRigid:
 		if body != projectile_owner:
-			var invlv_type = body.get_invlv_type()
-			if !invlv_type.contains("Proj"):
-				true_collision = true
-				damage_entity(body)
+			true_collision = true
+			damage_entity(body)
 	elif body is Projectile:
 		if body.get_rid() == get_rid() or body.projectile_owner == projectile_owner:
 			return
@@ -134,7 +138,6 @@ func damage_entity(body):
 func set_future_collision():
 	set_collision_layer_value(GlobalScript.collision_values.PROJECTILE_FUTURE, true)
 	
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
@@ -152,7 +155,6 @@ func set_past_collision():
 
 	#area_node.set_collision_layer_value(GlobalScript.collision_values.PROJECTILE_PAST, true)
 
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
@@ -163,6 +165,3 @@ func set_past_collision():
 	#area_node.set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
 	#area_node.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
 
-func _on_proj_exiting_screen():
-	pass
-	#queue_free()

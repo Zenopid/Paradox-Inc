@@ -12,7 +12,7 @@ signal invalid_control()
 #Audio
 @onready var game_slider = $"%Game_Volume"
 @onready var sfx_slider = $"%SFX_Volume"
-@onready var music_slider = $"%Music_Volume"
+@onready var music_slider = $"%BGM_Volume"
 @onready var enable_ui_sfx = $"%ui_sfx_enabled"
 
 #Visual
@@ -25,18 +25,18 @@ signal invalid_control()
 @onready var show_fps: CheckButton = $"%show_fps"
 #Controls
 @onready var jump_control:Button = $"%jump"
-@onready var crouch_control:Button = $TabContainer/Control/CrouchButton/crouch
-@onready var left_control:Button = $TabContainer/Control/LeftButton/left
-@onready var right_control:Button = $TabContainer/Control/RightButton/right
-@onready var attack_control:Button = $TabContainer/Control/AttackButton/attack
-@onready var dodge_control:Button = $TabContainer/Control/DodgeButton/dodge
-@onready var timeline_control:Button = $TabContainer/Control/TimelineButton/swap_timeline
-@onready var options_control: Button = $TabContainer/Control/OptionsButton/options
+@onready var crouch_control:Button = $"%crouch"
+@onready var left_control:Button = $"%left"
+@onready var right_control:Button = $"%right"
+@onready var attack_control:Button = $"%attack"
+@onready var dodge_control:Button = $"%dodge"
+@onready var timeline_control:Button = $"%swap_timeline"
+@onready var options_control: Button = $"%options"
 @onready var boost_control: Button = $"%boost"
-@onready var rebind_screen = $Control_Rebind_Screen
+@onready var rebind_screen = $"%Control_Rebind_Screen"
 @onready var rebind_text:Label = $"%Rebind_Text"
 @onready var overlapping_text:Label = $"%Overlapping_Text_Notification"
-@onready var timer:Timer = rebind_screen.get_node("Timer")
+@onready var rebind_timer:Timer = $"%Rebind_Timer"
 
 var current_setting_tab: String 
 
@@ -53,10 +53,11 @@ var last_input: InputEvent
 
 var level:GenericLevel
 
-var settings_resource:SettingsInfo = GlobalScript.settings_info
+@onready var settings_resource:SettingsInfo = GlobalScript.settings_info
 
 func _ready():
-	settings_resource = ResourceLoader.load(settings_resource.get_save_path(), "", ResourceLoader.CACHE_MODE_REPLACE)
+	if ResourceLoader.exists(settings_resource.get_save_path()):
+		settings_resource = load(settings_resource.get_save_path())
 	set_process_input(false)
 	level = get_tree().get_first_node_in_group("CurrentLevel")
 	current_setting_tab = settings_tab.get_current_tab_control().name.to_lower() + "_settings"
@@ -68,21 +69,22 @@ func _ready():
 	for i in get_tree().get_nodes_in_group("Toggle Buttons"):
 		i.connect("toggled", Callable(self, "_on_setting_toggled").bind(i))
 	
-	init_audio_settings()
-	init_visual_settings()
-	init_control_settings()
+	init_settings()
 	GlobalScript.emit_signal("entering_settings")
+	
+func init_settings():
+	init_audio_settings()
+	init_control_settings()
+	init_visual_settings()
 
 func init_audio_settings():
-	game_slider.value = db_to_linear(settings_resource.get_setting("game_volume"))
-	music_slider.value = db_to_linear(settings_resource.get_setting("bgm_volume"))
-	sfx_slider.value = db_to_linear(settings_resource.get_setting("sfx_volume"))
+	game_slider.value = settings_resource.get_setting("game_volume")
+	music_slider.value = settings_resource.get_setting("bgm_volume")
+	sfx_slider.value = settings_resource.get_setting("sfx_volume")
+	
 	enable_ui_sfx.button_pressed = settings_resource.get_setting("ui_sfx_enabled")
 	
-	for nodes in get_tree().get_nodes_in_group("Music Sliders"):
-		nodes.connect("value_changed", Callable(self, "set_music_volume").bind(nodes))
-		nodes.connect("drag_ended", Callable(self, "on_audio_slider_drag_ended").bind(nodes))
-		
+
 	for nodes in get_tree().get_nodes_in_group("Music Testers"):
 		nodes.connect("pressed", Callable(self, "_on_test_music_pressed").bind(nodes))
 
@@ -109,12 +111,8 @@ func _on_setting_toggled(toggled:bool, button:Button):
 func init_control_settings(): 
 	for nodes in get_tree().get_nodes_in_group("Rebind Buttons"):
 		nodes.connect("pressed", Callable(self, "start_rebind").bind(nodes.name,nodes))
-	var input_type = "Keyboard"
-	if Input.get_connected_joypads() != []:
-		#there's a controller connected, so assume controller settings
-		input_type = "Controller"
-		print("Detected controller " + Input.get_joy_name(0))
-	if input_type == "Keyboard":
+
+	if GlobalScript.controller_type == "Keyboard":
 		for i in settings_resource.get_control_buttons():
 			var current_button:String = i
 			for input in settings_resource.get_setting(current_button):
@@ -125,14 +123,14 @@ func init_control_settings():
 				elif input is InputEventMouseButton:
 					get(current_button.left(current_button.find("_")) + "_control").text = input.as_text()
 	else:
-		for i in settings_resource.get_button_names():
+		for i in settings_resource.get_control_buttons():
 			var current_button:String = i
 			for input in settings_resource.get_setting(current_button):
 				if input is InputEventJoypadButton :
 					get(current_button.left(current_button.find("_")) + "_control").text = input.as_text()
 					continue
 	if options_control.text == "":
-		if input_type == "Keyboard":
+		if GlobalScript.controller_type == "Keyboard":
 			options_control.text = "Escape"
 			#engine bug i think
 
@@ -211,10 +209,15 @@ func change_control(event_name, button:Button):
 			if i == last_input:
 				return
 			#need to check overlapping inputs
-	if Input.get_connected_joypads() == []:
+		print("Last input is " + str(last_input))
 		for i in InputMap.get_actions():
+			if i.contains("ui"):
+				continue
+			print(i)
+				#skip ui inputs they don't matter
 			for x in InputMap.action_get_events(i):
 				if x.is_match(last_input, true):
+					print(str(i) + " has the input of " + str(last_input.as_text()))
 					emit_signal("controls_overlap")
 					return
 				#overlapping inputs
@@ -223,21 +226,21 @@ func change_control(event_name, button:Button):
 	button.text = last_input.as_text()      
 	button.grab_focus()
 	set_process_input(false)
+	GlobalScript.change_ui_controls()
 
 func _on_tab_container_tab_changed(tab):
 	current_setting_tab = settings_tab.get_current_tab_control().name.to_lower() + "_settings"
 
 func on_audio_slider_drag_ended(value_changed:bool, slider:HSlider):
-	if value_changed:
-		updated_settings[slider.name.to_lower()] = slider.value
+	GlobalScript.apply_setting(slider.value, slider.name.to_lower())
 
 func _on_overlapping_controls(display_text:String):
 	rebind_text.hide()
 	overlapping_text.text = display_text
 	overlapping_text.show()
 	rebind_screen.show()
-	rebind_screen.get_node("Timer").start()
-	await timer.timeout
+	rebind_timer.start()
+	await rebind_timer.timeout
 	rebind_screen.hide()
 	overlapping_text.hide()
 	rebind_text.show()
@@ -251,3 +254,26 @@ func _on_visibility_changed():
 
 func _on_fps_options_item_selected(index):
 	check_if_setting_changed("fps", int(target_fps.get_item_text(index)))
+
+
+func _on_joypad_enabled_toggled(toggled_on):
+	if toggled_on:
+		GlobalScript.controller_type = "Controller"
+	else:
+		GlobalScript.controller_type = "Keyboard"
+
+
+
+func _on_game_volume_value_changed(value):
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value))
+	settings_resource.set_setting("game_volume", value)
+
+
+
+func _on_sfx_volume_value_changed(value):
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Sfx"), linear_to_db(value))
+	settings_resource.set_setting("sfx_volume", value)
+
+func _on_bgm_volume_value_changed(value):
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(value))
+	settings_resource.set_setting("bgm_volume",value)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=168 format=3 uid="uid://68mxs8vrodes"]
+[gd_scene load_steps=170 format=3 uid="uid://68mxs8vrodes"]
 
 [ext_resource type="Script" path="res://Character/Player/scripts/Player.gd" id="1_d84qb"]
 [ext_resource type="Texture2D" uid="uid://ccnj5krx1gyit" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-crouch-00.png" id="2_nbwc8"]
@@ -103,9 +103,10 @@
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/AirAttack2.gd" id="88_lli4y"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundPound.gd" id="89_tqgg8"]
 [ext_resource type="AudioStream" uid="uid://cmhynxa2310sa" path="res://Character/Player/SFX/Land.wav" id="96_7j2db"]
-[ext_resource type="AudioStream" uid="uid://dm5fxawgdqci5" path="res://Character/Player/SFX/Jump.wav" id="97_vrqk0"]
-[ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/WallSlide.gd" id="101_lae4r"]
-[ext_resource type="AudioStream" uid="uid://g7aweg5jsk1h" path="res://Character/Player/SFX/Slide.wav" id="102_jlbyr"]
+[ext_resource type="AudioStream" uid="uid://dgpri3y7buqrh" path="res://Character/Player/SFX/Jump.mp3" id="99_w16c3"]
+[ext_resource type="AudioStream" uid="uid://25j23g6qy15d" path="res://Character/Player/SFX/SuperjumpExplosion.mp3" id="100_8mnmx"]
+[ext_resource type="AudioStream" uid="uid://sq3lfldeaeav" path="res://Character/Player/SFX/Slide.mp3" id="102_at4q7"]
+[ext_resource type="Script" path="res://Character/Player/scripts/WallSlide.gd" id="104_7rp45"]
 [ext_resource type="Texture2D" uid="uid://cmvmd1suu7ptj" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Base Color.png" id="104_w3v4d"]
 [ext_resource type="PackedScene" uid="uid://d18ny0w4wlb1h" path="res://Universal_Scenes/camera.tscn" id="105_tcjc0"]
 
@@ -491,6 +492,7 @@ color = Color(0.878431, 0.996078, 1, 1)
 collision_mode = 2
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_ffhr5"]
+b = Vector2(-5, 10)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_m7p17"]
 size = Vector2(18, 19.4)
@@ -1367,6 +1369,23 @@ tracks/4/keys = {
 "method": &"emit_particles"
 }]
 }
+tracks/5/type = "method"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("StateMachine/Jump/Sfx")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.4676),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [0.0],
+"method": &"play"
+}, {
+"args": [],
+"method": &"stop"
+}]
+}
 
 [sub_resource type="Animation" id="Animation_qotqj"]
 resource_name = "Jump Squat"
@@ -1558,7 +1577,7 @@ size = Vector2(20, 14.5)
 
 [sub_resource type="Animation" id="Animation_444l8"]
 resource_name = "Slide"
-length = 0.4
+length = 0.200002
 loop_mode = 1
 step = 0.0166667
 tracks/0/type = "value"
@@ -1604,10 +1623,10 @@ tracks/3/path = NodePath("AnimatedSprite2D:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [0, 1, 0, 1]
+"values": [0, 1]
 }
 tracks/4/type = "method"
 tracks/4/imported = false
@@ -1809,6 +1828,9 @@ _data = {
 "Rest": SubResource("Animation_tq0si")
 }
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_iigp1"]
+size = Vector2(25, 25)
+
 [node name="Player" type="CharacterBody2D" groups=["Persist", "Players"]]
 process_mode = 1
 process_physics_priority = 25
@@ -1823,9 +1845,9 @@ current_timeline = "Inherit Level's Timeline"
 unique_name_in_owner = true
 visible = false
 player = NodePath("..")
-launch_speed = 1050
+launch_speed = 1300
 damage = 2
-time_until_grapple_falls = 0.55
+time_until_grapple_falls = 0.4
 gravity = 2
 max_fall_speed = 125
 fall_multiplier = 5.0
@@ -1971,8 +1993,10 @@ friction = 0.9
 [node name="Hit" type="AudioStreamPlayer" parent="StateMachine/Attack/GroundedAttack1"]
 unique_name_in_owner = true
 stream = ExtResource("85_rhng2")
+bus = &"Sfx"
 
 [node name="Whiff" type="AudioStreamPlayer" parent="StateMachine/Attack/GroundedAttack1"]
+bus = &"Sfx"
 
 [node name="GroundedAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("72_t4ijd")
@@ -1984,6 +2008,7 @@ friction = 0.85
 
 [node name="Hit" type="AudioStreamPlayer" parent="StateMachine/Attack/GroundedAttack2"]
 stream = ExtResource("85_rhng2")
+bus = &"Sfx"
 
 [node name="GroundedAttack3" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("73_5exvu")
@@ -1998,6 +2023,7 @@ friction = 0.8
 
 [node name="Hit" type="AudioStreamPlayer" parent="StateMachine/Attack/GroundedAttack3"]
 stream = ExtResource("85_rhng2")
+bus = &"Sfx"
 
 [node name="AirAttack1" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("74_kxsit")
@@ -2012,6 +2038,7 @@ attack_type = "Air"
 
 [node name="Hit" type="AudioStreamPlayer" parent="StateMachine/Attack/AirAttack1"]
 stream = ExtResource("85_rhng2")
+bus = &"Sfx"
 
 [node name="AirAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("88_lli4y")
@@ -2024,13 +2051,14 @@ attack_type = "Air"
 
 [node name="Hit" type="AudioStreamPlayer" parent="StateMachine/Attack/AirAttack2"]
 stream = ExtResource("85_rhng2")
+bus = &"Sfx"
 
 [node name="GroundPound" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("89_tqgg8")
 fall_speed = 800
 minimum_damage = 25
-maximum_damage = 45
-height_scaler = 0.1
+maximum_damage = 70
+height_scaler = 0.08
 decel_rate = 0.75
 duration = 7
 object_push = Vector2(1000, -650)
@@ -2046,6 +2074,7 @@ lunge_distance = 0
 hitstop = 0
 
 [node name="Hit" type="AudioStreamPlayer" parent="StateMachine/Attack/LandingLag"]
+bus = &"Sfx"
 
 [node name="Crouch" type="Node" parent="StateMachine"]
 script = ExtResource("34_j5ybi")
@@ -2069,7 +2098,6 @@ maximum_fall_speed = 700
 buffer_duration = 0.1
 push = 150
 animation_name = "Fall"
-has_inactive_process = true
 
 [node name="Land" type="AudioStreamPlayer" parent="StateMachine/Fall"]
 unique_name_in_owner = true
@@ -2091,7 +2119,13 @@ animation_name = "Jump"
 has_inactive_process = true
 
 [node name="Sfx" type="AudioStreamPlayer" parent="StateMachine/Jump"]
-stream = ExtResource("97_vrqk0")
+stream = ExtResource("99_w16c3")
+pitch_scale = 2.0
+bus = &"Sfx"
+
+[node name="SuperjumpSfx" type="AudioStreamPlayer" parent="StateMachine/Jump"]
+stream = ExtResource("100_8mnmx")
+volume_db = -15.0
 bus = &"Sfx"
 
 [node name="ParticlesRight" type="GPUParticles2D" parent="StateMachine/Jump"]
@@ -2144,8 +2178,7 @@ push = 500
 animation_name = "Slide"
 
 [node name="Sfx" type="AudioStreamPlayer" parent="StateMachine/Slide"]
-stream = ExtResource("102_jlbyr")
-volume_db = -30.0
+stream = ExtResource("102_at4q7")
 bus = &"Sfx"
 
 [node name="Particles" type="GPUParticles2D" parent="StateMachine/Slide"]
@@ -2160,11 +2193,12 @@ lifetime = 0.2
 fixed_fps = 60
 
 [node name="WallSlide" type="Node" parent="StateMachine"]
-script = ExtResource("101_lae4r")
+script = ExtResource("104_7rp45")
 eject_timer = 0.2
 crouch_slide_boost = 10
 Wallbouce_timer = 0.35
 jump_decay_rate = 0.15
+jump_boost = Vector2(50, -75)
 minimum_jump_decay = 0.05
 animation_name = "WallSlide"
 has_inactive_process = true
@@ -2201,17 +2235,12 @@ one_shot = true
 [node name="Dodge_Cooldown" type="Timer" parent="StateMachine/Timers"]
 one_shot = true
 
-[node name="Fastfall_Lockout" type="Timer" parent="StateMachine/Timers"]
-wait_time = 0.1
-one_shot = true
-
 [node name="Raycasts" type="Node" parent="StateMachine"]
 
 [node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts" groups=["Collision"]]
 unique_name_in_owner = true
 visible = false
 position = Vector2(0, 13.5)
-scale = Vector2(2, 1)
 target_position = Vector2(0, 10)
 collision_mask = 256
 hit_from_inside = true
@@ -2312,6 +2341,15 @@ enabled = true
 process_callback = 0
 player = NodePath("..")
 SHAKE_DECAY = 0.15
+
+[node name="DetectionArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+modulate = Color(0.00784314, 0.0627451, 0.0941176, 1)
+position = Vector2(0, 7)
+shape = SubResource("RectangleShape2D_iigp1")
 
 [connection signal="focus_entered" from="UI/QuickMenu" to="UI/QuickMenu" method="_on_focus_entered"]
 [connection signal="timeout" from="Invlv_Timer" to="." method="_on_invlv_timer_timeout"]

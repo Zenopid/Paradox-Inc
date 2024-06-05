@@ -10,6 +10,9 @@ var checkpoints: PackedInt32Array = []
 
 var index = 0;
 
+func _ready():
+	add_to_group("PlayerGhosts")
+
 func _init():
 	set_physics_process(false)
 	set_process(false)

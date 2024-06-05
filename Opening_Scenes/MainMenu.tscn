@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://c4fjnew0fybpk"]
+[gd_scene load_steps=11 format=3 uid="uid://c4fjnew0fybpk"]
 
 [ext_resource type="Script" path="res://Opening_Scenes/MainMenu.gd" id="1_3biwq"]
 [ext_resource type="FontFile" uid="uid://by1k102hd7hkp" path="res://fonts/Pixellari.ttf" id="1_l6hr5"]
 [ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="2_l0nly"]
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="6_tlju2"]
+[ext_resource type="AudioStream" uid="uid://c1vqgb1s0858f" path="res://Opening_Scenes/Menu.mp3" id="7_65cm4"]
 [ext_resource type="Texture2D" uid="uid://jpeltdmpbm5p" path="res://Sprites/UI_Sprites/exit_symbol1.png" id="7_ctq1j"]
 [ext_resource type="Texture2D" uid="uid://x77yhgyb0g0p" path="res://Sprites/UI_Sprites/settingsSymbol.png" id="7_jdllg"]
 
@@ -151,7 +152,6 @@ mouse_filter = 2
 color = Color(0.00784314, 0.0627451, 0.0941176, 1)
 
 [node name="Paradox" type="Label" parent="."]
-visible = false
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
@@ -173,7 +173,6 @@ horizontal_alignment = 1
 uppercase = true
 
 [node name="Incorporated" type="Label" parent="."]
-visible = false
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
@@ -506,6 +505,7 @@ scale = Vector2(0.25, 0.25)
 texture_normal = ExtResource("7_ctq1j")
 
 [node name="Settings" type="TextureButton" parent="."]
+unique_name_in_owner = true
 modulate = Color(0, 0.741176, 1, 1)
 layout_mode = 0
 offset_left = 1108.0
@@ -533,6 +533,12 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.764706)
 
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("7_65cm4")
+autoplay = true
+bus = &"Music"
+
 [connection signal="pressed" from="MenuButtons/ClassicGamemodes/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="MenuButtons/ClassicGamemodes/Resume" to="." method="_on_resume_pressed"]
 [connection signal="pressed" from="MenuButtons/SettingsAndBonusModes/Free Play" to="." method="_on_free_play_pressed"]
@@ -545,3 +551,4 @@ color = Color(0, 0, 0, 0.764706)
 [connection signal="pressed" from="LevelSelect/Return" to="." method="_on_level_select_return_button_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_button_pressed"]
 [connection signal="pressed" from="Settings" to="." method="_on_settings_pressed"]
+[connection signal="finished" from="BGM" to="." method="_on_bgm_finished"]

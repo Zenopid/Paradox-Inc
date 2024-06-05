@@ -25,8 +25,7 @@ func _physics_process(delta):
 	if stun_cnt <= 0:
 		in_hitstun = false
 	speed_tracker.text = "Speed: (" + str(round(velocity.x)) + "," + str(round(velocity.y)) + ")"
-	if being_destroyed:
-		queue_free()
+
 	states.physics_update(delta)
 
 func kill():

@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://fcuvx05j2v0y"]
+[gd_scene load_steps=43 format=3 uid="uid://fcuvx05j2v0y"]
 
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Paraghoul.gd" id="1_0ualm"]
 [ext_resource type="Texture2D" uid="uid://bgcenq3nxvjn2" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_1.png" id="2_8q4jg"]
@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://bvewt1lavbj41" path="res://Universal_Scenes/VFX/hitsparks.tscn" id="18_q6r7h"]
 [ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="19_3x474"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/WorldScanner.gd" id="19_h3ai8"]
+[ext_resource type="Script" path="res://Character/States/BaseState.gd" id="20_e1ekj"]
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="20_tkuy8"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_5e6m6"]
@@ -330,6 +331,23 @@ tracks/5/keys = {
 "update": 1,
 "values": [Vector2(0, 4), Vector2(1, 2), Vector2(-18, 15)]
 }
+tracks/6/type = "method"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("StateMachine/Shoot/Conjure")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.4509),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [0.0],
+"method": &"play"
+}, {
+"args": [],
+"method": &"stop"
+}]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bbk5j"]
 _data = {
@@ -461,8 +479,6 @@ sprite_frames = SubResource("SpriteFrames_5e6m6")
 animation = &"Shoot"
 flip_h = true
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-
 [node name="SpriteAnimator" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
 callback_mode_process = 0
@@ -512,6 +528,9 @@ projectile = ExtResource("15_etijb")
 entity_speed_multiplier = 0.35
 animation_name = "Shoot"
 
+[node name="Conjure" type="AudioStreamPlayer2D" parent="StateMachine/Shoot"]
+bus = &"Sfx"
+
 [node name="Chase" type="Node" parent="StateMachine"]
 script = ExtResource("16_d26je")
 acceleration = 5
@@ -519,6 +538,9 @@ random_spread = 0.786
 target_position_randomness = 125
 target_area_size = 50
 animation_name = "Idle"
+
+[node name="Melee" type="Node" parent="StateMachine"]
+script = ExtResource("20_e1ekj")
 
 [node name="Raycasts" type="Node" parent="StateMachine"]
 unique_name_in_owner = true
@@ -646,8 +668,11 @@ one_shot = true
 
 [node name="Pathfinder" type="NavigationAgent2D" parent="Navigation"]
 unique_name_in_owner = true
+path_max_distance = 2000.0
+avoidance_enabled = true
 debug_enabled = true
 debug_path_custom_color = Color(0.83, 0.0913, 0.103611, 1)
+debug_path_custom_line_width = 2.0
 
 [node name="Nav_Timer" type="Timer" parent="Navigation"]
 unique_name_in_owner = true

@@ -70,50 +70,47 @@ func speed_timer_logic(delta):
 		current_slide_duration -= delta
 
 func physics_process(delta):
-	
+	var is_grounded = grounded()
+	particles.emitting = is_grounded
 	particles.position = Vector2(entity.position.x, entity.position.y + 18)
 	
 	
 	speed_timer_logic(delta)
-	wall_checker.position.x = entity.position.x + 12.55 * slide_direction
-	wall_checker.position.y =  entity.position.y - 10.5 
+	wall_checker.position = Vector2(entity.position.x + 12.55 * slide_direction, entity.position.y - 10.5)
 	
 	slope_checker_right.position = Vector2(entity.position.x + 1, entity.position.y + 13.5)
 	slope_checker_left.position = Vector2(entity.position.x - 1, entity.position.y + 13.5)
+	
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	if current_slide_duration <= 0:
 		if is_on_slope() and !ascending_slope():
 			pass
 		else:
-			if !grounded():
+			if !is_grounded:
 				return
-			entity.velocity.x = float(slow_down(entity.velocity.x) )
+			entity.velocity.x = slow_down(entity.velocity.x) 
 	else:
 		if abs(entity.velocity.x) < slide_speed:
 			entity.velocity.x += slide_acceleration * get_movement_input()
 			if abs(entity.velocity.x) > slide_speed:
 				entity.velocity.x = slide_speed * sign(entity.velocity.x)
-#		entity.velocity.x += slide_acceleration * slide_direction
-#		entity.velocity.x = clamp(entity.velocity.x, -slide_speed, slide_speed)
 	hit_max_speed = true if abs(entity.velocity.x) >= abs(slide_speed) else false
 	
 	if entity.velocity.x  == 0:
 		particles.emitting = false
-		if Input.is_action_pressed("crouch"):
+		if Input.is_action_pressed("crouch") and is_grounded:
 			state_machine.transition_to("Crouch", {}, "Slide_to_Crouch")
 			return
-		enter_move_state()
-		return
-	if !grounded():
-		particles.emitting = false
-		entity.velocity.y += gravity_acceleration
-		if entity.velocity.y > max_gravity:
-			entity.velocity.y = max_gravity
+		state_machine.transition_if_available([
+		"Attack",
+		"Jump",
+		"Run",
+		"Idle",
+		])
+	if !is_grounded:
+		entity.velocity.y = clampi(entity.velocity.y, entity.velocity.y + gravity_acceleration, max_gravity)
 		if state_machine.transition_if_available(["WallSlide"]):
-			pass
-		else: 
-			state_machine.transition_to("Fall")
-		return
+			return
 	else:
 		emit_particles()
 	if !is_on_slope():
@@ -125,12 +122,13 @@ func physics_process(delta):
 
 func input(event: InputEvent):
 	super.input(event)
-	if state_machine.transition_if_available(["Attack"]):
-		return
 	if Input.is_action_just_pressed("jump"):
 		state_machine.transition_to("Jump", {overwrite_speed = Vector2(-1, jump_velocity)})
 		return
-	if state_machine.transition_if_available(["Dodge"]):
+	if state_machine.transition_if_available([
+		"Dodge",
+		"Attack"
+		]):
 		return
 	if !Input.is_action_pressed("crouch"):
 		state_machine.transition_if_available([
@@ -138,8 +136,8 @@ func input(event: InputEvent):
 			"Idle",
 		])
 
-func slow_down(speed: int) -> float:
-	return float(move_toward(speed, 0, slide_deceleration))
+func slow_down(speed: float) -> float:
+	return move_toward(speed, 0, slide_deceleration)
 
 func exit() -> void:
 	cooldown_timer.start()

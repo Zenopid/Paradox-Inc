@@ -13,6 +13,3 @@ script = ExtResource("1_8jggq")
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
 shape = SubResource("RectangleShape2D_rf17s")
-
-[node name="OnScreen" type="VisibleOnScreenEnabler2D" parent="."]
-unique_name_in_owner = true

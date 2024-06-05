@@ -4,7 +4,6 @@ extends BaseState
 @export var entity_speed_multiplier: float = 0.15
 
 @onready var shoot_cooldown:Timer
-@onready var target_position:Vector2
 @onready var los_raycast: ShapeCast2D
 @onready var player:Player
 
@@ -21,11 +20,12 @@ const PROJECTILE_SPAWN_LOCATION = Vector2(18, 15)
 
 @onready var debug_sphere:Area2D
 @onready var sphere_shape:CollisionShape2D
-@onready var chase_node
+@onready var chase_node:BaseState
 
 var do_physics_process:bool = false
 
-var target
+
+@onready var sfx: AudioStreamPlayer2D = $Conjure
 
 func init(current_entity, s_machine: EntityStateMachine):
 	super.init(current_entity, s_machine)
@@ -51,13 +51,12 @@ func enter(msg: = {}):
 	
 func projectile_attack(attack_name):
 	var fireball_instance = projectile.instantiate()
-	GlobalScript.add_child(fireball_instance)
+	GlobalScript.game_node.add_child(fireball_instance)
 	var points:Vector2 = entity.global_position + PROJECTILE_SPAWN_LOCATION
 	var push:Vector2 = fireball_instance.object_push
 	if !entity.sprite.flip_h:
 		points.x = abs(points.x)
 		push.x = abs(push.x)
-	
 	var hitbox_info = {
 		"global_position": points,
 		"projectile_owner": entity,
@@ -69,6 +68,7 @@ func projectile_attack(attack_name):
 	state_machine.transition_to("Chase")
 
 func physics_process(delta:float):
+	sfx.position = entity.position
 	entity.move_and_slide()
 
 func exit() -> void:

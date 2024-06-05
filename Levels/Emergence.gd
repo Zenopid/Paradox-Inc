@@ -1,19 +1,18 @@
 extends GenericLevel
 
 @onready var level_animator: AnimationPlayer = $AnimationPlayer
+@onready var puzzle_animator:AnimationPlayer = $"%PuzzleAnimator"
 @onready var future_lasers: Node2D = $"%Future_Lasers"
 @onready var past_lasers:Node2D = $"%Past_Lasers"
-@onready var spinning_platform_1_future: = $"%Spinning_Platform"
 @onready var grapple_item: Area2D = $"%Grapple"
 @onready var future_door:TileMap = $"%FutureDoor"
-@onready var box_spawn_location:Marker2D = $"%BoxSpawnLocation"
 @onready var puzzle_box:MoveableObject = $"%PuzzleBox"
+@onready var exit_barrier:StaticBody2D = $%"ExitBarrier"
 @export var laser_damage: int = 10
 
 
 func _ready():
 	init_tutorial_prompts()
-	spinning_platform_1_future.rotation_degrees = 90
 	level_animator.play("Rest")
 	for nodes in get_tree().get_nodes_in_group("Past Lasers"):
 		for lasers in nodes.get_children():
@@ -50,14 +49,17 @@ func _ready():
 func _on_puzzle_switch_activated(activated):
 	for switches in get_tree().get_nodes_in_group("PuzzleSwitches"):
 		if !switches.activated:
+			exit_barrier.position = Vector2(-1088.94, -6042.67)
 			return
-	
-		
+	if is_instance_valid(exit_barrier):
+		level_animator.play("RemoveBarrier")
+
+
 func init_tutorial_prompts():
-	var grapple_prompt_text = "the Left Mouse Button" if Input.get_connected_joypads() == [] else "Left Trigger Button"
+	var grapple_prompt_text:String = "the Left Mouse Button" if Input.get_connected_joypads() == [] else "Left Trigger Button"
 	$TutorialPrompts/Grapple.text = "Press " + grapple_prompt_text + " to use the grappling hook to 
 	pull yourself or other objects around." 
-	var grapple_boost_prompt_text = "the Right Mouse Button" if Input.get_connected_joypads() == [] else "Right Trigger Button"
+	var grapple_boost_prompt_text:String= "the Right Mouse Button" if Input.get_connected_joypads() == [] else "Right Trigger Button"
 	$"%GrappleBoost".text = "Press " + grapple_boost_prompt_text + " to fling yourself towards your grapple target."
 	
 func start_level():
@@ -69,7 +71,7 @@ func _on_player_respawning():
 	super._on_player_respawning()
 	level_animator.play("Rest")
 
-func _on_laser_area_entered(body):
+func _on_laser_area_entered(body:PhysicsBody2D):
 	body.damage(laser_damage)
 
 func _on_swapped_timeline(new_timeline:String):
@@ -82,9 +84,6 @@ func _on_swapped_timeline(new_timeline:String):
 		nodes.set_deferred("monitorable",false)
 	get(new_timeline.to_lower() + "_lasers").show()
 	get(get_next_timeline_swap().to_lower() + "_lasers").hide()
-
-func _on_exit_body_entered(body):
-	GlobalScript.end_level()
 
 func _on_platform_rotate_switch_status_changed(new_status):
 	if new_status:
@@ -117,12 +116,10 @@ func _on_elevator_area_body_entered(body):
 	level_animator.play("MoveElevator")
 
 
-func _on_box_spawner_status_changed(activated):
+
+
+func _on_puzzle_switch_1_status_changed(activated):
 	if activated:
-		var new_instance:MoveableObject = load(GlobalScript.BOX_PATH).instantiate()
-		new_instance.global_position = box_spawn_location.global_position
-		new_instance.current_timeline = current_player.current_timeline
-		var total_boxes = get_tree().get_nodes_in_group("PuzzleBoxes")
-		if total_boxes.size() > 5:
-			total_boxes[5].queue_free()
-		new_instance.add_to_group("PuzzleBoxes")
+		puzzle_animator.play("RotateFuturePlatform")
+	else:
+		puzzle_animator.stop(true)

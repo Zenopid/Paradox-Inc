@@ -18,7 +18,7 @@ class_name Training extends GenericLevel
 
 @onready var rotate_speed: int = 6
 @onready var puzzle_box: Node2D = $"%PuzzleLocation"
-
+@onready var bgm:AudioStreamPlayer = $"%BGM"
 func _ready():
 	super._ready()
 	puzzle_box.position = Vector2(388, -719)
@@ -26,9 +26,6 @@ func _ready():
 	$"%PastPuzzle".position = Vector2.ZERO
 	$"%ParadoxPuzzle".position = Vector2.ZERO 
 	$"%PuzzleSwitch".position = Vector2(87.5, 2.3)
-	$"%Elevator".position = Vector2(-35, 124)
-	for i in $"%Elevator".get_children():
-		i.position = Vector2.ZERO
 	#level_player.play("MoveElevator")
 
 #func _process(delta):
@@ -95,3 +92,7 @@ func disable():
 func enable():
 	super.enable()
 	training_ui.show()
+
+
+func _on_bgm_finished():
+	bgm.play()

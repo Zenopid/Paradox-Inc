@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c2q6x3xnvtvqh"]
+[gd_scene load_steps=10 format=3 uid="uid://c2q6x3xnvtvqh"]
 
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="1_ayrui"]
 [ext_resource type="Script" path="res://Assorted_Scenes/SaveFile.gd" id="1_phdc5"]
@@ -12,12 +12,104 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color(0.878431, 0.996078, 1, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ntv76"]
+bg_color = Color(0, 0.741176, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 0.883333, 0, 1)
+anti_aliasing = false
+
+[sub_resource type="Animation" id="Animation_y48cl"]
+resource_name = "DeletingSave"
+length = 1.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SaveFile/SaveFileOptions/Delete:theme_override_styles/pressed:bg_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 1.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0, 0.741176, 1, 1), Color(0.83, 0.0913, 0.103611, 1), Color(0, 0.741176, 1, 1)]
+}
+
 [sub_resource type="Animation" id="Animation_h56a4"]
 resource_name = "Enter"
+length = 0.25
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SaveFile/CurrentLevel:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SaveFile/SaveFileOptions:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1, 1e-05), Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_2agb7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SaveFile/CurrentLevel:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SaveFile/SaveFileOptions:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1e-05)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SaveFile/SaveFileOptions/Delete:theme_override_styles/pressed:bg_color")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0.741176, 1, 1)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6p3yj"]
 _data = {
-"Enter": SubResource("Animation_h56a4")
+"DeletingSave": SubResource("Animation_y48cl"),
+"Enter": SubResource("Animation_h56a4"),
+"RESET": SubResource("Animation_2agb7")
 }
 
 [node name="SelectSave" type="Control"]
@@ -73,7 +165,9 @@ offset_right = 480.0
 offset_bottom = 108.0
 theme_override_fonts/font = ExtResource("1_ayrui")
 theme_override_font_sizes/font_size = 90
-text = "Training"
+text = "Start New Game"
+visible_characters = 0
+visible_ratio = 0.0
 
 [node name="SaveFileOptions" type="VBoxContainer" parent="SaveFile"]
 layout_mode = 1
@@ -87,6 +181,7 @@ offset_top = 0.079999
 offset_bottom = -0.0360107
 grow_horizontal = 0
 grow_vertical = 2
+scale = Vector2(1, 1e-05)
 metadata/_edit_group_ = true
 
 [node name="Start" parent="SaveFile/SaveFileOptions" groups=["Start Buttons"] instance=ExtResource("2_plcfh")]
@@ -99,9 +194,11 @@ text = "Start"
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ntv76")
 text = "Delete"
 
-[node name="Timer" type="Timer" parent="SaveFile/SaveFileOptions/Delete"]
+[node name="DeleteTimer" type="Timer" parent="SaveFile/SaveFileOptions/Delete"]
+unique_name_in_owner = true
 one_shot = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -126,5 +223,7 @@ grow_vertical = 0
 text = " Return "
 
 [connection signal="pressed" from="SaveFile/SaveFileOptions/Start" to="." method="_on_start_pressed"]
+[connection signal="button_up" from="SaveFile/SaveFileOptions/Delete" to="." method="_on_delete_button_up"]
 [connection signal="pressed" from="SaveFile/SaveFileOptions/Delete" to="." method="_on_delete_pressed"]
+[connection signal="timeout" from="SaveFile/SaveFileOptions/Delete/DeleteTimer" to="." method="_on_timer_timeout"]
 [connection signal="pressed" from="Return" to="." method="_on_return_pressed"]

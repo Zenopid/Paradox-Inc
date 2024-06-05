@@ -3,6 +3,7 @@ class_name MainMenu extends Control
 signal level_selected()
 
 const GHOST_BUTTON_PATH:String = "uid://ddb6v8avcjany"
+const SAVE_FILE_SCENE_PATH:String = "uid://c2q6x3xnvtvqh"
 
 var training_scene = preload("res://Levels/Training.tscn")
 var player = preload("res://Character/Player/Scenes/player.tscn")
@@ -21,14 +22,16 @@ var first_level = preload("res://Levels/Act 1/Emergence.tscn")
 @onready var resume: Button = $"%Resume"
 @onready var exit_button:TextureButton = $"%Exit"
 @onready var selected_level:String 
-
+@onready var save_file_scene:Control 
 @onready var screen_darkener:ColorRect = $"%ScreenDarkener"
 @onready var ghost_screen:Control = $"%GhostScreen"
-
+@onready var settings_button:TextureButton = $"%Settings"
 @onready var selected_ghost:String = "Training"
 @onready var start_game_on_level_button_pressed:bool = true
-
 @onready var ghost_data:PlayerGhost
+@onready var level_buttons:Control = $"%LevelButtons"
+
+@onready var bgm:AudioStreamPlayer = $"%BGM"
 
 func _ready():
 	GlobalScript.main_menu = self
@@ -39,10 +42,14 @@ func _ready():
 	
 	for i in get_tree().get_nodes_in_group("Levels"):
 		i.connect("pressed", Callable(self, "start_level").bind(i.name))
-	resume.disabled = !GlobalScript.has_save()
+	if GlobalScript.has_save():
+		resume.disabled = false
+		save_file_scene = load(SAVE_FILE_SCENE_PATH).instantiate()
+		save_file_scene.hide()
+		add_child(save_file_scene)
+		save_file_scene.get_node("Return").connect("pressed", Callable(self, "_on_save_file_scene_return_button_pressed"))
 	exit_button.disabled = false
 	enable_menu()
-
 
 func disable_menu():
 	GlobalScript.emit_signal("disabling_menu")
@@ -60,6 +67,7 @@ func disable_menu():
 
 
 func enable_menu():
+	bgm.play()
 	start_game_on_level_button_pressed = true
 	show()
 	Engine.time_scale = 1
@@ -84,7 +92,7 @@ func _on_start_pressed():
 	level_select.show()
 	exit_button.hide()
 	exit_button.disabled = true 
-	$"%LevelButtons".get_child(0).grab_focus()
+	level_buttons.get_child(0).grab_focus()
 	GlobalScript.disable_free_play()
 
 func _on_settings_pressed():
@@ -140,7 +148,7 @@ func _on_retrieve_save_pressed():
 	debug_timer.start()
 
 func get_save():
-	var file = FileAccess.open(SaveSystem.default_file_path, FileAccess.READ_WRITE)
+	var file = FileAccess.open(GlobalScript.SAVE_FILE_PATH, FileAccess.READ_WRITE)
 	if file:
 		if FileAccess.get_open_error() == 0:
 			return file
@@ -152,11 +160,18 @@ func _on_save_info_back_button_pressed():
 	start_button.grab_focus()
 	
 func _on_resume_pressed():
-	if GlobalScript.has_save():
-		disable_menu()
-		GlobalScript.load_game()
-	else:
-		resume.disabled = true 
+	#if GlobalScript.has_save():
+		#disable_menu()
+		#GlobalScript.load_game()
+	#else:
+		#resume.disabled = true 
+	exit_button.hide()
+	settings_button.hide()
+	save_file_scene.show()
+
+func _on_save_file_scene_return_button_pressed():
+	exit_button.show()
+	settings_button.show()
 
 func _on_exit_button_pressed():
 	get_tree().quit()
@@ -204,3 +219,7 @@ func _on_exit_ghost_screen_pressed():
 	GlobalScript.disable_time_trial()
 	start_game_on_level_button_pressed = true
 	enable_menu()
+
+
+func _on_bgm_finished():
+	bgm.play()

@@ -19,11 +19,12 @@ const STICK_TO_GROUND: int = 140
 
 var attack_state: PlayerAttack
 var can_dodge:bool 
-
+var coyote_timer:Timer
 
 func init(current_entity:Entity):
 	entity = current_entity
 	attack_state = get_parent()
+	coyote_timer = attack_state.state_machine.get_timer("Coyote")
 
 func enter(_msg: = {}):
 	super.enter()
@@ -47,10 +48,13 @@ func on_attack_hit(object):
 		hit_sfx.play()
 
 func physics_process(delta: float):
+	var was_on_floor = grounded()
 	entity = entity as Player
 	entity.velocity.y = STICK_TO_GROUND
 	super.physics_process(delta)
-	if !grounded():
+	if was_on_floor and !grounded() and coyote_timer.is_stopped():
+		coyote_timer.start()
+	if attack_state.state_machine.state_available("Fall"):
 		entity.states.transition_to("Fall")
 		return
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)
@@ -85,4 +89,3 @@ func _on_attack_over(name_of_attack:String):
 func exit():
 	super.exit()
 	buffer_tracker = 0
-	entity.velocity.y = 0

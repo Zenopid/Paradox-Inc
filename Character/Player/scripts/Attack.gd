@@ -79,6 +79,7 @@ func _on_attack_over(anim_name):
 	pass
 
 func physics_process(delta: float) -> void:
+	var was_on_floor = grounded()
 	if state_machine.state_available("Dodge") and active_attack.can_dodge:
 		active_attack.exit()
 		state_machine.transition_to("Dodge")
@@ -130,4 +131,4 @@ func exit():
 
 func conditions_met() -> bool:
 
-	return !attack_buffer.is_stopped() or !attack_buffer.is_stopped()
+	return !attack_buffer.is_stopped() or Input.is_action_just_pressed("attack")

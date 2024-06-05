@@ -12,9 +12,9 @@ class_name SettingsInfo extends Resource
 @export var fps:int = Engine.physics_ticks_per_second
 
 @export_category("Audio Settings")
-@export var sfx_volume: int = 1
-@export var bgm_volume: int = 1
-@export var game_volume: int = 1
+@export var sfx_volume: float = 1
+@export var bgm_volume: float = 1
+@export var game_volume: float = 1
 @export var ui_sfx_enabled: bool = true
 
 @export_category("Control Settings")
