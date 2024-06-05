@@ -93,7 +93,6 @@ func push_objects():
 
 
 func exit(): 
-	nav_timer.disconnect("timeout", Callable(self, "_on_nav_timer_timeout"))
 	remove_child(target_sphere)
 
 func conditions_met():

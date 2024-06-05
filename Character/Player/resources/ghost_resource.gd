@@ -2,7 +2,7 @@ class_name PlayerGhost extends Resource
 
 const SAVE_FILE_FOLDER: String = "user://ghost_data"
 
-const SAVE_FILE_PATH:String = "user://ghost_data/ghosts.tres"
+const SAVE_FILE_PATH:String = "user://save_info/ghost_data/ghosts.tres"
 
 @export var saved_ghosts: = {
 	"Training": {},

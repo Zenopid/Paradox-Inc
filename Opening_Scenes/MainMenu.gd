@@ -194,6 +194,7 @@ func _on_time_attack_pressed():
 	anim_player.play("GetGhosts")
 
 func init_ghost_buttons():
+	print("init ghost buttons")
 	GlobalScript.enable_time_trial()
 	var ghost_container: VBoxContainer = $"%GhostContainer"
 

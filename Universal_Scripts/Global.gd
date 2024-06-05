@@ -424,13 +424,14 @@ func _on_level_start():
 	pass
 
 func add_ghost(level_name:String, ghost_name:String):
-	level_name = level_name.capitalize()
-	if ghost_data.saved_ghosts.has(level_name):
-		if ghost_data.saved_ghosts[level_name].has(ghost_name):
-			var new_ghost: GhostEntity = load(GHOSTPLAYER_PATH).instantiate()
-			new_ghost.set_ghost_info(ghost_data.saved_ghosts[level_name][ghost_name])
-			game_node.add_child(new_ghost)
-			current_ghost = new_ghost
+
+	var new_ghost: GhostEntity = load(GHOSTPLAYER_PATH).instantiate()
+	new_ghost.set_ghost_info(ghost_data.saved_ghosts[level_name][ghost_name])
+	game_node.add_child(new_ghost)
+	current_ghost = new_ghost
+	for i in game_node.get_children():
+		if i is GhostEntity and i != current_ghost:
+			i.free()
 
 func get_current_ghost() -> GhostEntity:
 	return current_ghost

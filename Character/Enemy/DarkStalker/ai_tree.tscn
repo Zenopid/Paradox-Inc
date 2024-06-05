@@ -24,7 +24,7 @@
 [node name="AI_Tree" type="Node" node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_xrmob")
 enabled = false
-blackboard = NodePath("@Node@163965")
+blackboard = NodePath("@Node@18186")
 actor = NodePath("")
 
 [node name="WorldInteractions" type="Node" parent="."]

@@ -266,14 +266,14 @@ func _on_joypad_enabled_toggled(toggled_on):
 
 func _on_game_volume_value_changed(value):
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value))
-	settings_resource.set_setting("game_volume", value)
+	settings_resource.set_setting(value, "game_volume")
 
 
 
 func _on_sfx_volume_value_changed(value):
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Sfx"), linear_to_db(value))
-	settings_resource.set_setting("sfx_volume", value)
+	settings_resource.set_setting(value, "sfx_volume")
 
 func _on_bgm_volume_value_changed(value):
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(value))
-	settings_resource.set_setting("bgm_volume",value)
+	settings_resource.set_setting(value, "bgm_volume")

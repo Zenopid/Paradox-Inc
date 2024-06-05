@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dm80pcxu7kvcx"]
+[gd_scene load_steps=6 format=3 uid="uid://dm80pcxu7kvcx"]
 
 [ext_resource type="FontFile" uid="uid://by1k102hd7hkp" path="res://fonts/Pixellari.ttf" id="1_wgr2v"]
 [ext_resource type="Script" path="res://Universal_Scenes/UI/GenericButton.gd" id="2_v4v5c"]
+[ext_resource type="AudioStream" uid="uid://epefv6bsbj47" path="res://audio/sfx/UI/button_clicked.mp3" id="3_f0etj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fvyta"]
 bg_color = Color(0, 0.741176, 1, 1)
@@ -43,5 +44,6 @@ text = "Text"
 script = ExtResource("2_v4v5c")
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_f0etj")
 
 [connection signal="pressed" from="." to="." method="_on_pressed"]

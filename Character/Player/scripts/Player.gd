@@ -293,6 +293,7 @@ func on_checkpoint_reached(heal_amount:int, new_timeline:String, new_spawn:Vecto
 	respawn_timeline = new_timeline
 	checkpoint_timestamps.append(stopwatch.get_total_time())
 	emit_signal("respawning")
+	checkpoints_reached += 1
 
 func brace():
 	player_braced = true

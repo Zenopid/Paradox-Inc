@@ -273,3 +273,5 @@ text = "Delete"
 libraries = {
 "": SubResource("AnimationLibrary_8go2i")
 }
+
+[connection signal="pressed" from="Delete" to="." method="_on_delete_pressed"]

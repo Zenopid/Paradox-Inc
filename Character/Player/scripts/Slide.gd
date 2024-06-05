@@ -108,7 +108,7 @@ func physics_process(delta):
 		"Idle",
 		])
 	if !is_grounded:
-		entity.velocity.y = clampi(entity.velocity.y, entity.velocity.y + gravity_acceleration, max_gravity)
+		entity.velocity.y = clampf(entity.velocity.y, entity.velocity.y + gravity_acceleration, max_gravity)
 		if state_machine.transition_if_available(["WallSlide"]):
 			return
 	else:

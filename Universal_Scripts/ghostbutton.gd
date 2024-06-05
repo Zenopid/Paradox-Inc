@@ -1,8 +1,14 @@
 extends ColorRect
 
 
+var ghost_info
+var selected_level:String
+var selected_ghost:String
+
 func init(ghost_data: PlayerGhost, level_name:String, ghost_name:String):
-	var ghost_info = ghost_data.saved_ghosts[level_name][ghost_name] 
+	ghost_info = ghost_data.saved_ghosts[level_name][ghost_name] 
+	selected_level = level_name
+	selected_ghost = ghost_name
 	$Title.text = ghost_name.capitalize().strip_edges()
 	var checkpoint_locations:PackedInt32Array = ghost_info["Checkpoint_Timestamps"]
 	$Time.text = parse_time(checkpoint_locations[checkpoint_locations.size() - 1])
@@ -25,3 +31,8 @@ func parse_time(total_time: int) -> String:
 		seconds_played = "0" + str(seconds_played)
 
 	return str(minutes_played) + ":" + str(seconds_played) + ":" + str(msecs_played)
+
+func _on_delete_pressed():
+	ghost_info.saved_ghosts[selected_level].erase(selected_ghost)
+	ghost_info.save_ghost_data()
+	queue_free()
