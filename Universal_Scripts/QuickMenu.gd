@@ -83,11 +83,14 @@ func _on_close_cheat_screen_pressed():
 func _on_cheat_button_pressed():
 	var new_text:String = cheat_text.text
 	if new_text.contains("tp"):
-		print(get_tree().get_first_node_in_group("CurrentLevel").get_node("Checkpoints"))
-		var checkpoint = get_tree().get_first_node_in_group("CurrentLevel").get_node("Checkpoints").get_node_or_null("Checkpoint" + new_text[new_text.length() - 1])
+		var checkpoint = get_tree().get_first_node_in_group("CurrentLevel").get_node("Checkpoints").get_node("Checkpoint" + new_text[new_text.length() - 1])
 		if checkpoint:
+			player.player_info.global_position = checkpoint.global_position
 			player.global_position = checkpoint.global_position
-	if new_text == "restore_hp":
-		print("restored hp")
-		player.heal(player.player_info.max_health - player.player_info.health)
+	match new_text:
+		"restore_hp":
+			player.heal(player.player_info.max_health - player.player_info.health)
+		"inf_hp":
+			player.player_info.max_health = 999999999
+			player.health_bar.init(999999999)
 	print("CHEATING with option " + new_text)

@@ -11,16 +11,15 @@ signal damaged(new_health)
 @export var health: int = 100
 @export_enum ("Future", "Past") var current_timeline:String = "Future"
 @export var is_paradox:bool = false
-@export var link_object: MoveableObject
-
+@export var link_object: Node2D
+@export var object_type:String = "Box"
 @export var id: int = 0
 #An id of 0 means that its a generic object that was spawned,
 #so we can just add it back. if its greater, we get whatever object
 #in the current tree and delete it, and replace it with the saved variable.
 
 @onready var current_level:GenericLevel 
-@onready var collision:CollisionShape2D = $"%Collision"
-@onready var timer:Timer = $"%Destruction_Timer"
+@onready var collision = $"%Collision"
 @onready var anim_player:AnimationPlayer = $"ColorChanger"
 
 var being_pushed: bool = false
@@ -72,24 +71,16 @@ func check_state(timeline: String):
 	if is_paradox:
 		return
 	if timeline != current_timeline:
-#		print("Object " + str(self) + " is disabling itself.")
 		disable()
 	else:
-#		print("Object " + str(self) + " is enabling itself.")
 		enable()
 	emit_signal("object_status", current_state)
-#	print(timeline + " is the new timeline.")
-#	print(current_state)
-#
-#func swap_timeline(disable_afterwards:bool):
-#	current_timeline = current_level.get_next_timeline_swap()
-#	if disable_afterwards:
-#		disable()
 
 func disable():
 	modulate.a  = 0.35
 	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_CAST_RAY) #need less collision checks hopefully, so we can demote it to just rays
 	current_state = state.DISABLED
+	
 func enable():
 	modulate.a = 1
 	set_continuous_collision_detection_mode(RigidBody2D.CCD_MODE_CAST_SHAPE)
@@ -153,8 +144,6 @@ func queued_destruction() -> bool:
 	return being_destroyed
 	
 func become_paradox():
-	if is_paradox:
-		return
 	if typeof(anim_player) != TYPE_NIL:
 		anim_player.play("Become Paradox")
 	is_paradox = true
@@ -176,6 +165,8 @@ func become_normal():
 func get_id():
 	return id
 
+func get_object_type() -> String:
+	return object_type
 
 func link_to_object(object):
 	link_object = object

@@ -39,6 +39,7 @@ func physics_process(delta):
 	if start_counter:
 		time_tracker += delta
 		if time_tracker >= time_until_exit:
+			Input.set_custom_mouse_cursor(null)
 			GlobalScript.emit_signal("game_over")
 	entity.velocity.y += jump_node.get_gravity() 
 	entity.move_and_slide()

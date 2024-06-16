@@ -63,7 +63,9 @@ func disable_menu():
 	for nodes in get_tree().get_nodes_in_group("Debug"):
 		nodes.visible = false
 	set_process_input(false)
-	
+	if typeof(save_file_scene) != TYPE_NIL:
+		if save_file_scene.is_inside_tree():
+			save_file_scene.hide()
 
 
 func enable_menu():
@@ -84,9 +86,11 @@ func enable_menu():
 	GlobalScript.disable_free_play()
 	ghost_screen.hide()
 	level_select.hide()
+	settings_button.show()
+	exit_button.show()
 	if ResourceLoader.exists(ghost_data.SAVE_FILE_PATH):
 		ghost_data = ResourceLoader.load(ghost_data.SAVE_FILE_PATH)
-	
+	 
 
 func _on_start_pressed():
 	level_select.show()
@@ -194,7 +198,6 @@ func _on_time_attack_pressed():
 	anim_player.play("GetGhosts")
 
 func init_ghost_buttons():
-	print("init ghost buttons")
 	GlobalScript.enable_time_trial()
 	var ghost_container: VBoxContainer = $"%GhostContainer"
 

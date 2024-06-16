@@ -16,7 +16,7 @@ class_name PlayerAirStrike extends BaseStrike
 @export var hitstop: int = 3
 
 var max_speed: int = 250
-var air_acceleration: int = 20
+var air_acceleration: int = 10
 var attack_state: PlayerAttack
 var jump_script_gravity: float
 var buffer_tracker = buffer_window
@@ -33,8 +33,20 @@ func init(current_entity:Entity):
 	air_acceleration = attack_state.jump_script.air_acceleration
 	jump_node = current_entity.states.find_state("Jump")
 	fall_node = current_entity.states.find_state("Fall")
-	
+
 func air_attack_logic():
+	
+	if get_movement_input() != 0:
+		if entity.sprite.flip_h:
+			if entity.velocity.x > -max_speed:
+				entity.velocity.x -= air_acceleration
+				if entity.velocity.x < -max_speed:
+					entity.velocity.x = -max_speed
+		else:
+			if entity.velocity.x < max_speed:
+				entity.velocity.x += air_acceleration
+				if entity.velocity.x > max_speed:
+					entity.velocity.x = max_speed
 
 	if entity.is_on_floor():
 		if current_active_hitbox():
@@ -49,11 +61,8 @@ func physics_process(delta):
 	air_attack_logic()
 	super.physics_process(delta)
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)
-	if abs(entity.velocity.x) < max_speed:
-		entity.velocity.x += air_acceleration * get_movement_input()
-		entity.velocity.x = clamp(entity.velocity.x, -max_speed, max_speed)
-	
-	if frame >= dodge_window and dodge_window >= 0:
+
+	if frame >= dodge_window and dodge_window != -1:
 		can_dodge = false
 
 
@@ -67,7 +76,7 @@ func get_movement_input() -> int:
 
 func on_attack_hit(object):
 	if object is Entity and object != entity:
-		#if the object is of the enity class, but it's not the entity that spawned the hitbox
+		#if the object is of the entity class, but it's not the entity that spawned the hitbox
 		can_cancel = true 
 		entity.camera.set_shake(camera_shake_strength)
 
@@ -75,7 +84,6 @@ func enter(_msg: = {}):
 	super.enter()
 	buffer_tracker = 0
 	can_dodge = dodge_cancellable
-
 
 func input(event):
 	super.input(event)
@@ -86,16 +94,17 @@ func input(event):
 			return 
 
 func start_buffer_attack():
-	entity.sprite.flip_h = Input.is_action_pressed("left")
+	var axis = Input.get_axis("left", "right")
+	entity.sprite.flip_h = axis < 0
 	attack_state.use_attack(buffer_attack)
 	return
 
 func _on_attack_over(name_of_attack:String):
-	if frame > 5:    
 		if !can_cancel:
 			emit_signal("attack_whiffed", animation_name)
-		if buffer_tracker > 0 and buffer_attack != "None" or buffer_window == -1 and buffer_attack != "None":
-			start_buffer_attack()
+		if buffer_attack != "None":
+			if buffer_tracker > 0 or buffer_window == -1:
+				start_buffer_attack()
 		else:
 			attack_state.state_machine.transition_to("Fall")
 			return

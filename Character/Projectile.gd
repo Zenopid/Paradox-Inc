@@ -12,7 +12,7 @@ const CLASH_RANGE = 10
 @export var height:int = 100
 @export var angle_flipper:int = 100
 @export var object_push:Vector2 = Vector2(250, 50)
-@export var hit_stop: int  = 1
+@export var hit_stop: int  = 0
 @export var duration:int = 10
 @export var speed: int = 25
 @export var max_distance: int = -1
@@ -60,18 +60,20 @@ func set_parameters(hitbox_info: = {}):
 	player = get_tree().get_first_node_in_group("Players")
 func _physics_process(delta):
 	var status = player.get_invlv_type().contains("Proj")
+	status = !status
+	print(status)
 	if timeline == "All":
-			set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)
-			set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, status)
+		set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)
+		set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, status)
 	elif timeline == "Past":
 		set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, status)
 	else:
 		set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)
-	#gravity_tracker += gravity_amount
-	#if gravity_amount > max_fall_speed:
-		#gravity_amount = max_fall_speed
-	var projectile_speed:Vector2 = (direction * speed) 
-	#projectile_speed.y += gravity_amount
+	gravity_tracker += gravity_amount
+	if gravity_amount > max_fall_speed:
+		gravity_amount = max_fall_speed
+	var projectile_speed:Vector2 = (direction * speed)  
+	projectile_speed.y += gravity_amount
 	var collision = move_and_collide(projectile_speed * direction)
 	if collision:
 		if typeof(collision.get_collider()) != TYPE_NIL:
@@ -102,9 +104,9 @@ func _on_body_entered(body):
 	#if you hit something that isn't invlv to proj then we decrease by a hit
 	if body == projectile_owner:
 		return
-	elif body is TileMap:
-		queue_free()
-	elif body is RigidBody2D:
+	if body is TileMap:
+		true_collision = true 
+	if body is RigidBody2D:
 		if global_position > body.global_position:
 			object_push = -abs(object_push + (int(velocity_effects_object_push) * velocity))
 		else:
@@ -122,10 +124,9 @@ func _on_body_entered(body):
 			return
 		if attack_type == body.attack_type:
 			if abs(body.damage  - damage) <=  CLASH_RANGE:
-				num_of_hits -= 1
+				true_collision = true 
 				body.num_of_hits -= 1
 				print_debug("CLASH")
-	#print ("hit body " + body.name)
 	if true_collision:
 		num_of_hits -= 1
 
@@ -141,27 +142,11 @@ func set_future_collision():
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
-	#
-	#area_node.set_collision_layer_value(GlobalScript.collision_values.PROJECTILE_FUTURE, true)
-	#
-	#area_node.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
-	#area_node.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
-	#area_node.set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
-	#area_node.set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
-	#area_node.set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
 
 func set_past_collision():
 	set_collision_layer_value(GlobalScript.collision_values.PROJECTILE_PAST, true)
 
-	#area_node.set_collision_layer_value(GlobalScript.collision_values.PROJECTILE_PAST, true)
 
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
-	#
-	#area_node.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
-	#area_node.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
-	#area_node.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
-	#area_node.set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
-	#area_node.set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)
-

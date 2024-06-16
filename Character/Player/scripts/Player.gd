@@ -21,7 +21,7 @@ signal respawning()
 
 @onready var state_tracker:Label = $Debug/StateTracker
 @onready var health:int = max_health 
-@onready var invlv_timer:Timer = $Invlv_Timer
+@onready var invlv_timer:Timer = $"%Invlv_Timer"
 @onready var effects_animation: AnimationPlayer = $EffectAnimator
 @onready var death_screen:ColorRect = $"%UI/DeathScreen"
 @onready var sprite: AnimatedSprite2D = $"%AnimatedSprite2D"
@@ -80,16 +80,12 @@ func _ready():
 	timeline_tracker.init(self)
 	backdrops.init(self)
 	connect_signals()
-	
 	_on_swapped_timeline(current_level.current_timeline)
 	state_machine_states = states.get_all_states()
-	
 	set_grapple_cursor(grapple_enabled)
-	if GlobalScript.controller_type == "Keyboard":
-		grapple.pointer.visible = false
-	else:
-		grapple.pointer.visible = true
+	grapple.pointer.visible = GlobalScript.controller_type == "Keyboard"
 	camera.make_current()
+
 func connect_signals():
 	GlobalScript.connect("level_over", Callable(self, "_on_level_over"))
 	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
@@ -140,6 +136,7 @@ func set_collision(future_value, past_value):
 
 func grapple_boost():
 	grapple = grapple as Hook
+	var grappled_object = grapple.get_grappled_object()
 	if grapple.attached:
 		var boost_amount:Vector2 = (position.direction_to(grapple.hook_body.global_position) * grapple.boost_speed.length()).round()
 		if !player_braced:
@@ -155,9 +152,14 @@ func grapple_boost():
 				#remove vertical boost if the hook's body is basically level with the player's.
 			if velocity.length() < max_grapple_speed:
 				velocity += boost_amount
-				velocity = velocity.limit_length(max_grapple_speed)
 		if grapple.object_pullable():
 			grapple.grappled_object.call_deferred("apply_central_impulse", -(boost_amount * (1  + grapple_boost_object_pull_multiplier)) )
+		grapple = grapple as Hook
+		
+		if typeof(grappled_object) != TYPE_NIL:
+			if grappled_object is Enemy:
+				print("pulling enemy")
+				grappled_object.on_grapple_pulled()
 		grapple.release()
 
 func disable():

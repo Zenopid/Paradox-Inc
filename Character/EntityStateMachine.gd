@@ -9,6 +9,8 @@ var previous_state: BaseState
 
 @export var machine_owner: Entity 
 
+
+
 var debug_info: Node2D = null
 var state_tracker: Label = null
 var motion_tracker: Label = null
@@ -21,16 +23,16 @@ var shapecast_nodes: = {}
 
 var states_with_inactive_process: = {}
 
+
 func init(debug_node: Node2D = null):
 	for nodes in get_node("Timers").get_children():
 		timer_nodes[nodes.name] = nodes
 	for nodes in get_node("Raycasts").get_children():
 		ray_nodes[nodes.name] = nodes
-	var shape_cast_node:Node = get_node_or_null("ShapeCasts")
-	if shape_cast_node:
-		for nodes in shape_cast_node.get_children():
+	var shapecast_node = get_node_or_null("ShapeCasts")
+	if shapecast_node:
+		for nodes in shapecast_node.get_children():
 			shapecast_nodes[nodes.name] = nodes
-			
 	for nodes in get_children():
 		if nodes is BaseState:
 			state_nodes[nodes.name] = nodes
@@ -44,7 +46,7 @@ func init(debug_node: Node2D = null):
 	if debug_node:
 		state_tracker = debug_node.get_node("StateTracker")
 		motion_tracker = debug_node.get_node("MotionTracker")
-		state_tracker.text = initial_state
+		state_tracker.text = "State: " + str(initial_state)
 	state_nodes.make_read_only()
 	timer_nodes.make_read_only()
 	ray_nodes.make_read_only()

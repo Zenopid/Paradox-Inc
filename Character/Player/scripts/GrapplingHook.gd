@@ -162,10 +162,11 @@ func _on_object_grappled(object):
 	attachment_point = object.global_position - hook_body.global_position
 
 func _on_grapple_detatched():
-	if grappled_object:
-		grappled_object.remove_from_group("Grappled Objects")
-		if grappled_object.has_method("become_normal"):
-			grappled_object.become_normal()
+	if is_instance_valid(grappled_object):
+		if typeof(grappled_object) != TYPE_NIL:
+			grappled_object.remove_from_group("Grappled Objects")
+			if grappled_object.has_method("become_normal"):
+				grappled_object.become_normal()
 	can_pull_object = false
 	grappled_object = null
 	attachment_point = Vector2.ZERO
@@ -191,7 +192,7 @@ func get_speed():
 		gravity_amount = 0
 	var speed: Vector2 = ((direction * launch_speed ) + player.velocity) * get_physics_process_delta_time()
 	speed.y += gravity_amount
-	return speed
+	return speed 
 
 func object_pullable() -> bool:
 	if grappled_object:
@@ -199,3 +200,6 @@ func object_pullable() -> bool:
 			if can_pull_object and !grappled_object.is_queued_for_deletion():
 				return true
 	return false
+
+func get_grappled_object() -> Variant:
+	return grappled_object

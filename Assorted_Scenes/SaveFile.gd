@@ -8,6 +8,7 @@ extends Control
 @onready var delete_timer:Timer = $"%DeleteTimer"
 
 @onready var default_delete_color:Color
+
 func _ready():
 	var level_info:LevelInfo = ResourceLoader.load(GenericLevel.SAVE_FILE_PATH)
 	current_level.text = level_info.get_level_name()
@@ -21,10 +22,6 @@ func _on_start_pressed():
 	GlobalScript.load_game()
 
 
-func _on_delete_pressed():
-	anim_player.play("DeletingSave")
-	delete_timer.start()
-	
 func _on_delete_button_up():
 	delete_timer.stop()
 	delete_button.set("theme_override_colors/font_pressed_color", default_delete_color)
@@ -54,7 +51,14 @@ func msecs_to_text(total_time) -> String:
 
 func _on_timer_timeout():
 	DirAccess.remove_absolute(GlobalScript.SAVE_FILE_PATH)
-	current_level.text = "Start New Game"
+	current_level.text = "No Save File"
 	play_time.text = msecs_to_text(0)
 	_on_delete_button_up()
+	start_button.disabled = true 
 
+
+
+func _on_delete_button_down():
+	anim_player.play("DeletingSave")
+	delete_timer.start()
+	

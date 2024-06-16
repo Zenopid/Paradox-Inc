@@ -48,11 +48,12 @@ func init_sphere():
 	target_sphere.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
 	
 func enter(_msg:= {}):
+	super.enter(_msg)
 	chase_timer.start()
 	player = get_tree().get_first_node_in_group("Players")
 	los_shapecast.look_at(player.global_position)
 	target_sphere.global_position = get_new_target()
-	add_child(target_sphere)
+	call_deferred("add_child", target_sphere)
 	
 func get_new_target() -> Vector2:
 	entity = entity as ParaGhoul
@@ -65,8 +66,25 @@ func physics_process( delta:float ):
 	if chase_timer.is_stopped():
 		state_machine.transition_to("Idle")
 		return
+	los_shapecast.position = entity.position
+	los_shapecast.look_at(player.global_position)
+	var dir = entity.global_position.direction_to(target_sphere.global_position)
+	entity.velocity += (acceleration * dir).rotated(randf_range(-random_spread, random_spread))
+	entity.velocity = entity.velocity.limit_length(chase_speed)
+	await get_tree().create_timer(0.001).timeout
+	entity.move_and_slide()
+	push_objects()
+	
+	var rng = randi_range(0, 10)
+	if rng < 8:
+		if state_machine.state_available("GroundPound"):
+			state_machine.transition_to("GroundPound")
+			return
+	else:
+		if state_machine.state_available("Charge"):
+			state_machine.transition_to("Charge", {direction = entity.global_position.direction_to(get_tree().get_first_node_in_group("Players").global_position)})
+			return
 	if los_shapecast.is_colliding():
-		chase_timer.start()
 		for i in los_shapecast.get_collision_count():
 			var collision = los_shapecast.get_collider(i)
 			if collision is Player:
@@ -76,14 +94,7 @@ func physics_process( delta:float ):
 		if i == entity :
 			if state_machine.transition_if_available(["Shoot"]):
 				return
-	los_shapecast.position = entity.position
-	los_shapecast.look_at(player.global_position)
-	var dir = entity.global_position.direction_to(target_sphere.global_position)
-	entity.velocity += (acceleration * dir).rotated(randf_range(-random_spread, random_spread))
-	entity.velocity = entity.velocity.limit_length(chase_speed)
-	await get_tree().create_timer(0.001).timeout
-	entity.move_and_slide()
-	push_objects()
+
 
 func push_objects():
 	for i in entity.get_slide_collision_count():

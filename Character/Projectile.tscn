@@ -9,6 +9,7 @@ size = Vector2(30, 20)
 slide_on_ceiling = false
 floor_max_angle = 0.0
 script = ExtResource("1_8jggq")
+timeline = "All"
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true

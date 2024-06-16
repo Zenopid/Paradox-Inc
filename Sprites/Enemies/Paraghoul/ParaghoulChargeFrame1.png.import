@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://hgpcljidldxq"
-path="res://.godot/imported/Paraghoul_CrashCopy_Frame2.png-d24f824b6c706d610aa6b03dc1818623.ctex"
+uid="uid://bdqot33f4oha1"
+path="res://.godot/imported/ParaghoulChargeFrame1.png-04b0586dad7d8d6710cd8304c2e986c8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Enemies/Paraghoul/Paraghoul_CrashCopy_Frame2.png"
-dest_files=["res://.godot/imported/Paraghoul_CrashCopy_Frame2.png-d24f824b6c706d610aa6b03dc1818623.ctex"]
+source_file="res://Sprites/Enemies/Paraghoul/ParaghoulChargeFrame1.png"
+dest_files=["res://.godot/imported/ParaghoulChargeFrame1.png-04b0586dad7d8d6710cd8304c2e986c8.ctex"]
 
 [params]
 

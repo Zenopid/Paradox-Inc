@@ -24,6 +24,7 @@ func _ready():
 	if debug_ui:
 		debug_ui.visible = GlobalScript.debug_enabled
 		states.init(debug_ui)
+#func init(timer_node:Node, raycast_node: Node2D, shapecast_node:Node2D, debug_node: Node2D = null):	
 	else:
 		states.init(null)
 	for nodes in get_tree().get_nodes_in_group("Collision"):
@@ -47,7 +48,10 @@ func set_level(new_level:GenericLevel):
 	
 func damage(amount, knockback: int = 0, knockback_angle: int = 0, hitstun:int = 0):
 	pass
-	
+
+func knockback_entity(knockback:Vector2, modifier:float):
+	velocity = knockback * modifier
+
 func heal(amount):
 	pass
 
@@ -61,6 +65,16 @@ func set_invlv_type(type:String):
 	invlv_type = type
 	if invlv_type == "":
 		invlv_type = "None"
+
+func add_invlv_type(type:String):
+	invlv_type += type
+	invlv_type = invlv_type.replace("None", "")
+
+func remove_invlv_type(type:String):
+	invlv_type = invlv_type.replace(type, "")
+	if invlv_type.is_empty():
+		invlv_type = "None"
+	
 
 func get_max_health() -> int:
 	return 100

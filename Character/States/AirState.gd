@@ -7,22 +7,27 @@ class_name PlayerAirState extends PlayerBaseState
 
 var remaining_jumps:int = 0
 var speed_before_wallslide: float 
+var scanner_shape:SegmentShape2D 
 const air_acceleration: int = 17
 const max_speed: int = 250
 const MINIMUM_WALLBOUNCE_SPEED: int = 10
+const MINIMUM_SHAPECAST_SIZE:int = 10
+const MAXIMUM_SHAPECAST_SIZE:int = 25
 
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	wall_checker = s_machine.get_shapecast("WallScanner")
-
+	scanner_shape = wall_checker.shape
 
 func enter(_msg: ={}):
 	super.enter()
 	wall_checker.enabled = true
 
 func physics_process(_delta):
-
+	entity = entity as Player
+	var weight = min((entity.velocity.x / entity.max_grapple_speed), 1)
+	scanner_shape.b.x = lerp(MINIMUM_SHAPECAST_SIZE, MAXIMUM_SHAPECAST_SIZE, weight) 
 	if get_movement_input() != 0:
 		if facing_left():
 			if entity.velocity.x > -max_speed:
@@ -40,8 +45,13 @@ func physics_process(_delta):
 		return
 	elif abs(entity.velocity.x) > MINIMUM_WALLBOUNCE_SPEED :
 		speed_before_wallslide = entity.velocity.x
-	wall_checker.position = Vector2(entity.position.x + 12.55 * get_facing_as_int(), entity.position.y - 10.5)
-		
+
+	if facing_left():
+		wall_checker.scale.x = -1
+		wall_checker.position = Vector2(entity.position.x - 11.5, entity.position.y - 10.5)
+	else:
+		wall_checker.scale.x = 1
+		wall_checker.position = Vector2(entity.position.x + 9.5, entity.position.y - 10.5)
 func default_move_and_slide():
 	entity.move_and_slide()
 	push_objects()

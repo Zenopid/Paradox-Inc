@@ -6,15 +6,13 @@ extends PlayerAirStrike
 @export var knockback_amount: int = 1
 @export var object_push: Vector2 = Vector2(300, 150)
 
-#var air_hitbox:Hitbox
-
 func physics_process(delta:float):
-	super.physics_process(delta)
 	if Input.is_action_just_pressed("attack"):
 		if Input.is_action_pressed("crouch"):
 			buffer_attack = "GroundPound"
 		else:
 			buffer_attack = "AirAttack2"
+	super.physics_process(delta)
 	if frame == 7:
 		var hitbox_info = {
 			"position": Vector2(0.375, -2.125),
@@ -29,9 +27,7 @@ func physics_process(delta:float):
 			"hit_stop": hitstop,
 		}  
 		attack_state.create_hitbox(hitbox_info)
-#	elif frame > 7 and frame < 12:
-#		air_hitbox.position = Vector2(entity.position.x + 0.375, entity.position.y - 2.125)
-
+		
 func current_active_hitbox():
 	if frame > 12: 
 		return false

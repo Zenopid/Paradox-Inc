@@ -11,17 +11,32 @@ func _ready():
 	anim_player.play("Travel")       
 	target = get_tree().get_first_node_in_group("Players")
 	travelling_sfx.play()
+	look_at(target.global_position)
+	velocity = projectile_owner.global_position.direction_to(target.global_position) * speed
+	
 func seek():
-	var desired = (target.position - position).normalized() * speed
-	var steer = (desired - velocity).normalized() * STEER_FORCE
-	return steer
+	if is_instance_valid(target):
+		var desired = (target.position - position).normalized() * speed
+		var steer = (desired - velocity).normalized() * STEER_FORCE
+		return steer
+	return null
 
 func play_explosion_sfx():
 	if !explosion_sfx.playing and num_of_hits > 0:
 		explosion_sfx.play()
 
 func _physics_process(delta):
-	velocity += seek()
+	var status = !(player.get_invlv_type().contains("Proj"))
+	if timeline == "All":
+		set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)
+		set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, status)
+	elif timeline == "Past":
+		set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, status)
+	else:
+		set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)
+	var seek_value = seek()
+	if seek_value:
+		velocity += seek_value
 	velocity = velocity.limit_length(speed)
 	rotation = velocity.angle()
 	var collision = move_and_collide(velocity * delta)

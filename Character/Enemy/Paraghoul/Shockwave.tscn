@@ -1,0 +1,109 @@
+[gd_scene load_steps=13 format=3 uid="uid://yinehm0bdrg6"]
+
+[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Shockwave.gd" id="1_ruqux"]
+[ext_resource type="AudioStream" uid="uid://bq1f7ps8fb75t" path="res://Character/Enemy/Paraghoul/Sfx/fireball_explode.mp3" id="2_dimxk"]
+[ext_resource type="AudioStream" uid="uid://bsqtpkqh8pjin" path="res://Character/Enemy/Paraghoul/Sfx/fireball_travel.mp3" id="3_25nmm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jfhos"]
+size = Vector2(50, 15)
+
+[sub_resource type="Animation" id="Animation_0olqg"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_oq1c2"]
+resource_name = "Travel"
+length = 0.266668
+loop_mode = 1
+step = 0.0166667
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vp8n7"]
+_data = {
+"RESET": SubResource("Animation_0olqg"),
+"Travel": SubResource("Animation_oq1c2")
+}
+
+[sub_resource type="Curve" id="Curve_2x3g4"]
+max_value = 5.0
+_data = [Vector2(0, 8.75), 0.0, 0.0, 0, 0, Vector2(0.344221, 0), 0.0, 0.0, 0, 0, Vector2(1, -92.5), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_aim0q"]
+curve_y = SubResource("Curve_2x3g4")
+
+[sub_resource type="Curve" id="Curve_c21nt"]
+max_value = 5.0
+_data = [Vector2(0.0376884, 3.96875), 0.0, 0.0, 0, 0, Vector2(1, 0.84375), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_fuvnx"]
+curve = SubResource("Curve_c21nt")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_h1y4o"]
+lifetime_randomness = 0.75
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(5, 5, 1)
+spread = 0.0
+initial_velocity_min = 300.0
+initial_velocity_max = 500.0
+directional_velocity_min = 1.0
+directional_velocity_max = 1.0
+directional_velocity_curve = SubResource("CurveXYZTexture_aim0q")
+gravity = Vector3(300, -2000, 0)
+scale_curve = SubResource("CurveTexture_fuvnx")
+color = Color(0.41, 0.314333, 0, 1)
+collision_mode = 2
+
+[node name="Shockwave" type="CharacterBody2D"]
+collision_layer = 196608
+collision_mask = 771
+script = ExtResource("1_ruqux")
+damage = 10
+width = 50
+height = 20
+angle_flipper = 1
+object_push = Vector2(750, 250)
+duration = -1
+speed = 300
+max_distance = 750
+velocity_effects_object_push = false
+timeline = "All"
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -7.5)
+shape = SubResource("RectangleShape2D_jfhos")
+debug_color = Color(0.831373, 0.0901961, 0.101961, 0.196078)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_vp8n7")
+}
+
+[node name="Explosion" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("2_dimxk")
+bus = &"Sfx"
+
+[node name="Travelling" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("3_25nmm")
+volume_db = -10.0
+bus = &"Sfx"
+
+[node name="Particles" type="GPUParticles2D" parent="."]
+unique_name_in_owner = true
+amount = 50
+process_material = SubResource("ParticleProcessMaterial_h1y4o")
+lifetime = 0.2
+fixed_fps = 60
+
+[node name="GroundChecker" type="RayCast2D" parent="." groups=["Collision", "Raycasts"]]
+unique_name_in_owner = true
+position = Vector2(0, -1)
+target_position = Vector2(0, 20)
+collision_mask = 768
+hit_from_inside = true
+
+[connection signal="finished" from="Travelling" to="." method="_on_travelling_finished"]

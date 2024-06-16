@@ -4,7 +4,6 @@ class_name Training extends GenericLevel
 
 @onready var box_spawn_point:Node2D = $BoxSpawnPoint
 @onready var enemy_spawn_point:Node2D = $EnemySpawnerPoint
-#@onready var animation_player = $AnimationPlayer
 @onready var speed_slider = $"%Speed_Slider"
 @onready var future_puzzle_tilemap = $"%FuturePuzzle"
 @onready var paradox_puzzle_tilemap = $"%ParadoxPuzzle"
@@ -18,7 +17,7 @@ class_name Training extends GenericLevel
 
 @onready var rotate_speed: int = 6
 @onready var puzzle_box: Node2D = $"%PuzzleLocation"
-@onready var bgm:AudioStreamPlayer = $"%BGM"
+
 func _ready():
 	super._ready()
 	puzzle_box.position = Vector2(388, -719)
@@ -42,7 +41,7 @@ func _on_spawner_pressed():
 	return box_instance
 func _on_clear_box_pressed():
 	for nodes in get_tree().get_nodes_in_group("Boxes"):
-		nodes.destroy()
+		nodes.kill()
 
 func _on_clear_enemy_pressed():
 	for nodes in get_tree().get_nodes_in_group("Training Enemies"):
@@ -94,5 +93,3 @@ func enable():
 	training_ui.show()
 
 
-func _on_bgm_finished():
-	bgm.play()

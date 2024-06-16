@@ -1,21 +1,84 @@
-[gd_scene load_steps=4 format=3 uid="uid://csxln62gm0sa6"]
+[gd_scene load_steps=7 format=3 uid="uid://csxln62gm0sa6"]
 
 [ext_resource type="Script" path="res://Universal_Scripts/Interactables/garbage_container.gd" id="1_p3iea"]
 [ext_resource type="Texture2D" uid="uid://bl7n6wgvoartc" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Props-01.png" id="2_acyui"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_uqrdc"]
+[sub_resource type="Animation" id="Animation_wub3l"]
+resource_name = "Become Paradox"
+length = 0.40001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0.623529, 0.0509804, 0.74902, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_uqlf0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_hmnct"]
+resource_name = "Return"
+length = 0.40001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.623529, 0.0509804, 0.74902, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wqfbj"]
+_data = {
+"Become Paradox": SubResource("Animation_wub3l"),
+"RESET": SubResource("Animation_uqlf0"),
+"Return": SubResource("Animation_hmnct")
+}
 
 [node name="GarbageContainer" type="RigidBody2D"]
-mass = 35.0
+collision_layer = 0
+collision_mask = 0
+mass = 5.0
 script = ExtResource("1_p3iea")
-health = 450
+bag_spawn_count = 12
+health = 600
+object_type = "Garbage Container"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Collision" type="CollisionPolygon2D" parent="."]
+unique_name_in_owner = true
+visible = false
 top_level = true
-shape = SubResource("RectangleShape2D_uqrdc")
+polygon = PackedVector2Array(23, -27, 23, 27, -23, 27, -24, -4.5)
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(115.62, 109.253)
+[node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_acyui")
 region_enabled = true
 region_rect = Rect2(0, 87.6219, 46.733, 56.107)
+
+[node name="ColorChanger" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_wqfbj")
+}

@@ -778,6 +778,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="joypad_enabled" parent="TabContainer/Control/UseJoypad" instance=ExtResource("4_3nxqt")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 2
 focus_neighbor_left = NodePath("../../OptionsButton/options")
@@ -786,6 +787,7 @@ focus_neighbor_right = NodePath("../../JumpButton/jump")
 focus_neighbor_bottom = NodePath("../../JumpButton/jump")
 focus_next = NodePath("../../../../Apply")
 focus_previous = NodePath("../../..")
+button_pressed = false
 
 [node name="Control_Rebind_Screen" type="Panel" parent="."]
 unique_name_in_owner = true

@@ -26,3 +26,4 @@ func default_move_and_slide():
 	
 func conditions_met() -> bool:
 	return true 
+

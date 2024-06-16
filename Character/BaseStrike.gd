@@ -31,7 +31,6 @@ func current_active_hitbox():
 
 func input(event):
 	pass
-
 func physics_process(delta: float):
 	entity.velocity.x *= friction
 	frame += 1

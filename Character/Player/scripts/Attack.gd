@@ -2,7 +2,7 @@ class_name PlayerAttack extends PlayerBaseState
 
 signal new_attack(attack_name)
 
-@onready var landing_lag = $LandingLag
+@onready var landing_lag: BaseStrike = $LandingLag
 
 @export var hitbox: PackedScene
 
@@ -23,7 +23,6 @@ var ground_checker: RayCast2D
 var attack_buffer:Timer 
 
 var temp_position: Vector2
-var timer = 10
 var hitbox_positions: = []
 var num_of_active_hitboxes: int
 
@@ -46,8 +45,7 @@ func create_hitbox(hitbox_info:= {}):
 	if entity.sprite.flip_h:
 		hitbox_info["position"].x  *= -1
 	hitbox_info["hitbox_owner"] = entity
-#	var hitbox_location = Vector2(entity.position.x + points.x, entity.position.y + points.y)
-#	var hitbox_location = points
+
 	var hitbox_instance: Hitbox = hitbox.instantiate()
 	entity.add_child(hitbox_instance)
 	hitbox_instance.set_parameters(hitbox_info)
@@ -88,7 +86,7 @@ func physics_process(delta: float) -> void:
 		active_attack.physics_process(delta)
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	
-func use_attack(attack_name) -> bool:
+func use_attack(attack_name:String) -> bool:
 	if active_attack:
 		active_attack.exit()
 	if attack_options.has(attack_name):
@@ -101,6 +99,7 @@ func use_attack(attack_name) -> bool:
 		active_attack.enter()
 		emit_signal("new_attack", active_attack.name)
 		return true
+	print_debug("Could not find attack " + attack_name)
 	return false
 
 func exit_state():
@@ -128,7 +127,9 @@ func exit():
 	if active_attack:
 		active_attack.exit()
 	ground_checker.target_position = temp_position
-
+	for i in get_tree().get_nodes_in_group("Player Hitboxes"):
+		i.queue_free()
+		
 func conditions_met() -> bool:
 
 	return !attack_buffer.is_stopped() or Input.is_action_just_pressed("attack")

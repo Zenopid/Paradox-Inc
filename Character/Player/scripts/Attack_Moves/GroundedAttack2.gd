@@ -4,6 +4,7 @@ extends PlayerBaseStrike
 @export var duration: int = 4
 @export var knockback_amount: int = 1
 @export var object_push: Vector2 = Vector2(300, 150)
+@export var hitstun:int = 35
 func physics_process(delta):
 	super.physics_process(delta)
 	if frame == 6:

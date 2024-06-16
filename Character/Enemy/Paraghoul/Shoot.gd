@@ -51,18 +51,18 @@ func enter(msg: = {}):
 	
 func projectile_attack(attack_name):
 	var fireball_instance = projectile.instantiate()
+	fireball_instance.projectile_owner = entity
 	GlobalScript.game_node.add_child(fireball_instance)
 	var points:Vector2 = entity.global_position + PROJECTILE_SPAWN_LOCATION
 	var push:Vector2 = fireball_instance.object_push
 	if !entity.sprite.flip_h:
 		points.x = abs(points.x)
 		push.x = abs(push.x)
-	var hitbox_info = {
+	var proj_info: = {
 		"global_position": points,
 		"projectile_owner": entity,
-		"direction": entity.global_position.direction_to(player.global_position).rotated(entity.sprite.rotation )
 	}
-	fireball_instance.set_parameters(hitbox_info)
+	fireball_instance.set_parameters(proj_info)
 	fireball_instance.set_future_collision()
 	fireball_instance.set_past_collision()
 	state_machine.transition_to("Chase")
@@ -72,6 +72,7 @@ func physics_process(delta:float):
 	entity.move_and_slide()
 
 func exit() -> void:
+	entity.fireball_sprite.hide()
 	shoot_cooldown.start()
 	entity.anim_player.disconnect("animation_finished", Callable(self, "projectile_attack"))
 

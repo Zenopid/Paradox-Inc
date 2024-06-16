@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://bdka6oxl4bhmn"]
+[gd_scene load_steps=37 format=3 uid="uid://bdka6oxl4bhmn"]
 
 [ext_resource type="PackedScene" uid="uid://cuaf8p6wx6aun" path="res://Levels/Future.tscn" id="1_0jmtq"]
 [ext_resource type="Script" path="res://Levels/Training.gd" id="1_di3ua"]
@@ -8,12 +8,13 @@
 [ext_resource type="Script" path="res://Levels/DamageSlider.gd" id="5_x8m4r"]
 [ext_resource type="PackedScene" uid="uid://dm80pcxu7kvcx" path="res://Universal_Scenes/UI/Button.tscn" id="7_dnhoe"]
 [ext_resource type="Script" path="res://Levels/PositionTracker.gd" id="8_l6tpw"]
-[ext_resource type="PackedScene" uid="uid://c5s048qamwl8p" path="res://Universal_Scenes/Interactables/Checkpoint.tscn" id="9_nssps"]
 [ext_resource type="PackedScene" uid="uid://cmcurlpklixd" path="res://Levels/Past.tscn" id="10_m2kjc"]
 [ext_resource type="PackedScene" uid="uid://c1qqqb8ugmyry" path="res://Universal_Scenes/Interactables/switch.tscn" id="11_wnuvr"]
 [ext_resource type="PackedScene" uid="uid://b812mbppojnhg" path="res://Universal_Scenes/Interactables/box.tscn" id="12_l8y4q"]
 [ext_resource type="Texture2D" uid="uid://dvwle04dxgr5" path="res://Sprites/Stages/Sidescroller Shooter - Central City/Assets/Tiles.png" id="14_bfyis"]
 [ext_resource type="PackedScene" uid="uid://qdbmrdg5rvrr" path="res://Universal_Scenes/Interactables/garbagebag.tscn" id="16_b2hqd"]
+[ext_resource type="PackedScene" uid="uid://fcuvx05j2v0y" path="res://Character/Enemy/Paraghoul/Paraghoul.tscn" id="16_dr44s"]
+[ext_resource type="PackedScene" uid="uid://csxln62gm0sa6" path="res://Universal_Scenes/Interactables/garbage_container.tscn" id="16_nj0sx"]
 [ext_resource type="PackedScene" uid="uid://b7575dsho2xwu" path="res://Character/Dummy/dummy.tscn" id="17_moxff"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_3u240"]
@@ -1094,15 +1095,6 @@ offset_bottom = -122.0
 theme_override_fonts/font = ExtResource("3_q6hlr")
 text = "Damage Box"
 
-[node name="Runway" type="Label" parent="Labels"]
-unique_name_in_owner = true
-offset_left = 1613.59
-offset_top = -148.775
-offset_right = 1700.59
-offset_bottom = -125.775
-theme_override_fonts/font = ExtResource("3_q6hlr")
-text = "This is just a runway, there's nothing here."
-
 [node name="BoxSpawnerLabel" type="Label" parent="Labels"]
 offset_left = 258.0
 offset_top = -123.0
@@ -1173,7 +1165,7 @@ disabled_color = Color(1, 0, 0, 1)
 enabled_color = Color(0, 0.8, 1, 1)
 
 [node name="SpawnPoint" type="Node2D" parent="."]
-position = Vector2(65.1554, -137.401)
+position = Vector2(-36.8329, -142.307)
 
 [node name="BoxSpawnPoint" type="Node2D" parent="."]
 position = Vector2(213.799, -114.335)
@@ -1245,9 +1237,6 @@ damage = 5
 [node name="CollisionShape2D" type="CollisionShape2D" parent="OutOfBounds"]
 position = Vector2(0, 378.444)
 shape = SubResource("RectangleShape2D_8dvi6")
-
-[node name="Checkpoint" parent="." instance=ExtResource("9_nssps")]
-position = Vector2(635, -54)
 
 [node name="CheckButton" type="CheckButton" parent="."]
 offset_left = 401.0
@@ -1839,7 +1828,16 @@ position = Vector2(-90.7691, -365.746)
 position = Vector2(580.212, -676.5)
 
 [node name="Dummy" parent="." instance=ExtResource("17_moxff")]
-position = Vector2(-366.245, -61.4713)
+position = Vector2(950.091, -571.549)
+
+[node name="GarbageContainer" parent="." node_paths=PackedStringArray("link_object") instance=ExtResource("16_nj0sx")]
+position = Vector2(1612.7, -64.0076)
+is_paradox = true
+link_object = NodePath(".")
+
+[node name="Paraghoul" parent="." node_paths=PackedStringArray("link_object") instance=ExtResource("16_dr44s")]
+position = Vector2(1789.64, -193.528)
+link_object = NodePath("../GarbageContainer")
 
 [connection signal="pressed" from="Buttons/SpawnBox" to="." method="_on_spawner_pressed"]
 [connection signal="pressed" from="Buttons/SpawnEnemy" to="." method="_on_spawn_enemy_pressed"]

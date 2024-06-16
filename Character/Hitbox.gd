@@ -6,17 +6,17 @@ var parent = get_parent()
 
 const CLASH_RANGE: int = 5
 
-var damage: int = 100
-var knockback_angle: int = 1
-var knockback_amount: int = 1
-var attack_type: String = "Normal"
-var width:int = 100
-var height:int = 100
-var angle_flipper:int = 100
-var object_push:Vector2 = Vector2(250, 50)
-var hit_stop: int = 0
-
-var duration:int = 10
+@export var damage: int = 100
+@export var knockback_angle: int = 1
+@export var knockback_amount: int = 1
+@export var attack_type: String = "Normal"
+@export var width:int = 100
+@export var height:int = 100
+@export var angle_flipper:int = 100
+@export var object_push:Vector2 = Vector2(250, 50)
+@export var hit_stop: int = 0
+@export var hitstun: int  = 0
+@export var duration:int = 10
 
 @onready var state_machine: EntityStateMachine
 @onready var hitbox_owner : Entity
@@ -26,18 +26,6 @@ var framez = 0.0
 var current_level: GenericLevel
 
 func set_parameters(hitbox_info: = {}):
-#	position = Vector2.ZERO
-#	duration = dur
-#	damage = d
-#	angle_flipper = af
-#	width = w
-#	height = h
-#	knockback_amount = amount
-#	knockback_angle = angle
-#	attack_type = type
-#	position = pos
-#	object_push = push
-#	hit_stop = hitstop
 	if hitbox_info:
 		var errors: = []
 		for info in hitbox_info.keys():
@@ -54,7 +42,11 @@ func set_parameters(hitbox_info: = {}):
 			for i in errors:
 				print(i)
 			print("-------------------------------------------")
-		visible = true 
+		visible = true
+		if !hitbox_owner:
+			push_error("Hitbox created without")
+		if hitbox_owner.has_method("get_state_machine"):
+			state_machine = hitbox_owner.get_state_machine()
 	else:
 		print_debug(hitbox_owner.name + " created hitbox without info.")
 		queue_free()
@@ -72,10 +64,7 @@ func update_extends():
 		add_child(rect)
 
 func _ready():
-	if !hitbox_owner:
-		hitbox_owner = get_parent()
-	if hitbox_owner.has_method("get_state_machine"):
-		state_machine = hitbox_owner.get_state_machine()
+
 	monitoring = false 
 	hitbox.shape = RectangleShape2D.new()
 	set_physics_process(false)
@@ -85,15 +74,14 @@ func _ready():
 	
 func _physics_process(delta:float ) -> void:
 	if framez < duration:
-		if duration != -1:
-			framez += 1
+		framez += 1
 	elif framez == duration:
 		queue_free()
 		return
-	if state_machine:
-		if state_machine.get_current_state().name != "Attack":
-			queue_free()
-			return
+	#if state_machine:
+		#if state_machine.get_current_state().name != "Attack":
+			#queue_free()
+			#return
 
 func _on_body_entered(body):
 	if body is RigidBody2D:
@@ -105,13 +93,14 @@ func _on_body_entered(body):
 		emit_signal("hitbox_collided", body)
 		if body.has_method("damage"):
 			body.damage(damage)
+	#	if body.has_method("knockback_entity"):
+		#	body.knockback_entity(object_push, knockback_amount)
+			# knockback_entity(knockback_amount:int, hitbox_location:Vector2, knockback_angle_modifier:float = 0, ):
 	elif body is Entity:
 		if body != hitbox_owner:
 			var invlv_type:String = body.get_invlv_type()
 			if !invlv_type.contains("Strike"):
 				damage_entity(body)
-				if body.has_method("apply_push"):
-					body.apply_push(object_push)
 	elif body is Hitbox:
 		#Check to see if one person is actually hitting the other.
 		for i in get_overlapping_bodies():
@@ -119,7 +108,7 @@ func _on_body_entered(body):
 				if i is Entity or i is EnemyRigid:
 					#If hitbox A is hitting hitbox B and hurtbox B, 
 					#but hitbox B is only hitting hitbox A,
-					#Person B takes the damage. Hopefully.
+					#Person B takes the damage. 
 					damage_entity(body)
 					return
 		#Then we check to see if they're the same type.
@@ -129,7 +118,6 @@ func _on_body_entered(body):
 				#If they're around the same damage, then we clash, and both hitboxes dissapear.
 				body.queue_free()
 				self.queue_free()
-				#To do: add particle effects 
 				print_debug("CLASH")
 
 func damage_entity(body):

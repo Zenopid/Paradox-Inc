@@ -42,8 +42,11 @@ func change_status(new_status):
 
 
 func physics_process(delta):
-	frame += 1
 	
+	
+	
+	frame += 1
+
 	var additional_damage = roundi(min(maximum_damage, abs((entity.global_position.y - starting_position) * height_scaler )))
 	ground_pound_damage = min(maximum_damage, minimum_damage + additional_damage)
 	match attack_status:
@@ -52,6 +55,7 @@ func physics_process(delta):
 		"Falling":
 			entity.velocity.y = fall_speed
 	if entity.is_on_floor():
+		entity.velocity.x = 0
 		if !has_hit_ground:
 			entity.anim_player.disconnect("animation_finished", Callable(self, "change_status"))
 			entity.anim_player.play("GroundPoundLand")
@@ -75,3 +79,9 @@ func physics_process(delta):
 			#print(str(ground_pound_damage) + " is the ground pound's damage.")
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)
 	entity.move_and_slide()
+
+func input(event):
+	super.input(event)
+	attack_state.state_machine.transition_if_available([
+		"Dodge"
+	])

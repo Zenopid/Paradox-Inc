@@ -37,6 +37,7 @@ signal invalid_control()
 @onready var rebind_text:Label = $"%Rebind_Text"
 @onready var overlapping_text:Label = $"%Overlapping_Text_Notification"
 @onready var rebind_timer:Timer = $"%Rebind_Timer"
+@onready var joypad_toggle:CheckButton = $"%joypad_enabled"
 
 var current_setting_tab: String 
 
@@ -132,7 +133,7 @@ func init_control_settings():
 	if options_control.text == "":
 		if GlobalScript.controller_type == "Keyboard":
 			options_control.text = "Escape"
-			#engine bug i think
+	joypad_toggle.button_pressed = (GlobalScript.controller_type == "Controller")
 
 func check_if_setting_changed(setting_name:String, setting_condition: Variant):
 	#print(GlobalScript.get_setting(current_setting_tab, setting_name))

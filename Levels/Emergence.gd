@@ -33,7 +33,7 @@ func _ready():
 			area.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, false)
 	get_tree().get_first_node_in_group("Future Lasers").remove_from_group("Future Lasers")
 	future_door.position = Vector2(1018, -5829)
-	$"%ExitBarrier".position = Vector2(-1349, -6039)
+	#$"%ExitBarrier".position = Vector2(-1349, -6039)
 
 	#_on_swapped_timeline(current_timeline)
 	
@@ -114,8 +114,6 @@ func _on_checkpoint_reached(checkpoint_number:int):
 
 func _on_elevator_area_body_entered(body):
 	level_animator.play("MoveElevator")
-
-
 
 
 func _on_puzzle_switch_1_status_changed(activated):

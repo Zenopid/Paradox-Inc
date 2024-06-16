@@ -36,21 +36,11 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	cooldown_timer.wait_time = dodge_cooldown
 	bunny_hop_boost = fall_node.bunny_hop_boost
 
-func set_collision_values():
-	entity.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PAST, false)
-	entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, false)
-	entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, false)
-	entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
-	entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
-	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, false)
-	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, false)
+
 func enter(_msg: = {}):
-	set_collision_values()
-	entity.set_invlv_type("StrikeProj")
 	var move = get_movement_input()
 	frame_tracker = 0
 	super.enter()
-	entity.anim_player.connect("animation_finished", Callable(self, "end_dodge"))
 	entity.velocity.y = clamp(entity.velocity.y, inital_fall_speed, fall_node.maximum_fall_speed)
 	if move < 0:
 		if entity.velocity.x > 0:
@@ -59,13 +49,10 @@ func enter(_msg: = {}):
 		if entity.velocity.x < 0:
 			entity.velocity.x = 0
 	entity.velocity.x += dodge_boost * move
+	
 func physics_process(delta: float):
 	entity = entity as Player
 	frame_tracker += 1
-	if frame_tracker >= strike_invlv_frames: 
-		entity.set_invlv_type( entity.invlv_type.replace("Strike", "") )
-	if frame_tracker >= proj_invlv_frames:
-		entity.set_invlv_type ( entity.invlv_type.replace("Proj", "") )
 	entity.velocity.y += jump_node.get_gravity() 
 	entity.velocity.y = clamp(entity.velocity.y, 0, fall_node.maximum_fall_speed)
 	entity.move_and_slide()
@@ -78,15 +65,9 @@ func physics_process(delta: float):
 					"Crouch",
 					"Run", 
 				])
-			if Input.is_action_pressed("dodge") : 
-				if !grounded():
-					state_machine.transition_to("Fall")
-					return
-				else:
-					state_machine.transition_to("Idle")
-					return
 	if abs(entity.velocity.x) < dodge_speed: 
 		entity.velocity.x = dodge_speed * get_facing_as_int()
+	print(entity.invlv_type)
 
 func leave_dodge():
 	if !grounded():
@@ -104,11 +85,24 @@ func leave_dodge():
 			"Idle",
 		])
 
+func input(event):
+	if is_actionable:
+		if !Input.is_action_pressed("dodge"): 
+			if !grounded():
+				state_machine.transition_to("Fall")
+			else:
+				state_machine.transition_if_available([
+					"Jump",
+					"Slide",
+					"Crouch",
+					"Run",
+					"Idle",
+				])
+
 func become_actionable():
-	is_actionable = true
+	is_actionable = true 
 	
-func end_dodge(_anim_name):
-	leave_dodge()
+
 
 func get_movement_input() -> float:
 	return Input.get_axis("left", "right")
@@ -118,18 +112,32 @@ func exit():
 	cooldown_timer.start()
 	dodge_over = false
 	is_actionable = false
-	entity.anim_player.disconnect("animation_finished", Callable(self, "end_dodge"))
-	if entity.get_level().get_current_timeline() == "Future":
-		entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
-		entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, true)
-		entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, true )
-		entity.set_collision_layer_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
-	else:
-		entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
-		entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, true)
-		entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, true)
-		entity.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PAST, true)
+	set_proj_invlv(false)
+	set_strike_invlv(false)
 	entity.set_invlv_type("None")
+	
+
+func set_proj_invlv(status:bool):
+	status = !status
+	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, status)
+	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, status)
+	if status:
+		entity.add_invlv_type("Proj")
+	else:
+		entity.remove_invlv_type("Proj")
+
+func set_strike_invlv(status:bool):
+	if status:
+		entity.add_invlv_type("Strike")
+		if entity.get_level().get_current_timeline() == "Future":
+			entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
+			entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, true)
+		else:
+			entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
+			entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, true)
+	else:
+		entity.remove_invlv_type("Strike")
+
 
 func conditions_met() -> bool:
 	if cooldown_timer.is_stopped():

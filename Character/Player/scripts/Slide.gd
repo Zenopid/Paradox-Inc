@@ -7,7 +7,6 @@ extends PlayerBaseState
 @export var slide_speed:int = 325 
 @export var slide_duration: float = 0.6
 @export var slide_cooldown: float = 0.7
-@export var coyote_duration: float = 0.15
 @export var jump_height : float = 400
 @export var jump_time_to_peak: float = 0.7
 @export var gravity_acceleration: int = 20
@@ -55,7 +54,6 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	jump_node = state_machine.find_state("Jump")
 	
 	cooldown_timer.wait_time = slide_cooldown
-	coyote_timer.wait_time = coyote_duration
 	
 func enter(_msg: = {}):
 	super.enter()
@@ -134,6 +132,7 @@ func input(event: InputEvent):
 		state_machine.transition_if_available([
 			"Run",
 			"Idle",
+			"Fall"
 		])
 
 func slow_down(speed: float) -> float:

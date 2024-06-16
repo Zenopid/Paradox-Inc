@@ -50,7 +50,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	superjump_timer = s_machine.get_timer("Superjump")
 	
 func enter(msg: = {}):
-	var is_grounded:bool = grounded()
+	var is_grounded:bool = ground_checker_colliding()
 	already_jumped = true 
 	if !jump_buffer.is_stopped() and is_grounded:
 		entity.velocity.x *= bunny_hop_bonus
@@ -136,7 +136,7 @@ func double_jump(additional_multiplier: float = 1, boost: Vector2 = Vector2.ZERO
 		entity.velocity.x = clamp(entity.velocity.x, -entity.max_grapple_speed, entity.max_grapple_speed)
 	entity.velocity += boost
 	remaining_jumps -= 1
-	print("Did double jump with boost of " + str(boost) + "and additional multiplier of " + str(additional_multiplier) )
+
 
 func get_gravity(print_gravity:bool = false) -> float:
 	var gravity = jump_gravity if entity.velocity.y < 0.0 else fall_gravity

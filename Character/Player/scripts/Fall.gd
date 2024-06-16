@@ -58,8 +58,6 @@ func physics_process(delta):
 	default_move_and_slide()
 	
 func set_raycast_positions():
-	wall_checker.position.x = entity.position.x + 12.55 * get_facing_as_int()
-	wall_checker.position.y =  entity.position.y - 10.5 
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 
 func exit() -> void:

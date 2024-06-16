@@ -17,7 +17,5 @@ func timeline_text(new_text:String):
 	new_text = new_text.to_lower()
 	if new_text == "future":
 		set("theme_override_colors/font_color", future_color)
-	elif new_text == "past":
-		set("theme_override_colors/font_color", past_color)
 	else:
 		set("theme_override_colors/font_color", past_color)

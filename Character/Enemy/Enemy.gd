@@ -54,6 +54,12 @@ func _ready():
 	_on_swapped_timeline(current_level.get_current_timeline())
 	init_collision()
 	current_level.connect("level_over", Callable(self, "queue_free"))
+	GlobalScript.connect("game_over", Callable(self, "_on_game_over"))
+
+func _on_game_over():
+	for projectiles in get_tree().get_nodes_in_group(self.name + " Projectiles"):
+		projectiles.queue_free()
+	queue_free()
 	
 func init_collision():
 	if is_paradox:
@@ -224,3 +230,5 @@ func enemy_near():
 func get_max_health() -> int:
 	return max_health
 
+func on_grapple_pulled():
+	pass

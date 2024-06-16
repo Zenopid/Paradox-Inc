@@ -146,25 +146,25 @@ var main_menu: MainMenu
 var settings_screen : Control
 var ghost_data:PlayerGhost = PlayerGhost.new()
 
-
-
-func _ready():
-	init_files()
-
-	disable_transition_screen()
-#	SaveSystem.connect("loaded", Callable(self, "load_game"))
-	settings_info.resolution = get_window().size
-	change_ui_controls()
-	ghost_data.init_dictionary()
-	
-func init_files():
+func _init():
+	var settings_file_path = SettingsInfo.new()
+	settings_file_path = settings_file_path.get_save_path()
 	DirAccess.make_dir_recursive_absolute(SAVE_FILE_FOLDER)
 	DirAccess.make_dir_recursive_absolute(PlayerGhost.SAVE_FILE_FOLDER)
 	if ResourceLoader.exists(ghost_data.SAVE_FILE_PATH):
 		ghost_data = ResourceLoader.load(ghost_data.SAVE_FILE_PATH)
-	if ResourceLoader.exists(settings_info.get_save_path()):
-		settings_info = ResourceLoader.load(settings_info.get_save_path(), "", ResourceLoader.CACHE_MODE_REPLACE)
-		
+	if ResourceLoader.exists(settings_file_path):
+		settings_info = ResourceLoader.load(settings_file_path, "", ResourceLoader.CACHE_MODE_REPLACE)
+		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(settings_info.get_setting("game_volume")))
+		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Sfx"), linear_to_db(settings_info.get_setting("sfx_volume")))
+		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(settings_info.get_setting("bgm_volume")))
+
+func _ready():
+	disable_transition_screen()
+	settings_info.resolution = get_window().size
+	change_ui_controls()
+	ghost_data.init_dictionary()
+
 func change_ui_controls():
 	set_ui_input("ui_up")
 	set_ui_input("ui_down")
@@ -327,10 +327,6 @@ func start_level(level:String):
 	if free_play_enabled:
 		player_instance.change_grapple_status(true)
 		player_instance.player_info.enable_all_items()
-	if time_trial_enabled:
-		var ghost_instance:GhostEntity = load(GHOSTPLAYER_PATH).instantiate()
-		ghost_instance.add_to_group("PlayerGhosts")
-		game_node.add_child(ghost_instance)
 	main_menu.hide()
 	bgm.stream = load(BGM_PATHS[current_level.name])
 	bgm.play()
@@ -363,8 +359,8 @@ func end_level():
 	await get_tree().create_timer(3).timeout
 	disable_transition_screen()
 	main_menu.enable_menu()
+	
 func enter_settings():
-
 	var new_settings = load(SETTINGS_PATH)
 	settings_screen = new_settings.instantiate()
 	if is_instance_valid(current_level):
@@ -424,18 +420,16 @@ func _on_level_start():
 	pass
 
 func add_ghost(level_name:String, ghost_name:String):
-
+	print_debug("Added ghost to game")
 	var new_ghost: GhostEntity = load(GHOSTPLAYER_PATH).instantiate()
 	new_ghost.set_ghost_info(ghost_data.saved_ghosts[level_name][ghost_name])
 	game_node.add_child(new_ghost)
 	current_ghost = new_ghost
-	for i in game_node.get_children():
-		if i is GhostEntity and i != current_ghost:
-			i.free()
+
 
 func get_current_ghost() -> GhostEntity:
 	return current_ghost
-
+ 
 func _on_level_over():
 	pass
 	#var end_screen = load(ENDSCREEN_PATH).instantiate()

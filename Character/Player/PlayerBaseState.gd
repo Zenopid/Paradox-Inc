@@ -38,13 +38,6 @@ func get_inverse_movement_input(type:String ):
 	return ""
 
 
-
-
-
-
-
-
-
 func grounded():
 	var ground_checker = state_machine.get_raycast("GroundChecker")
 	ground_checker.force_raycast_update()
@@ -52,6 +45,10 @@ func grounded():
 		return true
 	return false
 
+func ground_checker_colliding():
+	var ground_checker = state_machine.get_raycast("GroundChecker")
+	ground_checker.force_raycast_update()
+	return ground_checker.is_colliding() 
 func physics_process(delta:float):
 	super.physics_process(delta)
 	entity = entity as Player

@@ -143,6 +143,7 @@ visible = false
 
 [node name="BGM" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
+bus = &"Music"
 
 [connection signal="level_over" from="." to="." method="_on_level_over"]
 [connection signal="level_start" from="." to="." method="_on_level_start"]

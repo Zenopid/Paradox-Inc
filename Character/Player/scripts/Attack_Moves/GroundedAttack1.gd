@@ -5,12 +5,14 @@ extends PlayerBaseStrike
 @export var first_attack_push: Vector2 = Vector2(450,-100)
 @export var first_attack_knockback_amount: int = 1
 @export var first_attack_duration: int = 4
+@export var first_attack_hitstun: int = 30
 @export_category("Second Hitbox")
 @export var second_attack_damage: int = 10
 @export var second_attack_push: Vector2 = Vector2(200,-150)
 @export var second_attack_knockback_amount: int = 1
 @export var second_attack_duration: int = 2
 @export var second_attack_hitstop:int = 6
+@export var second_attack_hitstun: int = 25
 func physics_process(delta):
 	super.physics_process(delta)
 	if frame == 4:
@@ -29,7 +31,8 @@ func physics_process(delta):
 		"knockback_angle": 360,
 		"attack_type": "Normal",
 		"object_push": first_attack_push,
-		"hit_stop": hitstop
+		"hit_stop": hitstop,
+		"hitstun": first_attack_hitstun
 	}
 		attack_state.create_hitbox(hitbox_info)
 	if frame == 11:
@@ -43,6 +46,7 @@ func physics_process(delta):
 		"knockback_angle": 360,
 		"attack_type": "Normal",
 		"object_push": first_attack_push,
-		"hit_stop": second_attack_hitstop
+		"hit_stop": second_attack_hitstop,
+		"hitstun": second_attack_hitstun
 	}
 		attack_state.create_hitbox(hitbox_info)

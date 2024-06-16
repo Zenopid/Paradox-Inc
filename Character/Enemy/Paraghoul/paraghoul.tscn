@@ -1,11 +1,20 @@
-[gd_scene load_steps=43 format=3 uid="uid://fcuvx05j2v0y"]
+[gd_scene load_steps=66 format=3 uid="uid://fcuvx05j2v0y"]
 
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Paraghoul.gd" id="1_0ualm"]
 [ext_resource type="Texture2D" uid="uid://bgcenq3nxvjn2" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_1.png" id="2_8q4jg"]
+[ext_resource type="Texture2D" uid="uid://bdqot33f4oha1" path="res://Sprites/Enemies/Paraghoul/ParaghoulChargeFrame1.png" id="2_byp43"]
+[ext_resource type="Texture2D" uid="uid://dk0nryru1odtv" path="res://Sprites/Enemies/Paraghoul/Paraghoul_CrashFrame1.png" id="2_oa5xl"]
 [ext_resource type="Texture2D" uid="uid://c4lal3n0bxsvx" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_2.png" id="3_0jr2f"]
+[ext_resource type="Texture2D" uid="uid://bj6qa8u8cwt5d" path="res://Sprites/Enemies/Paraghoul/Paraghoul_CrashFrame2.png" id="3_bxcio"]
 [ext_resource type="Texture2D" uid="uid://chxhyds2exth1" path="res://Sprites/Enemies/Paraghoul/ParaghoulImmuneFrame1.png" id="3_dle0a"]
+[ext_resource type="Texture2D" uid="uid://kuhv4uy21tjy" path="res://Sprites/Enemies/Paraghoul/ParaghoulChargeFrame2.png" id="3_s5tta"]
 [ext_resource type="Texture2D" uid="uid://di3oo3irfnbu8" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_3.png" id="4_jscd8"]
+[ext_resource type="Texture2D" uid="uid://711q3x2dcyui" path="res://Sprites/Enemies/Paraghoul/ParaghoulChargeFrame3.png" id="4_jtwrt"]
+[ext_resource type="Texture2D" uid="uid://dlqvc5dydbppo" path="res://Sprites/Enemies/Paraghoul/Paraghoul_CrashFrame3.png" id="4_ndvtj"]
+[ext_resource type="Texture2D" uid="uid://cx4wjmrplmste" path="res://Sprites/Enemies/Paraghoul/ParaghoulChargeFrame4.png" id="5_8dj3y"]
 [ext_resource type="Texture2D" uid="uid://cah2lrp5fi6cn" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_4.png" id="5_x56g2"]
+[ext_resource type="Texture2D" uid="uid://pqwhyxx4nbt6" path="res://Sprites/Enemies/Paraghoul/Paraghoul_CrashFrame4.png" id="5_xkvnq"]
+[ext_resource type="Texture2D" uid="uid://dlog6j1ou6mdx" path="res://Sprites/Enemies/Paraghoul/ParaghoulChargeFrame5.png" id="6_7ecm3"]
 [ext_resource type="Texture2D" uid="uid://xm470yc42nnq" path="res://Sprites/Enemies/Paraghoul/FireballStart_1.png" id="6_dqr6v"]
 [ext_resource type="Texture2D" uid="uid://bkgq40k36pux8" path="res://Sprites/Enemies/Paraghoul/FireballStart_2.png" id="7_580jk"]
 [ext_resource type="Texture2D" uid="uid://cnb7u4hunrrus" path="res://Sprites/Enemies/Paraghoul/FireballStart_3.png" id="8_ter1l"]
@@ -18,15 +27,56 @@
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Shoot.gd" id="14_pc383"]
 [ext_resource type="PackedScene" uid="uid://54w6tmuksub7" path="res://Character/Enemy/Paraghoul/Fireball.tscn" id="15_etijb"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/LookAtPlayer.gd" id="16_d26je"]
-[ext_resource type="Script" path="res://Character/Enemy/DarkStalker/GroundChecker.gd" id="17_se4gl"]
 [ext_resource type="PackedScene" uid="uid://bvewt1lavbj41" path="res://Universal_Scenes/VFX/hitsparks.tscn" id="18_q6r7h"]
 [ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="19_3x474"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/WorldScanner.gd" id="19_h3ai8"]
 [ext_resource type="Script" path="res://Character/States/BaseState.gd" id="20_e1ekj"]
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="20_tkuy8"]
+[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/GroundPound.gd" id="24_p6o3v"]
+[ext_resource type="PackedScene" uid="uid://yinehm0bdrg6" path="res://Character/Enemy/Paraghoul/Shockwave.tscn" id="25_lqo17"]
+[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="26_m83h2"]
+[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Dazed.gd" id="27_8bief"]
+[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Charge.gd" id="33_b5ts8"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_5e6m6"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_byp43")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_s5tta")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_jtwrt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_8dj3y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_7ecm3")
+}],
+"loop": true,
+"name": &"Charge",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_oa5xl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_bxcio")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ndvtj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_xkvnq")
+}],
+"loop": true,
+"name": &"Crash",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("2_8q4jg")
@@ -60,6 +110,217 @@ animations = [{
 "name": &"Shoot",
 "speed": 6.0
 }]
+
+[sub_resource type="Animation" id="Animation_dptuw"]
+resource_name = "ChargeLoop"
+length = 0.166668
+loop_mode = 1
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Charge"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.0833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [3, 4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.83, 0.0913, 0.103611, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_a86bp"]
+resource_name = "ChargeStart"
+length = 0.466668
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Charge"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.316667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.466667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0.83, 0.0913, 0.103611, 1)]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("StateMachine/Charge")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.466667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_on_startup_finished"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_bndlw"]
+resource_name = "CrashLand"
+length = 0.333335
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Crash"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.166667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_y4xd1"]
+resource_name = "CrashLoop"
+length = 0.200002
+loop_mode = 1
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Crash"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="Animation" id="Animation_kh2r0"]
+resource_name = "Dazed"
+length = 2.0
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Idle"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 6.28319, 12.5664]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("StateMachine/Dazed")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(2),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_on_stun_over"
+}]
+}
 
 [sub_resource type="Animation" id="Animation_07nvf"]
 resource_name = "Dead"
@@ -114,6 +375,30 @@ tracks/3/keys = {
 
 [sub_resource type="Animation" id="Animation_nncq0"]
 resource_name = "Idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Idle"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
 
 [sub_resource type="Animation" id="Animation_phhge"]
 resource_name = "Immune"
@@ -254,6 +539,18 @@ tracks/7/keys = {
 "update": 0,
 "values": [Color(1, 1, 1, 1)]
 }
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Sprite:rotation")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
 [sub_resource type="Animation" id="Animation_w2kyi"]
 resource_name = "Shoot"
@@ -351,6 +648,11 @@ tracks/6/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bbk5j"]
 _data = {
+"ChargeLoop": SubResource("Animation_dptuw"),
+"ChargeStart": SubResource("Animation_a86bp"),
+"CrashLand": SubResource("Animation_bndlw"),
+"CrashLoop": SubResource("Animation_y4xd1"),
+"Dazed": SubResource("Animation_kh2r0"),
 "Dead": SubResource("Animation_07nvf"),
 "Idle": SubResource("Animation_nncq0"),
 "Immune": SubResource("Animation_phhge"),
@@ -446,6 +748,38 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Curve" id="Curve_wyaed"]
+max_value = 5.0
+_data = [Vector2(0, 8.75), 0.0, 0.0, 0, 0, Vector2(0.344221, 0), 0.0, 0.0, 0, 0, Vector2(1, -92.5), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_4ba8t"]
+curve_y = SubResource("Curve_wyaed")
+
+[sub_resource type="Curve" id="Curve_vvcyl"]
+max_value = 5.0
+_data = [Vector2(0.0376884, 3.96875), 0.0, 0.0, 0, 0, Vector2(1, 0.84375), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_oola5"]
+curve = SubResource("Curve_vvcyl")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_25xaa"]
+lifetime_randomness = 0.75
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(5, 15, 1)
+spread = 0.0
+initial_velocity_min = 500.0
+initial_velocity_max = 800.0
+directional_velocity_min = 1.0
+directional_velocity_max = 1.0
+directional_velocity_curve = SubResource("CurveXYZTexture_4ba8t")
+gravity = Vector3(300, -500, 0)
+scale_curve = SubResource("CurveTexture_oola5")
+color = Color(0.937255, 0.619608, 0.101961, 1)
+collision_mode = 2
+
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_eyrv5"]
 points = PackedVector2Array(0, 0, 300, -20, 300, 20)
 
@@ -466,7 +800,8 @@ radius = 30.0
 
 [node name="Paraghoul" type="CharacterBody2D"]
 collision_layer = 48
-collision_mask = 69631
+collision_mask = 4095
+floor_max_angle = 0.523599
 script = ExtResource("1_0ualm")
 gravity = 0
 max_fall_speed = 0
@@ -493,6 +828,7 @@ libraries = {
 }
 
 [node name="Fireball" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
 visible = false
 z_index = 5
 position = Vector2(0, 4)
@@ -542,19 +878,51 @@ animation_name = "Idle"
 [node name="Melee" type="Node" parent="StateMachine"]
 script = ExtResource("20_e1ekj")
 
+[node name="GroundPound" type="Node" parent="StateMachine"]
+script = ExtResource("24_p6o3v")
+crash_range = 900
+cooldown = 1.0
+crash_speed = 1000
+shockwave = ExtResource("25_lqo17")
+hitbox = ExtResource("26_m83h2")
+animation_name = "CrashLoop"
+
+[node name="Dazed" type="Node" parent="StateMachine"]
+script = ExtResource("27_8bief")
+decel_value = 0.75
+animation_name = "Idle"
+
+[node name="Charge" type="Node" parent="StateMachine"]
+script = ExtResource("33_b5ts8")
+max_charge_duration = 2.5
+object_push = Vector2(600, 200)
+charge_speed = 850
+hitbox = ExtResource("26_m83h2")
+cd = 1.75
+animation_name = "ChargeStart"
+
+[node name="Particles" type="GPUParticles2D" parent="StateMachine/Charge"]
+unique_name_in_owner = true
+position = Vector2(-5, 0)
+rotation = 3.14159
+emitting = false
+amount = 50
+process_material = SubResource("ParticleProcessMaterial_25xaa")
+lifetime = 0.5
+fixed_fps = 60
+
 [node name="Raycasts" type="Node" parent="StateMachine"]
 unique_name_in_owner = true
 
-[node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts" node_paths=PackedStringArray("entity") groups=["Collision", "Raycasts"]]
+[node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts" groups=["Collision", "Raycasts"]]
 unique_name_in_owner = true
-position = Vector2(14, 10)
-target_position = Vector2(0, 30)
-collision_mask = 805306368
+position = Vector2(0, 10)
+target_position = Vector2(0, 10)
+collision_mask = 768
 hit_from_inside = true
-script = ExtResource("17_se4gl")
-entity = NodePath("../../..")
 
 [node name="Timers" type="Node" parent="StateMachine"]
+unique_name_in_owner = true
 
 [node name="Shoot_Cooldown" type="Timer" parent="StateMachine/Timers"]
 one_shot = true
@@ -566,7 +934,19 @@ one_shot = true
 [node name="Chase_Duration" type="Timer" parent="StateMachine/Timers"]
 one_shot = true
 
-[node name="ShapeCasts" type="Node" parent="StateMachine"]
+[node name="Crash_Cooldown" type="Timer" parent="StateMachine/Timers"]
+one_shot = true
+
+[node name="Max_Crash_Duration" type="Timer" parent="StateMachine/Timers"]
+one_shot = true
+
+[node name="Charge_Limit" type="Timer" parent="StateMachine/Timers"]
+one_shot = true
+
+[node name="Charge_Cooldown" type="Timer" parent="StateMachine/Timers"]
+one_shot = true
+
+[node name="ShapeCasts" type="Node2D" parent="StateMachine"]
 unique_name_in_owner = true
 
 [node name="LOS" type="ShapeCast2D" parent="StateMachine/ShapeCasts"]

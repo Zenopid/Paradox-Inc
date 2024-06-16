@@ -9,10 +9,9 @@ const STICK_TO_GROUND: int = 140
 @export var buffer_attack: String = "None"
 @export var dodge_cancellable:bool = true
 @export var dodge_window: int = 4
-@export_category("")
+@export_category("Attack Variables")
 @export var lunge_distance:int = 250
 @export var hitstop: int = 3
-#@export var landing_lag: int = 0
 @export_category("Camera")
 @export var camera_shake_strength: float = 0
 @onready var buffer_tracker:int = buffer_window
@@ -58,7 +57,7 @@ func physics_process(delta: float):
 		entity.states.transition_to("Fall")
 		return
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)
-	if frame >= dodge_window:
+	if frame >= dodge_window and dodge_window != -1:
 		can_dodge = false
 	entity.move_and_slide()
 

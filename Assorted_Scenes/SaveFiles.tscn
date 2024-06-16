@@ -23,18 +23,18 @@ anti_aliasing = false
 
 [sub_resource type="Animation" id="Animation_y48cl"]
 resource_name = "DeletingSave"
-length = 1.2
+length = 1.5
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("SaveFile/SaveFileOptions/Delete:theme_override_styles/pressed:bg_color")
+tracks/0/path = NodePath("SaveFile/SaveFileOptions/Delete:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1, 1.2),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 1, 1.4, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Color(0, 0.741176, 1, 1), Color(0.83, 0.0913, 0.103611, 1), Color(0, 0.741176, 1, 1)]
+"values": [Color(1, 1, 1, 1), Color(0.83, 0.0913, 0.103611, 1), Color(0.83, 0.0913, 0.103611, 1), Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_h56a4"]
@@ -95,14 +95,14 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("SaveFile/SaveFileOptions/Delete:theme_override_styles/pressed:bg_color")
+tracks/2/path = NodePath("SaveFile/SaveFileOptions/Delete:modulate")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(0, 0.741176, 1, 1)]
+"values": [Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6p3yj"]
@@ -223,7 +223,7 @@ grow_vertical = 0
 text = " Return "
 
 [connection signal="pressed" from="SaveFile/SaveFileOptions/Start" to="." method="_on_start_pressed"]
+[connection signal="button_down" from="SaveFile/SaveFileOptions/Delete" to="." method="_on_delete_button_down"]
 [connection signal="button_up" from="SaveFile/SaveFileOptions/Delete" to="." method="_on_delete_button_up"]
-[connection signal="pressed" from="SaveFile/SaveFileOptions/Delete" to="." method="_on_delete_pressed"]
 [connection signal="timeout" from="SaveFile/SaveFileOptions/Delete/DeleteTimer" to="." method="_on_timer_timeout"]
 [connection signal="pressed" from="Return" to="." method="_on_return_pressed"]
