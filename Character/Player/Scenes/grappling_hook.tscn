@@ -132,6 +132,9 @@ flip_v = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hook"]
 shape = SubResource("CapsuleShape2D_2jdic")
 
+[node name="DampedSpringJoint2D" type="DampedSpringJoint2D" parent="Hook"]
+node_a = NodePath("..")
+
 [node name="Effects" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
 libraries = {

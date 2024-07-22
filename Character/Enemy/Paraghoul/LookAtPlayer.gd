@@ -24,6 +24,7 @@ var chase_timer:Timer
 
 
 
+
 func init(current_entity, s_machine: EntityStateMachine):
 	super.init(current_entity, s_machine)
 	los_shapecast = state_machine.get_shapecast("LOS")
@@ -52,29 +53,32 @@ func enter(_msg:= {}):
 	chase_timer.start()
 	player = get_tree().get_first_node_in_group("Players")
 	los_shapecast.look_at(player.global_position)
-	target_sphere.global_position = get_new_target()
+	update_path()
 	call_deferred("add_child", target_sphere)
 	
 func get_new_target() -> Vector2:
 	entity = entity as ParaGhoul
-	var target_position:Vector2 = Vector2.ZERO
-	target_position.x = randf_range(player.global_position.x - target_position_randomness, player.global_position.x + target_position_randomness)
-	target_position.y = randf_range(player.global_position.y - target_position_randomness, player.global_position.y - target_position_randomness * 2)
-	return target_position
-	
+	var x = randf_range(player.global_position.x - target_position_randomness, player.global_position.x + target_position_randomness)
+	var y = randf_range(player.global_position.y - target_position_randomness, player.global_position.y - target_position_randomness * 2)
+	return Vector2(x, y)
+
 func physics_process( delta:float ):
+	entity = entity as ParaGhoul
 	if chase_timer.is_stopped():
 		state_machine.transition_to("Idle")
 		return
 	los_shapecast.position = entity.position
 	los_shapecast.look_at(player.global_position)
-	var dir = entity.global_position.direction_to(target_sphere.global_position)
-	entity.velocity += (acceleration * dir).rotated(randf_range(-random_spread, random_spread))
+	var dir: Vector2
+	#dir = entity.global_position.direction_to(target_sphere.global_position)
+	
+	dir = (entity.pathfinder.get_next_path_position() - entity.global_position).normalized()
+	await get_tree().create_timer(0.001).timeout
+	entity.velocity += (acceleration * dir)  #.rotated(randf_range(-random_spread, random_spread))
 	entity.velocity = entity.velocity.limit_length(chase_speed)
 	await get_tree().create_timer(0.001).timeout
 	entity.move_and_slide()
 	push_objects()
-	
 	var rng = randi_range(0, 10)
 	if rng < 8:
 		if state_machine.state_available("GroundPound"):
@@ -94,6 +98,15 @@ func physics_process( delta:float ):
 		if i == entity :
 			if state_machine.transition_if_available(["Shoot"]):
 				return
+	if entity.pathfinder.is_target_reached():
+		if state_machine.transition_if_available([
+			"Shoot",
+			"GroundPound",
+			"Charge"
+			]):
+			return
+		else:
+			update_path()
 
 
 func push_objects():
@@ -101,7 +114,15 @@ func push_objects():
 		var collision = entity.get_slide_collision(i)
 		if collision.get_collider() is MoveableObject:
 			collision.get_collider().call_deferred("apply_central_impulse", -collision.get_normal() * entity.velocity.length()  )
-
+			
+func update_path():
+	var target = get_new_target()
+#	entity.pathfinder.target_position = target
+	target_sphere.global_position = target
+	entity.pathfinder.target_position = Vector2(-70, -170)
+	nav_timer.start()
+	print("updating path to go to position " + str(entity.pathfinder.target_position))
+	print("the player's position is currently " + str(player.global_position) )
 
 func exit(): 
 	remove_child(target_sphere)
@@ -113,5 +134,5 @@ func conditions_met():
 		for i in entity.detection_sphere.get_overlapping_bodies():
 			if i is Player:
 				return true
-				
 	return false
+

@@ -1,16 +1,12 @@
 extends PlayerBaseState
 
-@onready var dodge_tracker:int = dodge_duration 
 @onready var cooldown_timer: Timer
 @onready var superjump_timer:Timer
 
 @export var dodge_boost: int = 25
-@export var dodge_duration: int = 3
 @export var dodge_speed: int = 50
 @export var inital_fall_speed: int = 100
 @export var dodge_cooldown: float = 0.9
-@export var strike_invlv_frames: int = 7
-@export var proj_invlv_frames: int = 13
 
 var facing: String 
 
@@ -38,9 +34,9 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 
 
 func enter(_msg: = {}):
+	super.enter()
 	var move = get_movement_input()
 	frame_tracker = 0
-	super.enter()
 	entity.velocity.y = clamp(entity.velocity.y, inital_fall_speed, fall_node.maximum_fall_speed)
 	if move < 0:
 		if entity.velocity.x > 0:
@@ -101,8 +97,6 @@ func input(event):
 
 func become_actionable():
 	is_actionable = true 
-	
-
 
 func get_movement_input() -> float:
 	return Input.get_axis("left", "right")
@@ -118,15 +112,22 @@ func exit():
 	
 
 func set_proj_invlv(status:bool):
-	status = !status
+	#print("----------------------------------------------------")
+	#print("PROJ")
+	#print("previous invlv type is " + entity.invlv_type)
 	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, status)
 	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, status)
 	if status:
 		entity.add_invlv_type("Proj")
 	else:
 		entity.remove_invlv_type("Proj")
+	#print("now its " + entity.invlv_type)
+	#print("----------------------------------------------------")
 
 func set_strike_invlv(status:bool):
+	#print("----------------------------------------------------")
+	#print("STRIKE")
+	#print("previous invlv type is " + entity.invlv_type)
 	if status:
 		entity.add_invlv_type("Strike")
 		if entity.get_level().get_current_timeline() == "Future":
@@ -137,7 +138,8 @@ func set_strike_invlv(status:bool):
 			entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, true)
 	else:
 		entity.remove_invlv_type("Strike")
-
+	#print("now its " + entity.invlv_type)
+	#print("----------------------------------------------------")
 
 func conditions_met() -> bool:
 	if cooldown_timer.is_stopped():

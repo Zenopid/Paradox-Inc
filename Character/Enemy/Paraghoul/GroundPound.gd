@@ -46,6 +46,7 @@ func _on_ground_pound_interrupt(amount: int ):
 	
 func physics_process(delta:float):
 	if max_crash_timer.is_stopped():
+		entity.pathfinder.target_position = get_tree().get_first_node_in_group("Players").global_position
 		state_machine.transition_to("Chase")
 		return
 	frame_tracker += 1

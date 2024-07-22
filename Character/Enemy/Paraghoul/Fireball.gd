@@ -26,6 +26,8 @@ func play_explosion_sfx():
 		explosion_sfx.play()
 
 func _physics_process(delta):
+	if !is_instance_valid(player):
+		return
 	var status = !(player.get_invlv_type().contains("Proj"))
 	if timeline == "All":
 		set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)

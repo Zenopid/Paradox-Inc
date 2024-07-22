@@ -164,11 +164,6 @@ func _on_save_info_back_button_pressed():
 	start_button.grab_focus()
 	
 func _on_resume_pressed():
-	#if GlobalScript.has_save():
-		#disable_menu()
-		#GlobalScript.load_game()
-	#else:
-		#resume.disabled = true 
 	exit_button.hide()
 	settings_button.hide()
 	save_file_scene.show()

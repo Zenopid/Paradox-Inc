@@ -38,6 +38,7 @@ func get_level_info():
 	current_level = get_tree().get_first_node_in_group("CurrentLevel")
 	var level_info = current_level.get_endscreen_info()
 	for info in level_info.keys():
+		print(info)
 		if info in self:
 			set(info, level_info[info])
 		else:

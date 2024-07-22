@@ -23,7 +23,7 @@ var shapecast_nodes: = {}
 
 var states_with_inactive_process: = {}
 
-
+var process_state:bool = true 
 func init(debug_node: Node2D = null):
 	for nodes in get_node("Timers").get_children():
 		timer_nodes[nodes.name] = nodes
@@ -79,7 +79,7 @@ func transition_to(target_state_name: String = "", msg: = {}, trans_anim: String
 			await machine_owner.anim_player.animation_finished
 		current_state.enter(msg)
 		state_tracker.text = "State: " + str(current_state.name)
-		emit_signal("transitioned", current_state)
+		#emit_signal("transitioned", current_state)
 		#print("Transitioning from state " + previous_state.name + " to state " + current_state.name)
 	
 

@@ -24,6 +24,8 @@ func end_level():
 	player_one_timestamps = player_one.checkpoint_timestamps
 	player_two_timestamps = player_two.checkpoints
 	
+	await get_tree().create_timer(1).timeout
+	
 	for timestamp:int in player_one_timestamps.size():
 		var p1_timestamp:int = player_one_timestamps[timestamp]
 		var p2_timestamp:int = player_two_timestamps[timestamp]

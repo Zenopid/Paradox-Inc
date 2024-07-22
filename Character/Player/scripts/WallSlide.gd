@@ -24,7 +24,7 @@ var jump_decay: float = 1.0
 var previous_wall_direction: String
 var wallbounce_timer: Timer
 var jump_buffer:Timer
-var previous_speed: float = 0
+var previous_speed: Vector2 = Vector2.ZERO
 
 
 
@@ -59,10 +59,12 @@ func input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("jump") or !jump_buffer.is_stopped() :
 		var speed_bonus:Vector2 = jump_boost
 		speed_bonus.x = jump_boost.x if wall_direction == "left" else -jump_boost.x
+		if wallbounce_timer.is_stopped():
+			previous_speed = Vector2.ZERO
 		state_machine.transition_to("Jump", {
 			"add_jump" =  1,
 			"double_jump_multiplier" = jump_decay, 
-			"double_jump_bonus_speed" = Vector2((abs(previous_speed) * sign(jump_boost.x)) + speed_bonus.x, speed_bonus.y)
+			"double_jump_bonus_speed" = Vector2((abs(previous_speed.x) * sign(jump_boost.x)) + speed_bonus.x, speed_bonus.y + (previous_speed.y /2))
 			}
 			)
 		current_slide_speed += slide_speed_increase
@@ -126,7 +128,7 @@ func exit() -> void:
 	eject_tracker = eject_timer
 	wall_checker.enabled = false
 	wallbounce_timer.stop() 
-	previous_speed = 0
+	previous_speed = Vector2.ZERO
 
 func conditions_met() -> bool:
 	if wall_checker.is_colliding() and !grounded() and !Input.is_action_pressed("jump"):

@@ -192,6 +192,12 @@ func _on_level_over():
 
 func _physics_process(delta):
 	super._physics_process(delta)
+	set_grapple_velocity()
+	pull_grappled_object()
+	update_ghost_info()
+	
+func set_grapple_velocity():
+	grapple = grapple as Hook
 	var grounded = states.get_current_state().grounded()
 	var walk = (Input.get_action_strength("right") - Input.get_action_strength("left")) * state_machine_states["Run"].move_speed
 	if grapple.attached and !player_braced:
@@ -204,6 +210,15 @@ func _physics_process(delta):
 			grappling_upwards = false 
 		if sign(grapple_velocity.x) != sign(walk):
 			grapple_velocity.x *= grapple.sideways_multiplier
+		#if global_position.distance_to(grapple.hook_location) <= grapple.distance_to_swing and !grapple.object_pullable() and !grounded:
+			#var radius = global_position - grapple.hook_location
+			#var angle = acos(radius.dot(velocity) / (radius.length() * velocity.length()))
+			#var rad_vel = cos(angle) * velocity.length()
+			#grapple_velocity = grapple_velocity.lerp( grapple_velocity + (radius.normalized() * -rad_vel), 0.7)
+			#grapple_velocity = grapple_velocity.lerp(grapple_velocity + swing_velocity, 0.7)
+			grapple.swinging = true
+		else:
+			grapple.swinging = false 
 	else: 
 		grapple_velocity = Vector2.ZERO
 	
@@ -212,6 +227,13 @@ func _physics_process(delta):
 		#no pulling up/down while running/sliding/idle/crouching, only airborne states
 		#also helps with pushing around objects n stuff
 		grapple_boost_tracker = 0
+	grapple = grapple as Hook
+
+	if velocity.length() < max_grapple_speed:
+		velocity += grapple_velocity
+		velocity = velocity.limit_length(max_grapple_speed)
+		
+func pull_grappled_object():
 	if grapple.object_pullable():
 		var object_pull = grapple.hook_location.direction_to(global_position) * grapple.pull_speed
 		if abs(grapple.hook_location.y - global_position.y) <= level_with_grapple_range :
@@ -219,9 +241,8 @@ func _physics_process(delta):
 			#if you're trying to pull an object horiztonally , apply a light lift upwards to prevent being stuck, otherwise try to keep it level
 		grapple.grappled_object.call_deferred("apply_central_impulse", object_pull)
 		#grapple.grappled_object.set_timeline(current_level.current_timeline)
-	if velocity.length() < max_grapple_speed:
-		velocity += grapple_velocity
-		velocity = velocity.limit_length(max_grapple_speed)
+
+func update_ghost_info():
 	if update_ghost:
 		player_positions.append(global_position)
 		player_animations.append(anim_player.get_current_animation())

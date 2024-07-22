@@ -39,9 +39,9 @@ func _on_body_entered(body:Node2D):
 	var true_collision:bool = false
 	if body == projectile_owner:
 		return
+	elif body is TileMap and is_on_wall():
+		queue_free()
 	elif body is RigidBody2D:
-
-				#shockwaves would make paraghouls kill themselves
 		if global_position > body.global_position:
 			object_push = -abs(object_push + (int(velocity_effects_object_push) * velocity))
 		else:

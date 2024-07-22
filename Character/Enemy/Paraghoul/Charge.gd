@@ -66,6 +66,7 @@ func physics_process(delta:float):
 	if charging:
 		if charge_timer.is_stopped():
 			print("exited because its been charging too long")
+			entity.pathfinder.target_position = get_tree().get_first_node_in_group("Players").global_position
 			state_machine.transition_to("Chase")
 			return
 		entity.velocity = charge_direction * charge_speed

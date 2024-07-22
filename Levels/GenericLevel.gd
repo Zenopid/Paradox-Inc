@@ -6,7 +6,6 @@ const SAVE_FILE_PATH:String = "user://save_info/level_data.tres"
 @export var sliver_deaths:int = 3
 @export var bronze_deaths:int = 5
 
-
 @export var bronze_time: float = 5
 @export var sliver_time:float = 3
 @export var gold_time:float = 1

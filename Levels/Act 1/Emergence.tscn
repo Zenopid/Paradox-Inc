@@ -2622,6 +2622,9 @@ _data = {
 process_mode = 1
 script = ExtResource("1_oxnw7")
 laser_damage = 20
+bronze_time = 7.0
+sliver_time = 5.0
+gold_time = 3.0
 exit_portal = NodePath("Exit")
 current_timeline = "Past"
 
@@ -3273,7 +3276,7 @@ position = Vector2(-1121.82, 52.7483)
 shape = SubResource("RectangleShape2D_hgthm")
 
 [node name="SpawnPoint" type="Node2D" parent="."]
-position = Vector2(2006.14, -4237.23)
+position = Vector2(62.5397, -73.438)
 
 [node name="OutOfBounds" parent="." instance=ExtResource("4_bl0yy")]
 unique_name_in_owner = true

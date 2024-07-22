@@ -67,8 +67,9 @@ func set_invlv_type(type:String):
 		invlv_type = "None"
 
 func add_invlv_type(type:String):
-	invlv_type += type
-	invlv_type = invlv_type.replace("None", "")
+	if !invlv_type.contains(type):
+		invlv_type += type
+		invlv_type = invlv_type.replace("None", "")
 
 func remove_invlv_type(type:String):
 	invlv_type = invlv_type.replace(type, "")

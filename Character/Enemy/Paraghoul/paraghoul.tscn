@@ -34,7 +34,7 @@
 [ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="20_tkuy8"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/GroundPound.gd" id="24_p6o3v"]
 [ext_resource type="PackedScene" uid="uid://yinehm0bdrg6" path="res://Character/Enemy/Paraghoul/Shockwave.tscn" id="25_lqo17"]
-[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="26_m83h2"]
+[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/Hitbox.tscn" id="26_m83h2"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Dazed.gd" id="27_8bief"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Charge.gd" id="33_b5ts8"]
 
@@ -1044,20 +1044,18 @@ unique_name_in_owner = true
 wait_time = 0.4
 one_shot = true
 
-[node name="Navigation" type="Node2D" parent="."]
-
-[node name="Pathfinder" type="NavigationAgent2D" parent="Navigation"]
+[node name="Pathfinder" type="NavigationAgent2D" parent="."]
 unique_name_in_owner = true
-path_max_distance = 2000.0
 avoidance_enabled = true
 debug_enabled = true
 debug_path_custom_color = Color(0.83, 0.0913, 0.103611, 1)
 debug_path_custom_line_width = 2.0
 
-[node name="Nav_Timer" type="Timer" parent="Navigation"]
+[node name="Nav_Timer" type="Timer" parent="."]
 unique_name_in_owner = true
 wait_time = 0.1
 one_shot = true
 
 [connection signal="property_list_changed" from="." to="LinkLine" method="_on_paraghoul_property_list_changed"]
 [connection signal="timeout" from="Injure_Timer" to="." method="_on_injure_timer_timeout"]
+[connection signal="timeout" from="Nav_Timer" to="StateMachine/Chase" method="_on_nav_timer_timeout"]

@@ -1,15 +1,21 @@
 extends Camera2DPlus
 
-@export var player:Entity
 const DEAD_ZONE = 160
 const DEAD_ZONE_MOUSE = 100
 const LOOK_AHEAD_FACTOR = 0.01
 const SHIFT_TRANS = Tween.TRANS_SINE
 const SHIFT_EASE = Tween.EASE_OUT
 const SHIFT_DURATION = 1.0
+const MINIMUM_CAMERA_ZOOM:Vector2 = Vector2(1.4, 1.4)
+const MAXIMUM_CAMERA_ZOOM:Vector2 = Vector2(1.6, 1.6)
+@export var zoom_speed: float = 0.1
+
+@export var player:Entity
+
 var facing = 0
 
 @onready var prev_camera_pos = get_camera_position()
+
 
 func _ready():
 	super._ready()
@@ -30,7 +36,14 @@ func _process(delta: float) -> void:
 		_check_facing()
 #	change_zoom()
 	prev_camera_pos = get_camera_position()
-
+	adjust_zoom()
+	
+func adjust_zoom():
+	var weight = min((abs(player.velocity.x) / player.max_grapple_speed), 1)
+	var new_zoom = lerp(MAXIMUM_CAMERA_ZOOM, MINIMUM_CAMERA_ZOOM, weight) 
+	if new_zoom != zoom:
+		var tween = get_tree().create_tween().set_ease(Tween.EASE_IN)
+		tween.tween_property(self, "zoom", new_zoom, zoom_speed)
 #func change_zoom() -> Vector2:
 #	if player.velocity > Vector2(-2, -2) and player.velocity < Vector2(2,2):
 #		return Vector2.ZERO

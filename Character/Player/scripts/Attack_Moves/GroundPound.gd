@@ -26,8 +26,6 @@ var has_hit_ground: bool = false
 
 func enter(_msg: = {}):
 	has_hit_ground = false
-	if !entity.anim_player.is_connected("animation_finished", Callable(self, "change_status")):
-		entity.anim_player.connect("animation_finished", Callable(self, "change_status"))
 	entity.anim_player.play("GroundPoundStart")
 	entity.anim_player.queue("GroundPoundLoop")
 	attack_status = "Start"
@@ -40,13 +38,8 @@ func change_status(new_status):
 		"Falling":
 			attack_status = "Landing"
 
-
-func physics_process(delta):
-	
-	
-	
+func physics_process(delta:float):
 	frame += 1
-
 	var additional_damage = roundi(min(maximum_damage, abs((entity.global_position.y - starting_position) * height_scaler )))
 	ground_pound_damage = min(maximum_damage, minimum_damage + additional_damage)
 	match attack_status:
@@ -57,9 +50,7 @@ func physics_process(delta):
 	if entity.is_on_floor():
 		entity.velocity.x = 0
 		if !has_hit_ground:
-			entity.anim_player.disconnect("animation_finished", Callable(self, "change_status"))
 			entity.anim_player.play("GroundPoundLand")
-			entity.anim_player.connect("animation_finished", Callable(self, "_on_attack_over"))
 			has_hit_ground = true
 			change_status("Landing")
 			var hitbox_info = {
@@ -85,3 +76,6 @@ func input(event):
 	attack_state.state_machine.transition_if_available([
 		"Dodge"
 	])
+
+func _on_attack_over(name_of_attack:String):
+	attack_state.exit_state()

@@ -100,14 +100,17 @@ func start_buffer_attack():
 	return
 
 func _on_attack_over(name_of_attack:String):
-		if !can_cancel:
-			emit_signal("attack_whiffed", animation_name)
-		if buffer_attack != "None":
-			if buffer_tracker > 0 or buffer_window == -1:
-				start_buffer_attack()
-		else:
-			attack_state.state_machine.transition_to("Fall")
+	if !can_cancel:
+		emit_signal("attack_whiffed", animation_name)
+	if buffer_attack != "None":
+		if buffer_tracker > 0 or buffer_window == -1:
+			start_buffer_attack()
 			return
+	attack_state.state_machine.transition_if_available([
+		"Jump",
+		"Dodge",
+		"Fall"
+	])
 
 func exit():
 	super.exit()

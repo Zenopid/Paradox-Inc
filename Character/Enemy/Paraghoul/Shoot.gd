@@ -65,6 +65,7 @@ func projectile_attack(attack_name):
 	fireball_instance.set_parameters(proj_info)
 	fireball_instance.set_future_collision()
 	fireball_instance.set_past_collision()
+	entity.pathfinder.target_position = player.global_position
 	state_machine.transition_to("Chase")
 
 func physics_process(delta:float):

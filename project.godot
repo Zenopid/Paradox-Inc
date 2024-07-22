@@ -35,7 +35,7 @@ window/stretch/mode="viewport"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/beehave/plugin.cfg", "res://addons/camera_2d_plus/plugin.cfg", "res://addons/previous-tab/plugin.cfg", "res://addons/script_search/plugin.cfg")
+enabled=PackedStringArray("res://addons/beehave/plugin.cfg", "res://addons/camera_2d_plus/plugin.cfg", "res://addons/script_search/plugin.cfg")
 
 [input]
 

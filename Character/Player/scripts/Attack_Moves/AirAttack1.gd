@@ -27,7 +27,7 @@ func physics_process(delta:float):
 			"hit_stop": hitstop,
 		}  
 		attack_state.create_hitbox(hitbox_info)
-		
+
 func current_active_hitbox():
 	if frame > 12: 
 		return false

@@ -11,7 +11,6 @@ signal damaged(amount:int)
 @onready var spawn_location: Vector2 = self.global_position
 @onready var nav_timer: Timer = $"%Nav_Timer"
 @onready var fireball_sprite:AnimatedSprite2D = $"%Fireball"
-
 var frame_cnt: int = 0
 
 func _ready():

@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://Character/Enemy/DarkStalker/LOS.gd" id="5_jovso"]
 [ext_resource type="Script" path="res://Character/Enemy/DarkStalker/GroundChecker.gd" id="6_4synv"]
 [ext_resource type="Script" path="res://Character/Enemy/Attack.gd" id="7_d2k0y"]
-[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="8_nnns4"]
+[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/Hitbox.tscn" id="8_nnns4"]
 [ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="9_3y36u"]
 [ext_resource type="PackedScene" uid="uid://bvewt1lavbj41" path="res://Universal_Scenes/VFX/hitsparks.tscn" id="10_rbxs7"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="11_g8rs6"]

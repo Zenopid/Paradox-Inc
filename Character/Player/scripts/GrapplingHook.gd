@@ -26,6 +26,9 @@ signal detached()
 @export_category("Object Pull Speed")
 @export var pull_speed:Vector2 = Vector2(100,100)
 
+@export_category("Swing")
+@export var distance_to_swing:int = 50
+
 @onready var links: Line2D = $"%Chain"
 @onready var hook_sprite: Sprite2D = $"%Hook_Sprite"
 @onready var hook_body: CharacterBody2D = $"%Hook"
@@ -43,6 +46,7 @@ var attachment_point := Vector2.ZERO
 var gravity_amount: int = 0
 var hook_visible:bool = false 
 var can_pull_object:bool = false
+var swinging:bool = false
 
 func _ready():
 	connect("attached_object", Callable(self, "_on_object_grappled"))
@@ -107,6 +111,7 @@ func shoot(dir: Vector2 = Vector2.ZERO) :
 func release() -> void:
 	flying = false
 	attached = false
+	swinging = false
 	emit_signal("detached")
 	gravity_timer.stop()
 	gravity_amount = 0

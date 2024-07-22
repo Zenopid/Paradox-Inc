@@ -43,7 +43,11 @@ func input(event: InputEvent):
 
 func physics_process(delta):
 	super.physics_process(delta)
-	entity.velocity.y = clamp(entity.velocity.y, entity.velocity.y + jump_node.get_gravity(), maximum_fall_speed)
+	entity = entity as Player
+	var fall_speed = jump_node.get_gravity()
+	if entity.grapple.swinging:
+		fall_speed /= 2
+	entity.velocity.y = clamp(entity.velocity.y, entity.velocity.y + fall_speed, maximum_fall_speed)
 	if grounded():
 		state_machine.transition_if_available([
 			"Jump",
