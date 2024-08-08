@@ -39,6 +39,7 @@ var slope_checker_right: RayCast2D
 var fall_state: Fall
 
 var wall_checker: ShapeCast2D
+var cleaner_sprite:AnimatedSprite2D
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
@@ -54,6 +55,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	jump_node = state_machine.find_state("Jump")
 	
 	cooldown_timer.wait_time = slide_cooldown
+	cleaner_sprite = entity.get_node("Cleaner")
 	
 func enter(_msg: = {}):
 	super.enter()
@@ -61,10 +63,13 @@ func enter(_msg: = {}):
 	slide_direction = get_facing_as_int()
 	hit_max_speed = false 
 	wall_checker.enabled = true 
+	cleaner_sprite.show()
+	cleaner_sprite.flip_h = entity.sprite.flip_h
+	cleaner_sprite.position = Vector2(0, 7.5)
 	
 	
 func speed_timer_logic(delta):
-	if hit_max_speed and grounded():
+	if hit_max_speed:
 		current_slide_duration -= delta
 
 func physics_process(delta):
@@ -92,8 +97,9 @@ func physics_process(delta):
 			entity.velocity.x += slide_acceleration * get_movement_input()
 			if abs(entity.velocity.x) > slide_speed:
 				entity.velocity.x = slide_speed * sign(entity.velocity.x)
-	hit_max_speed = true if abs(entity.velocity.x) >= abs(slide_speed) else false
-	
+	if abs(entity.velocity.x) >= abs(slide_speed) and !hit_max_speed :
+		print("hit max speed")
+		hit_max_speed = true 
 	if entity.velocity.x  == 0:
 		particles.emitting = false
 		if Input.is_action_pressed("crouch") and is_grounded:
@@ -142,6 +148,8 @@ func exit() -> void:
 	cooldown_timer.start()
 	wall_checker.enabled = false
 	particles.emitting = false
+	cleaner_sprite.hide()
+	cleaner_sprite.position = Vector2.ZERO
 
 func push_objects():
 	for i in entity.get_slide_collision_count():

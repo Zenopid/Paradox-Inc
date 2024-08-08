@@ -39,6 +39,7 @@ func _on_spawner_pressed():
 	add_child(box_instance)
 	box_instance.add_to_group("Boxes")
 	return box_instance
+	
 func _on_clear_box_pressed():
 	for nodes in get_tree().get_nodes_in_group("Boxes"):
 		nodes.kill()
@@ -64,7 +65,6 @@ func _on_h_slider_value_changed(value: float):
 func _on_reset_pressed():
 	Engine.time_scale = 1
 	speed_slider.value = 1
-
 
 func _on_rotate_box_right_status_changed(activated:bool):
 	if activated:

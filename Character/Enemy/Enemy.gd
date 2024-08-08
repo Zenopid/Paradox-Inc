@@ -80,7 +80,6 @@ func _on_swapped_timeline(timeline: String):
 		else:
 			modulate.a = 1
 
-
 func set_collision(future_value, past_value):
 	
 	detection_sphere.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, future_value)
@@ -127,7 +126,14 @@ func set_collision(future_value, past_value):
 
 	set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, future_value)
 	set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, past_value)
-
+	
+	if !is_paradox:
+		if future_value:
+			pathfinder.set_navigation_layer_value(1, true )
+			pathfinder.set_navigation_layer_value(2, false)
+		elif past_value:
+			pathfinder.set_navigation_layer_value(1, false)
+			pathfinder.set_navigation_layer_value(2, true)
 
 func _physics_process(delta):
 	super._physics_process(delta)
@@ -190,8 +196,6 @@ func get_raycast(ray_name:String) -> RayCast2D:
 	
 func is_in_hitstun():
 	return in_hitstun
-	
-
 
 func create_hitbox(hitbox_info: = {}):
 #	attack_node.create_hitbox(width, height,attack_damage, kb_amount, angle, duration, type, angle_flipper, points, push, hitlag)
@@ -222,10 +226,8 @@ func _on_detection_sphere_body_exited(body):
 		detection_shape.debug_color = no_detection_color
 		player_close = false
 
-
 func enemy_near():
 	return enemy_close
-
 
 func get_max_health() -> int:
 	return max_health

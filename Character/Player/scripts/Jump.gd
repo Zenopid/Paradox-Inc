@@ -40,7 +40,10 @@ var jump_buffer:Timer
 var superjump_timer:Timer
 
 var already_jumped:bool = false
+var cleaner_sprite: AnimatedSprite2D
 
+
+	
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	ground_checker = s_machine.get_raycast("GroundChecker")
@@ -48,8 +51,11 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	jump_buffer = state_machine.get_timer("Jump_Buffer")
 	fastfall_timer = state_machine.get_timer("Fastfall_Lockout")
 	superjump_timer = s_machine.get_timer("Superjump")
+	cleaner_sprite = entity.get_node("Cleaner")
 	
 func enter(msg: = {}):
+	cleaner_sprite.show()
+	cleaner_sprite.flip_h = entity.sprite.flip_h
 	var is_grounded:bool = ground_checker_colliding()
 	already_jumped = true 
 	if !jump_buffer.is_stopped() and is_grounded:
@@ -98,7 +104,7 @@ func physics_process(delta):
 		if entity.velocity.y >= 0:
 			state_machine.transition_to("Fall")
 			return
-
+	
 	default_move_and_slide()
 
 func apply_jump_squat():
@@ -157,6 +163,7 @@ func exit() -> void:
 		remaining_jumps = double_jumps
 		already_jumped = false 
 	superjump_timer.stop()
+	cleaner_sprite.hide()
 
 func conditions_met() -> bool:
 	var is_grounded = grounded()

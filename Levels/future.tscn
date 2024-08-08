@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cuaf8p6wx6aun"]
+[gd_scene load_steps=20 format=3 uid="uid://cuaf8p6wx6aun"]
 
 [ext_resource type="Texture2D" uid="uid://bxmqcr1u77plg" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Assets/Tiles.png" id="1_0pjxx"]
 [ext_resource type="Texture2D" uid="uid://bbkd3lq1g38s1" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Background Props.png" id="2_ohlfq"]
@@ -33,6 +33,13 @@ vertices = PackedVector2Array(-8, -15.5, 8.5, -15.5, 8, 15.5, -8, 15.5)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(-8, -15.5, 8.5, -15.5, 8, 15.5, -8, 15.5)])
 source_geometry_group_name = &"navigation_polygon_source_group"
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_lt215"]
+vertices = PackedVector2Array(24, 24, -24, 24, -24, -24, 24, -24)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-24, -24, 24, -24, 24, 24, -24, 24)])
+source_geometry_group_name = &"navigation_polygon_source_group"
+agent_radius = 0.0
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_5441i"]
 vertices = PackedVector2Array(-16, -8, 16.5, -8, 16, 8, -16, 8)
@@ -113,6 +120,7 @@ texture = ExtResource("1_0pjxx")
 2:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-23.8649, -23.6881, 23.8649, -23.6881, 24.2184, 23.6881, -24.2184, 24.0416)
 2:4/0/physics_layer_1/linear_velocity = Vector2(0, 0)
 2:4/0/physics_layer_1/angular_velocity = 0.0
+2:4/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_lt215")
 0:4/size_in_atlas = Vector2i(2, 3)
 0:4/0 = 0
 0:4/0/physics_layer_0/linear_velocity = Vector2(0, 0)

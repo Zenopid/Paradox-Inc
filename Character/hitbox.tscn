@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://beb270t22q5l5"]
 
-[ext_resource type="Script" path="res://Character/Hitbox.gd" id="1_tt2li"]
+[ext_resource type="Script" path="res://Character/Hitbox.gd" id="1_8uiiq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dk2i"]
 
@@ -10,7 +10,7 @@ collision_layer = 0
 collision_mask = 0
 collision_priority = 50.0
 monitoring = false
-script = ExtResource("1_tt2li")
+script = ExtResource("1_8uiiq")
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 visible = false

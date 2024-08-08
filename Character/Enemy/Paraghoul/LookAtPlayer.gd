@@ -22,10 +22,13 @@ var sphere_shape:CollisionShape2D
 var shoot_cd: Timer
 var chase_timer:Timer
 
+var dir:Vector2
+var test_target:Vector2 = Vector2(300, -650)
 
 
 
 func init(current_entity, s_machine: EntityStateMachine):
+	player = get_tree().get_first_node_in_group("Players")
 	super.init(current_entity, s_machine)
 	los_shapecast = state_machine.get_shapecast("LOS")
 	shoot_cd = state_machine.get_timer("Shoot_Cooldown")
@@ -35,6 +38,8 @@ func init(current_entity, s_machine: EntityStateMachine):
 	nav_timer.wait_time = chase_location_update_rate
 	pathfinder = entity.pathfinder
 	init_sphere()
+	var pathfinder: NavigationAgent2D = entity.pathfinder
+	pathfinder.max_speed = chase_speed
 
 func init_sphere(): 
 	target_sphere = Area2D.new()
@@ -51,16 +56,19 @@ func init_sphere():
 func enter(_msg:= {}):
 	super.enter(_msg)
 	chase_timer.start()
-	player = get_tree().get_first_node_in_group("Players")
-	los_shapecast.look_at(player.global_position)
+	if typeof(player) != TYPE_NIL:
+		los_shapecast.look_at(player.global_position)
 	update_path()
 	call_deferred("add_child", target_sphere)
+	target_sphere.global_position = get_new_target()
+	
 	
 func get_new_target() -> Vector2:
 	entity = entity as ParaGhoul
 	var x = randf_range(player.global_position.x - target_position_randomness, player.global_position.x + target_position_randomness)
 	var y = randf_range(player.global_position.y - target_position_randomness, player.global_position.y - target_position_randomness * 2)
 	return Vector2(x, y)
+
 
 func physics_process( delta:float ):
 	entity = entity as ParaGhoul
@@ -69,11 +77,11 @@ func physics_process( delta:float ):
 		return
 	los_shapecast.position = entity.position
 	los_shapecast.look_at(player.global_position)
-	var dir: Vector2
 	#dir = entity.global_position.direction_to(target_sphere.global_position)
-	
-	dir = (entity.pathfinder.get_next_path_position() - entity.global_position).normalized()
-	await get_tree().create_timer(0.001).timeout
+	var next_path = entity.pathfinder.get_next_path_position()
+	await get_tree().create_timer(0.01).timeout
+	dir = entity.global_position.direction_to(next_path)
+	await get_tree().create_timer(0.01).timeout
 	entity.velocity += (acceleration * dir)  #.rotated(randf_range(-random_spread, random_spread))
 	entity.velocity = entity.velocity.limit_length(chase_speed)
 	await get_tree().create_timer(0.001).timeout
@@ -116,13 +124,10 @@ func push_objects():
 			collision.get_collider().call_deferred("apply_central_impulse", -collision.get_normal() * entity.velocity.length()  )
 			
 func update_path():
-	var target = get_new_target()
-#	entity.pathfinder.target_position = target
-	target_sphere.global_position = target
-	entity.pathfinder.target_position = Vector2(-70, -170)
+	entity.pathfinder.target_position = target_sphere.global_position
 	nav_timer.start()
-	print("updating path to go to position " + str(entity.pathfinder.target_position))
-	print("the player's position is currently " + str(player.global_position) )
+	#print("updating path to go to position " + str(entity.pathfinder.target_position))
+	#print("the player's position is currently " + str(player.global_position) )
 
 func exit(): 
 	remove_child(target_sphere)
