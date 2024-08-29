@@ -1,4 +1,4 @@
-[gd_scene load_steps=197 format=3 uid="uid://68mxs8vrodes"]
+[gd_scene load_steps=224 format=3 uid="uid://68mxs8vrodes"]
 
 [ext_resource type="Script" path="res://Character/Player/scripts/Player.gd" id="1_rhw38"]
 [ext_resource type="Script" path="res://Character/Player/scripts/GrapplingHook.gd" id="2_knt1j"]
@@ -11,44 +11,75 @@
 [ext_resource type="Script" path="res://Character/Player/UI/Stopwatch.gd" id="9_myo4q"]
 [ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="10_qiqpg"]
 [ext_resource type="PackedScene" uid="uid://cb6obgb5qrf3s" path="res://Assorted_Scenes/quick_menu.tscn" id="11_c67os"]
+[ext_resource type="Texture2D" uid="uid://kgpaidkk43py" path="res://Sprites/The Cleaner/Ninja/air_attack_one1.png" id="12_buahe"]
 [ext_resource type="Texture2D" uid="uid://6c70w568y8ul" path="res://Sprites/The Cleaner/ninja_guy_idle1.png" id="12_u5lwe"]
 [ext_resource type="Texture2D" uid="uid://w6eraiqx0vaw" path="res://Sprites/The Cleaner/ninja_guy_crouch.png" id="12_y1c22"]
+[ext_resource type="Texture2D" uid="uid://cg8444avixmcd" path="res://Sprites/The Cleaner/Ninja/dodge1.png" id="13_3jmqn"]
 [ext_resource type="Texture2D" uid="uid://bc8uuch0d5lc6" path="res://Sprites/The Cleaner/Ninja/fall_loop1.png" id="13_dbtk0"]
 [ext_resource type="Texture2D" uid="uid://da81ebp2sgvrh" path="res://Sprites/The Cleaner/ninja_guy_run1.png" id="13_fjfye"]
+[ext_resource type="Texture2D" uid="uid://ddraca7shcsbt" path="res://Sprites/The Cleaner/Ninja/air_attack_one2.png" id="13_my3a8"]
 [ext_resource type="Texture2D" uid="uid://pswr481woeov" path="res://Sprites/The Cleaner/ninja_guy_run2.png" id="14_2077i"]
+[ext_resource type="Texture2D" uid="uid://2qqpk80be25n" path="res://Sprites/The Cleaner/Ninja/air_attack_one3.png" id="14_hq4jm"]
+[ext_resource type="Texture2D" uid="uid://t6u7nqua0lc4" path="res://Sprites/The Cleaner/Ninja/dodge2.png" id="14_lp0nn"]
 [ext_resource type="Texture2D" uid="uid://0g8a2iogd5dy" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-air-attack1-00.png" id="14_ndslf"]
 [ext_resource type="Texture2D" uid="uid://cma0ymwqyy5f8" path="res://Sprites/The Cleaner/Ninja/fall_loop2.png" id="14_tickk"]
+[ext_resource type="Texture2D" uid="uid://dlhjsape5s260" path="res://Sprites/The Cleaner/Ninja/dodge3.png" id="15_4xlmd"]
 [ext_resource type="Texture2D" uid="uid://lljynljdvken" path="res://Sprites/The Cleaner/ninja_guy_run3.png" id="15_23bao"]
 [ext_resource type="Texture2D" uid="uid://djwvk4juxp610" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-air-attack1-01.png" id="15_hi7t6"]
+[ext_resource type="Texture2D" uid="uid://bxcm4yjnvavbw" path="res://Sprites/The Cleaner/Ninja/air_attack_one4.png" id="15_n5jll"]
+[ext_resource type="Texture2D" uid="uid://dy3n7igd7dasl" path="res://Sprites/The Cleaner/Ninja/ground_attack_one1.png" id="15_vc7e0"]
 [ext_resource type="Texture2D" uid="uid://bmw21l23nirwx" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-air-attack1-02.png" id="16_l036g"]
 [ext_resource type="Texture2D" uid="uid://bpghuh5s1lgky" path="res://Sprites/The Cleaner/ninja_guy_run4.png" id="16_m5w08"]
+[ext_resource type="Texture2D" uid="uid://blh4ytltgposq" path="res://Sprites/The Cleaner/Ninja/air_attack_two1.png" id="16_n7uod"]
 [ext_resource type="Texture2D" uid="uid://b4j26k7pf0uut" path="res://Sprites/The Cleaner/Ninja/jump_up_loop1.png" id="16_okxfl"]
+[ext_resource type="Texture2D" uid="uid://cx5bldjunw37i" path="res://Sprites/The Cleaner/Ninja/ground_attack_one2.png" id="16_y6iry"]
+[ext_resource type="Texture2D" uid="uid://ujovlmqy41aq" path="res://Sprites/The Cleaner/Ninja/air_attack_two2.png" id="17_567qi"]
 [ext_resource type="Texture2D" uid="uid://f2rx4m7rp1we" path="res://Sprites/The Cleaner/Ninja/jump_up_loop2.png" id="17_a7pim"]
+[ext_resource type="Texture2D" uid="uid://biapwhyn8cdvh" path="res://Sprites/The Cleaner/Ninja/ground_attack_one3.png" id="17_ais5e"]
 [ext_resource type="Texture2D" uid="uid://c7mbfqdmg2kc5" path="res://Sprites/The Cleaner/ninja_guy_run5.png" id="17_q5tce"]
 [ext_resource type="Texture2D" uid="uid://cm7j36xib67dv" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-air-attack1-03.png" id="17_r1mob"]
+[ext_resource type="Texture2D" uid="uid://cjgv5y3ndxv6l" path="res://Sprites/The Cleaner/Ninja/ground_attack_two1.png" id="18_bibke"]
 [ext_resource type="Texture2D" uid="uid://circnkyy1po8c" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-air-attack2-00.png" id="18_loqqc"]
 [ext_resource type="Texture2D" uid="uid://bqnvf3lser6y2" path="res://Sprites/The Cleaner/ninja_guy_run6.png" id="18_qfwjh"]
 [ext_resource type="Texture2D" uid="uid://7ijoxpg3634d" path="res://Sprites/The Cleaner/Ninja/jump_to_fall1.png" id="18_tr7wj"]
+[ext_resource type="Texture2D" uid="uid://ci2jy1r2t6axm" path="res://Sprites/The Cleaner/Ninja/air_attack_two3.png" id="18_y83g7"]
+[ext_resource type="Texture2D" uid="uid://bpovjuwm4w5v6" path="res://Sprites/The Cleaner/Ninja/ground_attack_two2.png" id="19_kfdmu"]
 [ext_resource type="Texture2D" uid="uid://dkwyn46n7duhp" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-air-attack2-01.png" id="19_n1jdw"]
 [ext_resource type="Texture2D" uid="uid://buulu1pkbdsw3" path="res://Sprites/The Cleaner/Ninja/jump_to_fall2.png" id="19_r2bba"]
+[ext_resource type="Texture2D" uid="uid://bptcgpnuvuugi" path="res://Sprites/The Cleaner/Ninja/air_attack_two4.png" id="19_xgjfx"]
+[ext_resource type="Texture2D" uid="uid://xlvxlgjdi30i" path="res://Sprites/The Cleaner/Ninja/air_attack_two5.png" id="20_4xjgc"]
 [ext_resource type="Texture2D" uid="uid://bsn88k052r6vi" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-air-attack2-02.png" id="20_5ib5r"]
 [ext_resource type="Texture2D" uid="uid://jr4tdarcqqgb" path="res://Sprites/The Cleaner/Ninja/jump_to_fall3.png" id="20_a3c5j"]
+[ext_resource type="Texture2D" uid="uid://dl4votjpa2j1n" path="res://Sprites/The Cleaner/Ninja/ground_attack_two3.png" id="20_ebomo"]
 [ext_resource type="Texture2D" uid="uid://dv7w320bhmfn3" path="res://Sprites/The Cleaner/Ninja/jump_to_fall4.png" id="21_eymwl"]
+[ext_resource type="Texture2D" uid="uid://ufo33d7u0vof" path="res://Sprites/The Cleaner/Ninja/ground_attack_two4.png" id="21_pm3jd"]
+[ext_resource type="Texture2D" uid="uid://b2rs3btsjrf2m" path="res://Sprites/The Cleaner/Ninja/air_attack_two6.png" id="21_q1hdx"]
 [ext_resource type="Texture2D" uid="uid://dn3odiih88lv" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-cast-00.png" id="21_sa13a"]
+[ext_resource type="Texture2D" uid="uid://bbmwgl0j30yyj" path="res://Sprites/The Cleaner/Ninja/air_attack_two7.png" id="22_p35g7"]
 [ext_resource type="Texture2D" uid="uid://buoc1mfspf0cy" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-cast-01.png" id="22_umpqq"]
+[ext_resource type="Texture2D" uid="uid://cu3bc4nynppvi" path="res://Sprites/The Cleaner/Ninja/ground_attack_three1.png" id="22_x83g2"]
+[ext_resource type="Texture2D" uid="uid://clqx6xvxbn5u1" path="res://Sprites/The Cleaner/Ninja/air_attack_two8.png" id="23_dyhjh"]
+[ext_resource type="Texture2D" uid="uid://b077c3a075ggd" path="res://Sprites/The Cleaner/Ninja/ground_attack_three2.png" id="23_v5vu7"]
 [ext_resource type="Texture2D" uid="uid://c5cgtn1bah5h3" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-cast-02.png" id="23_wyr8p"]
+[ext_resource type="Texture2D" uid="uid://c6h6hry4x8rhl" path="res://Sprites/The Cleaner/Ninja/ground_attack_three3.png" id="24_dqrj0"]
 [ext_resource type="Texture2D" uid="uid://cs57lpvbms7tj" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-cast-03.png" id="24_hnbhi"]
+[ext_resource type="Texture2D" uid="uid://c5bouwqrm61nr" path="res://Sprites/The Cleaner/Ninja/ground_attack_three4.png" id="25_0kw0e"]
 [ext_resource type="Texture2D" uid="uid://ccnj5krx1gyit" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-crouch-00.png" id="25_tqaqo"]
 [ext_resource type="Texture2D" uid="uid://ixgomgpkjqiy" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-crouch-01.png" id="26_7mhl2"]
+[ext_resource type="Texture2D" uid="uid://b23gvo15fkfex" path="res://Sprites/The Cleaner/Ninja/ground_attack_three5.png" id="26_yeui3"]
 [ext_resource type="Texture2D" uid="uid://dv3nxr0m8nmch" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-crouch-02.png" id="27_l4vle"]
+[ext_resource type="Texture2D" uid="uid://cep0ei0i7x1fg" path="res://Sprites/The Cleaner/Ninja/ground_attack_three6.png" id="27_xsfni"]
+[ext_resource type="Texture2D" uid="uid://c401vgkiq0k0r" path="res://Sprites/The Cleaner/Ninja/ground_attack_three7.png" id="28_mqt7b"]
 [ext_resource type="Texture2D" uid="uid://dhqt1kidxttyd" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-crouch-03.png" id="28_teqyx"]
 [ext_resource type="Texture2D" uid="uid://cxleucuh1gs13" path="res://Sprites/The Cleaner/Ninja/slide2.png" id="28_u1e5h"]
 [ext_resource type="Texture2D" uid="uid://d03l7l8ny22w5" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-00.png" id="29_iximf"]
 [ext_resource type="Texture2D" uid="uid://dun2bgsbj4tco" path="res://Sprites/The Cleaner/Ninja/slide3.png" id="29_wdbg2"]
 [ext_resource type="Texture2D" uid="uid://bde8kl0mcvgvb" path="res://Sprites/The Cleaner/Ninja/slide1.png" id="30_dhntu"]
 [ext_resource type="Texture2D" uid="uid://kqni0vgn4lhg" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-01.png" id="30_xq6bk"]
+[ext_resource type="Texture2D" uid="uid://gupj7twrgc8x" path="res://Sprites/The Cleaner/Ninja/wallslide1.png" id="31_paif5"]
 [ext_resource type="Texture2D" uid="uid://8srolpeq0tlh" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-02.png" id="31_re7ig"]
 [ext_resource type="Texture2D" uid="uid://bqwmapyenohx3" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-03.png" id="32_543nh"]
+[ext_resource type="Texture2D" uid="uid://dkig7o8d0b5ou" path="res://Sprites/The Cleaner/Ninja/wallslide2.png" id="32_ak1tt"]
 [ext_resource type="Texture2D" uid="uid://cg3cjk2kxxldl" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-04.png" id="33_mthig"]
 [ext_resource type="Texture2D" uid="uid://ep0wrnmy4mnq" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-05.png" id="34_010tr"]
 [ext_resource type="Texture2D" uid="uid://cmeau1sbxrw5k" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-06.png" id="35_8e5q6"]
@@ -236,10 +267,70 @@ _data = {
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("12_buahe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_my3a8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_hq4jm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_n5jll")
+}],
+"loop": true,
+"name": &"Air_Attack_1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("16_n7uod")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_567qi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_y83g7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_xgjfx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_4xjgc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_q1hdx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_p35g7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_dyhjh")
+}],
+"loop": true,
+"name": &"Air_Attack_2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("12_y1c22")
 }],
 "loop": true,
 "name": &"Crouch",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_3jmqn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_lp0nn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_4xlmd")
+}],
+"loop": true,
+"name": &"Dodge",
 "speed": 5.0
 }, {
 "frames": [{
@@ -251,6 +342,68 @@ animations = [{
 }],
 "loop": true,
 "name": &"Fall",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"Ground_Pound_Start",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_vc7e0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_y6iry")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_ais5e")
+}],
+"loop": true,
+"name": &"Grounded_Attack_1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_bibke")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_kfdmu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_ebomo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_pm3jd")
+}],
+"loop": true,
+"name": &"Grounded_Attack_2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("22_x83g2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_v5vu7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_dqrj0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_0kw0e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_yeui3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_xsfni")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_mqt7b")
+}],
+"loop": true,
+"name": &"Grounded_Attack_3",
 "speed": 5.0
 }, {
 "frames": [{
@@ -327,6 +480,17 @@ animations = [{
 }],
 "loop": true,
 "name": &"Slide",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("31_paif5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_ak1tt")
+}],
+"loop": true,
+"name": &"Wallslide",
 "speed": 5.0
 }]
 
@@ -715,7 +879,7 @@ collision_mode = 2
 b = Vector2(10, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_m7p17"]
-size = Vector2(40, 46)
+size = Vector2(40, 40)
 
 [sub_resource type="Animation" id="Animation_g6flu"]
 resource_name = "AirAttack1"
@@ -748,45 +912,69 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Hurtbox:shape")
-tracks/2/interp = 0
+tracks/2/path = NodePath("Cleaner:frame")
+tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.0666667, 0.166667, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Cleaner:animation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Air_Attack_1"]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Hurtbox:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 1)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Hurtbox:shape")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [SubResource("RectangleShape2D_m7p17")]
 }
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Hurtbox:position")
-tracks/3/interp = 0
-tracks/3/loop_wrap = true
-tracks/3/keys = {
+tracks/6/type = "method"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("StateMachine/Attack/AirAttack1")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 4.5)]
-}
-tracks/4/type = "method"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("StateMachine/Attack/AirAttack1")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0.350001),
-"transitions": PackedFloat32Array(1),
 "values": [{
-"args": ["AirAttack1"],
-"method": &"_on_attack_over"
+"args": [true],
+"method": &"set_dodge_cancelablity"
 }]
 }
 
 [sub_resource type="Animation" id="Animation_t54bv"]
 resource_name = "AirAttack2"
-length = 0.266668
+length = 0.383335
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -811,6 +999,56 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
 "values": [0, 1, 2]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Cleaner:animation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Air_Attack_2"]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Cleaner:frame")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.0333333, 0.0666667, 0.1, 0.15, 0.216667, 0.283333, 0.35),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Cleaner:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.15, 0.216667, 0.283333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2(0, 0), Vector2(-1, 0), Vector2(3, 0), Vector2(10, 0), Vector2(-1, 0)]
+}
+tracks/5/type = "method"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("StateMachine/Attack/AirAttack2")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [true],
+"method": &"set_dodge_cancelablity"
+}]
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rycy6"]
@@ -1006,12 +1244,12 @@ tracks/3/keys = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r6i1h"]
-size = Vector2(15, 15.6563)
+size = Vector2(30, 28)
 
 [sub_resource type="Animation" id="Animation_5r70m"]
 resource_name = "Dodge"
 length = 0.666668
-step = 0.0166667
+step = 0.0833333
 tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -1035,70 +1273,46 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hurtbox:shape")
+tracks/1/path = NodePath("AnimatedSprite2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [SubResource("RectangleShape2D_r6i1h")]
+"update": 0,
+"values": [Vector2(0, 9)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Hurtbox:position")
+tracks/2/path = NodePath("AnimatedSprite2D:animation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 8.9375)]
+"update": 1,
+"values": [&"Dodge"]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("AnimatedSprite2D:position")
+tracks/3/path = NodePath("AnimatedSprite2D:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 9)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("AnimatedSprite2D:animation")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"Dodge"]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("AnimatedSprite2D:frame")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
 "times": PackedFloat32Array(0, 0.0833335, 0.166667, 0.25, 0.333334, 0.416667, 0.500001, 0.583334),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3, 0, 1, 2, 3]
 }
-tracks/6/type = "method"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("StateMachine/Dodge")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("StateMachine/Dodge")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
 "times": PackedFloat32Array(0, 0.216667, 0.666667),
 "transitions": PackedFloat32Array(1, 1, 1),
 "values": [{
@@ -1111,6 +1325,66 @@ tracks/6/keys = {
 "args": [],
 "method": &"leave_dodge"
 }]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Cleaner:animation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Dodge"]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Cleaner:frame")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.0833333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 0, 1, 2, 0, 1, 2]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Cleaner:position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.0833333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 3), Vector2(0, 6), Vector2(0, 8), Vector2(0, 3), Vector2(0, 6), Vector2(0, 8), Vector2(0, 3), Vector2(0, 6), Vector2(0, 8)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Hurtbox:shape")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("RectangleShape2D_r6i1h")]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Hurtbox:position")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 8)]
 }
 
 [sub_resource type="Animation" id="Animation_xlc47"]
@@ -1391,14 +1665,8 @@ tracks/4/keys = {
 }]
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_248kd"]
-size = Vector2(19.5, 20.8)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ck0gr"]
-size = Vector2(19.5, 19.1256)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4aydt"]
-size = Vector2(19.5, 26.2433)
+size = Vector2(36, 42)
 
 [sub_resource type="Animation" id="Animation_1o8gg"]
 resource_name = "Grounded_Attack_1"
@@ -1407,31 +1675,31 @@ step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Hurtbox:shape")
-tracks/0/interp = 0
+tracks/0/path = NodePath("AnimatedSprite2D:animation")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.0666667, 0.116667),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [SubResource("RectangleShape2D_248kd"), SubResource("RectangleShape2D_ck0gr"), SubResource("RectangleShape2D_4aydt")]
+"values": [&"Grounded_Attack_1"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hurtbox:position")
-tracks/1/interp = 0
+tracks/1/path = NodePath("AnimatedSprite2D:frame")
+tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.0666667, 0.116667),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(0, 7.1205), Vector2(0, 7.95468), Vector2(0, 4.37829)]
+"times": PackedFloat32Array(0, 0.0666668, 0.116667, 0.183334, 0.266667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("AnimatedSprite2D:animation")
+tracks/2/path = NodePath("Cleaner:animation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -1443,18 +1711,59 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("AnimatedSprite2D:frame")
+tracks/3/path = NodePath("Cleaner:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.0666668, 0.116667, 0.183334, 0.266667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.116667, 0.266667),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [0, 1, 2, 3, 4]
+"values": [0, 1, 2]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Hurtbox:shape")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("RectangleShape2D_4aydt")]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Hurtbox:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 1.8)]
+}
+tracks/6/type = "method"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("StateMachine/Attack/GroundedAttack1")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.183334),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [true],
+"method": &"set_dodge_cancelablity"
+}, {
+"args": [false],
+"method": &"set_dodge_cancelablity"
+}]
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_in0ah"]
-size = Vector2(19.5, 23.648)
+size = Vector2(38, 42)
 
 [sub_resource type="Animation" id="Animation_1ptdi"]
 resource_name = "Grounded_Attack_2"
@@ -1463,31 +1772,31 @@ step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Hurtbox:shape")
+tracks/0/path = NodePath("AnimatedSprite2D:animation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [SubResource("RectangleShape2D_in0ah")]
+"values": [&"Grounded_Attack_2"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hurtbox:position")
+tracks/1/path = NodePath("AnimatedSprite2D:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 5.69352)]
+"times": PackedFloat32Array(0, 0.0666668, 0.116667, 0.15, 0.233334, 0.300001),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("AnimatedSprite2D:animation")
+tracks/2/path = NodePath("Cleaner:animation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -1499,21 +1808,59 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("AnimatedSprite2D:frame")
+tracks/3/path = NodePath("Cleaner:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.0666668, 0.116667, 0.15, 0.233334, 0.300001),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.166667, 0.283333),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [0, 1, 2, 3, 4, 5]
+"values": [0, 1, 2, 3]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Hurtbox:shape")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("RectangleShape2D_in0ah")]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Hurtbox:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 1)]
+}
+tracks/6/type = "method"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("StateMachine/Attack/GroundedAttack2")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.216667),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [true],
+"method": &"set_dodge_cancelablity"
+}, {
+"args": [false],
+"method": &"set_dodge_cancelablity"
+}]
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k77lw"]
-size = Vector2(23, 25.3626)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_mbghi"]
-size = Vector2(18, 18.1387)
+size = Vector2(36, 42)
 
 [sub_resource type="Animation" id="Animation_l28g0"]
 resource_name = "Grounded_Attack_3"
@@ -1522,31 +1869,31 @@ step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Hurtbox:shape")
+tracks/0/path = NodePath("AnimatedSprite2D:animation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.166667),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [SubResource("RectangleShape2D_k77lw"), SubResource("RectangleShape2D_mbghi")]
+"values": [&"Grounded_Attack_3"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hurtbox:position")
+tracks/1/path = NodePath("AnimatedSprite2D:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.166667),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.0666668, 0.15, 0.216667, 0.3, 0.366667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [Vector2(0, 5.69352), Vector2(0, 8.49315)]
+"values": [0, 1, 2, 3, 4, 5]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("AnimatedSprite2D:animation")
+tracks/2/path = NodePath("Cleaner:animation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -1558,14 +1905,67 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("AnimatedSprite2D:frame")
+tracks/3/path = NodePath("Cleaner:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.0666668, 0.15, 0.216667, 0.3, 0.366667),
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.233333, 0.283333, 0.383333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Hurtbox:shape")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("RectangleShape2D_k77lw")]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Hurtbox:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Cleaner:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.15, 0.233333, 0.283333, 0.383333),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [0, 1, 2, 3, 4, 5]
+"values": [Vector2(0, 0), Vector2(-7, -3), Vector2(-7, -4), Vector2(9, -2), Vector2(10, -3), Vector2(9, -1)]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("StateMachine/Attack/GroundedAttack3")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.416667),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [true],
+"method": &"set_dodge_cancelablity"
+}, {
+"args": [false],
+"method": &"set_dodge_cancelablity"
+}]
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1ymqm"]
@@ -1595,10 +1995,10 @@ tracks/1/path = NodePath("Cleaner:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.333333),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [0, 1]
+"values": [0]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -1941,6 +2341,18 @@ tracks/8/keys = {
 "update": 0,
 "values": [Vector2(33, -11)]
 }
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Cleaner:position")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -3)]
+}
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0p5d7"]
 size = Vector2(40, 40)
@@ -2159,9 +2571,6 @@ tracks/1/keys = {
 "values": [0, 1, 2]
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_m2vli"]
-size = Vector2(15, 28.5)
-
 [sub_resource type="Animation" id="Animation_e1b74"]
 resource_name = "WallSlide"
 length = 0.200002
@@ -2170,50 +2579,50 @@ step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Hurtbox:shape")
+tracks/0/path = NodePath("Cleaner:animation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [SubResource("RectangleShape2D_m2vli")]
+"values": [&"Wallslide"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hurtbox:position")
+tracks/1/path = NodePath("Cleaner:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 3.25)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("AnimatedSprite2D:frame")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [0, 1]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hurtbox:shape")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("RectangleShape2D_4aydt")]
+}
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("AnimatedSprite2D:animation")
+tracks/3/path = NodePath("Hurtbox:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"WallSlide"]
+"update": 0,
+"values": [Vector2(0, 4.6)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ci1of"]
@@ -2497,7 +2906,7 @@ mouse_filter = 2
 player = NodePath("../..")
 
 [node name="Cleaner" type="AnimatedSprite2D" parent="."]
-position = Vector2(0, 4.5)
+position = Vector2(0, -3)
 sprite_frames = SubResource("SpriteFrames_exgey")
 animation = &"Idle"
 
@@ -2554,6 +2963,7 @@ bus = &"Sfx"
 [node name="GroundedAttack3" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("92_6xrip")
 damage = 25
+knockback_amount = 5
 object_push = Vector2(650, 0)
 dodge_window = 0
 lunge_distance = 350
@@ -2583,7 +2993,6 @@ bus = &"Sfx"
 
 [node name="AirAttack2" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("94_816fo")
-damage = 10
 duration = 3
 object_push = Vector2(200, -350)
 animation_name = "AirAttack2"

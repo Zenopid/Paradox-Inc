@@ -36,7 +36,6 @@ func init(current_entity, s_machine: EntityStateMachine):
 	chase_timer.wait_time = max_chase_duration
 	nav_timer = entity.nav_timer
 	nav_timer.wait_time = chase_location_update_rate
-	pathfinder = entity.pathfinder
 	init_sphere()
 	var pathfinder: NavigationAgent2D = entity.pathfinder
 	pathfinder.max_speed = chase_speed
@@ -140,4 +139,3 @@ func conditions_met():
 			if i is Player:
 				return true
 	return false
-

@@ -69,4 +69,3 @@ func _on_body_entered(body:Node2D):
 				print_debug("CLASH")
 	if true_collision:
 		num_of_hits -= 1
-

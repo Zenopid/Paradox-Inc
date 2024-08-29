@@ -177,4 +177,3 @@ func init_link_object():
 		var target_method = "_on_link_object_" + i["name"]
 		if has_method(target_method):
 			link_object.connect(i["name"], Callable(self, target_method))
-

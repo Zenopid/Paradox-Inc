@@ -48,5 +48,3 @@ func _on_body_entered(body):
 
 func set_debug_color(color: Color):
 	$CollisionShape2D.debug_color = color
-
-

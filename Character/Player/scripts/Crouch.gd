@@ -52,4 +52,3 @@ func exit() -> void:
 	
 func conditions_met() -> bool:
 	return Input.is_action_pressed("crouch") and grounded()
-

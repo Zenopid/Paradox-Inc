@@ -13,8 +13,8 @@ const SAVE_FILE_PATH:String = "user://save_info/level_data.tres"
 @export var past_paradox_color: Color
 @export var future_paradox_color: Color
 @export var exit_portal: Area2D
-@onready var future: TileMap = $"%Future"
-@onready var past: TileMap = $"%Past"
+@onready var future: TileMapLayer = $"%ActiveFuture"
+@onready var past: TileMapLayer = $"%ActivePast"
 @onready var paradoxes:Node2D = $"%Paradoxes"
 @onready var future_tileset: TileSet
 @onready var past_tileset: TileSet

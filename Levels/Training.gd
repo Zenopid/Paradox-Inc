@@ -91,5 +91,3 @@ func disable():
 func enable():
 	super.enable()
 	training_ui.show()
-
-

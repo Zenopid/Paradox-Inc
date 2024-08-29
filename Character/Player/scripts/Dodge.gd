@@ -21,6 +21,9 @@ var dodge_buffer:Timer
 var bunny_hop_boost: float 
 var frame_tracker: int = 0
 
+var cleaner_sprite:AnimatedSprite2D
+
+
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	jump_node = state_machine.find_state("Jump")
@@ -31,9 +34,12 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	dodge_buffer = state_machine.get_timer("Dodge_Buffer")
 	cooldown_timer.wait_time = dodge_cooldown
 	bunny_hop_boost = fall_node.bunny_hop_boost
+	cleaner_sprite = entity.get_node("Cleaner")
 
 
 func enter(_msg: = {}):
+	cleaner_sprite.show()
+	cleaner_sprite.flip_h = entity.sprite.flip_h
 	super.enter()
 	var move = get_movement_input()
 	frame_tracker = 0
@@ -103,12 +109,14 @@ func get_movement_input() -> float:
 
 func exit():
 	entity.sprite.position = Vector2.ZERO
+	cleaner_sprite.position = Vector2.ZERO
 	cooldown_timer.start()
 	dodge_over = false
 	is_actionable = false
 	set_proj_invlv(false)
 	set_strike_invlv(false)
 	entity.set_invlv_type("None")
+	cleaner_sprite.hide()
 	
 
 func set_proj_invlv(status:bool):

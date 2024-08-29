@@ -78,10 +78,6 @@ func _on_attack_over(anim_name):
 
 func physics_process(delta: float) -> void:
 	var was_on_floor = grounded()
-	if state_machine.state_available("Dodge") and active_attack.can_dodge:
-		active_attack.exit()
-		state_machine.transition_to("Dodge")
-		return
 	if active_attack:
 		active_attack.physics_process(delta)
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
@@ -129,7 +125,7 @@ func exit():
 	ground_checker.target_position = temp_position
 	for i in get_tree().get_nodes_in_group("Player Hitboxes"):
 		i.queue_free()
-		
+	entity.get_node("Cleaner").position = Vector2.ZERO
 func conditions_met() -> bool:
 
 	return !attack_buffer.is_stopped() or Input.is_action_just_pressed("attack")

@@ -28,7 +28,6 @@ func init(current_entity:Entity):
 func enter(_msg: = {}):
 	super.enter()
 	buffer_tracker = 0
-	can_dodge = dodge_cancellable
 
 func get_movement_input() -> int:
 	var move = Input.get_axis("left", "right")
@@ -57,8 +56,6 @@ func physics_process(delta: float):
 		entity.states.transition_to("Fall")
 		return
 	buffer_tracker = clamp(buffer_tracker, 0, buffer_tracker - 1)
-	if frame >= dodge_window and dodge_window != -1:
-		can_dodge = false
 	entity.move_and_slide()
 
 func input(event):
@@ -68,7 +65,10 @@ func input(event):
 		if can_cancel and buffer_attack != "None":
 			start_buffer_attack()
 			return 
-
+		
+	if attack_state.state_machine.state_available("Dodge") and can_dodge:
+		attack_state.state_machine.transition_to("Dodge")
+			
 func start_buffer_attack():
 	if Input.is_action_pressed("left"):
 		entity.sprite.flip_h = true
@@ -84,6 +84,9 @@ func _on_attack_over(name_of_attack:String):
 		start_buffer_attack()
 	else:
 		emit_signal("leave_state")
+		
+func set_dodge_cancelablity(status:bool):
+	can_dodge = status
 
 func exit():
 	super.exit()

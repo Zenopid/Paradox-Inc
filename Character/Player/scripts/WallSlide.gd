@@ -26,7 +26,7 @@ var wallbounce_timer: Timer
 var jump_buffer:Timer
 var previous_speed: Vector2 = Vector2.ZERO
 
-
+var cleaner_sprite: AnimatedSprite2D 
 
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
@@ -36,6 +36,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	jump_node = state_machine.get_node("Jump")
 	wall_checker = state_machine.get_shapecast("WallScanner")
 	current_slide_speed = base_slide_speed
+	cleaner_sprite = current_entity.get_node("Cleaner")
 	
 func enter(msg: = {}):
 	if msg.has("previous_speed"):
@@ -52,6 +53,8 @@ func enter(msg: = {}):
 		current_slide_speed = base_slide_speed
 	super.enter()
 	wallbounce_timer.start()
+	cleaner_sprite.show()
+	cleaner_sprite.flip_h = entity.sprite.flip_h
 	
 func input(event: InputEvent) -> void:
 	super.input(event)
@@ -129,7 +132,7 @@ func exit() -> void:
 	wall_checker.enabled = false
 	wallbounce_timer.stop() 
 	previous_speed = Vector2.ZERO
-
+	cleaner_sprite.hide()
 func conditions_met() -> bool:
 	if wall_checker.is_colliding() and !grounded() and !Input.is_action_pressed("jump"):
 		if entity.sprite.flip_h and get_movement_input() < 0:

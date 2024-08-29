@@ -71,4 +71,3 @@ func _on_body_exited(body):
 		on_sprite.hide()
 		off_sprite.show()
 		emit_signal("status_changed", activated)
-
