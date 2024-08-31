@@ -116,8 +116,8 @@ func _physics_process(delta):
 	pass
 
 func set_timeline(new_timeline:String):
-	var old_timeline_tilemap: TileMap = get(current_timeline.to_lower())
-	var current_timeline_tilemap: TileMap = get(new_timeline.to_lower())
+	var old_timeline_tilemap: TileMapLayer = get(current_timeline.to_lower())
+	var current_timeline_tilemap: TileMapLayer = get(new_timeline.to_lower())
 	if current_timeline != new_timeline:
 		if !current_timeline_tilemap:
 			print_debug("No tilemap for the timeline " + str(new_timeline))

@@ -1,4 +1,4 @@
-[gd_scene load_steps=224 format=3 uid="uid://68mxs8vrodes"]
+[gd_scene load_steps=235 format=3 uid="uid://68mxs8vrodes"]
 
 [ext_resource type="Script" path="res://Character/Player/scripts/Player.gd" id="1_rhw38"]
 [ext_resource type="Script" path="res://Character/Player/scripts/GrapplingHook.gd" id="2_knt1j"]
@@ -12,7 +12,6 @@
 [ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="10_qiqpg"]
 [ext_resource type="PackedScene" uid="uid://cb6obgb5qrf3s" path="res://Assorted_Scenes/quick_menu.tscn" id="11_c67os"]
 [ext_resource type="Texture2D" uid="uid://kgpaidkk43py" path="res://Sprites/The Cleaner/Ninja/air_attack_one1.png" id="12_buahe"]
-[ext_resource type="Texture2D" uid="uid://6c70w568y8ul" path="res://Sprites/The Cleaner/ninja_guy_idle1.png" id="12_u5lwe"]
 [ext_resource type="Texture2D" uid="uid://w6eraiqx0vaw" path="res://Sprites/The Cleaner/ninja_guy_crouch.png" id="12_y1c22"]
 [ext_resource type="Texture2D" uid="uid://cg8444avixmcd" path="res://Sprites/The Cleaner/Ninja/dodge1.png" id="13_3jmqn"]
 [ext_resource type="Texture2D" uid="uid://bc8uuch0d5lc6" path="res://Sprites/The Cleaner/Ninja/fall_loop1.png" id="13_dbtk0"]
@@ -75,18 +74,28 @@
 [ext_resource type="Texture2D" uid="uid://d03l7l8ny22w5" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-00.png" id="29_iximf"]
 [ext_resource type="Texture2D" uid="uid://dun2bgsbj4tco" path="res://Sprites/The Cleaner/Ninja/slide3.png" id="29_wdbg2"]
 [ext_resource type="Texture2D" uid="uid://bde8kl0mcvgvb" path="res://Sprites/The Cleaner/Ninja/slide1.png" id="30_dhntu"]
+[ext_resource type="Texture2D" uid="uid://bxm6yiv7wvxw" path="res://Sprites/The Cleaner/Ninja/ground_pound_land2.png" id="30_q1xcx"]
 [ext_resource type="Texture2D" uid="uid://kqni0vgn4lhg" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-01.png" id="30_xq6bk"]
+[ext_resource type="Texture2D" uid="uid://xky14s2g6k1x" path="res://Sprites/The Cleaner/Ninja/ground_pound_land3.png" id="31_3r3ga"]
 [ext_resource type="Texture2D" uid="uid://gupj7twrgc8x" path="res://Sprites/The Cleaner/Ninja/wallslide1.png" id="31_paif5"]
 [ext_resource type="Texture2D" uid="uid://8srolpeq0tlh" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-02.png" id="31_re7ig"]
+[ext_resource type="Texture2D" uid="uid://d3p34ts5ypdsn" path="res://Sprites/The Cleaner/Ninja/ground_pound_land4.png" id="32_7pqe2"]
 [ext_resource type="Texture2D" uid="uid://bqwmapyenohx3" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-03.png" id="32_543nh"]
 [ext_resource type="Texture2D" uid="uid://dkig7o8d0b5ou" path="res://Sprites/The Cleaner/Ninja/wallslide2.png" id="32_ak1tt"]
+[ext_resource type="Texture2D" uid="uid://w4it54wu8fx0" path="res://Sprites/The Cleaner/Ninja/ground_pound_land5.png" id="33_kdr5s"]
 [ext_resource type="Texture2D" uid="uid://cg3cjk2kxxldl" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-04.png" id="33_mthig"]
 [ext_resource type="Texture2D" uid="uid://ep0wrnmy4mnq" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-05.png" id="34_010tr"]
+[ext_resource type="Texture2D" uid="uid://c0e6b6auxqxvk" path="res://Sprites/The Cleaner/Ninja/ground_pound_land6.png" id="34_j0qik"]
+[ext_resource type="Texture2D" uid="uid://ct5h8oh0tv6u" path="res://Sprites/The Cleaner/Ninja/ground_pound_loop1.png" id="35_1crox"]
 [ext_resource type="Texture2D" uid="uid://cmeau1sbxrw5k" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-die-06.png" id="35_8e5q6"]
+[ext_resource type="Texture2D" uid="uid://7urj6fh58db2" path="res://Sprites/The Cleaner/Ninja/ground_pound_loop2.png" id="36_1my62"]
 [ext_resource type="Texture2D" uid="uid://ci0c0m3ax113h" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-smrslt-00.png" id="36_jo11q"]
+[ext_resource type="Texture2D" uid="uid://cpx8p6jbo52ig" path="res://Sprites/The Cleaner/Ninja/ground_pound_startFrame1.png" id="37_5u6dm"]
 [ext_resource type="Texture2D" uid="uid://1hcph8a368lp" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-smrslt-01.png" id="37_ymn5j"]
+[ext_resource type="Texture2D" uid="uid://d1ecr180pr5x0" path="res://Sprites/The Cleaner/Ninja/ground_pound_startCopy_Frame1.png" id="38_3pwey"]
 [ext_resource type="Texture2D" uid="uid://dd2m5r6hyi04c" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-smrslt-02.png" id="38_fsejb"]
 [ext_resource type="Texture2D" uid="uid://03opb2564g7e" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-smrslt-03.png" id="39_bbgqd"]
+[ext_resource type="Texture2D" uid="uid://bkrv32wb5s50o" path="res://Sprites/The Cleaner/Ninja/ground_pound_startCopy_Copy_Frame1.png" id="39_junv5"]
 [ext_resource type="Texture2D" uid="uid://cdbvlsidw0kqp" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-fall-00.png" id="40_ys81m"]
 [ext_resource type="Texture2D" uid="uid://vqp74sn1icce" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-fall-01.png" id="41_3jt6j"]
 [ext_resource type="Texture2D" uid="uid://p1wpve40ng1c" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-air-attack-3-end-00.png" id="42_j4no0"]
@@ -101,8 +110,10 @@
 [ext_resource type="Texture2D" uid="uid://djk7231mtd2ut" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack1-03.png" id="51_dgfx3"]
 [ext_resource type="Texture2D" uid="uid://df2xfuranu3nf" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack1-04.png" id="52_wasuy"]
 [ext_resource type="Texture2D" uid="uid://c8p6ahlpythqq" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack2-00.png" id="53_gicg4"]
+[ext_resource type="Texture2D" uid="uid://x7eqvd8jsmx5" path="res://Sprites/The Cleaner/Ninja/idle1.png" id="54_fmbsc"]
 [ext_resource type="Texture2D" uid="uid://rv664btiqla6" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack2-01.png" id="54_wgwt8"]
 [ext_resource type="Texture2D" uid="uid://dtb44sedf2aa5" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack2-02.png" id="55_m8yge"]
+[ext_resource type="Texture2D" uid="uid://c617xx4qqdjmn" path="res://Sprites/The Cleaner/Ninja/idle2.png" id="55_swpvl"]
 [ext_resource type="Texture2D" uid="uid://dt17u4auaujc5" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack2-03.png" id="56_yeosp"]
 [ext_resource type="Texture2D" uid="uid://vqxjw7u1hpb" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack2-04.png" id="57_gsyr5"]
 [ext_resource type="Texture2D" uid="uid://dxmdqwokppvfk" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack2-05.png" id="58_357tf"]
@@ -344,7 +355,47 @@ animations = [{
 "name": &"Fall",
 "speed": 5.0
 }, {
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("30_q1xcx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_3r3ga")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_7pqe2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_kdr5s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_j0qik")
+}],
+"loop": true,
+"name": &"Ground_Pound_Land",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("35_1crox")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_1my62")
+}],
+"loop": true,
+"name": &"Ground_Pound_Loop",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("37_5u6dm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_3pwey")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_junv5")
+}],
 "loop": true,
 "name": &"Ground_Pound_Start",
 "speed": 5.0
@@ -408,7 +459,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("12_u5lwe")
+"texture": ExtResource("54_fmbsc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55_swpvl")
 }],
 "loop": true,
 "name": &"Idle",
@@ -879,7 +933,7 @@ collision_mode = 2
 b = Vector2(10, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_m7p17"]
-size = Vector2(40, 40)
+size = Vector2(40, 30)
 
 [sub_resource type="Animation" id="Animation_g6flu"]
 resource_name = "AirAttack1"
@@ -1479,7 +1533,7 @@ tracks/6/keys = {
 
 [sub_resource type="Animation" id="Animation_cbdmn"]
 resource_name = "GroundPoundLand"
-length = 0.266668
+length = 0.366669
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -1505,43 +1559,85 @@ tracks/1/keys = {
 "update": 1,
 "values": [0, 1, 2]
 }
-tracks/2/type = "value"
+tracks/2/type = "method"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Hurtbox:shape")
+tracks/2/path = NodePath("StateMachine/Attack/GroundPound")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [SubResource("RectangleShape2D_m7p17")]
+"times": PackedFloat32Array(0, 0.25, 0.366667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"values": [{
+"args": [false],
+"method": &"set_dodge_cancelablity"
+}, {
+"args": [true],
+"method": &"set_dodge_cancelablity"
+}, {
+"args": ["GroundPound"],
+"method": &"_on_attack_over"
+}]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Hurtbox:position")
+tracks/3/path = NodePath("Cleaner:animation")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 7.81078)]
+"update": 1,
+"values": [&"Ground_Pound_Land"]
 }
-tracks/4/type = "method"
+tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("StateMachine/Attack/GroundPound")
+tracks/4/path = NodePath("Cleaner:frame")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0.266667),
+"times": PackedFloat32Array(0, 0.116667, 0.166667, 0.216667, 0.316667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Cleaner:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.116667, 0.166667, 0.216667, 0.316667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2(0, 10), Vector2(0, 4), Vector2(0, 2), Vector2(4, -3), Vector2(2, -4)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Hurtbox:shape")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"values": [{
-"args": ["GroundPound"],
-"method": &"_on_attack_over"
-}]
+"update": 1,
+"values": [SubResource("RectangleShape2D_m7p17")]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Hurtbox:position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 7)]
 }
 
 [sub_resource type="Animation" id="Animation_i5rvg"]
@@ -1576,31 +1672,81 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Hurtbox:shape")
+tracks/2/path = NodePath("Cleaner:animation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [SubResource("RectangleShape2D_m7p17")]
+"values": [&"Ground_Pound_Loop"]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Hurtbox:position")
+tracks/3/path = NodePath("Cleaner:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Cleaner:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Vector2(0, 0), Vector2(-1, -1)]
+}
+tracks/5/type = "method"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("StateMachine/Attack/GroundPound")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [true],
+"method": &"set_dodge_cancelablity"
+}]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Hurtbox:shape")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("RectangleShape2D_m7p17")]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Hurtbox:position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 2.5)]
+"values": [Vector2(0, 3)]
 }
 
 [sub_resource type="Animation" id="Animation_xbyg7"]
 resource_name = "GroundPoundStart"
-length = 0.100002
+length = 0.250002
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -1626,43 +1772,73 @@ tracks/1/keys = {
 "update": 1,
 "values": [0]
 }
-tracks/2/type = "value"
+tracks/2/type = "method"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Hurtbox:shape")
+tracks/2/path = NodePath("StateMachine/Attack/GroundPound")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0.1),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [SubResource("RectangleShape2D_m7p17")]
+"times": PackedFloat32Array(0, 0.166667, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"values": [{
+"args": [true],
+"method": &"set_dodge_cancelablity"
+}, {
+"args": [false],
+"method": &"set_dodge_cancelablity"
+}, {
+"args": [0],
+"method": &"change_status"
+}]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Hurtbox:position")
+tracks/3/path = NodePath("Cleaner:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0.1),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 5.2)]
+"times": PackedFloat32Array(0, 0.166667, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
 }
-tracks/4/type = "method"
+tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("StateMachine/Attack/GroundPound")
+tracks/4/path = NodePath("Cleaner:animation")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0.1),
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"values": [{
-"args": [0],
-"method": &"change_status"
-}]
+"update": 1,
+"values": [&"Ground_Pound_Start"]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Hurtbox:shape")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("RectangleShape2D_m7p17")]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Hurtbox:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 3)]
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4aydt"]
@@ -1973,7 +2149,7 @@ size = Vector2(30, 42)
 
 [sub_resource type="Animation" id="Animation_hgcaq"]
 resource_name = "Idle"
-length = 0.666668
+length = 0.833337
 loop_mode = 1
 step = 0.0166667
 tracks/0/type = "value"
@@ -1995,10 +2171,10 @@ tracks/1/path = NodePath("Cleaner:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.416667),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [0]
+"values": [0, 1]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -2022,7 +2198,19 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 1.72502)]
+"values": [Vector2(0, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Cleaner:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 2)]
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wiw01"]
@@ -2112,18 +2300,6 @@ tracks/5/keys = {
 "update": 1,
 "values": [1, 2]
 }
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("StateMachine/ShapeCasts/WallScanner:position")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(30, -11)]
-}
 
 [sub_resource type="Animation" id="Animation_qotqj"]
 resource_name = "Jump Squat"
@@ -2176,6 +2352,20 @@ tracks/3/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [SubResource("RectangleShape2D_m7p17")]
+}
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("StateMachine/Jump")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"end_jump_squat"
+}]
 }
 
 [sub_resource type="Animation" id="Animation_rcli2"]
@@ -3311,7 +3501,7 @@ position = Vector2(0, 7)
 shape = SubResource("RectangleShape2D_iigp1")
 
 [node name="Node2D" type="Node2D" parent="."]
-position = Vector2(-11.9344, 22.0182)
+position = Vector2(-11.79, 22)
 
 [connection signal="timeout" from="GrapplingHook/Cooldown" to="GrapplingHook" method="end_cooldown"]
 [connection signal="focus_entered" from="UI/QuickMenu" to="UI/QuickMenu" method="_on_focus_entered"]

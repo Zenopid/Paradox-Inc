@@ -57,7 +57,7 @@ func physics_process(delta):
 	entity.move_and_slide()
 	if worldscanner_shapecast.is_colliding():
 		var collision = worldscanner_shapecast.get_collider(0)
-		if collision is TileMap:
+		if collision is TileMapLayer:
 			bounce_target(worldscanner_shapecast.get_collision_point(0) * worldscanner_shapecast.get_collision_normal(0))
 			direction_timer.start()
 		else:

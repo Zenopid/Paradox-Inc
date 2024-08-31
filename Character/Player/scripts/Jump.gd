@@ -54,6 +54,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	cleaner_sprite = entity.get_node("Cleaner")
 	
 func enter(msg: = {}):
+	wall_checker.enabled = true
 	cleaner_sprite.show()
 	cleaner_sprite.flip_h = entity.sprite.flip_h
 	var is_grounded:bool = ground_checker_colliding()
@@ -104,7 +105,6 @@ func physics_process(delta):
 		if entity.velocity.y >= 0:
 			state_machine.transition_to("Fall")
 			return
-	
 	default_move_and_slide()
 
 func apply_jump_squat():
@@ -112,7 +112,8 @@ func apply_jump_squat():
 	entity.velocity.x += jump_speed.x
 	jump_squat_over = false 
 	entity.anim_player.play("Jump Squat")
-	await entity.anim_player.animation_finished
+	
+func end_jump_squat():
 	jump_squat_over = true
 	entity.anim_player.play("Jump")
 	jump_speed.y = clampf(jump_speed.y, jump_velocity * superjump_bonus, 0 )
@@ -164,7 +165,7 @@ func exit() -> void:
 		already_jumped = false 
 	superjump_timer.stop()
 	cleaner_sprite.hide()
-
+	
 func conditions_met() -> bool:
 	var is_grounded = grounded()
 	if !jump_buffer.is_stopped() or Input.is_action_just_pressed("jump"):

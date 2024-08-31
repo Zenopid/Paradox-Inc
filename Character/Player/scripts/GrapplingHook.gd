@@ -155,16 +155,17 @@ func _physics_process(delta):
 			if is_instance_valid(grappled_object):
 				hook_body.global_position = grappled_object.global_position + attachment_point
 	hook_location = hook_body.global_position
-
+	#print(hook_location)
 
 func _on_object_grappled(object):
-	if !object is TileMap:
+	if !object is TileMapLayer:
 		grappled_object = object
 	if object is MoveableObject:
 		can_pull_object = true 
 		grappled_object.add_to_group("Grappled Objects")
 		grappled_object.become_paradox()
 	attachment_point = object.global_position - hook_body.global_position
+	print("grappling object " + str(object))
 
 func _on_grapple_detatched():
 	if is_instance_valid(grappled_object):

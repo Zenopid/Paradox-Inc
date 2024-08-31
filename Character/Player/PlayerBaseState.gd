@@ -19,8 +19,10 @@ func get_movement_input() -> float:
 	var move = Input.get_axis("left", "right")
 	if move < 0:
 		entity.sprite.flip_h = true
+		entity.get_node("Cleaner").flip_h = true
 	elif move > 0:
 		entity.sprite.flip_h = false
+		entity.get_node("Cleaner").flip_h = false
 	return move
 
 func get_inverse_movement_input(type:String ):

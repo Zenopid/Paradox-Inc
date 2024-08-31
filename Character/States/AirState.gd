@@ -25,7 +25,6 @@ func enter(_msg: ={}):
 	wall_checker.enabled = true
 
 func physics_process(_delta):
-	entity = entity as Player
 	var weight = min((abs(entity.velocity.x) / entity.max_grapple_speed), 1)
 	scanner_shape.b.x = lerp(MINIMUM_SHAPECAST_SIZE, MAXIMUM_SHAPECAST_SIZE, weight) 
 	if get_movement_input() != 0:

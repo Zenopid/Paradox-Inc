@@ -104,7 +104,7 @@ func _on_body_entered(body):
 	#if you hit something that isn't invlv to proj then we decrease by a hit
 	if body == projectile_owner:
 		return
-	if body is TileMap:
+	if body is TileMapLayer:
 		true_collision = true 
 	if body is RigidBody2D:
 		if global_position > body.global_position:

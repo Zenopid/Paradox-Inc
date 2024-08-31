@@ -5,7 +5,7 @@ extends GenericLevel
 @onready var future_lasers: Node2D = $"%Future_Lasers"
 @onready var past_lasers:Node2D = $"%Past_Lasers"
 @onready var grapple_item: Area2D = $"%Grapple"
-@onready var future_door:TileMap = $"%FutureDoor"
+@onready var future_door:TileMapLayer = $"%FutureDoor"
 @onready var puzzle_box:MoveableObject = $"%PuzzleBox"
 @onready var exit_barrier:StaticBody2D = $%"ExitBarrier"
 @export var laser_damage: int = 10

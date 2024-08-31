@@ -22,7 +22,11 @@ var ground_pound_damage: int
 
 var has_hit_ground: bool = false
 
+var cleaner_sprite:AnimatedSprite2D
 
+func init(current_entity:Entity):
+	super.init(current_entity)
+	cleaner_sprite = current_entity.get_node("Cleaner")
 
 func enter(_msg: = {}):
 	has_hit_ground = false
@@ -30,7 +34,8 @@ func enter(_msg: = {}):
 	entity.anim_player.queue("GroundPoundLoop")
 	attack_status = "Start"
 	starting_position = entity.global_position.y
-
+	cleaner_sprite.show()
+	
 func change_status(new_status):
 	match attack_status:
 		"Start":
@@ -79,3 +84,7 @@ func input(event):
 
 func _on_attack_over(name_of_attack:String):
 	attack_state.exit_state()
+	
+func exit():
+	super.exit()
+	cleaner_sprite.hide()

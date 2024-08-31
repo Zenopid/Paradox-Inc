@@ -39,7 +39,7 @@ func _on_body_entered(body:Node2D):
 	var true_collision:bool = false
 	if body == projectile_owner:
 		return
-	elif body is TileMap and is_on_wall():
+	elif body is TileMapLayer and is_on_wall():
 		queue_free()
 	elif body is RigidBody2D:
 		if global_position > body.global_position:
