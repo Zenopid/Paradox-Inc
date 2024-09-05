@@ -11,7 +11,6 @@ var jump_buffer: Timer
 var coyote_timer:Timer 
 
 var jump_node: Jump
-var walljump_node:Walljump
 
 var ground_checker: RayCast2D
 
@@ -24,7 +23,6 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	jump_node = state_machine.find_state("Jump")
 	jump_buffer = state_machine.get_timer("Jump_Buffer")
 	jump_buffer.wait_time = buffer_duration
-	walljump_node = state_machine.find_state("WallSlide")
 	
 	coyote_timer = state_machine.get_timer("Coyote")
 	cleaner_sprite = entity.get_node("Cleaner")

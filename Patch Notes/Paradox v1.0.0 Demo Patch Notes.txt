@@ -1,0 +1,133 @@
+Paradox v1.0.0 Patch Notes
+
+Bug Fixes:
+Fixed a bug where you couldn't use rebind keys to f or the mouse buttons.
+Fixed a bug where the player would automatically start falling during an aerial attack
+Fixed a bug where the ghost UI scene would not be in the center of the screen after a level.
+Fixed a bug where you couldn't use the controller to move through the UI.
+Fixed a bug where you couldn't drift during air attacks
+Fixed a bug changing coyote time
+Fixed a bug where rolling wasn't proj invlv for real this time 99% sure 
+Fixed a bug where air attack 1 froze at the last frame of animation, preventing you from doing anything until you hit the ground
+
+New Game Mode: Time Attack
+When you complete a level, you now have the ability to save your playthrough as a ghost.
+Race  aganist a ghost to try and obtain a high score.
+
+
+New Game Mode: Free Play
+Play through a level with the grapple and all items available.
+
+
+System
+	-Added bgm to main menu, training mode, and Emergence
+	-Changed default controls for controller
+		- Dodge moved from right action (Sony Circle Button) to top action (Sony Triangle Button)
+		- Crouch moved from left stick down to right action (Sony Circle Button)
+		- Added debug mode button (L3)
+
+New Garbage Container
+	-Extremely heavy object, preventing the grapple from being very effective
+	-Paraghouls can attach to it, becoming extra deadly (notes are below)
+	-Large health pool
+	-Explodes into garbage bags
+
+Added Saving and Loading
+	- Was completely broken in the last patch. Kinda broken and didn't save stuff created in the level like boxes and enemys. Now completely overhauled to work properly.
+	- Will save the following:
+	  User Settings
+          Game Info (Checkpoints, player info like position, enemies, etc)
+	  Saved ghosts
+	Looking into ways to prevent fps drops while loading
+
+Removed restart level button
+	-For some reason its really buggy. The functionality only really saves a second or 2 so it's not that serious.
+
+
+Player 
+
+Camera:
+	-Increased camera zoom (1.2x -> 1.5x)
+	-Offset camera upwards 0.5 meters
+
+
+Slide:
+	-No longer has its own coyote time 
+
+
+Jump:
+	-Added particle effects to normal jumps / super jumps
+	-Added sfx to jumps 
+
+Increased invlv timer (0.4 -> 0.8)
+	- This is to offset future hitstun / knockback changes
+Removed horizontal deceleration from landing after a fall 
+
+Dodge:
+	Dodge now cancels if button is not held while actionable
+	To stay in dodge, continue holding the button
+	Reduced dodge cooldown (0.8 -> 0.45 seconds)
+	Reduced dodge boost to compensate for cooldown reduction (0.25 -> 0.2 mps bonus)
+
+Grapple:
+	
+	Removed grapple damage (2 -> 0)
+	Can now stun enemies during certain attacks if you boost pull
+	Increased grapple projectile speed (10.5 mps -> 13 mps)
+	Decreased time before grapple falls (0.55 sec -> 0.4 sec)
+
+Attacks:
+	
+	Nerfed drift during air attacks (0.17 mps in air naturally vs 0.1 mps during attacks)
+
+	Increased ground pound hitbox width (0.39 -> 0.55 meters wide)
+	Added attack buffer (length of 0.1 seconds)
+	Decreased ground pound horizontal deceleration (85% -> 25%)
+	Increased damage of 3rd attack in grounded combo (20 -> 25 dmg)
+	3rd hit startup increased (9 -> 11 frames)
+	Increased minimum damage of ground pound (15 -> 25 dmg)
+
+	Can now buffer jumping and dodging out of air attacks
+	
+
+
+Wallslide:
+
+	Wallslide collision size increases with velocity to make it easier to wall bounce from higher speeds	
+
+	Wallbounce window increased (0.2 -> 0.35 seconds)
+	Increased height of wall slide jump by 0.75 meters
+
+Wallrun (New):
+	
+	One wall run that refreshes on touching the ground
+	Speed slowly decays after a brief delay, will eventually transition to a wall slide
+	
+
+
+Paraghoul
+
+	-Added pathfinding 
+
+	-Added sfx to fireballs travelling and hitting targets
+
+	Shrunk length but increased height for fireball hitbox 
+	Fireball now starts at max speed
+	Fireball steers around much faster (2 -> 7)
+
+	New type: Garbage Bag Ghoul:
+	Glass cannon, since garbage bags are lighter and have less hp then boxes
+	Has fire ramming attack that chases towards the player and slams into them
+	Grapple pulling a charging ghoul will stun them
+
+	New type: Garbage Container Ghouls
+	Miniboss
+	Has new ground pound attack that shoots out highly damaging shockwaves
+	Can be stunned by normal attacks after the ground pound to be struck by follow up melee attacks
+	Has large health pool
+	Striking dazed paraghouls will also damage link objects 
+	Also contains ram attack of garbage bag ghouls
+
+
+
+

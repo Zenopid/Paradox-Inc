@@ -26,7 +26,7 @@
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/LinkLine.gd" id="13_sk85h"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Shoot.gd" id="14_pc383"]
 [ext_resource type="PackedScene" uid="uid://54w6tmuksub7" path="res://Character/Enemy/Paraghoul/Fireball.tscn" id="15_etijb"]
-[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/LookAtPlayer.gd" id="16_d26je"]
+[ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Chase.gd" id="16_d26je"]
 [ext_resource type="PackedScene" uid="uid://bvewt1lavbj41" path="res://Universal_Scenes/VFX/hitsparks.tscn" id="18_q6r7h"]
 [ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="19_3x474"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/WorldScanner.gd" id="19_h3ai8"]
@@ -973,7 +973,7 @@ visible = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionSphere" groups=["Collision"]]
 shape = SubResource("CircleShape2D_p8cme")
 
-[node name="Hurtbox" type="CollisionShape2D" parent="." groups=["Collision"]]
+[node name="Collision" type="CollisionShape2D" parent="." groups=["Collision"]]
 unique_name_in_owner = true
 visible = false
 z_index = 1

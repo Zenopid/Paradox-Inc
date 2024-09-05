@@ -119,6 +119,10 @@ enum collision_values {
 	HOOK_PAST = 16,
 	PROJECTILE_FUTURE = 17,
 	PROJECTILE_PAST = 18,
+	PLAYER_HURTBOX_FUTURE = 19,
+	PLAYER_HURTBOX_PAST = 20,
+	ENEMY_HURTBOX_FUTURE = 21,
+	ENEMY_HURTBOX_PAST = 22
 }
 const LEVEL_PATHS = {
 	"Emergence" = "uid://2ixcpeisj8it",

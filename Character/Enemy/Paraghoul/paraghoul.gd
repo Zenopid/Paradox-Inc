@@ -13,22 +13,16 @@ signal damaged(amount:int)
 @onready var fireball_sprite:  = $"%Fireball"
 var frame_cnt: int = 0
 
+
 func _ready():
-	print(link_object)
+	#	print(link_object)
 	super._ready()
+	pathfinder = $"%Pathfinder"
 	is_paradox = true
-	link_object.become_paradox()
-	link_to_object(link_object)
-	link_object.link_to_object(self)
-	match link_object.get_object_type():
-		"Garbage Container":
-			sprite.modulate = garbage_container_color
-		_:
-			pass
-	max_health = link_object.health
-	health = max_health
-	health_bar.init(link_object.health)
-	print(link_object)
+	if link_object != null:
+		link_object.become_paradox()
+		link_to_object(link_object)
+		link_object.link_to_object(self)
 
 func _physics_process(delta):
 	if is_instance_valid(link_object):
@@ -45,7 +39,6 @@ func _physics_process(delta):
 	states.physics_update(delta)
 
 func kill():
-
 	for i in get_tree().get_nodes_in_group(name + " Projectiles"):
 		i.queue_free()
 	if is_instance_valid(link_object):
@@ -61,6 +54,13 @@ func link_to_object(object:MoveableObject):
 	
 	if typeof(health_bar) != TYPE_NIL:
 		health_bar.init(link_object.health)
+	
+	link_object.become_paradox()
+	link_object.link_to_object(self)
+	set_color()
+	max_health = object.health
+	health = max_health
+	health_bar.init(max_health)
 	
 func _on_link_object_damaged(new_health:int ):
 	if states.get_current_state().name == "Idle":
@@ -102,6 +102,10 @@ func set_color():
 			sprite.modulate = garbage_container_color
 		_:
 			pass
+
+func get_ghoul_type() -> String:
+	return link_object.get_object_type()
+	
 
 func on_grapple_pulled():
 	var current_state:BaseState = states.get_current_state()

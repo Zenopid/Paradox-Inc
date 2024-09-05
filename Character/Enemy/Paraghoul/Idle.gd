@@ -47,8 +47,8 @@ func bounce_target(point:Vector2):
 	
 func physics_process(delta):
 	for body in detection_sphere.get_overlapping_bodies():
-		if body is Player:
-			entity.pathfinder.target_position = get_tree().get_first_node_in_group("Players").global_position
+		if body is not Enemy and body is Entity:
+			entity.pathfinder.target_position = body.global_position
 			state_machine.transition_to("Chase")
 			return
 	if direction_timer.is_stopped() or abs(target_position - entity.global_position) <= target_reached_range:

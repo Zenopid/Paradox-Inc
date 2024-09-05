@@ -101,24 +101,34 @@ func _on_body_entered(body):
 			var invlv_type:String = body.get_invlv_type()
 			if !invlv_type.contains("Strike"):
 				damage_entity(body)
-	elif body is Hitbox:
+
+
+
+func _on_area_entered(area:Area2D):
+	var area_parent = area.get_parent()
+	if area is Hitbox:
 		#Check to see if one person is actually hitting the other.
 		for i in get_overlapping_bodies():
-			if i == body.get_parent():
+			if i == area.get_parent():
 				if i is Entity or i is EnemyRigid:
 					#If hitbox A is hitting hitbox B and hurtbox B, 
 					#but hitbox B is only hitting hitbox A,
 					#Person B takes the damage. 
-					damage_entity(body)
+					damage_entity(area_parent)
 					return
 		#Then we check to see if they're the same type.
-		if attack_type == body.attack_type:
+		if attack_type == area.attack_type:
 			#If they're the same type, they can clash, and we move on.
-			if abs(body.damage  - damage) <=  CLASH_RANGE:
+			if abs(area.damage  - damage) <=  CLASH_RANGE:
 				#If they're around the same damage, then we clash, and both hitboxes dissapear.
-				body.queue_free()
+				area.queue_free()
 				self.queue_free()
 				print_debug("CLASH")
+	elif area_parent is Entity:
+		if area_parent != hitbox_owner:
+			var invlv_type:String = area_parent.get_invlv_type()
+			if !invlv_type.contains("Strike"):
+				damage_entity(area_parent)
 
 func damage_entity(body):
 	body.damage(damage, knockback_amount, knockback_angle)
@@ -127,8 +137,8 @@ func damage_entity(body):
 func set_future_collision():
 	set_collision_layer_value(GlobalScript.collision_values.HITBOX_FUTURE, true)
 	
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_HURTBOX_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.ENEMY_HURTBOX_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
@@ -136,8 +146,8 @@ func set_future_collision():
 func set_past_collision():
 	set_collision_layer_value(GlobalScript.collision_values.HITBOX_PAST, true)
 	
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
-	set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_HURTBOX_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.ENEMY_HURTBOX_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)

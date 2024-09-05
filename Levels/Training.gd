@@ -54,9 +54,9 @@ func _on_spawn_enemy_pressed():
 	enemy_instance.position = enemy_spawn_point.position
 	enemy_instance.add_to_group("Training Enemies")
 	var box = _on_spawner_pressed()
+	add_child(enemy_instance)
 	enemy_instance.link_to_object(box)
 	box.link_to_object(box)
-	add_child(enemy_instance)
 	return enemy_instance
 
 func _on_h_slider_value_changed(value: float):

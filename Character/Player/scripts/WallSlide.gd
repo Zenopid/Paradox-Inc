@@ -12,7 +12,9 @@ class_name Walljump extends PlayerBaseState
 @export var  minimum_jump_decay :float = 0.2
 @export var slide_speed_increase: int = 10
 @onready var eject_tracker: float = eject_timer
-@onready var current_slide_speed: int 
+@onready var current_slide_speed: int
+@onready var wallrun_node:Wallrun
+
 var wallslide_timer: Timer
 var number_of_passes:int = 0
 var wall_checker: ShapeCast2D
@@ -37,6 +39,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	wall_checker = state_machine.get_shapecast("WallScanner")
 	current_slide_speed = base_slide_speed
 	cleaner_sprite = current_entity.get_node("Cleaner")
+	wallrun_node = state_machine.find_state("WallRun")
 	
 func enter(msg: = {}):
 	if msg.has("previous_speed"):
@@ -51,6 +54,7 @@ func enter(msg: = {}):
 	if previous_wall_direction != wall_direction:
 		jump_decay = 1
 		current_slide_speed = base_slide_speed
+		wallrun_node.hit_ground_post_wallrun = true
 	super.enter()
 	wallbounce_timer.start()
 	cleaner_sprite.show()
@@ -133,6 +137,7 @@ func exit() -> void:
 	wallbounce_timer.stop() 
 	previous_speed = Vector2.ZERO
 	cleaner_sprite.hide()
+	
 func conditions_met() -> bool:
 	if wall_checker.is_colliding() and !grounded() and !Input.is_action_pressed("jump"):
 		if entity.sprite.flip_h and get_movement_input() < 0:

@@ -33,7 +33,7 @@ signal respawning()
 @onready var UI:CanvasLayer = $"%UI"
 @onready var timeline_tracker: Label = $"%TimelineTracker"
 @onready var detection_area: Area2D = $"%DetectionArea"
-
+@onready var hurtbox = $"%Hurtbox"
 
 
 var player_info:PlayerInfo = PlayerInfo.new():
@@ -114,7 +114,9 @@ func set_collision(future_value, past_value):
 		
 		detection_area.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, future_value)
 		detection_area.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, past_value)
-	
+		
+		
+
 		set_collision_layer_value(GlobalScript.collision_values.PLAYER_FUTURE, future_value)
 		set_collision_layer_value(GlobalScript.collision_values.PLAYER_PAST, past_value)
 		
@@ -202,15 +204,14 @@ func set_grapple_velocity():
 	var walk = (Input.get_action_strength("right") - Input.get_action_strength("left")) * state_machine_states["Run"].move_speed
 	if grapple.attached and !player_braced:
 		grapple_velocity = to_local(grapple.hook_location).normalized()
+		grappling_upwards = grapple_velocity.y < 0
 		if grapple_velocity.y < 0:
 			grapple_velocity.y *= grapple.rise_multiplier
-			grappling_upwards = true 
 		else:
 			grapple_velocity.y *= grapple.fall_multiplier
-			grappling_upwards = false 
 		if sign(grapple_velocity.x) != sign(walk):
 			grapple_velocity.x *= grapple.sideways_multiplier
-		#if global_position.distance_to(grapple.hook_location) <= grapple.distance_to_swing and !grapple.object_pullable() and !grounded:
+		if global_position.distance_to(grapple.hook_location) <= grapple.distance_to_swing and !grapple.object_pullable() and !grounded:
 			#var radius = global_position - grapple.hook_location
 			#var angle = acos(radius.dot(velocity) / (radius.length() * velocity.length()))
 			#var rad_vel = cos(angle) * velocity.length()

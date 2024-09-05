@@ -38,7 +38,9 @@ func physics_process(_delta):
 				entity.velocity.x += air_acceleration
 				if entity.velocity.x > max_speed:
 					entity.velocity.x = max_speed
-					
+	if state_machine.state_available("WallRun"):
+		state_machine.transition_to("WallRun", {previous_speed = speed_before_wallslide})
+		return
 	if state_machine.state_available("WallSlide"):
 		state_machine.transition_to("WallSlide", {previous_speed = speed_before_wallslide})
 		return

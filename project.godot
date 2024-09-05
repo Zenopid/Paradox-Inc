@@ -154,6 +154,8 @@ view_timeline={
 2d_physics/layer_16="Hook (Past)"
 2d_physics/layer_17="Projectile (Future)"
 2d_physics/layer_18="Projectile (Past)"
+2d_physics/layer_19="Player Hurtbox (Future)"
+2d_physics/layer_20="Player Hurtbox (Past)"
 
 [physics]
 

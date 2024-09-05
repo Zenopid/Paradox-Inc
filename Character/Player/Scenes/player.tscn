@@ -1,4 +1,4 @@
-[gd_scene load_steps=235 format=3 uid="uid://68mxs8vrodes"]
+[gd_scene load_steps=236 format=3 uid="uid://68mxs8vrodes"]
 
 [ext_resource type="Script" path="res://Character/Player/scripts/Player.gd" id="1_rhw38"]
 [ext_resource type="Script" path="res://Character/Player/scripts/GrapplingHook.gd" id="2_knt1j"]
@@ -173,6 +173,7 @@
 [ext_resource type="Texture2D" uid="uid://dfl65b0g1jhq8" path="res://Sprites/Stages/Tiles/Assets/Background_2.png" id="112_fcxrk"]
 [ext_resource type="Texture2D" uid="uid://cmvmd1suu7ptj" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Base Color.png" id="113_fvjj6"]
 [ext_resource type="PackedScene" uid="uid://d18ny0w4wlb1h" path="res://Universal_Scenes/camera.tscn" id="114_ev06i"]
+[ext_resource type="Script" path="res://Character/Player/scripts/wall_run.gd" id="168_xvudv"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2jdic"]
 radius = 2.92899
@@ -990,7 +991,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Hurtbox:position")
+tracks/4/path = NodePath("Area2D/Hurtbox:position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -1002,7 +1003,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Hurtbox:shape")
+tracks/5/path = NodePath("Area2D/Hurtbox:shape")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -1115,7 +1116,7 @@ step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Hurtbox:shape")
+tracks/0/path = NodePath("Area2D/Hurtbox:shape")
 tracks/0/interp = 0
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -1127,7 +1128,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hurtbox:position")
+tracks/1/path = NodePath("Area2D/Hurtbox:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -1220,7 +1221,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Hurtbox:shape")
+tracks/4/path = NodePath("Area2D/Hurtbox:shape")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -1232,7 +1233,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Hurtbox:position")
+tracks/5/path = NodePath("Area2D/Hurtbox:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -1251,7 +1252,7 @@ step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Hurtbox:shape")
+tracks/0/path = NodePath("Area2D/Hurtbox:shape")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -1263,7 +1264,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hurtbox:position")
+tracks/1/path = NodePath("Area2D/Hurtbox:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -1419,7 +1420,7 @@ tracks/7/keys = {
 tracks/8/type = "value"
 tracks/8/imported = false
 tracks/8/enabled = true
-tracks/8/path = NodePath("Hurtbox:shape")
+tracks/8/path = NodePath("Area2D/Hurtbox:shape")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
@@ -1431,7 +1432,7 @@ tracks/8/keys = {
 tracks/9/type = "value"
 tracks/9/imported = false
 tracks/9/enabled = true
-tracks/9/path = NodePath("Hurtbox:position")
+tracks/9/path = NodePath("Area2D/Hurtbox:position")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/keys = {
@@ -1497,7 +1498,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Hurtbox:shape")
+tracks/4/path = NodePath("Area2D/Hurtbox:shape")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -1509,7 +1510,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Hurtbox:position")
+tracks/5/path = NodePath("Area2D/Hurtbox:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -1618,7 +1619,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("Hurtbox:shape")
+tracks/6/path = NodePath("Area2D/Hurtbox:shape")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -1630,7 +1631,7 @@ tracks/6/keys = {
 tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("Hurtbox:position")
+tracks/7/path = NodePath("Area2D/Hurtbox:position")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
@@ -1722,7 +1723,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("Hurtbox:shape")
+tracks/6/path = NodePath("Area2D/Hurtbox:shape")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -1734,7 +1735,7 @@ tracks/6/keys = {
 tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("Hurtbox:position")
+tracks/7/path = NodePath("Area2D/Hurtbox:position")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
@@ -1819,7 +1820,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Hurtbox:shape")
+tracks/5/path = NodePath("Area2D/Hurtbox:shape")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -1831,7 +1832,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("Hurtbox:position")
+tracks/6/path = NodePath("Area2D/Hurtbox:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -1899,7 +1900,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Hurtbox:shape")
+tracks/4/path = NodePath("Area2D/Hurtbox:shape")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -1911,7 +1912,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Hurtbox:position")
+tracks/5/path = NodePath("Area2D/Hurtbox:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -1996,7 +1997,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Hurtbox:shape")
+tracks/4/path = NodePath("Area2D/Hurtbox:shape")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -2008,7 +2009,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Hurtbox:position")
+tracks/5/path = NodePath("Area2D/Hurtbox:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -2093,7 +2094,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Hurtbox:shape")
+tracks/4/path = NodePath("Area2D/Hurtbox:shape")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -2105,7 +2106,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Hurtbox:position")
+tracks/5/path = NodePath("Area2D/Hurtbox:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -2179,7 +2180,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Hurtbox:shape")
+tracks/2/path = NodePath("Area2D/Hurtbox:shape")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -2191,14 +2192,14 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Hurtbox:position")
+tracks/3/path = NodePath("Area2D/Hurtbox:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 1)]
+"values": [Vector2(0, -1)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -2210,7 +2211,7 @@ tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 2)]
+"values": [Vector2(0, 0)]
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wiw01"]
@@ -2224,7 +2225,7 @@ step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Hurtbox:position")
+tracks/0/path = NodePath("Area2D/Hurtbox:position")
 tracks/0/interp = 0
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -2236,7 +2237,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hurtbox:shape")
+tracks/1/path = NodePath("Area2D/Hurtbox:shape")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -2332,7 +2333,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Hurtbox:position")
+tracks/2/path = NodePath("Area2D/Hurtbox:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -2344,7 +2345,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Hurtbox:shape")
+tracks/3/path = NodePath("Area2D/Hurtbox:shape")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -2399,7 +2400,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Hurtbox:shape")
+tracks/2/path = NodePath("Area2D/Hurtbox:shape")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -2411,7 +2412,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Hurtbox:position")
+tracks/3/path = NodePath("Area2D/Hurtbox:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -2426,7 +2427,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Hurtbox:shape")
+tracks/0/path = NodePath("Area2D/Hurtbox:shape")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -2438,7 +2439,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hurtbox:position")
+tracks/1/path = NodePath("Area2D/Hurtbox:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -2603,7 +2604,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("Hurtbox:shape")
+tracks/4/path = NodePath("Area2D/Hurtbox:shape")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -2615,7 +2616,7 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("Hurtbox:position")
+tracks/5/path = NodePath("Area2D/Hurtbox:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
@@ -2710,7 +2711,7 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("Hurtbox:shape")
+tracks/6/path = NodePath("Area2D/Hurtbox:shape")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
@@ -2722,7 +2723,7 @@ tracks/6/keys = {
 tracks/7/type = "value"
 tracks/7/imported = false
 tracks/7/enabled = true
-tracks/7/path = NodePath("Hurtbox:position")
+tracks/7/path = NodePath("Area2D/Hurtbox:position")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
@@ -2793,7 +2794,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Hurtbox:shape")
+tracks/2/path = NodePath("Area2D/Hurtbox:shape")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -2805,7 +2806,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Hurtbox:position")
+tracks/3/path = NodePath("Area2D/Hurtbox:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -3107,7 +3108,15 @@ texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_vmqdd")
 animation = &"Idle"
 
-[node name="Hurtbox" type="CollisionShape2D" parent="." groups=["Collision"]]
+[node name="Collision" type="CollisionShape2D" parent="." groups=["Collision"]]
+unique_name_in_owner = true
+position = Vector2(0, 3.5)
+shape = SubResource("RectangleShape2D_b022k")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="Hurtbox" type="CollisionShape2D" parent="Area2D" groups=["Collision"]]
+unique_name_in_owner = true
 position = Vector2(0, 3.5)
 shape = SubResource("RectangleShape2D_b022k")
 
@@ -3333,6 +3342,14 @@ process_material = SubResource("ParticleProcessMaterial_h5o11")
 lifetime = 0.2
 fixed_fps = 60
 
+[node name="WallRun" type="Node" parent="StateMachine"]
+script = ExtResource("168_xvudv")
+acceleration = 2
+max_slide_speed = 900
+decel_rate = 0.85
+animation_name = "Run"
+has_inactive_process = true
+
 [node name="WallSlide" type="Node" parent="StateMachine"]
 script = ExtResource("109_jk6ox")
 eject_timer = 0.2
@@ -3380,6 +3397,9 @@ one_shot = true
 [node name="Invlv_Timer" type="Timer" parent="StateMachine/Timers"]
 unique_name_in_owner = true
 wait_time = 0.8
+one_shot = true
+
+[node name="Wallrun_Decay" type="Timer" parent="StateMachine/Timers"]
 one_shot = true
 
 [node name="Raycasts" type="Node" parent="StateMachine"]
