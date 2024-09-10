@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="KeyboardTextures" load_steps=111 format=3 uid="uid://domrawueas2s"]
+[gd_resource type="Resource" script_class="KeyboardTextures" load_steps=110 format=3 uid="uid://domrawueas2s"]
 
 [ext_resource type="Texture2D" uid="uid://ei5tpuh570dp" path="res://addons/input_prompts/icons/keyboard/esc.png" id="1_rf0mg"]
 [ext_resource type="Texture2D" uid="uid://bvodyh3h4lf23" path="res://addons/input_prompts/icons/keyboard/0.png" id="1_s15vc"]
@@ -73,7 +73,6 @@
 [ext_resource type="Texture2D" uid="uid://d2w845et14y24" path="res://addons/input_prompts/icons/keyboard/y.png" id="43_mp1ou"]
 [ext_resource type="Texture2D" uid="uid://b5y36flrr7wk2" path="res://addons/input_prompts/icons/keyboard/k.png" id="44_2qjjc"]
 [ext_resource type="Texture2D" uid="uid://ii0rcifxy2s3" path="res://addons/input_prompts/icons/keyboard/l.png" id="45_0jsy4"]
-[ext_resource type="Texture2D" uid="uid://cgmpe7f8a51vk" path="res://addons/input_prompts/icons/keyboard/meta.png" id="49_f5qpc"]
 [ext_resource type="Texture2D" uid="uid://bwhf0tx67yj7a" path="res://addons/input_prompts/icons/keyboard/s.png" id="53_4ai2n"]
 [ext_resource type="Texture2D" uid="uid://thkia4a3h07o" path="res://addons/input_prompts/icons/keyboard/media_forward.png" id="55_w3ydn"]
 [ext_resource type="Texture2D" uid="uid://c7ul2t73hkrh2" path="res://addons/input_prompts/icons/keyboard/quote.png" id="56_v7kvb"]
@@ -176,7 +175,6 @@ QuoteDbl = ExtResource("56_v7kvb")
 Colon = ExtResource("23_edw0u")
 Semicolon = ExtResource("59_x313l")
 Asterisk = ExtResource("14_7im6p")
-Meta = ExtResource("49_f5qpc")
 Z = ExtResource("65_26pnj")
 X = ExtResource("107_mjl55")
 C = ExtResource("27_qxebp")

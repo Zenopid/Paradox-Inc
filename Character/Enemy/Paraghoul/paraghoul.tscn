@@ -25,7 +25,7 @@
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Idle.gd" id="13_rfhnm"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/LinkLine.gd" id="13_sk85h"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Shoot.gd" id="14_pc383"]
-[ext_resource type="PackedScene" uid="uid://54w6tmuksub7" path="res://Character/Enemy/Paraghoul/Fireball.tscn" id="15_etijb"]
+[ext_resource type="PackedScene" uid="uid://54w6tmuksub7" path="res://Character/Enemy/Paraghoul/fireball.tscn" id="15_etijb"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Chase.gd" id="16_d26je"]
 [ext_resource type="PackedScene" uid="uid://bvewt1lavbj41" path="res://Universal_Scenes/VFX/hitsparks.tscn" id="18_q6r7h"]
 [ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="19_3x474"]
@@ -35,7 +35,7 @@
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/GroundPound.gd" id="24_p6o3v"]
 [ext_resource type="PackedScene" uid="uid://yinehm0bdrg6" path="res://Character/Enemy/Paraghoul/Shockwave.tscn" id="25_lqo17"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Dazed.gd" id="27_8bief"]
-[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/Hitbox.tscn" id="31_mi01h"]
+[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="31_mi01h"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Charge.gd" id="33_b5ts8"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_5e6m6"]

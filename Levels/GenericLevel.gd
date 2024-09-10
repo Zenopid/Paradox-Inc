@@ -16,8 +16,6 @@ const SAVE_FILE_PATH:String = "user://save_info/level_data.tres"
 @onready var future: TileMapLayer = $"%ActiveFuture"
 @onready var past: TileMapLayer = $"%ActivePast"
 @onready var paradoxes:Node2D = $"%Paradoxes"
-@onready var future_tileset: TileSet
-@onready var past_tileset: TileSet
 @onready var spawn_point = get_node("SpawnPoint")
 @onready var future_nav: NavigationRegion2D
 @onready var past_nav: NavigationRegion2D
@@ -50,8 +48,6 @@ var player_deaths: int = 0
 
 func _ready():
 	load_music()
-	future_tileset = future.tile_set
-	past_tileset = past.tile_set
 	init_timeline()
 	connect_signals()
 	self.add_to_group("CurrentLevel")
@@ -116,12 +112,7 @@ func _physics_process(delta):
 	pass
 
 func set_timeline(new_timeline:String):
-	var old_timeline_tilemap: TileMapLayer = get(current_timeline.to_lower())
-	var current_timeline_tilemap: TileMapLayer = get(new_timeline.to_lower())
 	if current_timeline != new_timeline:
-		if !current_timeline_tilemap:
-			print_debug("No tilemap for the timeline " + str(new_timeline))
-			return
 		for nodes in get_tree().get_nodes_in_group(new_timeline.capitalize()):
 			nodes.modulate.a = 1
 		for nodes in get_tree().get_nodes_in_group(current_timeline.capitalize()):
@@ -138,7 +129,8 @@ func init_timeline():
 			paradox.remove_from_group("Past")
 			paradox.remove_from_group("Future")
 			paradox.modulate.a = 1
-	get(timeline).modulate.a = 1
+	for timelines in get_tree().get_nodes_in_group("Future"):
+		timelines.modulate.a = 1
 
 func get_start_point():
 	return spawn_point.position

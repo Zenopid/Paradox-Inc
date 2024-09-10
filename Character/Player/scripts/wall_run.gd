@@ -23,9 +23,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 
 func enter(msg: = {}):
 	super.enter()
-	cleaner_sprite.rotation_degrees = 90 
 	decay_timer.start()
-
 
 	
 func physics_process(delta):
@@ -66,10 +64,20 @@ func physics_process(delta):
 func inactive_process(_delta:float ) -> void:
 	if grounded():
 		hit_ground_post_wallrun = true 
-	
+
+func get_movement_input() -> float:
+	var move = Input.get_axis("left", "right")
+	if move < 0:
+		cleaner_sprite.flip_h = false
+		cleaner_sprite.rotation_degrees = 90
+	elif move > 0:
+		cleaner_sprite.flip_h = true 
+		cleaner_sprite.rotation_degrees = -90
+	return move
+
 		
 func exit():
-	entity.sprite.flip_h = ! entity.sprite.flip_h
+	super.get_movement_input()
 	cleaner_sprite.rotation_degrees = 0
 	previous_wall_direction = wall_direction
 	eject_tracker = eject_timer

@@ -1,0 +1,79 @@
+[gd_scene load_steps=11 format=3 uid="uid://dpv0afv5ld4jl"]
+
+[ext_resource type="Script" path="res://Character/Enemy/Trooper/trooper_energy_blast.gd" id="1_tdise"]
+[ext_resource type="Texture2D" uid="uid://c3csqgn5e0mwq" path="res://Sprites/Enemies/Trooper/energy_shot1.png" id="2_imodd"]
+[ext_resource type="Texture2D" uid="uid://40a3os31dp5j" path="res://Sprites/Enemies/Trooper/energy_shot2.png" id="3_pp4ei"]
+[ext_resource type="AudioStream" uid="uid://bq1f7ps8fb75t" path="res://Character/Enemy/Paraghoul/Sfx/fireball_explode.mp3" id="4_6rtdu"]
+[ext_resource type="AudioStream" uid="uid://bsqtpkqh8pjin" path="res://Character/Enemy/Paraghoul/Sfx/fireball_travel.mp3" id="5_rqv76"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2ecq3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_imodd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_pp4ei")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jfhos"]
+size = Vector2(30, 6)
+
+[sub_resource type="Animation" id="Animation_0olqg"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_oq1c2"]
+resource_name = "Travel"
+length = 0.266668
+loop_mode = 1
+step = 0.0166667
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vp8n7"]
+_data = {
+"RESET": SubResource("Animation_0olqg"),
+"Travel": SubResource("Animation_oq1c2")
+}
+
+[node name="Bullet" type="CharacterBody2D"]
+collision_layer = 196608
+collision_mask = 3
+script = ExtResource("1_tdise")
+damage = 10
+width = 30
+height = 6
+object_push = Vector2(400, 100)
+duration = -1
+speed = 1000
+velocity_effects_object_push = false
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_2ecq3")
+flip_h = true
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("RectangleShape2D_jfhos")
+debug_color = Color(0.831373, 0.0901961, 0.101961, 0.196078)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_vp8n7")
+}
+
+[node name="Explosion" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("4_6rtdu")
+bus = &"Sfx"
+
+[node name="Travelling" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("5_rqv76")
+volume_db = -10.0
+bus = &"Sfx"
+
+[connection signal="finished" from="Travelling" to="." method="_on_travelling_finished"]

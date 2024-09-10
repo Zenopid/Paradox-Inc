@@ -152,6 +152,7 @@ mouse_filter = 2
 color = Color(0.00784314, 0.0627451, 0.0941176, 1)
 
 [node name="Paradox" type="Label" parent="."]
+visible = false
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
@@ -173,6 +174,7 @@ horizontal_alignment = 1
 uppercase = true
 
 [node name="Incorporated" type="Label" parent="."]
+visible = false
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 8

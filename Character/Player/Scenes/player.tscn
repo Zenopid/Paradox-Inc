@@ -146,7 +146,7 @@
 [ext_resource type="Texture2D" uid="uid://cq1cxcyiqtgk" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-wall-slide-01.png" id="85_a7o55"]
 [ext_resource type="Script" path="res://Character/Player/scripts/StateMachine.gd" id="86_n8312"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack.gd" id="87_wrjcs"]
-[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/Hitbox.tscn" id="88_fc8ls"]
+[ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="88_fc8ls"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundedAttack1.gd" id="89_k45qv"]
 [ext_resource type="AudioStream" uid="uid://f6e0dp68alkl" path="res://Character/Player/SFX/Attacks/Hit/GenericHit.wav" id="90_bn77g"]
 [ext_resource type="Script" path="res://Character/Player/scripts/Attack_Moves/GroundedAttack2.gd" id="91_phbns"]

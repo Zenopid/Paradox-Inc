@@ -13,6 +13,13 @@ func _ready():
 	travelling_sfx.play()
 	look_at(target.global_position)
 	velocity = projectile_owner.global_position.direction_to(target.global_position) * speed
+	if timeline == "All":
+		set_collision_mask_value(GlobalScript.collision_values.PLAYER_HURTBOX_FUTURE, true)
+		set_collision_mask_value(GlobalScript.collision_values.PLAYER_HURTBOX_PAST, true)
+	elif timeline == "Past":
+		set_collision_mask_value(GlobalScript.collision_values.PLAYER_HURTBOX_PAST, true)
+	else:
+		set_collision_mask_value(GlobalScript.collision_values.PLAYER_HURTBOX_FUTURE, true)
 	
 func seek():
 	if is_instance_valid(target):
@@ -28,14 +35,7 @@ func play_explosion_sfx():
 func _physics_process(delta):
 	if !is_instance_valid(player):
 		return
-	var status = !(player.get_invlv_type().contains("Proj"))
-	if timeline == "All":
-		set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)
-		set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, status)
-	elif timeline == "Past":
-		set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, status)
-	else:
-		set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)
+
 	var seek_value = seek()
 	if seek_value:
 		velocity += seek_value
@@ -54,7 +54,6 @@ func _physics_process(delta):
 		return
 	var distance_travelled:Vector2 = abs(global_position - starting_position)
 	if distance_travelled.length() >= max_distance and max_distance != -1:
-		#print("went too far so proj is dying")
 		queue_free()
 	hitbox.global_position = self.global_position
 	if num_of_hits <= 0:

@@ -1,0 +1,291 @@
+[gd_scene load_steps=25 format=3 uid="uid://dwweyatte2rbk"]
+
+[ext_resource type="Script" path="res://Character/Enemy/Trooper/Trooper.gd" id="1_mk8kd"]
+[ext_resource type="Script" path="res://Character/EntityStateMachine.gd" id="2_msds0"]
+[ext_resource type="Script" path="res://Character/Enemy/Trooper/idle.gd" id="3_g4yu8"]
+[ext_resource type="Script" path="res://Character/Enemy/Trooper/active.gd" id="4_v1e5t"]
+[ext_resource type="Script" path="res://Character/Enemy/Trooper/chase.gd" id="5_02jux"]
+[ext_resource type="FontFile" uid="uid://dj8l8uk81jfik" path="res://fonts/MediumFont.tres" id="5_erwoa"]
+[ext_resource type="Script" path="res://Character/Enemy/Trooper/shoot.gd" id="5_ngbgq"]
+[ext_resource type="Script" path="res://Character/Enemy/Trooper/Dodge.gd" id="6_lwnq8"]
+[ext_resource type="PackedScene" uid="uid://dpv0afv5ld4jl" path="res://Character/Enemy/Trooper/trooper_energy_blast.tscn" id="6_ycpo8"]
+[ext_resource type="PackedScene" uid="uid://hswfds7k8o5c" path="res://Character/health_bar.tscn" id="10_lsfbw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lw8ul"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_c4pev"]
+points = PackedVector2Array(0, 0, 300, -20, 300, 20)
+
+[sub_resource type="Animation" id="Animation_rfwng"]
+resource_name = "Active"
+step = 0.0166667
+
+[sub_resource type="Animation" id="Animation_ttn3b"]
+resource_name = "Dodge"
+length = 0.283335
+step = 0.0166667
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("StateMachine/Dodge")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"start_dodge"
+}, {
+"args": [],
+"method": &"end_dodge"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_psk8n"]
+resource_name = "Idle"
+step = 0.0166667
+
+[sub_resource type="Animation" id="Animation_332kc"]
+resource_name = "Shoot"
+step = 0.0166667
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("StateMachine/Shoot")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.216667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [null],
+"method": &"projectile_attack"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_r4img"]
+_data = {
+"Active": SubResource("Animation_rfwng"),
+"Dodge": SubResource("Animation_ttn3b"),
+"Idle": SubResource("Animation_psk8n"),
+"Shoot": SubResource("Animation_332kc")
+}
+
+[sub_resource type="Animation" id="Animation_ovpgi"]
+resource_name = "Damaged"
+length = 0.5
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_buuv8"]
+resource_name = "Immune"
+length = 0.5
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0.917647, 0, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_tpcx1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_brx4j"]
+_data = {
+"Damaged": SubResource("Animation_ovpgi"),
+"Immune": SubResource("Animation_buuv8"),
+"RESET": SubResource("Animation_tpcx1")
+}
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_uqobl"]
+animations = []
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_k0gh3"]
+radius = 250.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hdvsr"]
+radius = 30.0
+
+[node name="Trooper" type="CharacterBody2D"]
+script = ExtResource("1_mk8kd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_lw8ul")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("machine_owner")]
+script = ExtResource("2_msds0")
+initial_state = "Idle"
+machine_owner = NodePath("..")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("3_g4yu8")
+
+[node name="Active" type="Node" parent="StateMachine"]
+script = ExtResource("4_v1e5t")
+
+[node name="Chase" type="Node" parent="StateMachine"]
+script = ExtResource("5_02jux")
+
+[node name="Shoot" type="Node" parent="StateMachine"]
+script = ExtResource("5_ngbgq")
+projectile = ExtResource("6_ycpo8")
+animation_name = "Shoot"
+
+[node name="Dodge" type="Node" parent="StateMachine"]
+script = ExtResource("6_lwnq8")
+
+[node name="Timers" type="Node" parent="StateMachine"]
+
+[node name="StrafeTimer" type="Timer" parent="StateMachine/Timers"]
+wait_time = 0.4
+one_shot = true
+
+[node name="ShootCD" type="Timer" parent="StateMachine/Timers"]
+one_shot = true
+
+[node name="ChaseDuration" type="Timer" parent="StateMachine/Timers"]
+one_shot = true
+
+[node name="Raycasts" type="Node" parent="StateMachine"]
+
+[node name="GroundChecker" type="RayCast2D" parent="StateMachine/Raycasts"]
+position = Vector2(10, 0)
+target_position = Vector2(0, 25)
+
+[node name="ShapeCasts" type="Node" parent="StateMachine"]
+
+[node name="LOS" type="ShapeCast2D" parent="StateMachine/ShapeCasts"]
+unique_name_in_owner = true
+shape = SubResource("ConvexPolygonShape2D_c4pev")
+target_position = Vector2(0, 0)
+max_results = 8
+collision_mask = 51
+
+[node name="SpriteAnimator" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+callback_mode_process = 0
+libraries = {
+"": SubResource("AnimationLibrary_r4img")
+}
+
+[node name="EffectAnimator" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_brx4j")
+}
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+modulate = Color(0.83, 0.0913, 0.103611, 1)
+z_index = 1
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_uqobl")
+animation = &"Charge"
+frame = 3
+flip_h = true
+
+[node name="Debug" type="Node2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-10, -10)
+metadata/_edit_group_ = true
+
+[node name="StateTracker" type="Label" parent="Debug"]
+unique_name_in_owner = true
+texture_filter = 1
+offset_left = -36.0
+offset_top = -37.0
+offset_right = 36.0
+offset_bottom = -14.0
+theme_override_fonts/font = ExtResource("5_erwoa")
+text = "State: Unknown"
+
+[node name="MotionTracker" type="Label" parent="Debug"]
+unique_name_in_owner = true
+texture_filter = 1
+offset_left = -44.0
+offset_top = -53.0
+offset_right = 52.0
+offset_bottom = -30.0
+theme_override_fonts/font = ExtResource("5_erwoa")
+text = "Speed: Unknown"
+
+[node name="Pathfinding" type="Node2D" parent="."]
+
+[node name="Nav_Timer" type="Timer" parent="Pathfinding"]
+unique_name_in_owner = true
+wait_time = 0.1
+one_shot = true
+
+[node name="Pathfinder" type="NavigationAgent2D" parent="Pathfinding"]
+unique_name_in_owner = true
+path_postprocessing = 1
+avoidance_enabled = true
+avoidance_layers = 3
+avoidance_mask = 3
+debug_enabled = true
+debug_path_custom_color = Color(0.83, 0.0913, 0.103611, 1)
+
+[node name="DetectionSphere" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionSphere" groups=["Collision"]]
+shape = SubResource("CircleShape2D_k0gh3")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+
+[node name="Hurtbox" type="CollisionShape2D" parent="Area2D"]
+unique_name_in_owner = true
+shape = SubResource("RectangleShape2D_lw8ul")
+
+[node name="UI" type="Node2D" parent="."]
+position = Vector2(0, 1)
+scale = Vector2(0.2, 0.2)
+
+[node name="HealthBar" parent="UI" instance=ExtResource("10_lsfbw")]
+unique_name_in_owner = true
+offset_left = -135.828
+offset_top = -157.306
+offset_right = -135.828
+offset_bottom = -157.306
+mouse_filter = 2
+
+[node name="EnemySphere" type="Area2D" parent="."]
+unique_name_in_owner = true
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySphere" groups=["Collision"]]
+shape = SubResource("CircleShape2D_hdvsr")
