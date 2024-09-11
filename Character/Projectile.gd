@@ -25,7 +25,6 @@ const CLASH_RANGE = 10
 @onready var state_machine: EntityStateMachine
 @onready var projectile_owner:Entity
 @onready var hitbox: CollisionShape2D = $"%Hitbox"
-@onready var player:Player
 @onready var starting_position:Vector2
 
 var gravity_tracker = 0
@@ -57,18 +56,8 @@ func set_parameters(hitbox_info: = {}):
 		add_to_group(projectile_owner.name + " Projectiles")
 	else:
 		print_debug("Projectile was created with no info.")
-	player = get_tree().get_first_node_in_group("Players")
 func _physics_process(delta):
-	var status = player.get_invlv_type().contains("Proj")
-	status = !status
-	print(status)
-	if timeline == "All":
-		set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)
-		set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, status)
-	elif timeline == "Past":
-		set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, status)
-	else:
-		set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)
+
 	gravity_tracker += gravity_amount
 	if gravity_amount > max_fall_speed:
 		gravity_amount = max_fall_speed
@@ -77,7 +66,9 @@ func _physics_process(delta):
 	var collision = move_and_collide(projectile_speed * direction)
 	if collision:
 		if typeof(collision.get_collider()) != TYPE_NIL:
-			_on_body_entered(collision.get_collider())
+			var collider = collision.get_collider()
+			if collider is Area2D or collider.get_parent() is Area2D:
+				_on_body_entered(collision.get_collider())
 	#hitbox.global_position = global_position
 	#area_box.global_position = global_position
 	if framez < duration:
@@ -139,6 +130,8 @@ func damage_entity(body):
 func set_future_collision():
 	set_collision_layer_value(GlobalScript.collision_values.PROJECTILE_FUTURE, true)
 	
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.ENEMY_PROJ_HURTBOX_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
@@ -146,7 +139,8 @@ func set_future_collision():
 func set_past_collision():
 	set_collision_layer_value(GlobalScript.collision_values.PROJECTILE_PAST, true)
 
-
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.ENEMY_PROJ_HURTBOX_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)

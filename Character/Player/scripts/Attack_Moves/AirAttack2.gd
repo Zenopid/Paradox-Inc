@@ -7,17 +7,6 @@ extends PlayerAirStrike
 @export var knockback_amount: int = 1
 @export var object_push: Vector2 = Vector2(300, 150)
 
-var cleaner_sprite: AnimatedSprite2D
-
-func init(current_entity:Entity):
-	super.init(current_entity)
-	cleaner_sprite = attack_state.entity.get_node("Cleaner")
-	
-func enter(_msg: = {}):
-	super.enter()
-	cleaner_sprite.show()
-	cleaner_sprite.flip_h = attack_state.entity.sprite.flip_h
-
 
 
 func physics_process(delta):
@@ -58,7 +47,3 @@ func current_active_hitbox():
 	if frame > 7:
 		return false
 	return true 
-
-func exit():
-	super.exit()
-	cleaner_sprite.hide()

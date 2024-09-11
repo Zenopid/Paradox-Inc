@@ -125,7 +125,7 @@ func exit():
 	ground_checker.target_position = temp_position
 	for i in get_tree().get_nodes_in_group("Player Hitboxes"):
 		i.queue_free()
-	entity.get_node("Cleaner").position = Vector2.ZERO
+	entity.sprite.position = Vector2.ZERO
 func conditions_met() -> bool:
 
 	return !attack_buffer.is_stopped() or Input.is_action_just_pressed("attack")

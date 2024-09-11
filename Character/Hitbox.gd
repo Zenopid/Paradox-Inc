@@ -137,8 +137,8 @@ func damage_entity(body):
 func set_future_collision():
 	set_collision_layer_value(GlobalScript.collision_values.HITBOX_FUTURE, true)
 	
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_HURTBOX_FUTURE, true)
-	set_collision_mask_value(GlobalScript.collision_values.ENEMY_HURTBOX_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.ENEMY_STRIKE_HURTBOX_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
@@ -146,8 +146,8 @@ func set_future_collision():
 func set_past_collision():
 	set_collision_layer_value(GlobalScript.collision_values.HITBOX_PAST, true)
 	
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_HURTBOX_PAST, true)
-	set_collision_mask_value(GlobalScript.collision_values.ENEMY_HURTBOX_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.ENEMY_STRIKE_HURTBOX_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)

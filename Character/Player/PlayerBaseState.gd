@@ -13,8 +13,6 @@ func input(event):
 	if Input.is_action_just_pressed("attack"):
 		state_machine.get_timer("Attack_Buffer").start()
 
-
-
 func get_movement_input() -> float:
 	var move = Input.get_axis("left", "right")
 	if move < 0:

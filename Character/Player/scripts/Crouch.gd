@@ -2,7 +2,6 @@ extends PlayerMoveState
 
 var superjump_timer: Timer
 var fall_scipt:Fall
-var cleaner_sprite: AnimatedSprite2D
 @export var superjump_buffer: float = 0.15
 @export var decelerate_value: float = 0.4
 
@@ -12,12 +11,9 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	superjump_timer.wait_time = superjump_buffer
 	fall_scipt = state_machine.find_state("Fall")
 	jump_script = state_machine.find_state("Jump")
-	cleaner_sprite = entity.get_node("Cleaner")
 	
 func enter(_msg:= {}):
 	super.enter()
-	cleaner_sprite.show()
-	cleaner_sprite.flip_h = entity.sprite.flip_h
 	entity.brace()
 
 func physics_process(delta):
@@ -48,7 +44,6 @@ func input(event):
 func exit() -> void:
 	superjump_timer.start()
 	entity.relax()
-	cleaner_sprite.hide()
 	
 func conditions_met() -> bool:
 	return Input.is_action_pressed("crouch") and grounded()

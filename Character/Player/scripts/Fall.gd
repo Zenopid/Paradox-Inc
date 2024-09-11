@@ -16,7 +16,6 @@ var ground_checker: RayCast2D
 
 var has_hit_ground:bool = false
 
-var cleaner_sprite: AnimatedSprite2D
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
 	ground_checker = state_machine.get_raycast("GroundChecker")
@@ -25,8 +24,7 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	jump_buffer.wait_time = buffer_duration
 	
 	coyote_timer = state_machine.get_timer("Coyote")
-	cleaner_sprite = entity.get_node("Cleaner")
-
+	
 func input(event: InputEvent):
 	super.input(event)
 	state_machine.transition_if_available([
@@ -40,8 +38,6 @@ func input(event: InputEvent):
 	])
 
 func enter(msg: = {}):
-	cleaner_sprite.show()
-	cleaner_sprite.flip_h = entity.sprite.flip_h
 	wall_checker.enabled = true
 	if state_machine.previous_state == jump_node:
 		entity.anim_player.play("Jump_To_Fall")
@@ -73,7 +69,6 @@ func set_raycast_positions():
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 
 func exit() -> void:
-	cleaner_sprite.hide()
 	if grounded():
 		land_sfx.play()
 	super.exit()

@@ -21,8 +21,7 @@ var dodge_buffer:Timer
 var bunny_hop_boost: float 
 var frame_tracker: int = 0
 
-var cleaner_sprite:AnimatedSprite2D
-
+var hurtbox_area:Area2D
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity,s_machine)
@@ -34,12 +33,9 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	dodge_buffer = state_machine.get_timer("Dodge_Buffer")
 	cooldown_timer.wait_time = dodge_cooldown
 	bunny_hop_boost = fall_node.bunny_hop_boost
-	cleaner_sprite = entity.get_node("Cleaner")
-
+	hurtbox_area = current_entity.get_node("HurtboxArea")
 
 func enter(_msg: = {}):
-	cleaner_sprite.show()
-	cleaner_sprite.flip_h = entity.sprite.flip_h
 	super.enter()
 	var move = get_movement_input()
 	frame_tracker = 0
@@ -109,45 +105,31 @@ func get_movement_input() -> float:
 
 func exit():
 	entity.sprite.position = Vector2.ZERO
-	cleaner_sprite.position = Vector2.ZERO
 	cooldown_timer.start()
 	dodge_over = false
 	is_actionable = false
 	set_proj_invlv(false)
 	set_strike_invlv(false)
-	entity.set_invlv_type("None")
-	cleaner_sprite.hide()
-	
+	entity.set_invlv_type("None")	
 
 func set_proj_invlv(status:bool):
-	#print("----------------------------------------------------")
-	#print("PROJ")
-	#print("previous invlv type is " + entity.invlv_type)
-	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, status)
-	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, status)
-	if status:
-		entity.add_invlv_type("Proj")
+	if entity.current_timeline == "Future":
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_FUTURE, status)
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_PAST, false)
 	else:
-		entity.remove_invlv_type("Proj")
-	#print("now its " + entity.invlv_type)
-	#print("----------------------------------------------------")
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_FUTURE, false)
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_PAST, status)
+
 
 func set_strike_invlv(status:bool):
-	#print("----------------------------------------------------")
-	#print("STRIKE")
-	#print("previous invlv type is " + entity.invlv_type)
-	if status:
-		entity.add_invlv_type("Strike")
-		if entity.get_level().get_current_timeline() == "Future":
-			entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, true)
-			entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, true)
-		else:
-			entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, true)
-			entity.set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, true)
+	if entity.current_timeline == "Future":
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_FUTURE, status)
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_PAST, false)
 	else:
-		entity.remove_invlv_type("Strike")
-	#print("now its " + entity.invlv_type)
-	#print("----------------------------------------------------")
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_FUTURE, false)
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_PAST, status)
+
+
 
 func conditions_met() -> bool:
 	if cooldown_timer.is_stopped():

@@ -24,7 +24,7 @@ signal respawning()
 @onready var invlv_timer:Timer = $"%Invlv_Timer"
 @onready var effects_animation: AnimationPlayer = $EffectAnimator
 @onready var death_screen:ColorRect = $"%UI/DeathScreen"
-@onready var sprite: AnimatedSprite2D = $"%AnimatedSprite2D"
+@onready var sprite: AnimatedSprite2D = $"%Cleaner"
 @onready var camera: Camera2DPlus = $Camera
 @onready var quick_menu:Control = $"%QuickMenu"
 @onready var stopwatch: Label = $"%Stopwatch"
