@@ -7,8 +7,7 @@ var parent = get_parent()
 const CLASH_RANGE: int = 5
 
 @export var damage: int = 100
-@export var knockback_angle: int = 1
-@export var knockback_amount: int = 1
+@export var knockback:Vector2
 @export var attack_type: String = "Normal"
 @export var width:int = 100
 @export var height:int = 100
@@ -19,7 +18,7 @@ const CLASH_RANGE: int = 5
 @export var duration:int = 10
 
 @onready var state_machine: EntityStateMachine
-@onready var hitbox_owner : Entity
+@onready var hitbox_owner 
 @onready var hitbox: CollisionShape2D = get_node("Shape")
 
 var framez = 0.0
@@ -43,7 +42,7 @@ func set_parameters(hitbox_info: = {}):
 				print(i)
 			print("-------------------------------------------")
 		visible = true
-		if !hitbox_owner:
+		if hitbox_owner == null:
 			push_error("Hitbox created without")
 		if hitbox_owner.has_method("get_state_machine"):
 			state_machine = hitbox_owner.get_state_machine()
@@ -78,45 +77,25 @@ func _physics_process(delta:float ) -> void:
 	elif framez == duration:
 		queue_free()
 		return
+
 	#if state_machine:
 		#if state_machine.get_current_state().name != "Attack":
 			#queue_free()
 			#return
 
-func _on_body_entered(body):
-	if body is RigidBody2D:
-		if global_position > body.global_position:
-			object_push = -abs(object_push)
-		else:
-			object_push = abs(object_push)
-		body.call_deferred("apply_central_impulse",object_push)
-		emit_signal("hitbox_collided", body)
-		if body.has_method("damage"):
-			body.damage(damage)
-	#	if body.has_method("knockback_entity"):
-		#	body.knockback_entity(object_push, knockback_amount)
-			# knockback_entity(knockback_amount:int, hitbox_location:Vector2, knockback_angle_modifier:float = 0, ):
-	elif body is Entity:
-		if body != hitbox_owner:
-			var invlv_type:String = body.get_invlv_type()
-			if !invlv_type.contains("Strike"):
-				damage_entity(body)
-
-
 
 func _on_area_entered(area:Area2D):
 	var area_parent = area.get_parent()
+	print("entered area" + area.name)
+	print("area parent = " + area_parent.name )
+	if area_parent == hitbox_owner:
+		return
+	#Check to see if one person is actually hitting the other.
+				#If hitbox A is hitting hitbox B and hurtbox B, 
+				#but hitbox B is only hitting hitbox A,
+				#Person B takes the damage.
+	#Otherwise we check to see if they're the same type.
 	if area is Hitbox:
-		#Check to see if one person is actually hitting the other.
-		for i in get_overlapping_bodies():
-			if i == area.get_parent():
-				if i is Entity or i is EnemyRigid:
-					#If hitbox A is hitting hitbox B and hurtbox B, 
-					#but hitbox B is only hitting hitbox A,
-					#Person B takes the damage. 
-					damage_entity(area_parent)
-					return
-		#Then we check to see if they're the same type.
 		if attack_type == area.attack_type:
 			#If they're the same type, they can clash, and we move on.
 			if abs(area.damage  - damage) <=  CLASH_RANGE:
@@ -124,18 +103,27 @@ func _on_area_entered(area:Area2D):
 				area.queue_free()
 				self.queue_free()
 				print_debug("CLASH")
-	elif area_parent is Entity:
-		if area_parent != hitbox_owner:
-			var invlv_type:String = area_parent.get_invlv_type()
-			if !invlv_type.contains("Strike"):
-				damage_entity(area_parent)
+				return
+	if area_parent is Entity:
+		damage_entity(area_parent)
+	elif area_parent is MoveableObject:
+		area_parent.damage(damage)
+		if global_position < area_parent.global_position:
+			area_parent.apply_central_impulse(object_push)
+		else:
+			area_parent.apply_central_impulse(Vector2(-object_push.x, object_push.y))
 
-func damage_entity(body):
-	body.damage(damage, knockback_amount, knockback_angle)
+func damage_entity(body: Entity):
+	if body.global_position < global_position:
+		knockback.x = -knockback.x
+	else:
+		knockback.x = abs(knockback.x)
+	body.damage(damage, knockback, hitstun)
+
 	emit_signal("hitbox_collided", body)
-#	queue_free()
+
 func set_future_collision():
-	set_collision_layer_value(GlobalScript.collision_values.HITBOX_FUTURE, true)
+	set_collision_layer_value(GlobalScript.collision_values.STRIKE_HITBOX_FUTRUE, true)
 	
 	set_collision_mask_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.ENEMY_STRIKE_HURTBOX_FUTURE, true)
@@ -144,7 +132,7 @@ func set_future_collision():
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
 
 func set_past_collision():
-	set_collision_layer_value(GlobalScript.collision_values.HITBOX_PAST, true)
+	set_collision_layer_value(GlobalScript.collision_values.STRIKE_HITBOX_PAST, true)
 	
 	set_collision_mask_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.ENEMY_STRIKE_HURTBOX_PAST, true)

@@ -107,8 +107,6 @@ enum collision_values {
 	OBJECT_PAST = 4,
 	ENTITY_FUTURE = 5,
 	ENTITY_PAST = 6,
-	HITBOX_FUTURE = 7,
-	HITBOX_PAST = 8,
 	GROUND_FUTURE = 9,
 	GROUND_PAST = 10,
 	WALL_FUTURE = 11,
@@ -127,6 +125,8 @@ enum collision_values {
 	PLAYER_PROJ_HURTBOX_PAST = 24,
 	ENEMY_PROJ_HURTBOX_FUTURE = 25,
 	ENEMY_PROJ_HURTBOX_PAST = 26,
+	STRIKE_HITBOX_FUTRUE = 27,
+	STRIKE_HITBOX_PAST = 28
 }
 const LEVEL_PATHS = {
 	"Emergence" = "uid://2ixcpeisj8it",

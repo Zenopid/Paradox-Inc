@@ -75,7 +75,7 @@ func _on_link_object_damaged(new_health:int ):
 	injure_timer.start()
 	emit_signal("damaged", health - new_health)
 
-func damage(amount, knockback: int = 0, knockback_angle: int = 0, hitstun: int = 0):
+func damage(amount, knockback: Vector2 = Vector2.ZERO, hitstun: int = 0):
 	in_hitstun = true
 	stun_cnt = hitstun
 	effects_animation.play("Immune")

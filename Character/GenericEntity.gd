@@ -46,7 +46,7 @@ func get_level() -> GenericLevel:
 func set_level(new_level:GenericLevel):
 	current_level = new_level
 	
-func damage(amount, knockback: int = 0, knockback_angle: int = 0, hitstun:int = 0):
+func damage(amount, knockback: Vector2 = Vector2.ZERO, hitstun:int = 0):
 	pass
 
 func knockback_entity(knockback:Vector2, modifier:float):

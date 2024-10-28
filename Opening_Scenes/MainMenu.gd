@@ -33,6 +33,8 @@ var first_level = preload("res://Levels/Act 1/Emergence.tscn")
 
 @onready var bgm:AudioStreamPlayer = $"%BGM"
 
+@onready var ghost_button:Button = $"%Time Attack"
+
 func _ready():
 	GlobalScript.main_menu = self
 	add_to_group("MainMenu")
@@ -43,7 +45,6 @@ func _ready():
 	for i in get_tree().get_nodes_in_group("Levels"):
 		i.connect("pressed", Callable(self, "start_level").bind(i.name))
 	if GlobalScript.has_save():
-		resume.disabled = false
 		save_file_scene = load(SAVE_FILE_SCENE_PATH).instantiate()
 		save_file_scene.hide()
 		add_child(save_file_scene)
@@ -80,7 +81,9 @@ func enable_menu():
 		nodes.mouse_filter = Control.MOUSE_FILTER_PASS
 	for nodes in get_tree().get_nodes_in_group("Debug"):
 		nodes.visible = GlobalScript.debug_enabled
+		
 	resume.disabled = !GlobalScript.has_save()
+	ghost_button.disabled = (ghost_data == null)
 	set_process_input(true)
 	start_button.grab_focus()
 	GlobalScript.disable_free_play()

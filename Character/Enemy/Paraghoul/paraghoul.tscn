@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=3 uid="uid://fcuvx05j2v0y"]
+[gd_scene load_steps=68 format=3 uid="uid://fcuvx05j2v0y"]
 
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Paraghoul.gd" id="1_0ualm"]
 [ext_resource type="Texture2D" uid="uid://bgcenq3nxvjn2" path="res://Sprites/Enemies/Paraghoul/ParaghoulAttack_1.png" id="2_8q4jg"]
@@ -37,6 +37,10 @@
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Dazed.gd" id="27_8bief"]
 [ext_resource type="PackedScene" uid="uid://beb270t22q5l5" path="res://Character/hitbox.tscn" id="31_mi01h"]
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Charge.gd" id="33_b5ts8"]
+[ext_resource type="Script" path="res://Character/Hitstun.gd" id="36_wk6mu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1weg5"]
+size = Vector2(53.5, 46.5)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_5e6m6"]
 animations = [{
@@ -808,6 +812,17 @@ script = ExtResource("1_0ualm")
 gravity = 0
 max_fall_speed = 0
 
+[node name="HurtboxArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+visible = false
+collision_layer = 0
+collision_mask = 0
+
+[node name="Hurtbox" type="CollisionShape2D" parent="HurtboxArea"]
+unique_name_in_owner = true
+position = Vector2(0, 0.75)
+shape = SubResource("RectangleShape2D_1weg5")
+
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 z_index = 1
@@ -858,6 +873,7 @@ direction_cooldown = 1.5
 idle_speed = 150
 acceleration = 2.0
 bounce_rand = 0.15
+target_reached_range = Vector2(25, 25)
 animation_name = "Idle"
 
 [node name="Shoot" type="Node" parent="StateMachine"]
@@ -872,9 +888,8 @@ bus = &"Sfx"
 [node name="Chase" type="Node" parent="StateMachine"]
 script = ExtResource("16_d26je")
 acceleration = 5
-random_spread = 0.786
-target_position_randomness = 125
-target_area_size = 50
+target_position_randomness = Vector2(25, 75)
+target_area_size = 75
 animation_name = "Idle"
 
 [node name="Melee" type="Node" parent="StateMachine"]
@@ -965,6 +980,9 @@ shape = SubResource("ConvexPolygonShape2D_xyb2p")
 max_results = 8
 collision_mask = 16128
 script = ExtResource("19_h3ai8")
+
+[node name="BaseState" type="Node" parent="StateMachine"]
+script = ExtResource("36_wk6mu")
 
 [node name="DetectionSphere" type="Area2D" parent="."]
 unique_name_in_owner = true
@@ -1057,6 +1075,8 @@ one_shot = true
 unique_name_in_owner = true
 path_postprocessing = 1
 avoidance_enabled = true
+radius = 25.0
+neighbor_distance = 750.0
 avoidance_layers = 3
 avoidance_mask = 3
 debug_enabled = true

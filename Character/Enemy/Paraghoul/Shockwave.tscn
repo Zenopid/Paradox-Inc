@@ -1,11 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://yinehm0bdrg6"]
+[gd_scene load_steps=14 format=3 uid="uid://yinehm0bdrg6"]
 
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Shockwave.gd" id="1_ruqux"]
 [ext_resource type="AudioStream" uid="uid://bq1f7ps8fb75t" path="res://Character/Enemy/Paraghoul/Sfx/fireball_explode.mp3" id="2_dimxk"]
 [ext_resource type="AudioStream" uid="uid://bsqtpkqh8pjin" path="res://Character/Enemy/Paraghoul/Sfx/fireball_travel.mp3" id="3_25nmm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jfhos"]
-size = Vector2(50, 15)
+size = Vector2(30, 15)
 
 [sub_resource type="Animation" id="Animation_0olqg"]
 length = 0.001
@@ -54,9 +54,12 @@ scale_curve = SubResource("CurveTexture_fuvnx")
 color = Color(0.41, 0.314333, 0, 1)
 collision_mode = 2
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p82ix"]
+size = Vector2(35, 20)
+
 [node name="Shockwave" type="CharacterBody2D"]
 collision_layer = 196608
-collision_mask = 771
+collision_mask = 12583680
 script = ExtResource("1_ruqux")
 damage = 10
 width = 50
@@ -71,9 +74,8 @@ timeline = "All"
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
-position = Vector2(0, -7.5)
+position = Vector2(0, -1)
 shape = SubResource("RectangleShape2D_jfhos")
-debug_color = Color(0.831373, 0.0901961, 0.101961, 0.196078)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
@@ -105,5 +107,15 @@ position = Vector2(0, -1)
 target_position = Vector2(0, 20)
 collision_mask = 768
 hit_from_inside = true
+
+[node name="HitboxArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -1)
+collision_layer = 196608
+collision_mask = 12582912
+
+[node name="Hitbox" type="CollisionShape2D" parent="HitboxArea"]
+shape = SubResource("RectangleShape2D_p82ix")
+debug_color = Color(0.831373, 0.0901961, 0.101961, 0.196078)
 
 [connection signal="finished" from="Travelling" to="." method="_on_travelling_finished"]

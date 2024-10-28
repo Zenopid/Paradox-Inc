@@ -9,6 +9,8 @@ extends GenericLevel
 @onready var puzzle_box:MoveableObject = $"%PuzzleBox"
 @onready var exit_barrier:StaticBody2D = $%"ExitBarrier"
 @export var laser_damage: int = 10
+@export var laser_knockback = Vector2(10, 0)
+@export var hitstun: int = 3
 
 
 func _ready():
@@ -72,7 +74,8 @@ func _on_player_respawning():
 	level_animator.play("Rest")
 
 func _on_laser_area_entered(body:PhysicsBody2D):
-	body.damage(laser_damage)
+	if body is Entity:
+		body.damage(laser_damage, laser_knockback, hitstun)
 
 func _on_swapped_timeline(new_timeline:String):
 	#super._on_swapped_timeline(new_timeline)

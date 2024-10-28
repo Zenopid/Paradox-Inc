@@ -9,15 +9,18 @@ Fixed a bug where you couldn't drift during air attacks
 Fixed a bug changing coyote time
 Fixed a bug where rolling wasn't proj invlv for real this time 99% sure 
 Fixed a bug where air attack 1 froze at the last frame of animation, preventing you from doing anything until you hit the ground
+Strike and Projectile hitbox optimizations
+Seperated detection and collision so now things can track the player without being able to hit them.
+
+Added a version tracker in the top right of the main menu.
 
 New Game Mode: Time Attack
 When you complete a level, you now have the ability to save your playthrough as a ghost.
-Race  aganist a ghost to try and obtain a high score.
+Race against a ghost to try and obtain a high score.
 
 
 New Game Mode: Free Play
-Play through a level with the grapple and all items available.
-
+Play through a level with the grapple and all items (none right now) available.
 
 System
 	-Added bgm to main menu, training mode, and Emergence
@@ -33,7 +36,7 @@ New Garbage Container
 	-Explodes into garbage bags
 
 Added Saving and Loading
-	- Was completely broken in the last patch. Kinda broken and didn't save stuff created in the level like boxes and enemys. Now completely overhauled to work properly.
+	- Was completely broken in the last patch. Kind of broken and didn't save stuff created in the level like boxes and enemies. Now completely overhauled to work properly.
 	- Will save the following:
 	  User Settings
           Game Info (Checkpoints, player info like position, enemies, etc)
@@ -48,7 +51,9 @@ Player
 
 Camera:
 	-Increased camera zoom (1.2x -> 1.5x)
-	-Offset camera upwards 0.5 meters
+	-Offset camera upwards 0.75 meters and 2.5 meters in the direction that you're facing
+	(This used to be in the game, not sure when it disappeared but its back now)
+	-Camera now faces the opposite way when wall sliding / wall running (away from the wall, towards where the 	sprite is looking)
 
 
 Slide:
@@ -80,7 +85,6 @@ Attacks:
 	
 	Nerfed drift during air attacks (0.17 mps in air naturally vs 0.1 mps during attacks)
 
-	Increased ground pound hitbox width (0.39 -> 0.55 meters wide)
 	Added attack buffer (length of 0.1 seconds)
 	Decreased ground pound horizontal deceleration (85% -> 25%)
 	Increased damage of 3rd attack in grounded combo (20 -> 25 dmg)
@@ -89,7 +93,10 @@ Attacks:
 
 	Can now buffer jumping and dodging out of air attacks
 	
+	Changed hitbox size of all attacks due to new sprites
 
+	Ground Pound:
+		- No longer collides with enemies while falling
 
 Wallslide:
 
@@ -100,33 +107,41 @@ Wallslide:
 
 Wallrun (New):
 	
+	Run up wall that you are touching, can bounce/jump off walls similarly to wallslide
 	One wall run that refreshes on touching the ground
-	Speed slowly decays after a brief delay, will eventually transition to a wall slide
+	Speed slowly decays after a brief delay, will eventually transition to a wall slide once enough speed lost
 	
 
 
 Paraghoul
 
-	-Added pathfinding 
+	New type: Garbage Bag Ghoul:
+	Glass cannon, since garbage bags are lighter and have less hp then boxes
+	Has fire ramming attack that slams into the player
+	Grapple pulling a charging ghoul will stun them
 
+	New type: Garbage Container Ghouls
+	Miniboss
+	Has new ground pound attack that shoots out highly damaging shockwaves
+	Can be stunned by attacks after the ground pound to be struck by follow up melee attacks
+	Also contains ram attack of garbage bag ghouls
+
+	-Added pathfinding 
+	- Striking dazed Paraghouls will also damage link objects 
+	-Paraghouls will now try to hover above the player rather than fly into them.
 	-Added sfx to fireballs travelling and hitting targets
 
 	Shrunk length but increased height for fireball hitbox 
 	Fireball now starts at max speed
 	Fireball steers around much faster (2 -> 7)
 
-	New type: Garbage Bag Ghoul:
-	Glass cannon, since garbage bags are lighter and have less hp then boxes
-	Has fire ramming attack that chases towards the player and slams into them
-	Grapple pulling a charging ghoul will stun them
+	
 
-	New type: Garbage Container Ghouls
-	Miniboss
-	Has new ground pound attack that shoots out highly damaging shockwaves
-	Can be stunned by normal attacks after the ground pound to be struck by follow up melee attacks
-	Has large health pool
-	Striking dazed paraghouls will also damage link objects 
-	Also contains ram attack of garbage bag ghouls
+Trooper
+	-New enemy type
+	-Grounded humanoid attack type that runs around shooting plasma bolts that travel in a straight line
+	-Will try to dodge attacks 
+	
 
 
 

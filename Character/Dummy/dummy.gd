@@ -12,7 +12,7 @@ class_name TrainingDummy extends Entity
 @export var max_health:int = 250
 @onready var health:int = 250
 
-func damage(amount, knockback: int = 0, knockback_angle: int = 0, hitstun:int = 0):
+func damage(amount, knockback: Vector2 = Vector2.ZERO, hitstun:int = 0):
 	anim_player.stop()
 	if amount >= heavy_damage_threshold:
 		anim_player.play("Damaged3")

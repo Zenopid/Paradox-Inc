@@ -3,10 +3,11 @@
 [ext_resource type="Script" path="res://Character/Hitbox.gd" id="1_8uiiq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dk2i"]
+size = Vector2(100, 1.25)
 
 [node name="Hitbox" type="Area2D"]
 z_index = -1
-collision_layer = 0
+collision_layer = 64
 collision_mask = 0
 collision_priority = 50.0
 script = ExtResource("1_8uiiq")
@@ -17,4 +18,3 @@ shape = SubResource("RectangleShape2D_7dk2i")
 debug_color = Color(0.701961, 0, 0.0117647, 0.419608)
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]

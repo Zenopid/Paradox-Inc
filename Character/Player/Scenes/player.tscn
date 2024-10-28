@@ -1,4 +1,4 @@
-[gd_scene load_steps=236 format=3 uid="uid://68mxs8vrodes"]
+[gd_scene load_steps=242 format=3 uid="uid://68mxs8vrodes"]
 
 [ext_resource type="Script" path="res://Character/Player/scripts/Player.gd" id="1_rhw38"]
 [ext_resource type="Script" path="res://Character/Player/scripts/GrapplingHook.gd" id="2_knt1j"]
@@ -121,6 +121,7 @@
 [ext_resource type="Texture2D" uid="uid://b4r07femjr3n5" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack3-01.png" id="60_dm36x"]
 [ext_resource type="Texture2D" uid="uid://cau7sgvghhf0b" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack3-02.png" id="61_hevdc"]
 [ext_resource type="Texture2D" uid="uid://dyetfep4favr4" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack3-03.png" id="62_mnrrg"]
+[ext_resource type="Texture2D" uid="uid://cprftulorem7i" path="res://Sprites/The Cleaner/Ninja/ninja_guy_sub1.png" id="62_t1hlo"]
 [ext_resource type="Texture2D" uid="uid://ctjd06ri5ysbx" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack3-04.png" id="63_ns46o"]
 [ext_resource type="Texture2D" uid="uid://bxiv78vslvjf8" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-attack3-05.png" id="64_tfptn"]
 [ext_resource type="Texture2D" uid="uid://c0vk4qm408cpl" path="res://Sprites/Adventurer-1.5/Individual Sprites/adventurer-idle-00.png" id="65_icww3"]
@@ -173,6 +174,7 @@
 [ext_resource type="Texture2D" uid="uid://dfl65b0g1jhq8" path="res://Sprites/Stages/Tiles/Assets/Background_2.png" id="112_fcxrk"]
 [ext_resource type="Texture2D" uid="uid://cmvmd1suu7ptj" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Base Color.png" id="113_fvjj6"]
 [ext_resource type="PackedScene" uid="uid://d18ny0w4wlb1h" path="res://Universal_Scenes/camera.tscn" id="114_ev06i"]
+[ext_resource type="Script" path="res://Character/Player/scripts/player_hitstun.gd" id="162_a3sbm"]
 [ext_resource type="Script" path="res://Character/Player/scripts/wall_run.gd" id="168_xvudv"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2jdic"]
@@ -274,6 +276,8 @@ _data = {
 "cooldown_end": SubResource("Animation_3jld0"),
 "cooldown_start": SubResource("Animation_q2nri")
 }
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_no0la"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_exgey"]
 animations = [{
@@ -498,6 +502,14 @@ animations = [{
 }],
 "loop": true,
 "name": &"Jump_To_Fall",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("62_t1hlo")
+}],
+"loop": true,
+"name": &"Jutsu_One",
 "speed": 5.0
 }, {
 "frames": [{
@@ -2145,6 +2157,49 @@ tracks/7/keys = {
 }]
 }
 
+[sub_resource type="Animation" id="Animation_naote"]
+resource_name = "Hurt"
+length = 0.0166684
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Cleaner:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Jutsu_One"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Cleaner:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("StateMachine/Hitstun")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.0166667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"on_animation_over"
+}]
+}
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1ymqm"]
 size = Vector2(30, 42)
 
@@ -2831,6 +2886,7 @@ _data = {
 "Grounded_Attack_1": SubResource("Animation_1o8gg"),
 "Grounded_Attack_2": SubResource("Animation_1ptdi"),
 "Grounded_Attack_3": SubResource("Animation_l28g0"),
+"Hurt": SubResource("Animation_naote"),
 "Idle": SubResource("Animation_hgcaq"),
 "Jump": SubResource("Animation_wrlkf"),
 "Jump Squat": SubResource("Animation_qotqj"),
@@ -2915,6 +2971,10 @@ _data = {
 "RESET": SubResource("Animation_tpcx1"),
 "Rest": SubResource("Animation_tq0si")
 }
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jrqky"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y1fqk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iigp1"]
 size = Vector2(25, 25)
@@ -3097,6 +3157,8 @@ mouse_filter = 2
 player = NodePath("../..")
 
 [node name="Cleaner" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_no0la")
 position = Vector2(0, -3)
 sprite_frames = SubResource("SpriteFrames_exgey")
 animation = &"Idle"
@@ -3114,7 +3176,9 @@ position = Vector2(0, 3.5)
 shape = SubResource("RectangleShape2D_b022k")
 
 [node name="HurtboxArea" type="Area2D" parent="."]
-collision_layer = 4456449
+unique_name_in_owner = true
+collision_layer = 202113024
+collision_mask = 0
 
 [node name="Hurtbox" type="CollisionShape2D" parent="HurtboxArea" groups=["Collision"]]
 unique_name_in_owner = true
@@ -3255,6 +3319,11 @@ unique_name_in_owner = true
 stream = ExtResource("101_jxk6i")
 bus = &"Sfx"
 
+[node name="Hitstun" type="Node" parent="StateMachine"]
+script = ExtResource("162_a3sbm")
+weight = 0.958
+animation_name = "Hurt"
+
 [node name="Idle" type="Node" parent="StateMachine"]
 script = ExtResource("102_p8gee")
 animation_name = "Idle"
@@ -3317,6 +3386,7 @@ animation_name = "Run"
 
 [node name="Slide" type="Node" parent="StateMachine"]
 script = ExtResource("107_qbj8p")
+time_to_exit_slide = 0.1
 slide_acceleration = 10
 slide_deceleration = 10
 slide_speed = 425
@@ -3345,7 +3415,9 @@ fixed_fps = 60
 
 [node name="WallRun" type="Node" parent="StateMachine"]
 script = ExtResource("168_xvudv")
+time_until_decay = 0.25
 acceleration = 2
+cd = 0.35
 max_slide_speed = 900
 decel_rate = 0.85
 animation_name = "Run"
@@ -3355,7 +3427,6 @@ has_inactive_process = true
 script = ExtResource("109_jk6ox")
 eject_timer = 0.2
 crouch_slide_boost = 10
-Wallbouce_timer = 0.35
 jump_decay_rate = 0.15
 jump_boost = Vector2(50, -75)
 minimum_jump_decay = 0.05
@@ -3401,6 +3472,13 @@ wait_time = 0.8
 one_shot = true
 
 [node name="Wallrun_Decay" type="Timer" parent="StateMachine/Timers"]
+one_shot = true
+
+[node name="Slide_Exit" type="Timer" parent="StateMachine/Timers"]
+wait_time = 0.6
+one_shot = true
+
+[node name="Wallrun_CD" type="Timer" parent="StateMachine/Timers"]
 one_shot = true
 
 [node name="Raycasts" type="Node" parent="StateMachine"]
@@ -3481,11 +3559,13 @@ tween_duration = 0.25
 
 [node name="PastBackground" type="ParallaxLayer" parent="Backgrounds"]
 z_index = 1
+material = SubResource("ShaderMaterial_jrqky")
 motion_scale = Vector2(0, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="Backgrounds/PastBackground"]
 modulate = Color(0.85, 0.85, 0.85, 1)
 texture_filter = 1
+material = SubResource("ShaderMaterial_y1fqk")
 position = Vector2(1, -1)
 scale = Vector2(2.3246, 2.37132)
 texture = ExtResource("112_fcxrk")
@@ -3503,13 +3583,13 @@ texture = ExtResource("113_fvjj6")
 centered = false
 
 [node name="Camera" parent="." node_paths=PackedStringArray("player") instance=ExtResource("114_ev06i")]
-ignore_rotation = false
 enabled = true
 zoom = Vector2(1.4, 1.4)
-process_callback = 0
-zoom_speed = 0.5
+drag_top_margin = 0.4
+drag_bottom_margin = 0.4
+zoom_speed = 0.4
 player = NodePath("..")
-FOLLOW_OFFSET = Vector2(0, -50)
+FOLLOW_OFFSET = Vector2(150, -75)
 SHAKE_DECAY = 0.15
 
 [node name="DetectionArea" type="Area2D" parent="."]

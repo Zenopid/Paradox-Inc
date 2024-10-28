@@ -4,12 +4,14 @@ var dodge_area2D: Area2D
 var roll_speed:int = 500
 var ground_checker:RayCast2D
 var los_shapecast:ShapeCast2D
+var cd:Timer 
 
 func init(current_entity: Entity, s_machine: EntityStateMachine):
 	super.init(current_entity, s_machine)
 	dodge_area2D = current_entity.get_node("%Hurtbox").get_parent()
 	ground_checker = state_machine.get_raycast("GroundChecker")
 	los_shapecast = state_machine.get_shapecast("LOS")
+	cd = state_machine.get_timer("RollCD")
 
 func enter(_msg: = {}):
 	super.enter(_msg)
@@ -38,6 +40,11 @@ func exit_state():
 		"Shoot",
 		"Active"
 	])
+
+func conditions_met() -> bool:
+	return false 
+	#return cd.is_stopped():
+	
 func exit():
 	dodge_area2D.monitoring = true 
 	ground_checker.enabled = false

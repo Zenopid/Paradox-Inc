@@ -7,9 +7,6 @@ class_name Shockwave extends Projectile
 
 func _physics_process(delta):
 	rotation_degrees = 0
-	var status = !player.get_invlv_type().contains("Proj")
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, status)
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, status)
 	var projectile_speed:Vector2 = (direction * speed)  
 	if direction.x > 0:
 		particles.scale.x = -1

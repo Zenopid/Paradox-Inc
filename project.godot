@@ -162,6 +162,8 @@ view_timeline={
 2d_physics/layer_24="Player Proj Hurtbox (Past)"
 2d_physics/layer_25="Enemy Proj Hurtbox (Future)"
 2d_physics/layer_26="Enemy Proj Hurtbox (Past)"
+2d_physics/layer_27="Strike Hitbox (Future)"
+2d_physics/layer_28="Strike Hitbox (Past)"
 
 [physics]
 

@@ -8,8 +8,10 @@ class_name Trooper extends Enemy
 
 
 
-func damage(amount, knockback: int = 0, knockback_angle: int = 0, hitstun: int = 0):
-	super.damage(amount, knockback, knockback_angle, hitstun)
+
+
+func damage(amount, knockback: Vector2 = Vector2.ZERO, hitstun: int = 0):
+	super.damage(amount, knockback, hitstun)
 	var roll_rng = randi_range(0, 100)
 	if roll_rng <= roll_chance:
 		roll_chance = minimum_roll_chance

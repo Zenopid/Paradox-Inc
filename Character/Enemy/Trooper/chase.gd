@@ -18,7 +18,6 @@ func enter(_msg: = {}):
 	super.enter(_msg)
 	los_shapecast.enabled = true
 	ground_checker.enabled = true 
-	chase_timer.start()
 
 func physics_process(delta:float):
 	los_shapecast.position = entity.position
@@ -36,3 +35,4 @@ func physics_process(delta:float):
 func exit():
 	los_shapecast.enabled = false
 	ground_checker.enabled = false
+	chase_timer.start()

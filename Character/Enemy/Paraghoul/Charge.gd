@@ -30,7 +30,6 @@ func enter(msg: = {}):
 	entity.sprite.look_at(charge_direction)
 
 func _on_startup_finished():
-	print("startup has finished")
 	entity.anim_player.play("ChargeLoop")
 	charge_timer.start()
 	charging = true 
@@ -55,18 +54,15 @@ func _on_startup_finished():
 	particles.rotation_degrees = entity.sprite.rotation_degrees + 180
 
 func _on_charge_landed(object):
-	print("exiting cuz it hit something")
 	state_machine.transition_to("Chase")
 	
 func physics_process(delta:float):
 	if entity.grounded():
-		print("exiting cuz its grounded ")
 		state_machine.transition_to("Chase")
 		return
 	if charging:
 		if charge_timer.is_stopped():
-			print("exited because its been charging too long")
-			entity.pathfinder.target_position = get_tree().get_first_node_in_group("Players").global_position
+			entity.pathfinder.target_position = entity.aggro_player.global_position
 			state_machine.transition_to("Chase")
 			return
 		entity.velocity = charge_direction * charge_speed

@@ -27,17 +27,14 @@ func enter(_msg: ={}):
 func physics_process(_delta):
 	var weight = min((abs(entity.velocity.x) / entity.max_grapple_speed), 1)
 	scanner_shape.b.x = lerp(MINIMUM_SHAPECAST_SIZE, MAXIMUM_SHAPECAST_SIZE, weight) 
-	if get_movement_input() != 0:
-		if facing_left():
-			if entity.velocity.x > -max_speed:
-				entity.velocity.x -= air_acceleration
-				if entity.velocity.x < -max_speed:
-					entity.velocity.x = -max_speed
-		else:
-			if entity.velocity.x < max_speed:
-				entity.velocity.x += air_acceleration
-				if entity.velocity.x > max_speed:
-					entity.velocity.x = max_speed
+	var move = get_movement_input()
+	
+	if move != 0:
+		if abs(entity.velocity.x) < max_speed or sign(move) != sign(entity.velocity.x):
+			entity.velocity.x += air_acceleration * move
+			if abs(entity.velocity.x) > max_speed:
+				entity.velocity.x = max_speed * sign(entity.velocity.x)
+	
 	if state_machine.state_available("WallRun"):
 		state_machine.transition_to("WallRun", {previous_speed = speed_before_wallslide})
 		return
@@ -47,12 +44,11 @@ func physics_process(_delta):
 	elif abs(entity.velocity.x) > MINIMUM_WALLBOUNCE_SPEED :
 		speed_before_wallslide = entity.velocity
 
-	if facing_left():
-		wall_checker.scale.x = -1
-		wall_checker.position = Vector2(entity.position.x - 11, entity.position.y - 10)
-	else:
-		wall_checker.scale.x = 1
-		wall_checker.position = Vector2(entity.position.x + 11, entity.position.y - 10)
+
+	var facing = get_facing_as_int()
+	wall_checker.scale.x = facing
+	wall_checker.position = Vector2(entity.position.x + (11 * facing), entity.position.y - 10)
+
 func default_move_and_slide():
 	entity.move_and_slide()
 	push_objects()

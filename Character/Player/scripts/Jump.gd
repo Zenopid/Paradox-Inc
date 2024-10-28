@@ -40,7 +40,6 @@ var jump_buffer:Timer
 var superjump_timer:Timer
 
 var already_jumped:bool = false
-var cleaner_sprite: AnimatedSprite2D
 
 
 	
@@ -51,26 +50,18 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	jump_buffer = state_machine.get_timer("Jump_Buffer")
 	fastfall_timer = state_machine.get_timer("Fastfall_Lockout")
 	superjump_timer = s_machine.get_timer("Superjump")
-	cleaner_sprite = entity.get_node("Cleaner")
 	
 func enter(msg: = {}):
 	wall_checker.enabled = true
-	cleaner_sprite.show()
-	cleaner_sprite.flip_h = entity.sprite.flip_h
-	var is_grounded:bool = ground_checker_colliding()
 	already_jumped = true 
-	if !jump_buffer.is_stopped() and is_grounded:
+	if !jump_buffer.is_stopped() and ground_checker_colliding():
 		entity.velocity.x *= bunny_hop_bonus
 	jump_buffer.stop()
 	jump_squat_over = true
 	jump_speed = Vector2(0, jump_velocity)
 	var double_jump_multiplier: float = 1
-	sfx.pitch_scale = 2
 	if !superjump_timer.is_stopped():
-		jump_speed.y *= superjump_bonus
-		sfx.pitch_scale = SUPERJUMP_PITCH_SCALE
-		emit_superjump_particles()
-		superjump_sfx.play()
+		superjump()
 	for i in msg.keys():
 		match i:
 			"add_jump":
@@ -82,9 +73,10 @@ func enter(msg: = {}):
 					jump_speed.x = msg["overwrite_speed"].x
 				if msg["overwrite_speed"].y != -1:
 					jump_speed.y = msg["overwrite_speed"].y
+				print("overwriting speed")
 			"double_jump_multiplier":
 				double_jump_multiplier = msg["double_jump_multiplier"]
-	if is_grounded or !coyote_timer.is_stopped():
+	if ground_checker_colliding():
 		apply_jump_squat()
 	else:
 		var boost: Vector2 = Vector2.ZERO
@@ -106,6 +98,13 @@ func physics_process(delta):
 			state_machine.transition_to("Fall")
 			return
 	default_move_and_slide()
+
+func superjump():
+	jump_speed.y *= superjump_bonus
+	sfx.pitch_scale = SUPERJUMP_PITCH_SCALE
+	emit_superjump_particles()
+	superjump_sfx.play()
+	sfx.pitch_scale = 2
 
 func apply_jump_squat():
 
@@ -134,9 +133,6 @@ func input(event:InputEvent):
 		double_jump()
 
 func double_jump(additional_multiplier: float = 1, boost: Vector2 = Vector2.ZERO):
-	if remaining_jumps <= 0:
-		remaining_jumps = 0
-		return
 	entity.velocity.y = (jump_velocity * double_jump_strength) * additional_multiplier
 	if abs(entity.velocity.x) < entity.max_grapple_speed:
 		entity.velocity.x += double_jump_boost * get_movement_input()
@@ -160,11 +156,7 @@ func get_jumps() -> int:
 
 func exit() -> void:
 	super.exit()
-	if grounded():
-		remaining_jumps = double_jumps
-		already_jumped = false 
 	superjump_timer.stop()
-	cleaner_sprite.hide()
 	
 func conditions_met() -> bool:
 	var is_grounded = grounded()
@@ -183,22 +175,16 @@ func inactive_process(delta:float) -> void:
 func emit_superjump_particles() -> void:
 	superjump_particles.process_material.angle_min = 5 * sign(entity.velocity.x)
 	superjump_particles.process_material.angle_max = superjump_particles.process_material.angle_min
-	if !superjump_particles.emitting:
-		superjump_particles.emitting = true
-	else:
-		superjump_particles.restart()
+	superjump_particles.emitting = true
+
 
 func emit_particles() -> void: 
 	left_particles.position = Vector2(entity.position.x, entity.position.y + 18)
 	right_particles.position = left_particles.position
-	left_particles.scale.x = -1
-	right_particles.scale.x = 1
 	if grounded():
 		if !left_particles.emitting:
 			left_particles.emitting = true
-		else:
-			left_particles.restart()
-		if !right_particles.emitting:
 			right_particles.emitting = true
 		else:
+			left_particles.restart()
 			right_particles.restart()

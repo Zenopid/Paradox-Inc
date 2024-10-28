@@ -2,28 +2,22 @@ class_name FireBall extends Projectile
 @onready var anim_player = $"%AnimationPlayer"
 @onready var explosion_sfx:AudioStreamPlayer2D = $"%Explosion"
 @onready var travelling_sfx:AudioStreamPlayer2D = $"%Travelling"
-@onready var target:Player
+@onready var target: Player
 var acceleration:= Vector2.ZERO
 @export var STEER_FORCE: float = 25
 
 
-func _ready():
+func set_parameters(hitbox_info: = {}):
+	super.set_parameters(hitbox_info)
+	target = hitbox_info["target"]
 	anim_player.play("Travel")       
-	target = get_tree().get_first_node_in_group("Players")
 	travelling_sfx.play()
 	look_at(target.global_position)
 	velocity = projectile_owner.global_position.direction_to(target.global_position) * speed
-	if timeline == "All":
-		set_collision_mask_value(GlobalScript.collision_values.PLAYER_HURTBOX_FUTURE, true)
-		set_collision_mask_value(GlobalScript.collision_values.PLAYER_HURTBOX_PAST, true)
-	elif timeline == "Past":
-		set_collision_mask_value(GlobalScript.collision_values.PLAYER_HURTBOX_PAST, true)
-	else:
-		set_collision_mask_value(GlobalScript.collision_values.PLAYER_HURTBOX_FUTURE, true)
-	
+
 func seek():
-	if is_instance_valid(target):
-		var desired = (target.position - position).normalized() * speed
+	if is_instance_valid(target.global_position):
+		var desired = (target.global_position - position).normalized() * speed
 		var steer = (desired - velocity).normalized() * STEER_FORCE
 		return steer
 	return null
@@ -33,9 +27,6 @@ func play_explosion_sfx():
 		explosion_sfx.play()
 
 func _physics_process(delta):
-	if !is_instance_valid(player):
-		return
-
 	var seek_value = seek()
 	if seek_value:
 		velocity += seek_value
@@ -43,9 +34,7 @@ func _physics_process(delta):
 	rotation = velocity.angle()
 	var collision = move_and_collide(velocity * delta)
 	if collision:
-		if typeof(collision.get_collider()) != TYPE_NIL:
-			play_explosion_sfx()
-			_on_body_entered(collision.get_collider())
+		queue_free()
 	if framez < duration:
 		framez += 1
 	elif framez == duration:
@@ -67,3 +56,20 @@ func _physics_process(delta):
 
 func _on_travelling_finished():
 	travelling_sfx.play()
+	
+
+func set_future_collision():
+	set_collision_layer_value(GlobalScript.collision_values.PROJECTILE_FUTURE, true)
+	
+	hitbox_area.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
+
+func set_past_collision():
+	set_collision_layer_value(GlobalScript.collision_values.PROJECTILE_PAST, true)
+
+	hitbox_area.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
+	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)

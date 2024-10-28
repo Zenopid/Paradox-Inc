@@ -33,7 +33,8 @@ signal respawning()
 @onready var UI:CanvasLayer = $"%UI"
 @onready var timeline_tracker: Label = $"%TimelineTracker"
 @onready var detection_area: Area2D = $"%DetectionArea"
-@onready var hurtbox = $"%Hurtbox"
+@onready var hurtbox:CollisionShape2D = $"%Hurtbox"
+@onready var hurtbox_area: Area2D = $"%HurtboxArea"
 
 
 var player_info:PlayerInfo = PlayerInfo.new():
@@ -112,10 +113,18 @@ func set_collision(future_value, past_value):
 		detection_area.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, future_value)
 		detection_area.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, past_value)
 		
+		
 		detection_area.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, future_value)
 		detection_area.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, past_value)
 		
-		
+		if states.get_current_state().name != "Dodge":
+			hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_FUTURE, future_value)
+			hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_PAST, past_value)
+			hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_FUTURE, future_value)
+			hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_PAST, past_value)
+			hurtbox_area.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, future_value)
+			hurtbox_area.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, past_value)
+			
 
 		set_collision_layer_value(GlobalScript.collision_values.PLAYER_FUTURE, future_value)
 		set_collision_layer_value(GlobalScript.collision_values.PLAYER_PAST, past_value)
@@ -200,7 +209,7 @@ func _physics_process(delta):
 	
 func set_grapple_velocity():
 	grapple = grapple as Hook
-	var grounded = states.get_current_state().grounded()
+	var grounded = is_on_floor()
 	var walk = (Input.get_action_strength("right") - Input.get_action_strength("left")) * state_machine_states["Run"].move_speed
 	if grapple.attached and !player_braced:
 		grapple_velocity = to_local(grapple.hook_location).normalized()
@@ -283,13 +292,21 @@ func _set_health(value):
 			kill()
 			emit_signal("killed")
 
-func damage(amount, knockback:int = 0 , knockback_angle:int = 0, hitstun:int = 0, ignores_invuln = false):
+func damage(amount, knockback:Vector2 = Vector2.ZERO, hitstun:int = 0, ignores_invuln = false):
 	if invlv_timer.is_stopped() or ignores_invuln:
 		Input.start_joy_vibration(0, 0.5,0, 0.2)
 		invlv_timer.start()
 		_set_health(player_info.health - amount)
 		effects_animation.play("Damaged")
 		effects_animation.queue("Invincible")
+		if player_info.health > 0:
+			states.transition_to("Hitstun", {
+				"knockback": knockback,
+				"hitstun": hitstun
+			})
+		else:
+			kill()
+			emit_signal("killed")
 
 func heal(amount):
 	_set_health(health + amount)

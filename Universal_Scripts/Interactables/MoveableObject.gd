@@ -21,6 +21,7 @@ signal damaged(new_health)
 @onready var current_level:GenericLevel 
 @onready var collision = $"%Collision"
 @onready var anim_player:AnimationPlayer = $"ColorChanger"
+@onready var hurtbox_area:Area2D = $"%HurtboxArea"
 
 var being_pushed: bool = false
 var push_speed: int
@@ -109,7 +110,6 @@ func set_collision(future_collision_values: bool = true, past_collision_values: 
 	set_collision_layer_value(GlobalScript.collision_values.OBJECT_FUTURE, future_collision_values)
 	set_collision_layer_value(GlobalScript.collision_values.OBJECT_PAST,past_collision_values)
 
-
 	set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, future_collision_values)
 	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, past_collision_values)
 	
@@ -122,12 +122,13 @@ func set_collision(future_collision_values: bool = true, past_collision_values: 
 	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, future_collision_values)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, past_collision_values)
 	
-	set_collision_mask_value(GlobalScript.collision_values.HITBOX_FUTURE, future_collision_values)
-	set_collision_mask_value(GlobalScript.collision_values.HITBOX_PAST, past_collision_values)
-	
 	set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, future_collision_values)
 	set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, past_collision_values)
-
+	
+	if hurtbox_area:
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.OBJECT_FUTURE, future_collision_values)
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.OBJECT_PAST, past_collision_values)
+		print("changed the thingy")
 
 func damage(amount: int):
 	if amount == 0:

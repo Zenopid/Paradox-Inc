@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://c7gmmlgx3k803"]
+
+[ext_resource type="Script" path="res://Universal_Scripts/Interactables/Laser.gd" id="1_gpocr"]
+[ext_resource type="Script" path="res://Character/Hitbox.gd" id="2_2xj41"]
+
+[sub_resource type="Environment" id="Environment_2hf86"]
+background_mode = 3
+glow_enabled = true
+glow_blend_mode = 0
+glow_hdr_threshold = 0.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qx7na"]
+size = Vector2(90, 2)
+
+[node name="Laser" type="Line2D"]
+points = PackedVector2Array(0, 0, 100, 0)
+width = 2.0
+default_color = Color(0.79, 0, 0, 1)
+script = ExtResource("1_gpocr")
+laser_knockback = Vector2(1000, -400)
+hitstun = 20
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_2hf86")
+
+[node name="Hitbox" type="Area2D" parent="."]
+unique_name_in_owner = true
+z_index = 1
+collision_layer = 0
+collision_mask = 0
+collision_priority = 50.0
+script = ExtResource("2_2xj41")
+height = 2
+duration = -1
+
+[node name="Shape" type="CollisionShape2D" parent="Hitbox"]
+unique_name_in_owner = true
+position = Vector2(50, 0)
+shape = SubResource("RectangleShape2D_qx7na")
+
+[connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]

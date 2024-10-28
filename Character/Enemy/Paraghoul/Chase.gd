@@ -7,8 +7,7 @@ var los_shapecast: ShapeCast2D
 @export var max_chase_duration:float = 7
 @export var chase_speed: float = 450
 @export var acceleration: int = 20
-@export var random_spread:float = 0.75
-@export var target_position_randomness: int = 50
+@export var target_position_randomness: Vector2 = Vector2(50, 150)
 @export var target_area_size: int = 20
 #@export var push_force: Vector2 = Vector2(200,200)
 @onready var target: Entity
@@ -61,9 +60,9 @@ func enter(_msg:= {}):
 	
 	
 func get_new_target() -> Vector2:
-	entity = entity as ParaGhoul
-	var x = randf_range(pathfinder.target_position.x - target_position_randomness, pathfinder.target_position.x + target_position_randomness)
-	var y = randf_range(pathfinder.target_position.y - target_position_randomness, pathfinder.target_position.y - target_position_randomness * 2)
+	var player_to_track:Player = entity.aggro_player
+	var x = randf_range(player_to_track.global_position.x - target_position_randomness.x, player_to_track.global_position.x + target_position_randomness.x)
+	var y = randf_range(player_to_track.global_position.y - target_position_randomness.y, player_to_track.global_position.y - target_position_randomness.y * 2)
 	return Vector2(x, y)
 
 
@@ -77,7 +76,7 @@ func physics_process( delta:float ):
 	#dir = entity.global_position.direction_to(target_sphere.global_position)
 	var next_path = pathfinder.get_next_path_position()
 	dir = entity.global_position.direction_to(next_path)
-	entity.velocity += (acceleration * dir)  #.rotated(randf_range(-random_spread, random_spread))
+	entity.velocity += (acceleration * dir)  
 	entity.velocity = entity.velocity.limit_length(chase_speed)
 	await get_tree().create_timer(0.001).timeout
 	entity.move_and_slide()
@@ -94,16 +93,20 @@ func physics_process( delta:float ):
 	if los_shapecast.is_colliding():
 		for i in los_shapecast.get_collision_count():
 			var collision = los_shapecast.get_collider(i)
-			if collision is not Enemy and collision is Entity:
-				if state_machine.transition_if_available(["Shoot"]):
+			if collision is Player:
+				chase_timer.start()
+				if state_machine.state_available("Shoot"):
+					state_machine.transition_to("Shoot", {target = collision})
 					return
+			
 	for i in target_sphere.get_overlapping_bodies():
-		if i == entity :
-			if state_machine.transition_if_available(["Shoot"]):
+		if i is Player:
+			if state_machine.state_available("Shoot"):
+				state_machine.transition_to("Shoot", {target = i})
 				return
+			chase_timer.start()
 	if pathfinder.is_target_reached():
 		if state_machine.transition_if_available([
-			"Shoot",
 			"GroundPound",
 			"Charge"
 			]):

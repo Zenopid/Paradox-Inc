@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://qdbmrdg5rvrr"]
+[gd_scene load_steps=9 format=3 uid="uid://qdbmrdg5rvrr"]
 
 [ext_resource type="Script" path="res://Universal_Scripts/Interactables/MoveableObject.gd" id="1_robjn"]
 [ext_resource type="Texture2D" uid="uid://bl7n6wgvoartc" path="res://Sprites/UI_Sprites/Sidescroller Shooter - Central City/Background/Props-01.png" id="2_2rmwh"]
@@ -62,6 +62,9 @@ _data = {
 "Return": SubResource("Animation_yjceo")
 }
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yyjmp"]
+size = Vector2(35, 31)
+
 [node name="GarbageBag" type="RigidBody2D" groups=["Moveable Object", "Persist"]]
 collision_layer = 0
 collision_mask = 0
@@ -86,3 +89,10 @@ unique_name_in_owner = true
 libraries = {
 "": SubResource("AnimationLibrary_hk24e")
 }
+
+[node name="HurtboxArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Hurtbox" type="CollisionShape2D" parent="HurtboxArea"]
+unique_name_in_owner = true
+shape = SubResource("RectangleShape2D_yyjmp")

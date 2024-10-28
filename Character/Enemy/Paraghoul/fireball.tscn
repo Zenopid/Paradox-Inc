@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://54w6tmuksub7"]
+[gd_scene load_steps=12 format=3 uid="uid://54w6tmuksub7"]
 
 [ext_resource type="Script" path="res://Character/Enemy/Paraghoul/Fireball.gd" id="1_dg647"]
 [ext_resource type="Texture2D" uid="uid://c4y015ag4fyuc" path="res://Sprites/Enemies/Paraghoul/FireballTravel_1.png" id="2_qygi0"]
@@ -20,9 +20,6 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_jfhos"]
-size = Vector2(30, 25)
-
 [sub_resource type="Animation" id="Animation_0olqg"]
 length = 0.001
 
@@ -38,9 +35,15 @@ _data = {
 "Travel": SubResource("Animation_oq1c2")
 }
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jfhos"]
+size = Vector2(30, 25)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y4f6o"]
+size = Vector2(17, 13)
+
 [node name="Fireball" type="CharacterBody2D"]
 collision_layer = 196608
-collision_mask = 3
+collision_mask = 12582912
 script = ExtResource("1_dg647")
 STEER_FORCE = 7.0
 damage = 5
@@ -54,11 +57,6 @@ timeline = "All"
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_2ecq3")
 flip_h = true
-
-[node name="Hitbox" type="CollisionShape2D" parent="."]
-unique_name_in_owner = true
-shape = SubResource("RectangleShape2D_jfhos")
-debug_color = Color(0.831373, 0.0901961, 0.101961, 0.196078)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
@@ -77,4 +75,18 @@ stream = ExtResource("5_v16os")
 volume_db = -10.0
 bus = &"Sfx"
 
+[node name="HitboxArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 196608
+collision_mask = 12582912
+
+[node name="Hitbox" type="CollisionShape2D" parent="HitboxArea"]
+unique_name_in_owner = true
+shape = SubResource("RectangleShape2D_jfhos")
+debug_color = Color(0.831373, 0.0901961, 0.101961, 0.196078)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_y4f6o")
+
 [connection signal="finished" from="Travelling" to="." method="_on_travelling_finished"]
+[connection signal="area_entered" from="HitboxArea" to="." method="_on_area_entered"]

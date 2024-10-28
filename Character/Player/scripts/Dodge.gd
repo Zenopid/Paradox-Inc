@@ -40,12 +40,10 @@ func enter(_msg: = {}):
 	var move = get_movement_input()
 	frame_tracker = 0
 	entity.velocity.y = clamp(entity.velocity.y, inital_fall_speed, fall_node.maximum_fall_speed)
-	if move < 0:
-		if entity.velocity.x > 0:
-			entity.velocity.x = 0
-	else:
-		if entity.velocity.x < 0:
-			entity.velocity.x = 0
+	#if move < 0 and entity.velocity.x > 0 or move > 0 and entity.velocity.x < 0:
+		#entity.velocity.x = 0
+	if sign(move) != sign(entity.velocity.x):
+		entity.velocity.x = 0
 	entity.velocity.x += dodge_boost * move
 	
 func physics_process(delta: float):
@@ -65,7 +63,6 @@ func physics_process(delta: float):
 				])
 	if abs(entity.velocity.x) < dodge_speed: 
 		entity.velocity.x = dodge_speed * get_facing_as_int()
-	print(entity.invlv_type)
 
 func leave_dodge():
 	if !grounded():
@@ -108,9 +105,19 @@ func exit():
 	cooldown_timer.start()
 	dodge_over = false
 	is_actionable = false
-	set_proj_invlv(false)
-	set_strike_invlv(false)
-	entity.set_invlv_type("None")	
+	if entity.current_timeline == "Future":
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_FUTURE, true)
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_PAST, false)
+	else:
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_FUTURE, false)
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_PAST, true)
+	if entity.current_timeline == "Future":
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_FUTURE, true)
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_PAST, false)
+	else:
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_FUTURE, false)
+		hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.PLAYER_STRIKE_HURTBOX_PAST, true)
+
 
 func set_proj_invlv(status:bool):
 	if entity.current_timeline == "Future":

@@ -34,12 +34,11 @@ func enter (_msg: = {}):
 	super.enter(_msg)
 	frame_tracker = 0
 	has_hit_ground = false
-	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, false)
-	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, false)
+	entity.set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, false)
+	entity.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, false)
 	entity.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, false)
 	entity.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, false)
 	max_crash_timer.start()
-	#proj invlv during ground pound
 	
 func _on_ground_pound_interrupt(amount: int ):
 	state_machine.transition_to("Dazed")
@@ -113,9 +112,9 @@ func conditions_met():
 
 func exit():
 	entity.disconnect("damaged", Callable(self, "_on_ground_pound_interrupt"))
-	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, false)
-	entity.set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, false)
 	entity.set_collision_mask_value(GlobalScript.collision_values.PLAYER_FUTURE, true)
 	entity.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PAST, true)
+	entity.set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
+	entity.set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
 	cd_timer.start()
 	entity.set_color()

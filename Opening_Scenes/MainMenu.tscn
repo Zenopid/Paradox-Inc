@@ -263,9 +263,6 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 50)
 layout_mode = 2
-focus_neighbor_right = NodePath("../../ClassicGamemodes/Start")
-focus_neighbor_bottom = NodePath("../../ClassicGamemodes/Start")
-focus_next = NodePath("../../ClassicGamemodes/Start")
 theme_override_font_sizes/font_size = 31
 text = "Free Play"
 
@@ -478,29 +475,31 @@ text = "SCHEDULE"
 
 [node name="LevelButtons" type="GridContainer" parent="LevelSelect"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 500)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 30.0
+offset_left = 130.0
 offset_top = 177.0
-offset_right = -30.0
+offset_right = -150.0
 offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
-columns = 2
 metadata/_edit_group_ = true
 
 [node name="Training" parent="LevelSelect/LevelButtons" groups=["Levels"] instance=ExtResource("2_l0nly")]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
-size_flags_vertical = 1
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 75
 text = "Training"
 
 [node name="Emergence" parent="LevelSelect/LevelButtons" groups=["Levels"] instance=ExtResource("2_l0nly")]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 1
+theme_override_font_sizes/font_size = 75
 text = "Emergence"
 
 [node name="Return" parent="LevelSelect" instance=ExtResource("2_l0nly")]

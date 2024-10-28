@@ -5,8 +5,8 @@ signal hitbox_collided(object)
 const CLASH_RANGE = 10
 
 @export var damage: int = 100
-@export var knockback_angle: int = 1
-@export var knockback_amount: int = 1
+@export var knockback: Vector2 = Vector2.ZERO
+@export var hitstun:int = 5
 @export var attack_type: String = "Normal"
 @export var width:int = 100
 @export var height:int = 100
@@ -25,6 +25,7 @@ const CLASH_RANGE = 10
 @onready var state_machine: EntityStateMachine
 @onready var projectile_owner:Entity
 @onready var hitbox: CollisionShape2D = $"%Hitbox"
+@onready var hitbox_area:Area2D = $"%HitboxArea"
 @onready var starting_position:Vector2
 
 var gravity_tracker = 0
@@ -56,8 +57,8 @@ func set_parameters(hitbox_info: = {}):
 		add_to_group(projectile_owner.name + " Projectiles")
 	else:
 		print_debug("Projectile was created with no info.")
+		
 func _physics_process(delta):
-
 	gravity_tracker += gravity_amount
 	if gravity_amount > max_fall_speed:
 		gravity_amount = max_fall_speed
@@ -65,18 +66,9 @@ func _physics_process(delta):
 	projectile_speed.y += gravity_amount
 	var collision = move_and_collide(projectile_speed * direction)
 	if collision:
-		if typeof(collision.get_collider()) != TYPE_NIL:
-			var collider = collision.get_collider()
-			if collider is Area2D or collider.get_parent() is Area2D:
-				_on_body_entered(collision.get_collider())
-	#hitbox.global_position = global_position
-	#area_box.global_position = global_position
-	if framez < duration:
-		framez += 1
-	elif framez == duration:
-		#print("framez == duration so proj is dying")
 		queue_free()
-		return
+			#hitbox.global_position = global_position
+	#area_box.global_position = global_position
 	var distance_travelled:Vector2 = abs(global_position - starting_position)
 	if distance_travelled.length() >= max_distance and max_distance != -1:
 		#print("went too far so proj is dying")
@@ -85,13 +77,21 @@ func _physics_process(delta):
 	if num_of_hits <= 0:
 		queue_free()
 
+func update_duration():
+	framez += 1
+	if framez == duration:
+		#print("framez == duration so proj is dying")
+		queue_free()
+		return
+
 func update_extends():
 	starting_position = global_position
 	hitbox.shape.size = Vector2(width, height)
 	hitbox.position = position
 	
-func _on_body_entered(body):
+func _on_area_entered(area:Area2D):
 	var true_collision:bool = false
+	var body = area.get_parent()
 	#if you hit something that isn't invlv to proj then we decrease by a hit
 	if body == projectile_owner:
 		return
@@ -121,17 +121,16 @@ func _on_body_entered(body):
 	if true_collision:
 		num_of_hits -= 1
 
-
 func damage_entity(body):
-	body.damage(damage, knockback_amount, knockback_angle)
+	body.damage(damage, knockback, hitstun)
 	emit_signal("hitbox_collided", body)
 	#GlobalScript.apply_hitstop(hit_stop)
 
 func set_future_collision():
 	set_collision_layer_value(GlobalScript.collision_values.PROJECTILE_FUTURE, true)
 	
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_FUTURE, true)
-	set_collision_mask_value(GlobalScript.collision_values.ENEMY_PROJ_HURTBOX_FUTURE, true)
+	hitbox_area.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_FUTURE, true)
+	hitbox_area.set_collision_mask_value(GlobalScript.collision_values.ENEMY_PROJ_HURTBOX_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_FUTURE, true)
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_FUTURE, true)
@@ -139,8 +138,8 @@ func set_future_collision():
 func set_past_collision():
 	set_collision_layer_value(GlobalScript.collision_values.PROJECTILE_PAST, true)
 
-	set_collision_mask_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_PAST, true)
-	set_collision_mask_value(GlobalScript.collision_values.ENEMY_PROJ_HURTBOX_PAST, true)
+	hitbox_area.set_collision_mask_value(GlobalScript.collision_values.PLAYER_PROJ_HURTBOX_PAST, true)
+	hitbox_area.set_collision_mask_value(GlobalScript.collision_values.ENEMY_PROJ_HURTBOX_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.OBJECT_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.WALL_PAST, true)
 	set_collision_mask_value(GlobalScript.collision_values.GROUND_PAST, true)

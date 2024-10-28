@@ -31,7 +31,6 @@ func init(current_entity, s_machine: EntityStateMachine):
 	super.init(current_entity, s_machine)
 	shoot_cooldown = state_machine.get_timer("Shoot_Cooldown")
 	los_raycast = state_machine.get_shapecast("LOS")
-	player = get_tree().get_first_node_in_group("Players")
 	chase_node = state_machine.find_state("Chase")
 	if GlobalScript.debug_enabled:
 		debug_sphere = Area2D.new()
@@ -44,10 +43,10 @@ func init(current_entity, s_machine: EntityStateMachine):
 		debug_sphere.visible = true
 
 func enter(msg: = {}):
-	player = get_tree().get_first_node_in_group("Players")
 	entity.anim_player.connect("animation_finished", Callable(self, "projectile_attack"))
 	super.enter()
 	entity.velocity *= entity_speed_multiplier
+
 	
 func projectile_attack(attack_name):
 	var fireball_instance = projectile.instantiate()
@@ -61,11 +60,11 @@ func projectile_attack(attack_name):
 	var proj_info: = {
 		"global_position": points,
 		"projectile_owner": entity,
+		"target": entity.aggro_player,
 	}
 	fireball_instance.set_parameters(proj_info)
 	fireball_instance.set_future_collision()
 	fireball_instance.set_past_collision()
-	entity.pathfinder.target_position = player.global_position
 	state_machine.transition_to("Chase")
 
 func physics_process(delta:float):

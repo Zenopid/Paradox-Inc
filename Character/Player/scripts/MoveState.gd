@@ -34,8 +34,6 @@ func init(current_entity: Entity, s_machine: EntityStateMachine):
 	slope_ray_right = state_machine.get_raycast("SlopeCheckerRight")
 	coyote_timer = state_machine.get_timer("Coyote")
 	coyote_timer.wait_time = coyote_duration
-	coyote_timer.one_shot = true
-	
 	jump_script = state_machine.find_state("Jump")
 	fall_script = state_machine.find_state("Fall")
 	run_state = state_machine.find_state("Run")
@@ -63,7 +61,6 @@ func physics_process(delta:float) -> void:
 	ground_checker.position = Vector2(entity.position.x, entity.position.y + 13.5)
 	slope_ray_left.position = Vector2(entity.position.x - 1, entity.position.y + 13.5)
 	slope_ray_right.position = Vector2(entity.position.x + 1, entity.position.y + 13.5)
-	var slope_checker:RayCast2D
 
 	var was_on_floor = grounded()
 	var move = get_movement_input()
@@ -85,14 +82,7 @@ func physics_process(delta:float) -> void:
 		coyote_timer.start()
 	if state_machine.transition_if_available(["Fall"]):
 		return
-	if state_machine.get_current_state() == run_state:
-		push_objects()
 
-func push_objects():
-	for i in entity.get_slide_collision_count():
-		var collision = entity.get_slide_collision(i)
-		if collision.get_collider() is RigidBody2D:
-			collision.get_collider().call_deferred("apply_central_impulse", -collision.get_normal() * push ) 
 
 func default_move_and_slide():
 	entity.set_max_slides(4)
@@ -133,14 +123,12 @@ func calculate_slope(delta, ray: RayCast2D):
 #		entity.velocity -= entity.up_direction * delta
 
 func ascending_slope() -> bool:
-	if facing_left():
-		if slope_ray_right.is_colliding():
-			return false
-	else:
-		if slope_ray_left.is_colliding():
-			return false
-	return true 
-
+	if facing_left() and slope_ray_right.is_colliding():
+		return false
+	elif !facing_left() and slope_ray_left.is_colliding():
+		return false
+	return true
+	
 func exit() -> void:
 	coyote_timer.stop()
 	entity.floor_snap_length = 1

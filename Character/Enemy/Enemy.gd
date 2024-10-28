@@ -25,6 +25,7 @@ signal killed()
 @onready var ground_raycast:RayCast2D = $"%GroundChecker"
 @onready var raycast_node = $"%Raycasts"
 @onready var shapecast_node = $"StateMachine".get_node_or_null("ShapeCasts")
+@onready var hurtbox_area:Area2D = $"%HurtboxArea"
 
 var currently_attacking:bool = false
 var in_hitstun: bool = false
@@ -35,6 +36,8 @@ var enemy_close: bool = false
 var raycasts = []
 var detection_areas = []
 var being_destroyed:bool = false 
+
+var aggro_player: Player 
 
 func get_spawn():
 	return spawn_point
@@ -127,6 +130,11 @@ func set_collision(future_value, past_value):
 	set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_FUTURE, future_value)
 	set_collision_mask_value(GlobalScript.collision_values.PROJECTILE_PAST, past_value)
 	
+	hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.ENEMY_STRIKE_HURTBOX_FUTURE, future_value)
+	hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.ENEMY_STRIKE_HURTBOX_PAST, past_value)
+	hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.ENEMY_PROJ_HURTBOX_FUTURE, future_value)
+	hurtbox_area.set_collision_layer_value(GlobalScript.collision_values.ENEMY_PROJ_HURTBOX_PAST, past_value)
+	
 	if !is_paradox:
 		if future_value:
 			pathfinder.set_navigation_layer_value(1, true )
@@ -161,7 +169,7 @@ func _set_health(value):
 			kill()
 			emit_signal("killed")
 
-func damage(amount, knockback: int = 0, knockback_angle: int = 0, hitstun: int = 0):
+func damage(amount, knockback: Vector2 = Vector2.ZERO, hitstun: int = 0):
 	in_hitstun = true
 	stun_cnt = hitstun
 	_set_health(health - amount)
@@ -170,6 +178,8 @@ func damage(amount, knockback: int = 0, knockback_angle: int = 0, hitstun: int =
 		hitsparks.emitting = true
 	else:
 		hitsparks.restart()
+	if health <= 0:
+		kill()
 
 func heal(amount):
 	_set_health(health + amount)

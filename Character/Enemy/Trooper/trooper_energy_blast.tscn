@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dpv0afv5ld4jl"]
+[gd_scene load_steps=12 format=3 uid="uid://dpv0afv5ld4jl"]
 
 [ext_resource type="Script" path="res://Character/Enemy/Trooper/trooper_energy_blast.gd" id="1_tdise"]
 [ext_resource type="Texture2D" uid="uid://c3csqgn5e0mwq" path="res://Sprites/Enemies/Trooper/energy_shot1.png" id="2_imodd"]
@@ -16,27 +16,78 @@ animations = [{
 "texture": ExtResource("3_pp4ei")
 }],
 "loop": true,
-"name": &"default",
+"name": &"Travel",
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_jfhos"]
-size = Vector2(30, 6)
-
 [sub_resource type="Animation" id="Animation_0olqg"]
 length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Travel"]
+}
 
 [sub_resource type="Animation" id="Animation_oq1c2"]
 resource_name = "Travel"
-length = 0.266668
+length = 0.200002
 loop_mode = 1
 step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Travel"]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_vp8n7"]
 _data = {
 "RESET": SubResource("Animation_0olqg"),
 "Travel": SubResource("Animation_oq1c2")
 }
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8qp3u"]
+size = Vector2(30, 6)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6pewl"]
+size = Vector2(25, 4)
 
 [node name="Bullet" type="CharacterBody2D"]
 collision_layer = 196608
@@ -46,18 +97,13 @@ damage = 10
 width = 30
 height = 6
 object_push = Vector2(400, 100)
-duration = -1
-speed = 1000
+duration = 1000
+speed = 10
 velocity_effects_object_push = false
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_2ecq3")
-flip_h = true
-
-[node name="Hitbox" type="CollisionShape2D" parent="."]
-unique_name_in_owner = true
-shape = SubResource("RectangleShape2D_jfhos")
-debug_color = Color(0.831373, 0.0901961, 0.101961, 0.196078)
+animation = &"Travel"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
@@ -76,4 +122,18 @@ stream = ExtResource("5_rqv76")
 volume_db = -10.0
 bus = &"Sfx"
 
+[node name="HitboxArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Hitbox" type="CollisionShape2D" parent="HitboxArea"]
+unique_name_in_owner = true
+shape = SubResource("RectangleShape2D_8qp3u")
+debug_color = Color(0.831373, 0.0901961, 0.101961, 0.196078)
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+visible = false
+shape = SubResource("RectangleShape2D_6pewl")
+
 [connection signal="finished" from="Travelling" to="." method="_on_travelling_finished"]
+[connection signal="area_entered" from="HitboxArea" to="." method="_on_area_entered"]

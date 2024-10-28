@@ -28,6 +28,8 @@ func enter(_msg: = {}):
 	entity.anim_player.queue("GroundPoundLoop")
 	attack_status = "Start"
 	starting_position = entity.global_position.y
+	entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_FUTURE, false)
+	entity.set_collision_mask_value(GlobalScript.collision_values.ENTITY_PAST, false)
 	
 func change_status(new_status):
 	match attack_status:
@@ -80,3 +82,4 @@ func _on_attack_over(name_of_attack:String):
 	
 func exit():
 	super.exit()
+	entity._on_swapped_timeline(entity.current_timeline)
